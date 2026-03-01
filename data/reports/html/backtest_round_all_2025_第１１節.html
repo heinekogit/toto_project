@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang='ja'>
+<head>
+<meta charset='utf-8'>
+<title>Backtest J1+J2 2025 第１１節</title>
+<style>
+body{font-family:system-ui, -apple-system, sans-serif; margin:24px;}
+table{border-collapse:collapse; width:100%; font-size:12px;}
+th,td{border:1px solid #ddd; padding:6px; text-align:left;}
+thead th{background:#f5f5f5; position:sticky; top:0;}
+tr.desc-row td{background:#fcfcfc; color:#666; font-size:11px;}
+td.is-correct-true{color:#c1121f; font-weight:700;}
+.summary{margin:8px 0 12px; font-size:13px;}
+.summary b{color:#c1121f;}
+</style>
+</head>
+<body>
+<div style='margin-bottom:12px;'><a href='../index.html'>← indexに戻る</a></div>
+<h2>Backtest J1+J2 2025 第１１節</h2>
+<div class='summary'>的中数: <b>8/20</b> / 的中率: <b>40.0%</b></div>
+<table>
+<thead><tr>
+<th>league</th>
+<th>節</th>
+<th>match_id</th>
+<th>datetime</th>
+<th>home_team</th>
+<th>away_team</th>
+<th>home_score</th>
+<th>away_score</th>
+<th>home_advantage_diff</th>
+<th>is_home_advantage_positive</th>
+<th>prob_home_win</th>
+<th>prob_draw</th>
+<th>prob_away_win</th>
+<th>predicted_highest_prob_result</th>
+<th>actual_result</th>
+<th>is_correct</th>
+<th>predicted_result</th>
+</tr></thead>
+<tbody>
+<tr class='desc-row'>
+<td>リーグ</td>
+<td>節</td>
+<td>試合ID</td>
+<td>試合日時</td>
+<td>ホーム</td>
+<td>アウェイ</td>
+<td>ホーム得点</td>
+<td>アウェイ得点</td>
+<td></td>
+<td></td>
+<td>ホーム勝ち確率</td>
+<td>引き分け確率</td>
+<td>アウェイ勝ち確率</td>
+<td>予測結果</td>
+<td>実際の結果</td>
+<td>的中</td>
+<td></td>
+</tr>
+<tr>
+<td>J1</td>
+<td>第１１節第１日</td>
+<td>j1_2025_04191403_新潟_京都</td>
+<td>2025-04-19 14:03:00</td>
+<td>新潟</td>
+<td>京都</td>
+<td>1</td>
+<td>2</td>
+<td>-1.0526</td>
+<td>False</td>
+<td>0.151</td>
+<td>0.21</td>
+<td>0.639</td>
+<td>A</td>
+<td>A</td>
+<td class='is-correct-true'>True</td>
+<td>A</td>
+</tr>
+<tr>
+<td>J1</td>
+<td>第１１節第２日</td>
+<td>j1_2025_04201403_横浜FC_Ｇ大阪</td>
+<td>2025-04-20 14:03:00</td>
+<td>横浜FC</td>
+<td>Ｇ大阪</td>
+<td>1</td>
+<td>1</td>
+<td>0.1053</td>
+<td>True</td>
+<td>0.331</td>
+<td>0.252</td>
+<td>0.416</td>
+<td>A</td>
+<td>D</td>
+<td>False</td>
+<td>A</td>
+</tr>
+<tr>
+<td>J1</td>
+<td>第１１節第２日</td>
+<td>j1_2025_04201403_名古屋_広島</td>
+<td>2025-04-20 14:03:00</td>
+<td>名古屋</td>
+<td>広島</td>
+<td>2</td>
+<td>1</td>
+<td>-0.2632</td>
+<td>False</td>
+<td>0.165</td>
+<td>0.214</td>
+<td>0.621</td>
+<td>A</td>
+<td>H</td>
+<td>False</td>
+<td>A</td>
+</tr>
+<tr>
+<td>J1</td>
+<td>第１１節第２日</td>
+<td>j1_2025_04201403_神戸_町田</td>
+<td>2025-04-20 14:03:00</td>
+<td>神戸</td>
+<td>町田</td>
+<td>1</td>
+<td>0</td>
+<td>0.2632</td>
+<td>True</td>
+<td>0.342</td>
+<td>0.254</td>
+<td>0.403</td>
+<td>D</td>
+<td>H</td>
+<td>False</td>
+<td>D</td>
+</tr>
+<tr>
+<td>J1</td>
+<td>第１１節第２日</td>
+<td>j1_2025_04201403_岡山_鹿島</td>
+<td>2025-04-20 14:03:00</td>
+<td>岡山</td>
+<td>鹿島</td>
+<td>1</td>
+<td>2</td>
+<td>-0.4211</td>
+<td>False</td>
+<td>0.289</td>
+<td>0.243</td>
+<td>0.468</td>
+<td>A</td>
+<td>A</td>
+<td class='is-correct-true'>True</td>
+<td>A</td>
+</tr>
+<tr>
+<td>J1</td>
+<td>第１１節第２日</td>
+<td>j1_2025_04201404_清水_福岡</td>
+<td>2025-04-20 14:04:00</td>
+<td>清水</td>
+<td>福岡</td>
+<td>3</td>
+<td>1</td>
+<td>0.2632</td>
+<td>True</td>
+<td>0.354</td>
+<td>0.257</td>
+<td>0.389</td>
+<td>D</td>
+<td>H</td>
+<td>False</td>
+<td>D</td>
+</tr>
+<tr>
+<td>J1</td>
+<td>第１１節第２日</td>
+<td>j1_2025_04201503_Ｃ大阪_FC東京</td>
+<td>2025-04-20 15:03:00</td>
+<td>Ｃ大阪</td>
+<td>FC東京</td>
+<td>1</td>
+<td>1</td>
+<td>0.4211</td>
+<td>True</td>
+<td>0.42</td>
+<td>0.251</td>
+<td>0.328</td>
+<td>H</td>
+<td>D</td>
+<td>False</td>
+<td>H</td>
+</tr>
+<tr>
+<td>J1</td>
+<td>第１１節第２日</td>
+<td>j1_2025_04201503_湘南_柏</td>
+<td>2025-04-20 15:03:00</td>
+<td>湘南</td>
+<td>柏</td>
+<td>0</td>
+<td>1</td>
+<td>-0.6842</td>
+<td>False</td>
+<td>0.275</td>
+<td>0.24</td>
+<td>0.484</td>
+<td>A</td>
+<td>A</td>
+<td class='is-correct-true'>True</td>
+<td>A</td>
+</tr>
+<tr>
+<td>J1</td>
+<td>第１１節第２日</td>
+<td>j1_2025_04201503_川崎Ｆ_東京Ｖ</td>
+<td>2025-04-20 15:03:00</td>
+<td>川崎Ｆ</td>
+<td>東京Ｖ</td>
+<td>0</td>
+<td>0</td>
+<td>0.7368</td>
+<td>True</td>
+<td>0.588</td>
+<td>0.221</td>
+<td>0.191</td>
+<td>H</td>
+<td>D</td>
+<td>False</td>
+<td>H</td>
+</tr>
+<tr>
+<td>J1</td>
+<td>第１１節第２日</td>
+<td>j1_2025_04201603_浦和_横浜FM</td>
+<td>2025-04-20 16:03:00</td>
+<td>浦和</td>
+<td>横浜FM</td>
+<td>3</td>
+<td>1</td>
+<td>1.3158</td>
+<td>True</td>
+<td>0.558</td>
+<td>0.227</td>
+<td>0.215</td>
+<td>H</td>
+<td>H</td>
+<td class='is-correct-true'>True</td>
+<td>H</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>第１１節第１日</td>
+<td>j2_2025_04251903_磐田_大分</td>
+<td>2025-04-25 19:03:00</td>
+<td>磐田</td>
+<td>大分</td>
+<td>0</td>
+<td>3</td>
+<td>1.0526</td>
+<td>True</td>
+<td>0.56</td>
+<td>0.226</td>
+<td>0.213</td>
+<td>H</td>
+<td>A</td>
+<td>False</td>
+<td>H</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>第１１節第１日</td>
+<td>j2_2025_04251903_鳥栖_山形</td>
+<td>2025-04-25 19:03:00</td>
+<td>鳥栖</td>
+<td>山形</td>
+<td>2</td>
+<td>1</td>
+<td>0.4211</td>
+<td>True</td>
+<td>0.379</td>
+<td>0.258</td>
+<td>0.363</td>
+<td>D</td>
+<td>H</td>
+<td>False</td>
+<td>D</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>第１１節第１日</td>
+<td>j2_2025_04251903_長崎_いわき</td>
+<td>2025-04-25 19:03:00</td>
+<td>長崎</td>
+<td>いわき</td>
+<td>3</td>
+<td>4</td>
+<td>0.5789</td>
+<td>True</td>
+<td>0.649</td>
+<td>0.207</td>
+<td>0.143</td>
+<td>H</td>
+<td>A</td>
+<td>False</td>
+<td>H</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>第１１節第１日</td>
+<td>j2_2025_04251903_藤枝_熊本</td>
+<td>2025-04-25 19:03:00</td>
+<td>藤枝</td>
+<td>熊本</td>
+<td>0</td>
+<td>2</td>
+<td>0.4737</td>
+<td>True</td>
+<td>0.437</td>
+<td>0.249</td>
+<td>0.315</td>
+<td>D</td>
+<td>A</td>
+<td>False</td>
+<td>D</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>第１１節第１日</td>
+<td>j2_2025_04251903_仙台_愛媛</td>
+<td>2025-04-25 19:03:00</td>
+<td>仙台</td>
+<td>愛媛</td>
+<td>1</td>
+<td>1</td>
+<td>0.7895</td>
+<td>True</td>
+<td>0.711</td>
+<td>0.191</td>
+<td>0.098</td>
+<td>H</td>
+<td>D</td>
+<td>False</td>
+<td>H</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>第１１節第１日</td>
+<td>j2_2025_04251903_千葉_秋田</td>
+<td>2025-04-25 19:03:00</td>
+<td>千葉</td>
+<td>秋田</td>
+<td>3</td>
+<td>1</td>
+<td>0.6842</td>
+<td>True</td>
+<td>0.695</td>
+<td>0.196</td>
+<td>0.109</td>
+<td>H</td>
+<td>H</td>
+<td class='is-correct-true'>True</td>
+<td>H</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>第１１節第１日</td>
+<td>j2_2025_04251903_水戸_甲府</td>
+<td>2025-04-25 19:03:00</td>
+<td>水戸</td>
+<td>甲府</td>
+<td>0</td>
+<td>0</td>
+<td>0.6316</td>
+<td>True</td>
+<td>0.461</td>
+<td>0.244</td>
+<td>0.294</td>
+<td>H</td>
+<td>D</td>
+<td>False</td>
+<td>H</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>第１１節第１日</td>
+<td>j2_2025_04251903_大宮_札幌</td>
+<td>2025-04-25 19:03:00</td>
+<td>大宮</td>
+<td>札幌</td>
+<td>1</td>
+<td>0</td>
+<td>0.4211</td>
+<td>True</td>
+<td>0.624</td>
+<td>0.213</td>
+<td>0.162</td>
+<td>H</td>
+<td>H</td>
+<td class='is-correct-true'>True</td>
+<td>H</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>第１１節第２日</td>
+<td>j2_2025_04261403_山口_今治</td>
+<td>2025-04-26 14:03:00</td>
+<td>山口</td>
+<td>今治</td>
+<td>1</td>
+<td>2</td>
+<td>-0.4737</td>
+<td>False</td>
+<td>0.183</td>
+<td>0.219</td>
+<td>0.598</td>
+<td>A</td>
+<td>A</td>
+<td class='is-correct-true'>True</td>
+<td>A</td>
+</tr>
+<tr>
+<td>J2</td>
+<td>第１１節第２日</td>
+<td>j2_2025_04261403_徳島_富山</td>
+<td>2025-04-26 14:03:00</td>
+<td>徳島</td>
+<td>富山</td>
+<td>1</td>
+<td>0</td>
+<td>0.7368</td>
+<td>True</td>
+<td>0.476</td>
+<td>0.242</td>
+<td>0.282</td>
+<td>H</td>
+<td>H</td>
+<td class='is-correct-true'>True</td>
+<td>H</td>
+</tr>
+</tbody></table>
+</body></html>

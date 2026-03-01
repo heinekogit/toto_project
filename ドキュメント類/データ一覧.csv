@@ -1,0 +1,90 @@
+ファイルパス,ファイル名,タイプ,保持情報/機能
+00_raw_html/cosaka.html,cosaka.html,データファイル,C大阪のスクレイピングされた生HTMLデータ
+00_raw_html/ftokyo.html,ftokyo.html,データファイル,FC東京のスクレイピングされた生HTMLデータ
+00_raw_html/fukuoka.html,fukuoka.html,データファイル,福岡のスクレイピングされた生HTMLデータ
+00_raw_html/gosaka.html,gosaka.html,データファイル,G大阪のスクレイピングされた生HTMLデータ
+00_raw_html/hiroshima.html,hiroshima.html,データファイル,広島のスクレイピングされた生HTMLデータ
+00_raw_html/kashima.html,kashima.html,データファイル,鹿島のスクレイピングされた生HTMLデータ
+00_raw_html/kashiwa.html,kashiwa.html,データファイル,柏のスクレイピングされた生HTMLデータ
+00_raw_html/kobe.html,kobe.html,データファイル,神戸のスクレイピングされた生HTMLデータ
+00_raw_html/kyoto.html,kyoto.html,データファイル,京都のスクレイピングされた生HTMLデータ
+00_raw_html/machida.html,machida.html,データファイル,町田のスクレイピングされた生HTMLデータ
+00_raw_html/nagoya.html,nagoya.html,データファイル,名古屋のスクレイピングされた生HTMLデータ
+00_raw_html/niigata.html,niigata.html,データファイル,新潟のスクレイピングされた生HTMLデータ
+00_raw_html/okayama.html,okayama.html,データファイル,岡山のスクレイピングされた生HTMLデータ
+00_raw_html/sapporo.html,sapporo.html,データファイル,札幌のスクレイピングされた生HTMLデータ
+00_raw_html/shimizu.html,shimizu.html,データファイル,清水のスクレイピングされた生HTMLデータ
+00_raw_html/shonan.html,shonan.html,データファイル,湘南のスクレイピングされた生HTMLデータ
+00_raw_html/tokyov.html,tokyov.html,データファイル,東京Vのスクレイピングされた生HTMLデータ
+00_raw_html/urawa.html,urawa.html,データファイル,浦和のスクレイピングされた生HTMLデータ
+00_raw_html/yokohamafc.html,yokohamafc.html,データファイル,横浜FCのスクレイピングされた生HTMLデータ
+00_raw_html/yokohamafm.html,yokohamafm.html,データファイル,横浜FMのスクレイピングされた生HTMLデータ
+01_progress_result/01_progress_results_03.py,01_progress_results_03.py,スクリプトファイル,進捗結果に関するデータ処理（詳細不明）
+01_progress_result/progress_results_02.py,progress_results_02.py,スクリプトファイル,進捗結果に関するデータ処理（詳細不明）
+02_stats_teams/,02_stats_teams/,ディレクトリ,チームの統計データ（CSV, HTML, XLSXなど）を格納
+03_stats_players/save_team_html.py,save_team_html.py,スクリプトファイル,チームのHTMLデータを保存する機能
+03_stats_players/構成.txt,構成.txt,データファイル,プレイヤー関連データの構成メモ（詳細不明）
+04_team_condition/05_schedule_result_base_02.py,05_schedule_result_base_02.py,スクリプトファイル,チームコンディション/スケジュール結果ベース処理（詳細不明）
+04_team_condition/05_schedule_result_base.py,05_schedule_result_base.py,スクリプトファイル,チームコンディション/スケジュール結果ベース処理（詳細不明）
+04_team_condition/06_setu_to_team_01.py,06_setu_to_team_01.py,スクリプトファイル,チームへの節データのマッピング処理（詳細不明）
+04_team_condition/06_setu_to_team_02.py,06_setu_to_team_02.py,スクリプトファイル,チームへの節データのマッピング処理（詳細不明）
+04_team_condition/06_setu_to_team_03.py,06_setu_to_team_03.py,スクリプトファイル,チームへの節データのマッピング処理（詳細不明）
+04_team_condition/06_setu_to_team_04.py,06_setu_to_team_04.py,スクリプトファイル,チームへの節データのマッピング処理（詳細不明）
+2025_score_average.xlsx,2025_score_average.xlsx,データファイル,2025年のスコア平均値データ (Excel)
+2025_shoot_average.xlsx,2025_shoot_average.xlsx,データファイル,2025年のシュート平均値データ (Excel)
+30_extra/scrape_01.ipynb,scrape_01.ipynb,スクリプトファイル,Jupyter Notebook形式のスクレイピング関連スクリプト（詳細不明）
+30_extra/scrape_with_selenium.py,scrape_with_selenium.py,スクリプトファイル,Seleniumを使用したJリーグ試合情報のスクレイピング、対戦カード抽出（詳細については要確認）
+30_extra/team_strength_03.py,team_strength_03.py,スクリプトファイル,SPAIAサイトからチームの得点・失点・試合数をスクレイピングし、CSVに出力
+30_extra/team_strength_shoot.py,team_strength_shoot.py,スクリプトファイル,Jリーグスタッツサイトからチームの統計データをスクレイピングし、CSVに出力
+30_extra/test_driver.py,test_driver.py,スクリプトファイル,Seleniumドライバのテスト用スクリプト（推定）
+all_team_stats.csv,all_team_stats.csv,データファイル,全チームの集約された統計データ
+all_team_stats.xlsx,all_team_stats.xlsx,データファイル,全チームの集約された統計データ (Excel)
+backtest_2025.csv,backtest_2025.csv,データファイル,2025年終了済み試合のバックテスト結果、予測確率、的中/不的中のフラグ
+data/j1_2024_results.csv,j1_2024_results.csv,データファイル,2024年シーズンの全試合結果（学習データ）
+data/j1_2025_upcoming.csv,j1_2025_upcoming.csv,データファイル,2025年シーズンの終了済み試合＋未開催試合（予測対象）
+J1_2024_schedule_by_structure.csv,J1_2024_schedule_by_structure.csv,データファイル,2024年J1リーグのスケジュール
+J1_2024_schedule_by_structure.xlsx,J1_2024_schedule_by_structure.xlsx,データファイル,2024年J1リーグのスケジュール (Excel)
+J1_2025_final.csv,J1_2025_final.csv,データファイル,2025年J1リーグの最終結果データ（推定）
+J1_2025_parsed_final.csv,J1_2025_parsed_final.csv,データファイル,2025年J1リーグの最終パース済みデータ（推定）
+J1_2025_parsed.csv,J1_2025_parsed.csv,データファイル,2025年J1リーグのパース済みデータ
+j1_2025_predictions.csv,j1_2025_predictions.csv,データファイル,2025年未開催試合の予測結果、勝・分・負の発生確率
+j1_2025_predictions.xlsx,j1_2025_predictions.xlsx,データファイル,2025年未開催試合の予測結果（Excel）
+J1_2025_schedule_by_structure_バックアップ.xlsx,J1_2025_schedule_by_structure_バックアップ.xlsx,データファイル,2025年J1リーグのスケジュールバックアップ (Excel)
+J1_2025_schedule_by_structure.csv,J1_2025_schedule_by_structure.csv,データファイル,2025年J1リーグのスケジュール
+J1_2025_schedule_by_structure.xlsx,J1_2025_schedule_by_structure.xlsx,データファイル,2025年J1リーグのスケジュール (Excel)
+J1_2025_team_schedule_pivot.xlsx,J1_2025_team_schedule_pivot.xlsx,データファイル,2025年J1リーグのチームスケジュールピボットデータ (Excel)
+J1_2025_team_schedule_with_opponent.xlsx,J1_2025_team_schedule_with_opponent.xlsx,データファイル,2025年J1リーグの対戦相手付きチームスケジュール (Excel)
+scripts/11_prediction_01.py,11_prediction_01.py,スクリプトファイル,Jリーグ試合結果のElo＋ポアソン分布予測モデル、2025年未開催試合の予測と終了済み試合のバックテスト、的中率計算
+team_schedule.csv,team_schedule.csv,データファイル,チームの試合スケジュールデータ
+tt_prj.code-workspace,tt_prj.code-workspace,データファイル,VS Codeワークスペース設定ファイル
+z_old_script/02_save_html_teamstats_01.py,02_save_html_teamstats_01.py,スクリプトファイル,チーム統計のHTML保存（詳細不明）
+z_old_script/03_extract_csv_teamstats_02.py,03_extract_csv_teamstats_02.py,スクリプトファイル,チーム統計のCSV抽出（詳細不明）
+z_old_script/03_extract_csv_teamstats_03.py,03_extract_csv_teamstats_03.py,スクリプトファイル,チーム統計のCSV抽出（詳細不明）
+z_old_script/04_merge_stats_csvs_01.py,04_merge_stats_csvs_01.py,スクリプトファイル,複数の統計CSVファイルをマージ（詳細不明）
+z_old_script/copilot_01.py,copilot_01.py,スクリプトファイル,Copilot関連のテスト/実験スクリプト（推定）
+z_old_script/extract_to_csv_original.py,extract_to_csv_original.py,スクリプトファイル,CSV抽出のオリジナルスクリプト（詳細不明）
+z_old_script/gpt.py,gpt.py,スクリプトファイル,GPT関連のテスト/実験スクリプト（推定）
+z_old_script/gpt2.py,gpt2.py,スクリプトファイル,GPT関連のテスト/実験スクリプト（推定）
+z_old_script/progress_results_01.py,progress_results_01.py,スクリプトファイル,進捗結果処理（詳細不明）
+z_old_script/save_html_sources original.py,save_html_sources original.py,スクリプトファイル,HTMLソース保存のオリジナルスクリプト（詳細不明）
+z_old_script/stats_per_goal_01.py,stats_per_goal_01.py,スクリプトファイル,ゴールあたりの統計計算（詳細不明）
+z_old_script/stats_per_goal_02.py,stats_per_goal_02.py,スクリプトファイル,ゴールあたりの統計計算（詳細不明）
+z_old_script/team_strength_01.py,team_strength_01.py,スクリプトファイル,チーム強さ計算（詳細不明）
+z_old_script/team_strength_02.py,team_strength_02.py,スクリプトファイル,チーム強さ計算（詳細不明）
+ドキュメント類/0502_ひろうけいそく_ひながた.xlsx,0502_ひろうけいそく_ひながた.xlsx,データファイル,疲労計測テンプレート (Excel)
+ドキュメント類/0510/0510_J1_2025_予想結果_第13節_第15節.xlsx,0510_J1_2025_予想結果_第13節_第15節.xlsx,データファイル,2025年J1予想結果（第13節〜第15節） (Excel)
+ドキュメント類/0510/GPTレポート_予測分析項目一覧_ステータス付き.xlsx,GPTレポート_予測分析項目一覧_ステータス付き.xlsx,データファイル,GPTレポート予測分析項目一覧（ステータス付き） (Excel)
+ドキュメント類/0510/J1_2025_スタッツ予測_再修正版.xlsx,J1_2025_スタッツ予測_再修正版.xlsx,データファイル,2025年J1スタッツ予測（再修正版） (Excel)
+ドキュメント類/0510/J1_2025_スタッツ予測_勝率付き.xlsx,J1_2025_スタッツ予測_勝率付き.xlsx,データファイル,2025年J1スタッツ予測（勝率付き） (Excel)
+ドキュメント類/ppda資料.docx,ppda資料.docx,データファイル,PPDA資料 (Word)
+ドキュメント類/TT_hand_スタッツ素材.xlsx,TT_hand_スタッツ素材.xlsx,データファイル,TTハンドスタッツ素材 (Excel)
+ドキュメント類/TT_prjシステム進行.docx,TT_prjシステム進行.docx,データファイル,TTプロジェクトシステム進行資料 (Word)
+ドキュメント類/メモ.txt,メモ.txt,データファイル,開発メモ（`webdriver-manager` インストール関連）
+ドキュメント類/作業用パレット.txt,作業用パレット.txt,データファイル,Jリーグ公式サイトのスクレイピング対象URLとファイル名のリスト
+日程_結果_J1_2024_前半.txt,日程_結果_J1_2024_前半.txt,データファイル,2024年J1リーグ前半戦の日程・結果（テキスト形式）
+日程_結果_J1_2024_後半.txt,日程_結果_J1_2024_後半.txt,データファイル,2024年J1リーグ後半戦の日程・結果（テキスト形式）
+日程_結果_J1_2025_前半.txt,日程_結果_J1_2025_前半.txt,データファイル,2025年J1リーグ前半戦の日程・結果（テキスト形式）
+日程_結果1.txt,日程_結果1.txt,データファイル,日程・結果（詳細不明）
+日程_結果J1_2025_後半.txt,日程_結果J1_2025_後半.txt,データファイル,2025年J1リーグ後半戦の日程・結果（テキスト形式）
+試合結果_拡張.csv,試合結果_拡張.csv,データファイル,拡張された試合結果データ
+試合結果_節日付付き.csv,試合結果_節日付付き.csv,データファイル,節と日付が付与された試合結果データ

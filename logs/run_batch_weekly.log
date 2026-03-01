@@ -1,0 +1,302 @@
+[PREFLIGHT] data.j-league.or.jp : OK
+[PREFLIGHT] www.jleague.jp : OK
+[STEP] build_absence_impact.py : 欠場管理CSVと選手マスタから欠場影響CSVを更新
+==> /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/build_absence_impact.py /Users/dev_tomo/Desktop/tt_prj_restart/data/manual/欠場管理リスト.csv /Users/dev_tomo/Desktop/tt_prj_restart/data/manual/jleague_club_players.csv --out-dir /Users/dev_tomo/Desktop/tt_prj_restart/data/manual --season 2026 --asof-date 2026-02-28 --snapshot-dir /Users/dev_tomo/Desktop/tt_prj_restart/data/absence_snapshots
+[OK] absence snapshot: /Users/dev_tomo/Desktop/tt_prj_restart/data/absence_snapshots/absences_with_impact_asof_20260228.csv
+[OK] team_shares snapshot: /Users/dev_tomo/Desktop/tt_prj_restart/data/absence_snapshots/team_shares_asof_20260228.csv
+[OK] absences_with_impact: /Users/dev_tomo/Desktop/tt_prj_restart/data/manual/absences_with_impact.csv rows=26
+[OK] team_shares: /Users/dev_tomo/Desktop/tt_prj_restart/data/manual/team_shares.csv rows=22
+[INFO] matched=25, fuzzy=0, not_found=1
+[INFO] build_absence_impact.py : success
+[RESULT] build_absence_impact.py : OK
+=== League: j1 / Season: 2026 ===
+[STEP] 01_update_match_results.py : 試合結果CSVを更新（終了試合のスコア反映）
+==> LEAGUE=j1 SEASON_YEAR=2026 /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/01_update_match_results.py
+試合結果をスクレイピング中: https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=35
+出力CSVパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv
+タブURLを取得します: https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=36
+HTMLコンテンツを一時ファイル /Users/dev_tomo/Desktop/tt_prj_restart/data/temp_match_results.html に保存しました。
+BeautifulSoupで試合結果テーブルを正常に検出しました。手動でデータを抽出します。
+BeautifulSoupでテーブルデータを正常に抽出しました。
+警告: スコア抽出失敗 489 件（先頭10件）: [{'節': '第４節第２日', 'home_team': '横浜FM', 'away_team': '東京Ｖ', 'score_full': 'vs'}, {'節': '第４節第２日', 'home_team': '浦和', 'away_team': '鹿島', 'score_full': 'vs'}, {'節': '第４節第２日', 'home_team': 'FC東京', 'away_team': '柏', 'score_full': 'vs'}, {'節': '第４節第２日', 'home_team': 'Ｇ大阪', 'away_team': '清水', 'score_full': 'vs'}, {'節': '第４節第２日', 'home_team': '長崎', 'away_team': 'Ｃ大阪', 'score_full': 'vs'}, {'節': '第４節第３日', 'home_team': '川崎Ｆ', 'away_team': '水戸', 'score_full': 'vs'}, {'節': '第４節第３日', 'home_team': '岡山', 'away_team': '名古屋', 'score_full': 'vs'}, {'節': '第５節第１日', 'home_team': '千葉', 'away_team': '柏', 'score_full': 'vs'}, {'節': '第５節第１日', 'home_team': 'FC東京', 'away_team': '横浜FM', 'score_full': 'vs'}, {'節': '第５節第１日', 'home_team': '浦和', 'away_team': '水戸', 'score_full': 'vs'}]
+リーグ所属フィルタをスキップ: TRANSITION_2026_MODE
+データをCSVに保存しようとしています: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv
+SUCCESS: 試合結果データを /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv に保存しました。 rows=580
+[INFO] 01_update_match_results.py : success
+[RESULT] 01_update_match_results.py : OK
+[STEP] 02_update_rankings.py : 順位表CSVを更新（勝点・得失点など）
+==> LEAGUE=j1 SEASON_YEAR=2026 /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/02_update_rankings.py
+[INFO] competitionIdを複数候補で選択しました: 明治安田Ｊ１百年構想リーグ EASTグループ(707) / 明治安田Ｊ１百年構想リーグ WESTグループ(708) yearId=20261
+[INFO] 順位表テーブル検出: 1件 / 連結行数=11
+[OK] comp=707 最新節 を取得しました。
+[INFO] 順位表テーブル検出: 1件 / 連結行数=11
+[OK] comp=708 最新節 を取得しました。
+出力: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_rankings_20260228.csv
+[INFO] 02_update_rankings.py : success
+[RESULT] 02_update_rankings.py : OK
+[STEP] 20_update_stats.py : チームスタッツCSVを更新（予測特徴量の基礎データ）
+==> LEAGUE=j1 SEASON_YEAR=2026 STATS_ASOF_DATE=2026-02-28 /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/20_update_stats.py
+[INFO] stats source: league=j1, source=j1, season=2026
+TEMP_HTML_DIRのパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/temp_stats_html
+スクレイピング中: 1試合平均シュート数 from https://www.jleague.jp/stats/j1/club/2026/shoot_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均枠内シュート数 from https://www.jleague.jp/stats/j1/club/2026/shoot_on_target_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: シュート決定率 from https://www.jleague.jp/stats/j1/club/2026/shoot_rate/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均得点数 from https://www.jleague.jp/stats/j1/club/2026/score_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均パス数 from https://www.jleague.jp/stats/j1/club/2026/pass_count_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: パス成功率 from https://www.jleague.jp/stats/j1/club/2026/pass_rate/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均ドリブル数 from https://www.jleague.jp/stats/j1/club/2026/dribble_count_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: ドリブル成功率 from https://www.jleague.jp/stats/j1/club/2026/dribble_rate/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均スルーパス数 from https://www.jleague.jp/stats/j1/club/2026/through_pass_count_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: スルーパス成功率 from https://www.jleague.jp/stats/j1/club/2026/through_pass_rate/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均クロス数 from https://www.jleague.jp/stats/j1/club/2026/cross_count_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均空中戦勝利数 from https://www.jleague.jp/stats/j1/club/2026/air_battle_win_count_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 空中戦勝率 from https://www.jleague.jp/stats/j1/club/2026/air_battle_win_rate/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 平均ボール支配率 from https://www.jleague.jp/stats/j1/club/2026/ball_rate/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均チャンスクリエイト数 from https://www.jleague.jp/stats/j1/club/2026/chance_create_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均1vs1勝利数 from https://www.jleague.jp/stats/j1/club/2026/one_on_one_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均こぼれ球奪取数 from https://www.jleague.jp/stats/j1/club/2026/recovery_count_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: ゴール期待値 from https://www.jleague.jp/stats/j1/club/2026/expected_goals/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均走行距離 from https://www.jleague.jp/stats/j1/club/2026/distance_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均スプリント回数 from https://www.jleague.jp/stats/j1/club/2026/sprint_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均Atスプリント回数 from https://www.jleague.jp/stats/j1/club/2026/at_sprint_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均Mtスプリント回数 from https://www.jleague.jp/stats/j1/club/2026/mt_sprint_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均Dtスプリント回数 from https://www.jleague.jp/stats/j1/club/2026/dt_sprint_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均ポゼッション時の走行距離 from https://www.jleague.jp/stats/j1/club/2026/possession_distance_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均ポゼッション時のスプリント回数 from https://www.jleague.jp/stats/j1/club/2026/possession_sprint_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均被シュート数 from https://www.jleague.jp/stats/j1/club/2026/suffer_shoot_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均被枠内シュート数 from https://www.jleague.jp/stats/j1/club/2026/suffer_shoot_on_target_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均失点数 from https://www.jleague.jp/stats/j1/club/2026/lost_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均クリア数 from https://www.jleague.jp/stats/j1/club/2026/clear_count_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均タックル数 from https://www.jleague.jp/stats/j1/club/2026/tackle_count_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: タックル成功率 from https://www.jleague.jp/stats/j1/club/2026/tackle_rate/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均ブロック数 from https://www.jleague.jp/stats/j1/club/2026/block_count_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均インターセプト数 from https://www.jleague.jp/stats/j1/club/2026/intercept_count_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 被ゴール期待値 from https://www.jleague.jp/stats/j1/club/2026/expected_goals_against/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 1試合平均被ゴール期待値 from https://www.jleague.jp/stats/j1/club/2026/expected_goals_against_per_game/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: 被ゴール期待値 ※PKを除く from https://www.jleague.jp/stats/j1/club/2026/expected_goals_against_excl_pk/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+スクレイピング中: クリーンシート総数 from https://www.jleague.jp/stats/j1/club/2026/clean_sheet/
+現在のページで抽出されたスタッツ数: 20 (未公開値=0, 変換失敗=0, 対象行=20)
+[METRIC_QC] attempted_metrics=37, succeeded_metrics=37, success_rate=100.00%
+[VALUE_QC] teams=20, stat_columns=37, filled_cells=740/740, fill_rate=100.00%
+最終的なデータフレームの行数: 20
+[SNAPSHOT] stats snapshot saved: /Users/dev_tomo/Desktop/tt_prj_restart/data/stats_snapshots/team_master_stats_j1_2026_asof_20260228.csv
+SUCCESS: すべてのチームスタッツを /Users/dev_tomo/Desktop/tt_prj_restart/data/team_master_stats_j1_2026.csv に集約しました。
+[INFO] 20_update_stats.py : success
+[RESULT] 20_update_stats.py : OK
+[STEP] 01_update_match_schedule.py : 今後日程CSVを更新（試合日時・対戦カード）
+==> LEAGUE=j1 SEASON_YEAR=2026 /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/01_update_match_schedule.py
+試合日程をスクレイピング中: https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=35
+出力CSVパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_upcoming.csv
+SUCCESS: 試合日程データを /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_upcoming.csv に保存しました。 rows=179
+[INFO] 01_update_match_schedule.py : success
+[RESULT] 01_update_match_schedule.py : OK
+[STEP] 06_calculate_fatigue.py : 疲労スコアCSVを作成/更新（連戦・移動の影響）
+==> LEAGUE=j1 SEASON_YEAR=2026 /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/06_calculate_fatigue.py
+DATA_DIRのパス: /Users/dev_tomo/Desktop/tt_prj_restart/data
+UPCOMING_CSVのパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_upcoming.csv
+LATEST_RESULTS_CSVのパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv
+TEAM_TRAVEL_DISTANCES_CSVのパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/team_travel_distances.csv
+試合日程データを /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_upcoming.csv および /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv から読み込みました。
+移動距離データを /Users/dev_tomo/Desktop/tt_prj_restart/data/team_travel_distances.csv から読み込みました。
+疲労度スコアを /Users/dev_tomo/Desktop/tt_prj_restart/data/team_fatigue_scores_j1_2026.csv に保存しました。
+[INFO] 06_calculate_fatigue.py : success
+[RESULT] 06_calculate_fatigue.py : OK
+[STEP] 03_rankings_motivation.py : モチベーション関連指標を更新（順位文脈の補助特徴量）
+==> LEAGUE=j1 SEASON_YEAR=2026 /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/03_rankings_motivation.py
+[INFO] motivation window=3w team_match=10/20
+[INFO] motivation window=5w team_match=10/20
+出力: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_motivation.csv
+[INFO] 03_rankings_motivation.py : success
+[RESULT] 03_rankings_motivation.py : OK
+=== League: j2 / Season: 2026 ===
+[STEP] 01_update_match_results.py : 試合結果CSVを更新（終了試合のスコア反映）
+==> LEAGUE=j2 SEASON_YEAR=2026 /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/01_update_match_results.py
+試合結果をスクレイピング中: https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=36
+出力CSVパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_latest_results.csv
+タブURLを取得します: https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=35
+HTMLコンテンツを一時ファイル /Users/dev_tomo/Desktop/tt_prj_restart/data/temp_match_results.html に保存しました。
+BeautifulSoupで試合結果テーブルを正常に検出しました。手動でデータを抽出します。
+BeautifulSoupでテーブルデータを正常に抽出しました。
+警告: スコア抽出失敗 489 件（先頭10件）: [{'節': '第４節第１日', 'home_team': '仙台', 'away_team': '八戸', 'score_full': 'vs'}, {'節': '第４節第１日', 'home_team': '栃木Ｃ', 'away_team': '湘南', 'score_full': 'vs'}, {'節': '第４節第１日', 'home_team': '群馬', 'away_team': '秋田', 'score_full': 'vs'}, {'節': '第４節第１日', 'home_team': '札幌', 'away_team': '岐阜', 'score_full': 'vs'}, {'節': '第４節第１日', 'home_team': '甲府', 'away_team': '松本', 'score_full': 'vs'}, {'節': '第４節第１日', 'home_team': '長野', 'away_team': '大宮', 'score_full': 'vs'}, {'節': '第４節第１日', 'home_team': '磐田', 'away_team': '福島', 'score_full': 'vs'}, {'節': '第４節第１日', 'home_team': '富山', 'away_team': 'FC大阪', 'score_full': 'vs'}, {'節': '第４節第１日', 'home_team': '愛媛', 'away_team': '徳島', 'score_full': 'vs'}, {'節': '第４節第１日', 'home_team': '北九州', 'away_team': '滋賀', 'score_full': 'vs'}]
+リーグ所属フィルタをスキップ: TRANSITION_2026_MODE
+データをCSVに保存しようとしています: /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_latest_results.csv
+SUCCESS: 試合結果データを /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_latest_results.csv に保存しました。 rows=580
+[INFO] 01_update_match_results.py : success
+[RESULT] 01_update_match_results.py : OK
+[STEP] 02_update_rankings.py : 順位表CSVを更新（勝点・得失点など）
+==> LEAGUE=j2 SEASON_YEAR=2026 /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/02_update_rankings.py
+[INFO] competitionIdを複数候補で選択しました: 明治安田Ｊ２・Ｊ３百年構想リーグ EAST-Aグループ(710) / 明治安田Ｊ２・Ｊ３百年構想リーグ EAST-Bグループ(711) / 明治安田Ｊ２・Ｊ３百年構想リーグ WEST-Aグループ(712) / 明治安田Ｊ２・Ｊ３百年構想リーグ WEST-Bグループ(713) yearId=20261
+[INFO] 順位表テーブル検出: 1件 / 連結行数=11
+[OK] comp=710 最新節 を取得しました。
+[INFO] 順位表テーブル検出: 1件 / 連結行数=11
+[OK] comp=711 最新節 を取得しました。
+[INFO] 順位表テーブル検出: 1件 / 連結行数=11
+[OK] comp=712 最新節 を取得しました。
+[INFO] 順位表テーブル検出: 1件 / 連結行数=11
+[OK] comp=713 最新節 を取得しました。
+出力: /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_rankings_20260228.csv
+[INFO] 02_update_rankings.py : success
+[RESULT] 02_update_rankings.py : OK
+[STEP] 20_update_stats.py : チームスタッツCSVを更新（予測特徴量の基礎データ）
+==> LEAGUE=j2 SEASON_YEAR=2026 STATS_ASOF_DATE=2026-02-28 /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/20_update_stats.py
+[INFO] stats source: league=j2, source=j2j3, season=2026
+TEMP_HTML_DIRのパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/temp_stats_html
+スクレイピング中: 1試合平均シュート数 from https://www.jleague.jp/stats/j2j3/club/2026/shoot_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均枠内シュート数 from https://www.jleague.jp/stats/j2j3/club/2026/shoot_on_target_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: シュート決定率 from https://www.jleague.jp/stats/j2j3/club/2026/shoot_rate/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均得点数 from https://www.jleague.jp/stats/j2j3/club/2026/score_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均パス数 from https://www.jleague.jp/stats/j2j3/club/2026/pass_count_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: パス成功率 from https://www.jleague.jp/stats/j2j3/club/2026/pass_rate/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均ドリブル数 from https://www.jleague.jp/stats/j2j3/club/2026/dribble_count_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: ドリブル成功率 from https://www.jleague.jp/stats/j2j3/club/2026/dribble_rate/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均スルーパス数 from https://www.jleague.jp/stats/j2j3/club/2026/through_pass_count_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: スルーパス成功率 from https://www.jleague.jp/stats/j2j3/club/2026/through_pass_rate/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均クロス数 from https://www.jleague.jp/stats/j2j3/club/2026/cross_count_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均空中戦勝利数 from https://www.jleague.jp/stats/j2j3/club/2026/air_battle_win_count_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 空中戦勝率 from https://www.jleague.jp/stats/j2j3/club/2026/air_battle_win_rate/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 平均ボール支配率 from https://www.jleague.jp/stats/j2j3/club/2026/ball_rate/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均チャンスクリエイト数 from https://www.jleague.jp/stats/j2j3/club/2026/chance_create_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均1vs1勝利数 from https://www.jleague.jp/stats/j2j3/club/2026/one_on_one_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均こぼれ球奪取数 from https://www.jleague.jp/stats/j2j3/club/2026/recovery_count_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: ゴール期待値 from https://www.jleague.jp/stats/j2j3/club/2026/expected_goals/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均走行距離 from https://www.jleague.jp/stats/j2j3/club/2026/distance_per_game/
+現在のページで抽出されたスタッツ数: 0 (未公開値=10, 変換失敗=0, 対象行=10)
+警告: 1試合平均走行距離 は全チーム未公開（'-'）のためスキップします。
+スクレイピング中: 1試合平均スプリント回数 from https://www.jleague.jp/stats/j2j3/club/2026/sprint_per_game/
+現在のページで抽出されたスタッツ数: 0 (未公開値=10, 変換失敗=0, 対象行=10)
+警告: 1試合平均スプリント回数 は全チーム未公開（'-'）のためスキップします。
+スクレイピング中: 1試合平均Atスプリント回数 from https://www.jleague.jp/stats/j2j3/club/2026/at_sprint_per_game/
+現在のページで抽出されたスタッツ数: 0 (未公開値=10, 変換失敗=0, 対象行=10)
+警告: 1試合平均Atスプリント回数 は全チーム未公開（'-'）のためスキップします。
+スクレイピング中: 1試合平均Mtスプリント回数 from https://www.jleague.jp/stats/j2j3/club/2026/mt_sprint_per_game/
+現在のページで抽出されたスタッツ数: 0 (未公開値=10, 変換失敗=0, 対象行=10)
+警告: 1試合平均Mtスプリント回数 は全チーム未公開（'-'）のためスキップします。
+スクレイピング中: 1試合平均Dtスプリント回数 from https://www.jleague.jp/stats/j2j3/club/2026/dt_sprint_per_game/
+現在のページで抽出されたスタッツ数: 0 (未公開値=10, 変換失敗=0, 対象行=10)
+警告: 1試合平均Dtスプリント回数 は全チーム未公開（'-'）のためスキップします。
+スクレイピング中: 1試合平均ポゼッション時の走行距離 from https://www.jleague.jp/stats/j2j3/club/2026/possession_distance_per_game/
+現在のページで抽出されたスタッツ数: 0 (未公開値=10, 変換失敗=0, 対象行=10)
+警告: 1試合平均ポゼッション時の走行距離 は全チーム未公開（'-'）のためスキップします。
+スクレイピング中: 1試合平均ポゼッション時のスプリント回数 from https://www.jleague.jp/stats/j2j3/club/2026/possession_sprint_per_game/
+現在のページで抽出されたスタッツ数: 0 (未公開値=10, 変換失敗=0, 対象行=10)
+警告: 1試合平均ポゼッション時のスプリント回数 は全チーム未公開（'-'）のためスキップします。
+スクレイピング中: 1試合平均被シュート数 from https://www.jleague.jp/stats/j2j3/club/2026/suffer_shoot_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均被枠内シュート数 from https://www.jleague.jp/stats/j2j3/club/2026/suffer_shoot_on_target_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均失点数 from https://www.jleague.jp/stats/j2j3/club/2026/lost_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均クリア数 from https://www.jleague.jp/stats/j2j3/club/2026/clear_count_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均タックル数 from https://www.jleague.jp/stats/j2j3/club/2026/tackle_count_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: タックル成功率 from https://www.jleague.jp/stats/j2j3/club/2026/tackle_rate/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均ブロック数 from https://www.jleague.jp/stats/j2j3/club/2026/block_count_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均インターセプト数 from https://www.jleague.jp/stats/j2j3/club/2026/intercept_count_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 被ゴール期待値 from https://www.jleague.jp/stats/j2j3/club/2026/expected_goals_against/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 1試合平均被ゴール期待値 from https://www.jleague.jp/stats/j2j3/club/2026/expected_goals_against_per_game/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: 被ゴール期待値 ※PKを除く from https://www.jleague.jp/stats/j2j3/club/2026/expected_goals_against_excl_pk/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+スクレイピング中: クリーンシート総数 from https://www.jleague.jp/stats/j2j3/club/2026/clean_sheet/
+現在のページで抽出されたスタッツ数: 40 (未公開値=0, 変換失敗=0, 対象行=40)
+[METRIC_QC] attempted_metrics=37, succeeded_metrics=30, success_rate=81.08%
+[FILTER] j2 teams only: 39 -> 20 (source=/Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_upcoming.csv)
+[VALUE_QC] teams=20, stat_columns=30, filled_cells=600/600, fill_rate=100.00%
+最終的なデータフレームの行数: 20
+[SNAPSHOT] stats snapshot saved: /Users/dev_tomo/Desktop/tt_prj_restart/data/stats_snapshots/team_master_stats_j2_2026_asof_20260228.csv
+SUCCESS: すべてのチームスタッツを /Users/dev_tomo/Desktop/tt_prj_restart/data/team_master_stats_j2_2026.csv に集約しました。
+[INFO] 20_update_stats.py : success
+[RESULT] 20_update_stats.py : OK
+[STEP] 01_update_match_schedule.py : 今後日程CSVを更新（試合日時・対戦カード）
+==> LEAGUE=j2 SEASON_YEAR=2026 /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/01_update_match_schedule.py
+試合日程をスクレイピング中: https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=36
+出力CSVパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_upcoming.csv
+[INFO] 固定チームリストを適用: league=j2, season=2026, teams=20
+リーグ所属フィルタを適用: 380 -> 90
+除外チーム(21): FC大阪, 北九州, 奈良, 山口, 岐阜, 愛媛, 未定, 松本, 栃木SC, 滋賀, 熊本, 琉球, 相模原, 福島, 群馬, 讃岐, 金沢, 長野, 高知, 鳥取, 鹿児島
+SUCCESS: 試合日程データを /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_upcoming.csv に保存しました。 rows=78
+[INFO] 01_update_match_schedule.py : success
+[RESULT] 01_update_match_schedule.py : OK
+[STEP] 06_calculate_fatigue.py : 疲労スコアCSVを作成/更新（連戦・移動の影響）
+==> LEAGUE=j2 SEASON_YEAR=2026 /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/06_calculate_fatigue.py
+DATA_DIRのパス: /Users/dev_tomo/Desktop/tt_prj_restart/data
+UPCOMING_CSVのパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_upcoming.csv
+LATEST_RESULTS_CSVのパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_latest_results.csv
+TEAM_TRAVEL_DISTANCES_CSVのパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/team_travel_distances.csv
+試合日程データを /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_upcoming.csv および /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_latest_results.csv から読み込みました。
+移動距離データを /Users/dev_tomo/Desktop/tt_prj_restart/data/team_travel_distances.csv から読み込みました。
+疲労度スコアを /Users/dev_tomo/Desktop/tt_prj_restart/data/team_fatigue_scores_j2_2026.csv に保存しました。
+[INFO] 06_calculate_fatigue.py : success
+[RESULT] 06_calculate_fatigue.py : OK
+[STEP] 03_rankings_motivation.py : モチベーション関連指標を更新（順位文脈の補助特徴量）
+==> LEAGUE=j2 SEASON_YEAR=2026 /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/03_rankings_motivation.py
+[INFO] motivation window=3w team_match=10/40
+[INFO] motivation window=5w team_match=10/40
+出力: /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_motivation.csv
+[INFO] 03_rankings_motivation.py : success
+[RESULT] 03_rankings_motivation.py : OK
+[INFO] 完了（全STEP成功）
+=== SUMMARY ===
+OK: 13
+ERROR: 0
+==> /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/build_batch_log_report.py --input /Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_weekly.log --output /Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_weekly_report.html --title 週次バッチ ログ警告レポート
+[INFO] log report generated: /Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_weekly_report.html

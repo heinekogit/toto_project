@@ -1,0 +1,11 @@
+save_team_html.py は、Jリーグ各クラブの「選手ページ」HTMLを一括保存するだけのスクリプトです。
+具体的には：
+URL https://www.jleague.jp/club/{クラブID}/profile/#player を順にアクセス
+取得したHTMLを 00_raw_html/ に club_id.html として保存
+1秒待機しながら全クラブ分を回す
+つまり「選手データ解析の前段として、HTML素材を集めるための保存スクリプト」です。
+この時点では解析やCSV化はしていません。
+
+
+
+

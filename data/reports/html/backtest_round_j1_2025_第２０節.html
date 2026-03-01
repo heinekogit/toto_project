@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang='ja'>
+<head>
+<meta charset='utf-8'>
+<title>Backtest J1 2025 第２０節: backtest_j1_2025_rounds.csv</title>
+<style>
+body{font-family:system-ui, -apple-system, sans-serif; margin:24px;}
+table{border-collapse:collapse; width:100%; font-size:12px;}
+th,td{border:1px solid #ddd; padding:6px; text-align:left;}
+thead th{background:#f5f5f5; position:sticky; top:0;}
+tr.desc-row td{background:#fcfcfc; color:#666; font-size:11px;}
+td.is-correct-true{color:#c1121f; font-weight:700;}
+.summary{margin:8px 0 12px; font-size:13px;}
+.summary b{color:#c1121f;}
+</style>
+</head>
+<body>
+<div style='margin-bottom:12px;'><a href='../index.html'>← indexに戻る</a></div>
+<h2>Backtest J1 2025 第２０節: backtest_j1_2025_rounds.csv</h2>
+<div class='summary'>的中数: <b>6/10</b> / 的中率: <b>60.0%</b></div>
+<table>
+<thead><tr>
+<th>節</th>
+<th>match_id</th>
+<th>datetime</th>
+<th>home_team</th>
+<th>away_team</th>
+<th>home_score</th>
+<th>away_score</th>
+<th>home_advantage_diff</th>
+<th>is_home_advantage_positive</th>
+<th>prob_home_win</th>
+<th>prob_draw</th>
+<th>prob_away_win</th>
+<th>predicted_highest_prob_result</th>
+<th>actual_result</th>
+<th>is_correct</th>
+<th>predicted_result</th>
+</tr></thead>
+<tbody>
+<tr class='desc-row'>
+<td>節</td>
+<td>試合ID</td>
+<td>試合日時</td>
+<td>ホーム</td>
+<td>アウェイ</td>
+<td>ホーム得点</td>
+<td>アウェイ得点</td>
+<td></td>
+<td></td>
+<td>ホーム勝ち確率</td>
+<td>引き分け確率</td>
+<td>アウェイ勝ち確率</td>
+<td>予測結果</td>
+<td>実際の結果</td>
+<td>的中</td>
+<td></td>
+</tr>
+<tr>
+<td>第２０節第１日</td>
+<td>j1_2025_04161933_浦和_京都</td>
+<td>2025-04-16 19:33:00</td>
+<td>浦和</td>
+<td>京都</td>
+<td>2</td>
+<td>1</td>
+<td>0.3684</td>
+<td>True</td>
+<td>0.364</td>
+<td>0.259</td>
+<td>0.377</td>
+<td>A</td>
+<td>H</td>
+<td>False</td>
+<td>A</td>
+</tr>
+<tr>
+<td>第２０節第２日</td>
+<td>j1_2025_06141733_湘南_町田</td>
+<td>2025-06-14 17:33:00</td>
+<td>湘南</td>
+<td>町田</td>
+<td>1</td>
+<td>2</td>
+<td>-0.4737</td>
+<td>False</td>
+<td>0.296</td>
+<td>0.245</td>
+<td>0.46</td>
+<td>A</td>
+<td>A</td>
+<td class='is-correct-true'>True</td>
+<td>A</td>
+</tr>
+<tr>
+<td>第２０節第２日</td>
+<td>j1_2025_06141803_横浜FC_川崎Ｆ</td>
+<td>2025-06-14 18:03:00</td>
+<td>横浜FC</td>
+<td>川崎Ｆ</td>
+<td>0</td>
+<td>1</td>
+<td>-0.2632</td>
+<td>False</td>
+<td>0.188</td>
+<td>0.22</td>
+<td>0.592</td>
+<td>A</td>
+<td>A</td>
+<td class='is-correct-true'>True</td>
+<td>A</td>
+</tr>
+<tr>
+<td>第２０節第２日</td>
+<td>j1_2025_06141803_鹿島_広島</td>
+<td>2025-06-14 18:03:00</td>
+<td>鹿島</td>
+<td>広島</td>
+<td>1</td>
+<td>1</td>
+<td>0.4737</td>
+<td>True</td>
+<td>0.52</td>
+<td>0.234</td>
+<td>0.246</td>
+<td>H</td>
+<td>D</td>
+<td>False</td>
+<td>H</td>
+</tr>
+<tr>
+<td>第２０節第２日</td>
+<td>j1_2025_06141903_FC東京_Ｃ大阪</td>
+<td>2025-06-14 19:03:00</td>
+<td>FC東京</td>
+<td>Ｃ大阪</td>
+<td>2</td>
+<td>2</td>
+<td>0.3158</td>
+<td>True</td>
+<td>0.344</td>
+<td>0.255</td>
+<td>0.402</td>
+<td>D</td>
+<td>D</td>
+<td class='is-correct-true'>True</td>
+<td>D</td>
+</tr>
+<tr>
+<td>第２０節第３日</td>
+<td>j1_2025_06151403_新潟_横浜FM</td>
+<td>2025-06-15 14:03:00</td>
+<td>新潟</td>
+<td>横浜FM</td>
+<td>1</td>
+<td>0</td>
+<td>-0.1053</td>
+<td>False</td>
+<td>0.462</td>
+<td>0.244</td>
+<td>0.294</td>
+<td>H</td>
+<td>H</td>
+<td class='is-correct-true'>True</td>
+<td>H</td>
+</tr>
+<tr>
+<td>第２０節第３日</td>
+<td>j1_2025_06151803_神戸_名古屋</td>
+<td>2025-06-15 18:03:00</td>
+<td>神戸</td>
+<td>名古屋</td>
+<td>2</td>
+<td>1</td>
+<td>1.1053</td>
+<td>True</td>
+<td>0.573</td>
+<td>0.224</td>
+<td>0.203</td>
+<td>H</td>
+<td>H</td>
+<td class='is-correct-true'>True</td>
+<td>H</td>
+</tr>
+<tr>
+<td>第２０節第３日</td>
+<td>j1_2025_06151804_東京Ｖ_柏</td>
+<td>2025-06-15 18:04:00</td>
+<td>東京Ｖ</td>
+<td>柏</td>
+<td>0</td>
+<td>3</td>
+<td>-0.3684</td>
+<td>False</td>
+<td>0.205</td>
+<td>0.224</td>
+<td>0.571</td>
+<td>A</td>
+<td>A</td>
+<td class='is-correct-true'>True</td>
+<td>A</td>
+</tr>
+<tr>
+<td>第２０節第３日</td>
+<td>j1_2025_06151804_岡山_福岡</td>
+<td>2025-06-15 18:04:00</td>
+<td>岡山</td>
+<td>福岡</td>
+<td>0</td>
+<td>1</td>
+<td>0.2632</td>
+<td>True</td>
+<td>0.399</td>
+<td>0.255</td>
+<td>0.346</td>
+<td>D</td>
+<td>A</td>
+<td>False</td>
+<td>D</td>
+</tr>
+<tr>
+<td>第２０節第３日</td>
+<td>j1_2025_06151833_清水_Ｇ大阪</td>
+<td>2025-06-15 18:33:00</td>
+<td>清水</td>
+<td>Ｇ大阪</td>
+<td>0</td>
+<td>0</td>
+<td>0.2632</td>
+<td>True</td>
+<td>0.403</td>
+<td>0.254</td>
+<td>0.343</td>
+<td>H</td>
+<td>D</td>
+<td>False</td>
+<td>H</td>
+</tr>
+</tbody></table>
+</body></html>

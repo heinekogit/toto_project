@@ -1,0 +1,4 @@
+﻿match_id,home_team,away_team,home_advantage_diff,prob_home_win,prob_draw,prob_away_win,prob_home_win_after,prob_draw_after,prob_away_win_after,sum_before,sum_after
+dummy_001,TeamA,TeamB,0.8,0.46,0.3,0.24,0.47440000000000004,0.3072,0.21839999999999998,1.0,1.0
+dummy_002,TeamC,TeamD,-0.55,0.33,0.34,0.33,0.3201,0.33505,0.34485,1.0,1.0
+dummy_003,TeamE,TeamF,0.1,0.38,0.29,0.33,0.38180000000000003,0.2909,0.32730000000000004,1.0,1.0

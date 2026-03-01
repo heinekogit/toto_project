@@ -1,0 +1,4 @@
+﻿metric,value
+accuracy,0.3631578947368421
+log_loss_3class,1.2105927890351686
+brier_score_3class,0.754813944740612

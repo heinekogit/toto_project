@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang='ja'>
+<head>
+<meta charset='utf-8'>
+<title>作業管理ページ</title>
+<style>
+body{font-family:system-ui, -apple-system, sans-serif; margin:24px;}
+.box{border:2px solid #333; padding:16px; margin-bottom:16px;}
+.row{margin:8px 0;}
+.label{font-weight:600; margin-right:8px;}
+a{color:#1a73e8; text-decoration:none;}
+</style>
+</head>
+<body>
+<h2>作業管理ページ</h2>
+<div class='row'>更新: 2026-02-28 08:25</div>
+<div class='box'>
+<div class='row'><span class='label'>準備</span>週次バッチ起動: <code>/scripts/run_batch_weekly.sh</code></div>
+<div class='row'><span class='label'>準備</span>試合直前バッチ: <code>/scripts/run_batch_matchday.sh</code></div>
+<div class='row'><span class='label'>手動実行(ログ保存)</span><code>SEASON_YEAR=2026 LEAGUES='j1 j2' ./scripts/run_batch_weekly.sh 2>&1 | tee logs/run_batch_weekly.log</code></div>
+<div class='row'><span class='label'>手動実行(ログ保存)</span><code>SEASON_YEAR=2026 LEAGUES='j1 j2' ./scripts/run_batch_matchday.sh 2>&1 | tee logs/run_batch_matchday.log</code></div>
+<div class='row'><span class='label'>ログ確認</span><code>tail -n 80 logs/run_batch_weekly.log</code> / <code>tail -n 80 logs/run_batch_matchday.log</code></div>
+<div class='row'><span class='label'>結果確認</span><code>tail -n 20 j1_2026_predictions.csv</code> / <code>tail -n 20 j2_2026_predictions.csv</code></div>
+<div class='row'><span class='label'>品質確認</span><code>ls data/reports/merge_qc/j1_2026</code> / <code>ls data/reports/merge_qc/j2_2026</code></div>
+</div>
+<div class='box'>
+<div class='row'><span class='label'>予想</span>入力: 節 / リーグ / 年</div>
+</div>
+<div class='box'>
+<div class='row'><span class='label'>予想レポート</span><a href='html/predictions_view.html'>結果予想レポート</a></div>
+<div class='row'><span class='label'>解析内訳</span><a href='html/report_view.html'>解析内訳等レポート</a></div>
+<div class='row'><span class='label'>バックテスト</span><a href='html/backtest_view.html'>バックテスト</a></div>
+<div class='row'><span class='label'>最新表示</span>
+<a href='html/predictions_round_all_2026_第１８節.html'>最新の予想を開く</a>
+ / 
+<a href='html/backtest_round_all_2026_第１８節.html'>最新のバックテストを開く</a>
+ <button onclick='reloadNoCache()'>再読込(キャッシュ回避)</button></div>
+</div>
+<div class='box'>
+<div class='row'><span class='label'>節別リンク</span>以下から節別HTMLを選択</div>
+<div class='row'><span class='label'>予想</span>
+<select id='predRound'>
+<option value=''>選択してください</option>
+<option value='html/predictions_round_all_2026_第１節.html'>第１節</option>
+<option value='html/predictions_round_all_2026_第２節.html'>第２節</option>
+<option value='html/predictions_round_all_2026_第３節.html'>第３節</option>
+<option value='html/predictions_round_all_2026_第４節.html'>第４節</option>
+<option value='html/predictions_round_all_2026_第５節.html'>第５節</option>
+<option value='html/predictions_round_all_2026_第６節.html'>第６節</option>
+<option value='html/predictions_round_all_2026_第７節.html'>第７節</option>
+<option value='html/predictions_round_all_2026_第８節.html'>第８節</option>
+<option value='html/predictions_round_all_2026_第９節.html'>第９節</option>
+<option value='html/predictions_round_all_2026_第１０節.html'>第１０節</option>
+<option value='html/predictions_round_all_2026_第１１節.html'>第１１節</option>
+<option value='html/predictions_round_all_2026_第１２節.html'>第１２節</option>
+<option value='html/predictions_round_all_2026_第１３節.html'>第１３節</option>
+<option value='html/predictions_round_all_2026_第１４節.html'>第１４節</option>
+<option value='html/predictions_round_all_2026_第１５節.html'>第１５節</option>
+<option value='html/predictions_round_all_2026_第１６節.html'>第１６節</option>
+<option value='html/predictions_round_all_2026_第１７節.html'>第１７節</option>
+<option value='html/predictions_round_all_2026_第１８節.html'>第１８節</option>
+</select>
+<button onclick="openRound('predRound')">表示</button>
+<button onclick="downloadPredRoundCsv()">CSV出力</button>
+</div>
+<div class='row'><span class='label'>バックテスト</span>
+<select id='backRound'>
+<option value=''>選択してください</option>
+<option value='html/backtest_round_all_2025_第１節.html'>ALL 2025 第１節</option>
+<option value='html/backtest_round_all_2025_第２節.html'>ALL 2025 第２節</option>
+<option value='html/backtest_round_all_2025_第３節.html'>ALL 2025 第３節</option>
+<option value='html/backtest_round_all_2025_第４節.html'>ALL 2025 第４節</option>
+<option value='html/backtest_round_all_2025_第５節.html'>ALL 2025 第５節</option>
+<option value='html/backtest_round_all_2025_第６節.html'>ALL 2025 第６節</option>
+<option value='html/backtest_round_all_2025_第７節.html'>ALL 2025 第７節</option>
+<option value='html/backtest_round_all_2025_第８節.html'>ALL 2025 第８節</option>
+<option value='html/backtest_round_all_2025_第９節.html'>ALL 2025 第９節</option>
+<option value='html/backtest_round_all_2025_第１０節.html'>ALL 2025 第１０節</option>
+<option value='html/backtest_round_all_2025_第１１節.html'>ALL 2025 第１１節</option>
+<option value='html/backtest_round_all_2025_第１２節.html'>ALL 2025 第１２節</option>
+<option value='html/backtest_round_all_2025_第１３節.html'>ALL 2025 第１３節</option>
+<option value='html/backtest_round_all_2025_第１４節.html'>ALL 2025 第１４節</option>
+<option value='html/backtest_round_all_2025_第１５節.html'>ALL 2025 第１５節</option>
+<option value='html/backtest_round_all_2025_第１６節.html'>ALL 2025 第１６節</option>
+<option value='html/backtest_round_all_2025_第１７節.html'>ALL 2025 第１７節</option>
+<option value='html/backtest_round_all_2025_第１８節.html'>ALL 2025 第１８節</option>
+<option value='html/backtest_round_all_2025_第１９節.html'>ALL 2025 第１９節</option>
+<option value='html/backtest_round_all_2025_第２０節.html'>ALL 2025 第２０節</option>
+<option value='html/backtest_round_all_2025_第２１節.html'>ALL 2025 第２１節</option>
+<option value='html/backtest_round_all_2025_第２２節.html'>ALL 2025 第２２節</option>
+<option value='html/backtest_round_all_2025_第２３節.html'>ALL 2025 第２３節</option>
+<option value='html/backtest_round_all_2025_第２４節.html'>ALL 2025 第２４節</option>
+<option value='html/backtest_round_all_2025_第２５節.html'>ALL 2025 第２５節</option>
+<option value='html/backtest_round_all_2025_第２６節.html'>ALL 2025 第２６節</option>
+<option value='html/backtest_round_all_2025_第２７節.html'>ALL 2025 第２７節</option>
+<option value='html/backtest_round_all_2025_第２８節.html'>ALL 2025 第２８節</option>
+<option value='html/backtest_round_all_2025_第２９節.html'>ALL 2025 第２９節</option>
+<option value='html/backtest_round_all_2025_第３０節.html'>ALL 2025 第３０節</option>
+<option value='html/backtest_round_all_2025_第３１節.html'>ALL 2025 第３１節</option>
+<option value='html/backtest_round_all_2025_第３２節.html'>ALL 2025 第３２節</option>
+<option value='html/backtest_round_all_2025_第３３節.html'>ALL 2025 第３３節</option>
+<option value='html/backtest_round_all_2025_第３４節.html'>ALL 2025 第３４節</option>
+<option value='html/backtest_round_all_2025_第３５節.html'>ALL 2025 第３５節</option>
+<option value='html/backtest_round_all_2025_第３６節.html'>ALL 2025 第３６節</option>
+<option value='html/backtest_round_all_2025_第３７節.html'>ALL 2025 第３７節</option>
+<option value='html/backtest_round_all_2025_第３８節.html'>ALL 2025 第３８節</option>
+<option value='html/backtest_round_all_2026_第１節.html'>ALL 2026 第１節</option>
+<option value='html/backtest_round_all_2026_第２節.html'>ALL 2026 第２節</option>
+<option value='html/backtest_round_all_2026_第３節.html'>ALL 2026 第３節</option>
+<option value='html/backtest_round_all_2026_第４節.html'>ALL 2026 第４節</option>
+<option value='html/backtest_round_all_2026_第５節.html'>ALL 2026 第５節</option>
+<option value='html/backtest_round_all_2026_第６節.html'>ALL 2026 第６節</option>
+<option value='html/backtest_round_all_2026_第７節.html'>ALL 2026 第７節</option>
+<option value='html/backtest_round_all_2026_第８節.html'>ALL 2026 第８節</option>
+<option value='html/backtest_round_all_2026_第９節.html'>ALL 2026 第９節</option>
+<option value='html/backtest_round_all_2026_第１０節.html'>ALL 2026 第１０節</option>
+<option value='html/backtest_round_all_2026_第１１節.html'>ALL 2026 第１１節</option>
+<option value='html/backtest_round_all_2026_第１２節.html'>ALL 2026 第１２節</option>
+<option value='html/backtest_round_all_2026_第１３節.html'>ALL 2026 第１３節</option>
+<option value='html/backtest_round_all_2026_第１４節.html'>ALL 2026 第１４節</option>
+<option value='html/backtest_round_all_2026_第１５節.html'>ALL 2026 第１５節</option>
+<option value='html/backtest_round_all_2026_第１６節.html'>ALL 2026 第１６節</option>
+<option value='html/backtest_round_all_2026_第１７節.html'>ALL 2026 第１７節</option>
+<option value='html/backtest_round_all_2026_第１８節.html'>ALL 2026 第１８節</option>
+<option value='html/backtest_round_j1_2025_第１節.html'>J1 2025 第１節</option>
+<option value='html/backtest_round_j1_2025_第２節.html'>J1 2025 第２節</option>
+<option value='html/backtest_round_j1_2025_第３節.html'>J1 2025 第３節</option>
+<option value='html/backtest_round_j1_2025_第４節.html'>J1 2025 第４節</option>
+<option value='html/backtest_round_j1_2025_第５節.html'>J1 2025 第５節</option>
+<option value='html/backtest_round_j1_2025_第６節.html'>J1 2025 第６節</option>
+<option value='html/backtest_round_j1_2025_第７節.html'>J1 2025 第７節</option>
+<option value='html/backtest_round_j1_2025_第８節.html'>J1 2025 第８節</option>
+<option value='html/backtest_round_j1_2025_第９節.html'>J1 2025 第９節</option>
+<option value='html/backtest_round_j1_2025_第１０節.html'>J1 2025 第１０節</option>
+<option value='html/backtest_round_j1_2025_第１１節.html'>J1 2025 第１１節</option>
+<option value='html/backtest_round_j1_2025_第１２節.html'>J1 2025 第１２節</option>
+<option value='html/backtest_round_j1_2025_第１３節.html'>J1 2025 第１３節</option>
+<option value='html/backtest_round_j1_2025_第１４節.html'>J1 2025 第１４節</option>
+<option value='html/backtest_round_j1_2025_第１５節.html'>J1 2025 第１５節</option>
+<option value='html/backtest_round_j1_2025_第１６節.html'>J1 2025 第１６節</option>
+<option value='html/backtest_round_j1_2025_第１７節.html'>J1 2025 第１７節</option>
+<option value='html/backtest_round_j1_2025_第１８節.html'>J1 2025 第１８節</option>
+<option value='html/backtest_round_j1_2025_第１９節.html'>J1 2025 第１９節</option>
+<option value='html/backtest_round_j1_2025_第２０節.html'>J1 2025 第２０節</option>
+<option value='html/backtest_round_j1_2025_第２１節.html'>J1 2025 第２１節</option>
+<option value='html/backtest_round_j1_2025_第２２節.html'>J1 2025 第２２節</option>
+<option value='html/backtest_round_j1_2025_第２３節.html'>J1 2025 第２３節</option>
+<option value='html/backtest_round_j1_2025_第２４節.html'>J1 2025 第２４節</option>
+<option value='html/backtest_round_j1_2025_第２５節.html'>J1 2025 第２５節</option>
+<option value='html/backtest_round_j1_2025_第２６節.html'>J1 2025 第２６節</option>
+<option value='html/backtest_round_j1_2025_第２７節.html'>J1 2025 第２７節</option>
+<option value='html/backtest_round_j1_2025_第２８節.html'>J1 2025 第２８節</option>
+<option value='html/backtest_round_j1_2025_第２９節.html'>J1 2025 第２９節</option>
+<option value='html/backtest_round_j1_2025_第３０節.html'>J1 2025 第３０節</option>
+<option value='html/backtest_round_j1_2025_第３１節.html'>J1 2025 第３１節</option>
+<option value='html/backtest_round_j1_2025_第３２節.html'>J1 2025 第３２節</option>
+<option value='html/backtest_round_j1_2025_第３３節.html'>J1 2025 第３３節</option>
+<option value='html/backtest_round_j1_2025_第３４節.html'>J1 2025 第３４節</option>
+<option value='html/backtest_round_j1_2025_第３５節.html'>J1 2025 第３５節</option>
+<option value='html/backtest_round_j1_2025_第３６節.html'>J1 2025 第３６節</option>
+<option value='html/backtest_round_j1_2025_第３７節.html'>J1 2025 第３７節</option>
+<option value='html/backtest_round_j1_2025_第３８節.html'>J1 2025 第３８節</option>
+<option value='html/backtest_round_j1_2026_第１節.html'>J1 2026 第１節</option>
+<option value='html/backtest_round_j1_2026_第２節.html'>J1 2026 第２節</option>
+<option value='html/backtest_round_j1_2026_第３節.html'>J1 2026 第３節</option>
+<option value='html/backtest_round_j1_2026_第４節.html'>J1 2026 第４節</option>
+<option value='html/backtest_round_j1_2026_第５節.html'>J1 2026 第５節</option>
+<option value='html/backtest_round_j1_2026_第６節.html'>J1 2026 第６節</option>
+<option value='html/backtest_round_j1_2026_第７節.html'>J1 2026 第７節</option>
+<option value='html/backtest_round_j1_2026_第８節.html'>J1 2026 第８節</option>
+<option value='html/backtest_round_j1_2026_第９節.html'>J1 2026 第９節</option>
+<option value='html/backtest_round_j1_2026_第１０節.html'>J1 2026 第１０節</option>
+<option value='html/backtest_round_j1_2026_第１１節.html'>J1 2026 第１１節</option>
+<option value='html/backtest_round_j1_2026_第１２節.html'>J1 2026 第１２節</option>
+<option value='html/backtest_round_j1_2026_第１３節.html'>J1 2026 第１３節</option>
+<option value='html/backtest_round_j1_2026_第１４節.html'>J1 2026 第１４節</option>
+<option value='html/backtest_round_j1_2026_第１５節.html'>J1 2026 第１５節</option>
+<option value='html/backtest_round_j1_2026_第１６節.html'>J1 2026 第１６節</option>
+<option value='html/backtest_round_j1_2026_第１７節.html'>J1 2026 第１７節</option>
+<option value='html/backtest_round_j1_2026_第１８節.html'>J1 2026 第１８節</option>
+<option value='html/backtest_round_j2_2025_第１節.html'>J2 2025 第１節</option>
+<option value='html/backtest_round_j2_2025_第２節.html'>J2 2025 第２節</option>
+<option value='html/backtest_round_j2_2025_第３節.html'>J2 2025 第３節</option>
+<option value='html/backtest_round_j2_2025_第４節.html'>J2 2025 第４節</option>
+<option value='html/backtest_round_j2_2025_第５節.html'>J2 2025 第５節</option>
+<option value='html/backtest_round_j2_2025_第６節.html'>J2 2025 第６節</option>
+<option value='html/backtest_round_j2_2025_第７節.html'>J2 2025 第７節</option>
+<option value='html/backtest_round_j2_2025_第８節.html'>J2 2025 第８節</option>
+<option value='html/backtest_round_j2_2025_第９節.html'>J2 2025 第９節</option>
+<option value='html/backtest_round_j2_2025_第１０節.html'>J2 2025 第１０節</option>
+<option value='html/backtest_round_j2_2025_第１１節.html'>J2 2025 第１１節</option>
+<option value='html/backtest_round_j2_2025_第１２節.html'>J2 2025 第１２節</option>
+<option value='html/backtest_round_j2_2025_第１３節.html'>J2 2025 第１３節</option>
+<option value='html/backtest_round_j2_2025_第１４節.html'>J2 2025 第１４節</option>
+<option value='html/backtest_round_j2_2025_第１５節.html'>J2 2025 第１５節</option>
+<option value='html/backtest_round_j2_2025_第１６節.html'>J2 2025 第１６節</option>
+<option value='html/backtest_round_j2_2025_第１７節.html'>J2 2025 第１７節</option>
+<option value='html/backtest_round_j2_2025_第１８節.html'>J2 2025 第１８節</option>
+<option value='html/backtest_round_j2_2025_第１９節.html'>J2 2025 第１９節</option>
+<option value='html/backtest_round_j2_2025_第２０節.html'>J2 2025 第２０節</option>
+<option value='html/backtest_round_j2_2025_第２１節.html'>J2 2025 第２１節</option>
+<option value='html/backtest_round_j2_2025_第２２節.html'>J2 2025 第２２節</option>
+<option value='html/backtest_round_j2_2025_第２３節.html'>J2 2025 第２３節</option>
+<option value='html/backtest_round_j2_2025_第２４節.html'>J2 2025 第２４節</option>
+<option value='html/backtest_round_j2_2025_第２５節.html'>J2 2025 第２５節</option>
+<option value='html/backtest_round_j2_2025_第２６節.html'>J2 2025 第２６節</option>
+<option value='html/backtest_round_j2_2025_第２７節.html'>J2 2025 第２７節</option>
+<option value='html/backtest_round_j2_2025_第２８節.html'>J2 2025 第２８節</option>
+<option value='html/backtest_round_j2_2025_第２９節.html'>J2 2025 第２９節</option>
+<option value='html/backtest_round_j2_2025_第３０節.html'>J2 2025 第３０節</option>
+<option value='html/backtest_round_j2_2025_第３１節.html'>J2 2025 第３１節</option>
+<option value='html/backtest_round_j2_2025_第３２節.html'>J2 2025 第３２節</option>
+<option value='html/backtest_round_j2_2025_第３３節.html'>J2 2025 第３３節</option>
+<option value='html/backtest_round_j2_2025_第３４節.html'>J2 2025 第３４節</option>
+<option value='html/backtest_round_j2_2025_第３５節.html'>J2 2025 第３５節</option>
+<option value='html/backtest_round_j2_2025_第３６節.html'>J2 2025 第３６節</option>
+<option value='html/backtest_round_j2_2025_第３７節.html'>J2 2025 第３７節</option>
+<option value='html/backtest_round_j2_2025_第３８節.html'>J2 2025 第３８節</option>
+<option value='html/backtest_round_j2_2026_第１節.html'>J2 2026 第１節</option>
+<option value='html/backtest_round_j2_2026_第２節.html'>J2 2026 第２節</option>
+<option value='html/backtest_round_j2_2026_第３節.html'>J2 2026 第３節</option>
+<option value='html/backtest_round_j2_2026_第４節.html'>J2 2026 第４節</option>
+<option value='html/backtest_round_j2_2026_第５節.html'>J2 2026 第５節</option>
+<option value='html/backtest_round_j2_2026_第６節.html'>J2 2026 第６節</option>
+<option value='html/backtest_round_j2_2026_第７節.html'>J2 2026 第７節</option>
+<option value='html/backtest_round_j2_2026_第８節.html'>J2 2026 第８節</option>
+<option value='html/backtest_round_j2_2026_第９節.html'>J2 2026 第９節</option>
+<option value='html/backtest_round_j2_2026_第１０節.html'>J2 2026 第１０節</option>
+<option value='html/backtest_round_j2_2026_第１１節.html'>J2 2026 第１１節</option>
+<option value='html/backtest_round_j2_2026_第１２節.html'>J2 2026 第１２節</option>
+<option value='html/backtest_round_j2_2026_第１３節.html'>J2 2026 第１３節</option>
+<option value='html/backtest_round_j2_2026_第１４節.html'>J2 2026 第１４節</option>
+<option value='html/backtest_round_j2_2026_第１５節.html'>J2 2026 第１５節</option>
+<option value='html/backtest_round_j2_2026_第１６節.html'>J2 2026 第１６節</option>
+<option value='html/backtest_round_j2_2026_第１７節.html'>J2 2026 第１７節</option>
+<option value='html/backtest_round_j2_2026_第１８節.html'>J2 2026 第１８節</option>
+</select>
+<button onclick="openRound('backRound')">表示</button>
+</div>
+</div>
+<div class='box'>
+<div class='row'><span class='label'>メモ</span>各レポートHTMLは下記スクリプトで更新</div>
+<div class='row'><code>python data/reports/view_predictions.py</code></div>
+<div class='row'><code>python data/reports/view_report_json.py</code></div>
+<div class='row'><code>python data/reports/view_backtest.py</code></div>
+<div class='row'><code>python data/reports/build_round_views.py</code></div>
+</div>
+<script>
+function openRound(selectId){
+  const sel = document.getElementById(selectId);
+  if (!sel || !sel.value) { alert('節を選択してください'); return; }
+  window.location.href = sel.value;
+}
+function downloadPredRoundCsv(){
+  const sel = document.getElementById('predRound');
+  if (!sel || !sel.value) { alert('節を選択してください'); return; }
+  const htmlPath = sel.value;
+  const file = htmlPath.split('/').pop();
+  const csvPath = 'csv/' + file.replace('.html', '.csv');
+  const a = document.createElement('a');
+  a.href = csvPath;
+  a.download = 'selected_round_predictions.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+function reloadNoCache(){
+  const u = new URL(window.location.href);
+  u.searchParams.set('t', Date.now().toString());
+  window.location.href = u.toString();
+}
+</script>
+</body></html>

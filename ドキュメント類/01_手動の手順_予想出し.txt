@@ -1,0 +1,41 @@
+■ 予想作成  ---------------------------------------------------------------------
+# 1) 週次バッチ（2026/J1+J2）
+SEASON_YEAR=2026 LEAGUES='j1 j2' ./scripts/run_batch_weekly.sh 2>&1 | tee logs/run_batch_weekly.log
+
+# 2) 試合直前バッチ（2026/J1+J2）
+SEASON_YEAR=2026 LEAGUES='j1 j2' DRAW_EXPECTATION_MULTIPLIER=1.43 ./scripts/run_batch_matchday.sh 2>&1 | tee logs/run_batch_matchday.log
+
+# 3) 節別ビュー再生成
+./scripts/.venv/bin/python data/reports/build_round_views.py
+
+# 4) ダッシュボード再生成
+./scripts/.venv/bin/python data/reports/build_dashboard.py
+
+--------------------------------------
+1) 終了後のエラーチェック
+file:///Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_weekly_report.html
+file:///Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_matchday_report.html
+
+
+■ 次の節のbuyplan作成前に  --------------------------------------------------------
+前節の購入情報を保存する  
+ROUND=round04 SEASON_YEAR=2026 ./scripts/run_evaluate_round.sh
+
+・toto公式の予想をPDFでバックアップ保存しておく。
+
+■ 購入候補の作成  ----------------------------------------------------------------
+・manualに［toto並び順.csv］を作成
+・予想から出力したcsvを、［predictions.csv］と名前を替えて［purchase_reference］に格納
+その後で、
+
+./scripts/.venv/bin/python buyplan.py \
+  --in data/purchase_reference/predictions.csv \
+  --outdir data/purchase_reference
+
+
+■ 的中結果検証（Jリーグ公式サイト更新後 ---------------------------------------------
+ROUND=round03 SEASON_YEAR=2026 ./scripts/run_evaluate_round.sh
+
+
+
+

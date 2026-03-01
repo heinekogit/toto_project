@@ -1,0 +1,4 @@
+usage: update_weather_cache.py [-h] --matches-csv MATCHES_CSV
+                               --stadiums-csv STADIUMS_CSV [--out OUT]
+                               [--cache-dir CACHE_DIR] [--full-refresh]
+update_weather_cache.py: error: the following arguments are required: --matches-csv, --stadiums-csv

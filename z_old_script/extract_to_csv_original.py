@@ -1,0 +1,65 @@
+import os
+from bs4 import BeautifulSoup
+import csv
+
+# チームID対応表
+team_id_map = {
+    "鹿島アントラーズ": "001",
+    "川崎フロンターレ": "002",
+    "セレッソ大阪": "003",
+    "清水エスパルス": "004",
+    "京都サンガF.C.": "005",
+    "浦和レッズ": "006",
+    "名古屋グランパス": "007",
+    "柏レイソル": "008",
+    "ＦＣ町田ゼルビア": "009",
+    "ガンバ大阪": "010",
+    "アビスパ福岡": "011",
+    "アルビレックス新潟": "012",
+    "サンフレッチェ広島": "013",
+    "横浜Ｆ・マリノス": "014",
+    "ヴィッセル神戸": "015",
+    "ファジアーノ岡山": "016",
+    "湘南ベルマーレ": "017",
+    "ＦＣ東京": "018",
+    "東京ヴェルディ": "019",
+    "横浜ＦＣ": "020",
+}
+
+def extract_data(html_file, output_csv, league_class="J1"):
+    with open(html_file, encoding='utf-8') as f:
+        html_content = f.read()
+
+    soup = BeautifulSoup(html_content, 'html.parser')
+    output_rows = []
+
+    ranking_list = soup.find_all('li')
+    for li in ranking_list:
+        rank_tag = li.find('p', class_='number')
+        team_tag = li.find('p', class_='team')
+        value_tag = li.find('div', class_='ranking_stats') or \
+                    li.find('div', class_='ranking_stats_1') or \
+                    li.find('div', class_='ranking_stats_2') or \
+                    li.find('div', class_='ranking_stats_3')
+
+        if rank_tag and team_tag and value_tag:
+            rank = rank_tag.text.strip()
+            team_name = team_tag.text.strip()
+            value = value_tag.find('p').text.strip()
+
+            team_id = team_id_map.get(team_name, "")
+
+            output_rows.append([team_id, league_class, team_name, rank, value])
+
+    with open(output_csv, mode='w', newline='', encoding='utf-8-sig') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["team_id", "class", "team_name", "rank", "value"])
+        writer.writerows(output_rows)
+
+# フォルダ内のHTMLファイルをすべて処理
+input_folder = 'downloaded_html'
+for filename in os.listdir(input_folder):
+    if filename.endswith('.html'):
+        html_path = os.path.join(input_folder, filename)
+        csv_filename = filename.replace('.html', '.csv')
+        extract_data(html_path, csv_filename)

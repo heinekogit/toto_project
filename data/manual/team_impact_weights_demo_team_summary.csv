@@ -1,0 +1,3 @@
+﻿team_name,sum_regular_rate,sum_attack_share,sum_defense_share,top_attack_players,top_defense_players
+TeamA,3.774193548387097,0.8032258064516129,2.3161290322580648,A_FW1(0.5226) / A_MF1(0.2806) / A_GK(0.0000),A_GK(0.9677) / A_DF1(0.8000) / A_MF1(0.3742)
+TeamB,3.34375,0.6696428571428572,2.125,B_FW1(0.4018) / B_MF1(0.2679) / B_GK(0.0000),B_GK(1.0000) / B_DF1(0.6250) / B_MF1(0.3750)

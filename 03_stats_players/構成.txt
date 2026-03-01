@@ -1,0 +1,7 @@
+players_stats/
+├── 00_raw_html/         ← 各クラブの選手一覧HTMLを保存（例：shonan.html）
+├── 01_parsed_json/      ← パース済みJSONデータ（必要に応じて）
+├── 02_combined_csv/     ← 全クラブの選手情報まとめCSVなど
+├── scripts/             ← スクリプト置き場
+│   └── save_team_html.py  ← HTML保存スクリプト（今回作成）
+└── README.md            ← 処理の概要メモ（任意）
