@@ -15,11 +15,15 @@
 
 
 import os
+import sys
 import pandas as pd
 import numpy as np
 from scipy.stats import poisson
 import json
 import re
+import hashlib
+import subprocess
+import pickle
 from datetime import datetime
 import unicodedata
 
@@ -31,6 +35,8 @@ REPORT_DIR = os.path.join(DATA_DIR, "reports")
 STATS_SNAPSHOT_DIR = os.path.join(DATA_DIR, "stats_snapshots")
 LEAGUE = os.environ.get("LEAGUE", "j1").lower()
 SEASON_YEAR = int(os.environ.get("SEASON_YEAR", "2025"))
+TOTO_ROUND_ID = os.environ.get("TOTO_ROUND_ID", "").strip()
+ROUND_NO_ENV = os.environ.get("ROUND_NO", "").strip()
 STATS_ASOF_DATE = os.environ.get("STATS_ASOF_DATE", "").strip()
 STATS_SNAPSHOT_NAME = os.environ.get("STATS_SNAPSHOT_NAME", "").strip()
 WEATHER_ASOF_DATE = os.environ.get("WEATHER_ASOF_DATE", STATS_ASOF_DATE).strip()
@@ -39,6 +45,43 @@ WEATHER_SNAPSHOT_DIR = os.environ.get("WEATHER_SNAPSHOT_DIR", os.path.join(DATA_
 ABSENCE_ASOF_DATE = os.environ.get("ABSENCE_ASOF_DATE", STATS_ASOF_DATE).strip()
 ABSENCE_SNAPSHOT_NAME = os.environ.get("ABSENCE_SNAPSHOT_NAME", "").strip()
 ABSENCE_SNAPSHOT_DIR = os.environ.get("ABSENCE_SNAPSHOT_DIR", os.path.join(DATA_DIR, "absence_snapshots"))
+TOTO_ORDER_CSV = os.environ.get("TOTO_ORDER_CSV", os.path.join(MANUAL_DIR, "toto並び順.csv"))
+RAW_CLI_ARGS = sys.argv[1:]
+CLI_ARGS = set(RAW_CLI_ARGS)
+
+
+def _get_env_int(name, default):
+    raw = os.environ.get(name, str(default))
+    try:
+        return int(str(raw).strip())
+    except Exception:
+        print(f"[CONFIG][WARN] invalid int env {name}={raw!r}; fallback={default}")
+        return int(default)
+
+
+def _env_flag(name, default=0):
+    return _get_env_int(name, default) == 1
+
+
+def _get_cli_int_arg(flag, default):
+    try:
+        idx = RAW_CLI_ARGS.index(flag)
+    except ValueError:
+        return default
+    if idx + 1 >= len(RAW_CLI_ARGS):
+        return default
+    try:
+        return int(str(RAW_CLI_ARGS[idx + 1]).strip())
+    except Exception:
+        return default
+
+
+FORCE_RECALC = ("--force" in CLI_ARGS) or _env_flag("FORCE_RECALC", 0)
+SELF_CHECK_HFA = ("--self-check-hfa" in CLI_ARGS) or _env_flag("SELF_CHECK_HFA", 0)
+SKIP_HFA_SELF_CHECK = ("--skip-hfa-self-check" in CLI_ARGS) or _env_flag("SKIP_HFA_SELF_CHECK", 0)
+DUMP_DECISION = ("--dump-decision" in CLI_ARGS) or _env_flag("DUMP_DECISION", 0)
+HFA_TRACE_N = max(1, _get_cli_int_arg("--hfa-trace-n", _get_env_int("HFA_TRACE_N", 5)))
+DECISION_RULE_DESC = "argmax(prob_home_win, prob_draw, prob_away_win)"
 MERGE_QC_DIR = os.path.join(REPORT_DIR, "merge_qc", f"{LEAGUE}_{SEASON_YEAR}")
 PREV_SEASON_YEAR = SEASON_YEAR - 1
 csv_prev = os.path.join(DATA_DIR, f"{LEAGUE}_{PREV_SEASON_YEAR}_results.csv")
@@ -48,7 +91,16 @@ if not os.path.exists(csv_prev):
         csv_prev = csv_prev_latest
 prev_final_elo_csv = os.path.join(DATA_DIR, f"{LEAGUE}_{PREV_SEASON_YEAR}_final_elo.csv")
 csv_season = os.path.join(DATA_DIR, f"{LEAGUE}_{SEASON_YEAR}_upcoming.csv")
-output_csv = os.path.join(BASE_DIR, f"{LEAGUE}_{SEASON_YEAR}_predictions.csv")
+csv_season_latest = os.path.join(DATA_DIR, f"{LEAGUE}_{SEASON_YEAR}_latest_results.csv")
+ENABLE_HFA_INT = _get_env_int("ENABLE_HFA", 1)
+if ENABLE_HFA_INT not in (0, 1):
+    print(f"[CONFIG][WARN] ENABLE_HFA should be 0/1 but got {ENABLE_HFA_INT}; coerced to {1 if ENABLE_HFA_INT else 0}")
+    ENABLE_HFA_INT = 1 if ENABLE_HFA_INT else 0
+ENABLE_HFA = ENABLE_HFA_INT == 1
+hfa_suffix = "hfa_on" if ENABLE_HFA else "hfa_off"
+LEGACY_OUTPUT_CSV = os.path.join(BASE_DIR, f"{LEAGUE}_{SEASON_YEAR}_predictions.csv")
+output_csv_default = os.path.join(BASE_DIR, f"{LEAGUE}_{SEASON_YEAR}_predictions_{hfa_suffix}.csv")
+output_csv = os.environ.get("OUTPUT_PRED_CSV", "").strip() or output_csv_default
 backtest_output_csv = os.path.join(BASE_DIR, f"backtest_{LEAGUE}_{SEASON_YEAR}.csv")
 
 def pick_non_empty_csv_path(candidates, required_cols=None):
@@ -70,6 +122,101 @@ def pick_non_empty_csv_path(candidates, required_cols=None):
             print(f"[PATH] 読み込み失敗のためスキップ: {path} ({e})")
             continue
     return candidates[-1] if candidates else None
+
+
+def _norm_key_text(v):
+    if pd.isna(v):
+        return ""
+    s = unicodedata.normalize("NFKC", str(v)).replace("　", " ").strip()
+    s = s.replace(" ", "").replace("・", "")
+    return s.upper()
+
+
+def _build_match_merge_key(df):
+    out = df.copy()
+    dt = pd.to_datetime(out.get("datetime"), errors="coerce")
+    out["_dt_key"] = dt.dt.strftime("%Y-%m-%d %H:%M")
+    out["_home_key"] = out.get("home_team", pd.Series(index=out.index, dtype="object")).map(_norm_key_text)
+    out["_away_key"] = out.get("away_team", pd.Series(index=out.index, dtype="object")).map(_norm_key_text)
+    out["_match_merge_key"] = out["_dt_key"].fillna("") + "|" + out["_home_key"].fillna("") + "|" + out["_away_key"].fillna("")
+    return out
+
+
+def enrich_scores_from_latest_results(df_season, latest_results_csv):
+    if df_season is None or df_season.empty:
+        return df_season
+    if not os.path.exists(latest_results_csv):
+        print(f"[SCORE_ENRICH] skip: latest_results not found ({latest_results_csv})")
+        return df_season
+    try:
+        latest = pd.read_csv(latest_results_csv)
+    except Exception as e:
+        print(f"[SCORE_ENRICH][WARN] failed to read latest_results: {e}")
+        return df_season
+    required = {"home_team", "away_team"}
+    if not required.issubset(latest.columns):
+        print("[SCORE_ENRICH][WARN] latest_results missing required columns")
+        return df_season
+    work = df_season.copy()
+    before_scored = int(
+        pd.to_numeric(work.get("home_score"), errors="coerce").notna()
+        .mul(pd.to_numeric(work.get("away_score"), errors="coerce").notna())
+        .sum()
+    )
+    for col in ["home_score", "away_score"]:
+        if col not in work.columns:
+            work[col] = pd.NA
+        work[col] = pd.to_numeric(work[col], errors="coerce")
+        if col not in latest.columns:
+            latest[col] = pd.NA
+        latest[col] = pd.to_numeric(latest[col], errors="coerce")
+
+    # 1) match_id優先
+    filled_by_match_id = 0
+    if "match_id" in work.columns and "match_id" in latest.columns:
+        right = latest[["match_id", "home_score", "away_score"]].dropna(subset=["match_id"]).drop_duplicates(
+            subset=["match_id"], keep="last"
+        )
+        m = work.merge(right, on="match_id", how="left", suffixes=("", "__latest"))
+        for col in ["home_score", "away_score"]:
+            pre_na = m[col].isna()
+            m[col] = m[col].fillna(m[f"{col}__latest"])
+            filled_by_match_id += int(pre_na.sum() - m[col].isna().sum())
+        work = m.drop(columns=["home_score__latest", "away_score__latest"], errors="ignore")
+
+    # 2) datetime+home+awayで補完
+    left = _build_match_merge_key(work)
+    right = _build_match_merge_key(latest)
+    right = right[["_match_merge_key", "home_score", "away_score"]].drop_duplicates(subset=["_match_merge_key"], keep="last")
+    m2 = left.merge(right, on="_match_merge_key", how="left", suffixes=("", "__latest2"))
+    filled_by_key = 0
+    for col in ["home_score", "away_score"]:
+        pre_na = m2[col].isna()
+        m2[col] = m2[col].fillna(m2[f"{col}__latest2"])
+        filled_by_key += int(pre_na.sum() - m2[col].isna().sum())
+    work = m2.drop(
+        columns=[
+            "home_score__latest2",
+            "away_score__latest2",
+            "_dt_key",
+            "_home_key",
+            "_away_key",
+            "_match_merge_key",
+        ],
+        errors="ignore",
+    )
+
+    after_scored = int(
+        pd.to_numeric(work.get("home_score"), errors="coerce").notna()
+        .mul(pd.to_numeric(work.get("away_score"), errors="coerce").notna())
+        .sum()
+    )
+    print(
+        f"[SCORE_ENRICH] source={latest_results_csv} "
+        f"filled_by_match_id={filled_by_match_id} filled_by_key={filled_by_key} "
+        f"scored_rows={before_scored}->{after_scored}"
+    )
+    return work
 
 
 def _asof_key(value):
@@ -288,11 +435,10 @@ DRAW_PROB_THRESHOLD = float(os.environ.get("DRAW_PROB_THRESHOLD", "0.24"))
 DRAW_BALANCE_THRESHOLD = 0.10
 HOME_ADV_ELO_COEF = float(os.environ.get("HOME_ADV_ELO_COEF", "60"))
 HFA_ELO = float(os.environ.get("HFA_ELO", "35"))
-ENABLE_HFA = os.environ.get("ENABLE_HFA", "1") == "1"
 HOME_ADV_PROFILE_DIFF_CLIP = float(os.environ.get("HOME_ADV_PROFILE_DIFF_CLIP", "0.8"))
-HFA_ABS_MAX = float(os.environ.get("HFA_ABS_MAX", "60"))
-HFA_DATA_QUALITY_MULT = float(os.environ.get("HFA_DATA_QUALITY_MULT", "0.3"))
-HFA_STATS_MISSING_MULT = float(os.environ.get("HFA_STATS_MISSING_MULT", "0.0"))
+# HFAは固定定数（デフォルト35）。試合固有バイアスは別スイッチで分離する。
+ENABLE_MATCHUP_BIAS = _env_flag("ENABLE_MATCHUP_BIAS", 0)
+MATCHUP_BIAS_COEF = float(os.environ.get("MATCHUP_BIAS_COEF", str(HOME_ADV_ELO_COEF)))
 ELO_DIFF_TEMPERATURE = float(os.environ.get("ELO_DIFF_TEMPERATURE", "1.35"))
 ELO_DIFF_SCALE = float(os.environ.get("ELO_DIFF_SCALE", "1.00"))
 ELO_DRAW_BASE = float(os.environ.get("ELO_DRAW_BASE", "0.33"))
@@ -301,11 +447,11 @@ ELO_DRAW_BUMP = float(os.environ.get("ELO_DRAW_BUMP", "0.00"))
 ELO_DRAW_SENSITIVITY = float(os.environ.get("ELO_DRAW_SENSITIVITY", "400"))
 ELO_DRAW_DIFF_SCALE = float(os.environ.get("ELO_DRAW_DIFF_SCALE", "1.00"))
 ELO_DRAW_MIN = float(os.environ.get("ELO_DRAW_MIN", "0.10"))
-ELO_DRAW_MAX = float(os.environ.get("ELO_DRAW_MAX", "0.33"))
-DRAW_DECAY_SCALE = float(os.environ.get("DRAW_DECAY_SCALE", "120.0"))
+ELO_DRAW_MAX = float(os.environ.get("ELO_DRAW_MAX", "0.38"))
+DRAW_DECAY_SCALE = float(os.environ.get("DRAW_DECAY_SCALE", "320.0"))
 # draw確率はPoisson由来とElo由来をブレンド（1.0=Poissonのみ, 0.0=Eloのみ）
-DRAW_BLEND_WEIGHT = float(os.environ.get("DRAW_BLEND_WEIGHT", "0.75"))
-DRAW_ASSIGN_BY_EXPECTATION = os.environ.get("DRAW_ASSIGN_BY_EXPECTATION", "1") == "1"
+DRAW_BLEND_WEIGHT = float(os.environ.get("DRAW_BLEND_WEIGHT", "0.60"))
+DRAW_ASSIGN_BY_EXPECTATION = _env_flag("DRAW_ASSIGN_BY_EXPECTATION", 1)
 # 期待ドロー件数の倍率（確率自体は変更せず、D割当件数のみ調整）
 DRAW_EXPECTATION_MULTIPLIER = float(os.environ.get("DRAW_EXPECTATION_MULTIPLIER", "1.0"))
 # Poisson格子の打ち切り誤差を抑えるための設定
@@ -313,10 +459,480 @@ POISSON_GRID_MIN_K = int(os.environ.get("POISSON_GRID_MIN_K", "10"))
 POISSON_GRID_MAX_K = int(os.environ.get("POISSON_GRID_MAX_K", "20"))
 POISSON_TAIL_EPS = float(os.environ.get("POISSON_TAIL_EPS", "1e-6"))
 MISSING_WARN_THRESHOLD = float(os.environ.get("MISSING_WARN_THRESHOLD", "0.05"))
-DEBUG_ELO_PROB = os.environ.get("DEBUG_ELO_PROB", "0") == "1"
+DEBUG_ELO_PROB = _env_flag("DEBUG_ELO_PROB", 0)
 DEBUG_MATCH_ID = os.environ.get("DEBUG_MATCH_ID", "").strip()
 J1_WIN_PROB_CAP = float(os.environ.get("J1_WIN_PROB_CAP", "0.68"))
 PROB_FALLBACK = (0.397, 0.251, 0.353)
+HFA_APPLY_COUNTER = {"applied": 0, "skipped": 0, "reason_counts": {}}
+HDA_MODEL_MODE = os.environ.get("HDA_MODEL_MODE", "multinom").strip().lower()
+if HDA_MODEL_MODE not in {"legacy", "multinom"}:
+    print(f"[CONFIG][WARN] invalid HDA_MODEL_MODE={HDA_MODEL_MODE!r}; fallback='legacy'")
+    HDA_MODEL_MODE = "legacy"
+HDA_FEATURE_PROFILE = os.environ.get("HDA_FEATURE_PROFILE", "").strip()
+_hda_model_default_profile = (
+    os.path.join(DATA_DIR, "models", f"hda_multinom_train2025_{LEAGUE}__{HDA_FEATURE_PROFILE}.joblib")
+    if HDA_FEATURE_PROFILE
+    else ""
+)
+_hda_model_default_league = os.path.join(DATA_DIR, "models", f"hda_multinom_train2025_{LEAGUE}.joblib")
+_hda_model_default_legacy = os.path.join(DATA_DIR, "models", "hda_multinom_train2025.joblib")
+HDA_MODEL_PATH = os.environ.get("HDA_MODEL_PATH", "").strip() or (_hda_model_default_profile or _hda_model_default_league)
+HDA_MODEL_BUNDLE = None
+HDA_MODEL_MODE_EFFECTIVE = HDA_MODEL_MODE
+
+
+def _softmax_rows(logits):
+    arr = np.asarray(logits, dtype=float)
+    if arr.ndim == 1:
+        arr = arr.reshape(1, -1)
+    z = arr - np.max(arr, axis=1, keepdims=True)
+    ez = np.exp(z)
+    den = np.sum(ez, axis=1, keepdims=True)
+    den = np.where(den <= 0, 1.0, den)
+    return ez / den
+
+
+def _load_hda_model_bundle(path):
+    with open(path, "rb") as f:
+        bundle = pickle.load(f)
+    required = {"type", "classes", "feature_names", "coef", "intercept", "feature_mean", "feature_std"}
+    if not isinstance(bundle, dict) or not required.issubset(bundle.keys()):
+        raise RuntimeError(f"invalid model bundle keys: required={sorted(required)}")
+    if bundle.get("type") != "softmax_linear":
+        raise RuntimeError(f"unsupported model bundle type: {bundle.get('type')!r}")
+    classes = [str(c).upper() for c in bundle["classes"]]
+    if not {"H", "D", "A"}.issubset(classes):
+        raise RuntimeError(f"classes must include H/D/A but got {classes}")
+    bundle["classes"] = classes
+    bundle["feature_names"] = [str(c) for c in bundle["feature_names"]]
+    bundle["coef"] = np.asarray(bundle["coef"], dtype=float)
+    bundle["intercept"] = np.asarray(bundle["intercept"], dtype=float)
+    bundle["feature_mean"] = np.asarray(bundle["feature_mean"], dtype=float)
+    bundle["feature_std"] = np.asarray(bundle["feature_std"], dtype=float)
+    return bundle
+
+
+def _log_model_config():
+    if HDA_MODEL_BUNDLE is None:
+        print(
+            f"[MODEL_CONFIG] league={LEAGUE} class_weight=unavailable "
+            f"alpha=unavailable baseline_eps=unavailable"
+        )
+        return
+    cw = HDA_MODEL_BUNDLE.get("class_weight", "unknown")
+    alpha = HDA_MODEL_BUNDLE.get("class_weight_alpha", "unknown")
+    baseline_eps = HDA_MODEL_BUNDLE.get("baseline_eps", "unknown")
+    print(
+        f"[MODEL_CONFIG] league={LEAGUE} class_weight={cw} "
+        f"alpha={alpha} baseline_eps={baseline_eps}"
+    )
+
+
+def _init_hda_model():
+    global HDA_MODEL_BUNDLE, HDA_MODEL_MODE_EFFECTIVE
+    if HDA_MODEL_MODE != "multinom":
+        HDA_MODEL_MODE_EFFECTIVE = "legacy"
+        HDA_MODEL_BUNDLE = None
+        _log_model_config()
+        return
+    model_candidates = []
+    if HDA_MODEL_PATH:
+        model_candidates.append(HDA_MODEL_PATH)
+    if _hda_model_default_profile and _hda_model_default_profile not in model_candidates:
+        model_candidates.append(_hda_model_default_profile)
+    if _hda_model_default_league not in model_candidates:
+        model_candidates.append(_hda_model_default_league)
+    if _hda_model_default_legacy not in model_candidates:
+        model_candidates.append(_hda_model_default_legacy)
+    model_path = next((p for p in model_candidates if p and os.path.exists(p)), "")
+    if not model_path or not os.path.exists(model_path):
+        print(f"[CONFIG][WARN] HDA_MODEL_MODE=multinom ですがモデル未検出のため legacy にフォールバック: {HDA_MODEL_PATH}")
+        HDA_MODEL_MODE_EFFECTIVE = "legacy"
+        HDA_MODEL_BUNDLE = None
+        _log_model_config()
+        return
+    try:
+        HDA_MODEL_BUNDLE = _load_hda_model_bundle(model_path)
+        globals()["HDA_MODEL_PATH"] = model_path
+        HDA_MODEL_MODE_EFFECTIVE = "multinom"
+        _log_model_config()
+    except Exception as e:
+        print(f"[CONFIG][WARN] multinomモデル読み込み失敗のため legacy にフォールバック: {e}")
+        HDA_MODEL_MODE_EFFECTIVE = "legacy"
+        HDA_MODEL_BUNDLE = None
+        _log_model_config()
+
+
+def _predict_hda_multinom_probs(elo_diff_for_prob):
+    if HDA_MODEL_BUNDLE is None:
+        raise RuntimeError("HDA_MODEL_BUNDLE is not loaded")
+    feat_values = {
+        "elo_diff_for_prob": float(elo_diff_for_prob),
+        "abs_elo_diff_for_prob": float(abs(elo_diff_for_prob)),
+        # multinomモードでは旧draw調整係数を使わず、生の差分由来のみを使う
+        "d_scaled": float(abs(elo_diff_for_prob)),
+        "abs_d_scaled": float(abs(elo_diff_for_prob)),
+    }
+    feature_names = HDA_MODEL_BUNDLE["feature_names"]
+    x = np.array([feat_values.get(name, 0.0) for name in feature_names], dtype=float)
+    mu = HDA_MODEL_BUNDLE["feature_mean"]
+    sigma = HDA_MODEL_BUNDLE["feature_std"]
+    sigma = np.where(np.abs(sigma) < 1e-12, 1.0, sigma)
+    x_std = (x - mu) / sigma
+    logits = x_std.dot(HDA_MODEL_BUNDLE["coef"].T) + HDA_MODEL_BUNDLE["intercept"]
+    probs = _softmax_rows(logits)[0]
+    cls_to_prob = {c: float(p) for c, p in zip(HDA_MODEL_BUNDLE["classes"], probs)}
+    ph = float(cls_to_prob.get("H", 0.0))
+    pdw = float(cls_to_prob.get("D", 0.0))
+    pa = float(cls_to_prob.get("A", 0.0))
+    return _normalize_probs(ph, pdw, pa), feat_values
+
+
+def _sha1_file(path):
+    h = hashlib.sha1()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _short_col_list(cols, head=50, tail=20):
+    cols = list(cols)
+    if len(cols) <= head + tail:
+        return cols
+    return cols[:head] + ["..."] + cols[-tail:]
+
+
+def _update_hfa_apply_counter(reason, applied):
+    if applied:
+        HFA_APPLY_COUNTER["applied"] += 1
+    else:
+        HFA_APPLY_COUNTER["skipped"] += 1
+    rc = HFA_APPLY_COUNTER["reason_counts"]
+    rc[reason] = int(rc.get(reason, 0)) + 1
+
+
+def _detect_probability_columns(df_a, df_b):
+    prob_candidates = [
+        ("prob_home", "prob_draw", "prob_away"),
+        ("prob_home_win", "prob_draw", "prob_away_win"),
+        ("p_home", "p_draw", "p_away"),
+    ]
+    for c_home, c_draw, c_away in prob_candidates:
+        if {c_home, c_draw, c_away}.issubset(df_a.columns) and {c_home, c_draw, c_away}.issubset(df_b.columns):
+            return [c_home, c_draw, c_away]
+    cols_a = _short_col_list(df_a.columns)
+    cols_b = _short_col_list(df_b.columns)
+    print(
+        "[ERROR] probability columns not found. "
+        f"available_columns_a={cols_a} available_columns_b={cols_b}"
+    )
+    raise RuntimeError("probability columns not found")
+
+
+def _build_hfa_aligned_dataframe(df_a, df_b, value_cols):
+    shared_cols = [c for c in value_cols if c in df_a.columns and c in df_b.columns]
+    if not shared_cols:
+        return pd.DataFrame(), [], "none"
+    if "match_id" in df_a.columns and "match_id" in df_b.columns:
+        merged = df_a[["match_id"] + shared_cols].merge(
+            df_b[["match_id"] + shared_cols], on="match_id", how="inner", suffixes=("_a", "_b")
+        )
+        return merged, shared_cols, "match_id"
+    key_cols = ["datetime", "home_team", "away_team"]
+    if set(key_cols).issubset(df_a.columns) and set(key_cols).issubset(df_b.columns):
+        merged = df_a[key_cols + shared_cols].merge(
+            df_b[key_cols + shared_cols], on=key_cols, how="inner", suffixes=("_a", "_b")
+        )
+        return merged, shared_cols, "datetime+home+away"
+    min_len = min(len(df_a), len(df_b))
+    data = {}
+    for col in shared_cols:
+        data[f"{col}_a"] = df_a[col].head(min_len)
+        data[f"{col}_b"] = df_b[col].head(min_len)
+    return pd.DataFrame(data), shared_cols, "row_index"
+
+
+def _compute_max_abs_diff(merged, col_name):
+    left = f"{col_name}_a"
+    right = f"{col_name}_b"
+    if left not in merged.columns or right not in merged.columns:
+        return None
+    d = (pd.to_numeric(merged[left], errors="coerce") - pd.to_numeric(merged[right], errors="coerce")).abs()
+    return float(d.max(skipna=True))
+
+
+def _compute_diff_stats(merged, col_name):
+    left = f"{col_name}_a"
+    right = f"{col_name}_b"
+    if left not in merged.columns or right not in merged.columns:
+        return None, None
+    d = (pd.to_numeric(merged[left], errors="coerce") - pd.to_numeric(merged[right], errors="coerce")).abs()
+    max_abs = float(d.max(skipna=True))
+    num_diff = int((d > 1e-12).sum())
+    return max_abs, num_diff
+
+
+def _log_hfa_intermediate_trace(df_a, df_b):
+    compare_cols = [
+        "elo_diff_for_prob",
+        "elo_diff_scaled",
+        "elo_diff",
+        "elo_diff_raw",
+        "d_scaled",
+        "elo_diff_before_hfa",
+        "elo_diff_after_hfa",
+    ]
+    merged, shared_cols, key_name = _build_hfa_aligned_dataframe(df_a, df_b, compare_cols)
+    if merged.empty:
+        print("[HFA_TRACE] key=none max_abs_diff=NA num_rows_with_any_diff=0")
+        return
+
+    primary = next(
+        (c for c in ["elo_diff_for_prob", "elo_diff_scaled", "elo_diff", "elo_diff_raw"] if c in shared_cols),
+        None,
+    )
+    if primary:
+        max_abs, num_diff = _compute_diff_stats(merged, primary)
+        print(
+            f"[HFA_TRACE] key={primary} align={key_name} "
+            f"max_abs_diff={max_abs:.6f} num_rows_with_any_diff={num_diff}"
+        )
+    else:
+        print(f"[HFA_TRACE] key=none align={key_name} max_abs_diff=NA num_rows_with_any_diff=0")
+
+    if "d_scaled" in shared_cols:
+        max_abs, num_diff = _compute_diff_stats(merged, "d_scaled")
+        print(
+            f"[HFA_TRACE] key=d_scaled align={key_name} "
+            f"max_abs_diff={max_abs:.6f} num_rows_with_any_diff={num_diff}"
+        )
+
+    if "elo_diff_before_hfa" in shared_cols and "elo_diff_after_hfa" in shared_cols:
+        added_a = (
+            pd.to_numeric(merged["elo_diff_after_hfa_a"], errors="coerce")
+            - pd.to_numeric(merged["elo_diff_before_hfa_a"], errors="coerce")
+        )
+        added_b = (
+            pd.to_numeric(merged["elo_diff_after_hfa_b"], errors="coerce")
+            - pd.to_numeric(merged["elo_diff_before_hfa_b"], errors="coerce")
+        )
+        d_added = (added_a - added_b).abs()
+        max_abs_added = float(d_added.max(skipna=True))
+        max_abs_added_on = float(added_a.abs().max(skipna=True))
+        max_abs_added_off = float(added_b.abs().max(skipna=True))
+        num_added_diff = int((d_added > 1e-12).sum())
+        print(
+            f"[HFA_TRACE] max_abs_hfa_added={max_abs_added:.6f} "
+            f"num_rows_with_any_diff={num_added_diff}"
+        )
+        print(
+            f"[HFA_TRACE] max_abs_hfa_added_on={max_abs_added_on:.6f} "
+            f"max_abs_hfa_added_off={max_abs_added_off:.6f}"
+        )
+        print(
+            "[HFA_TRACE] formula=max_abs_hfa_added=max(abs("
+            "(elo_diff_after_hfa-elo_diff_before_hfa)_ON - "
+            "(elo_diff_after_hfa-elo_diff_before_hfa)_OFF))"
+        )
+
+    # Representative per-row trace: sort by |diff(elo_diff_for_prob)| desc and print top-N
+    row_cols = [
+        "elo_diff_before_hfa",
+        "hfa_added_to_diff",
+        "elo_diff_after_hfa",
+        "elo_diff_for_prob",
+        "d_scaled",
+    ]
+    if "match_id" in df_a.columns and "match_id" in df_b.columns:
+        left_cols = ["match_id"] + [c for c in ["home_team", "away_team"] if c in df_a.columns] + [c for c in row_cols if c in df_a.columns]
+        right_cols = ["match_id"] + [c for c in row_cols if c in df_b.columns]
+        row_df = df_a[left_cols].merge(df_b[right_cols], on="match_id", how="inner", suffixes=("_a", "_b"))
+        row_align = "match_id"
+    elif set(["datetime", "home_team", "away_team"]).issubset(df_a.columns) and set(["datetime", "home_team", "away_team"]).issubset(df_b.columns):
+        key_cols = ["datetime", "home_team", "away_team"]
+        left_cols = key_cols + [c for c in row_cols if c in df_a.columns]
+        right_cols = key_cols + [c for c in row_cols if c in df_b.columns]
+        row_df = df_a[left_cols].merge(df_b[right_cols], on=key_cols, how="inner", suffixes=("_a", "_b"))
+        row_align = "datetime+home+away"
+    else:
+        min_len = min(len(df_a), len(df_b))
+        row_align = "row_index"
+        row_df = pd.DataFrame({"row_index": np.arange(min_len)})
+        if "home_team" in df_a.columns:
+            row_df["home_team"] = df_a["home_team"].head(min_len).values
+        if "away_team" in df_a.columns:
+            row_df["away_team"] = df_a["away_team"].head(min_len).values
+        for c in row_cols:
+            if c in df_a.columns:
+                row_df[f"{c}_a"] = df_a[c].head(min_len).values
+            if c in df_b.columns:
+                row_df[f"{c}_b"] = df_b[c].head(min_len).values
+
+    if not row_df.empty:
+        if "elo_diff_for_prob_a" in row_df.columns and "elo_diff_for_prob_b" in row_df.columns:
+            row_df["__diff_elo_for_prob"] = (
+                pd.to_numeric(row_df["elo_diff_for_prob_a"], errors="coerce")
+                - pd.to_numeric(row_df["elo_diff_for_prob_b"], errors="coerce")
+            )
+        elif "elo_diff_used_for_prob_a" in row_df.columns and "elo_diff_used_for_prob_b" in row_df.columns:
+            row_df["__diff_elo_for_prob"] = (
+                pd.to_numeric(row_df["elo_diff_used_for_prob_a"], errors="coerce")
+                - pd.to_numeric(row_df["elo_diff_used_for_prob_b"], errors="coerce")
+            )
+        else:
+            row_df["__diff_elo_for_prob"] = 0.0
+        if "d_scaled_a" in row_df.columns and "d_scaled_b" in row_df.columns:
+            row_df["__diff_d_scaled"] = (
+                pd.to_numeric(row_df["d_scaled_a"], errors="coerce")
+                - pd.to_numeric(row_df["d_scaled_b"], errors="coerce")
+            )
+        else:
+            row_df["__diff_d_scaled"] = np.nan
+        top_rows = row_df.reindex(row_df["__diff_elo_for_prob"].abs().sort_values(ascending=False).index).head(int(HFA_TRACE_N))
+        for _, r in top_rows.iterrows():
+            match_id = str(r.get("match_id", r.get("row_index", "")))
+            home = str(r.get("home_team", ""))
+            away = str(r.get("away_team", ""))
+            print(
+                f"[HFA_TRACE_ROW] align={row_align} match_id={match_id} home={home} away={away} "
+                f"elo_before={pd.to_numeric(r.get('elo_diff_before_hfa_a'), errors='coerce'):.4f} "
+                f"hfa_added={pd.to_numeric(r.get('hfa_added_to_diff_a'), errors='coerce'):.4f} "
+                f"elo_after={pd.to_numeric(r.get('elo_diff_after_hfa_a'), errors='coerce'):.4f} "
+                f"elo_for_prob={pd.to_numeric(r.get('elo_diff_for_prob_a'), errors='coerce'):.4f} "
+                f"d_scaled={pd.to_numeric(r.get('d_scaled_a'), errors='coerce'):.4f} "
+                f"diff_elo_for_prob={pd.to_numeric(r.get('__diff_elo_for_prob'), errors='coerce'):.4f} "
+                f"diff_d_scaled={pd.to_numeric(r.get('__diff_d_scaled'), errors='coerce'):.4f}"
+            )
+
+
+def _compare_hfa_probability_files(path_a, path_b, label_a="HFA_ON", label_b="HFA_OFF"):
+    df_a = pd.read_csv(path_a)
+    df_b = pd.read_csv(path_b)
+    _log_hfa_intermediate_trace(df_a, df_b)
+
+    sha_a = _sha1_file(path_a)
+    sha_b = _sha1_file(path_b)
+    print(f"[HFA_SELF_CHECK:SHA1] {label_a}={sha_a}")
+    print(f"[HFA_SELF_CHECK:SHA1] {label_b}={sha_b}")
+    if sha_a == sha_b:
+        print("[ERROR] HFA_ON and HFA_OFF outputs are identical (sha1 match)")
+        raise RuntimeError("HFA self-check failed: identical outputs by sha1")
+
+    intermediate_candidates = [
+        "elo_diff_for_prob",
+        "elo_diff",
+        "elo_diff_scaled",
+        "elo_diff_raw",
+    ]
+    aligned_intermediate, shared_intermediate, inter_key = _build_hfa_aligned_dataframe(
+        df_a, df_b, intermediate_candidates + ["d_scaled"]
+    )
+    elo_col = next((c for c in intermediate_candidates if c in shared_intermediate), None)
+    max_diff_elo = _compute_max_abs_diff(aligned_intermediate, elo_col) if elo_col else None
+    max_diff_d_scaled = _compute_max_abs_diff(aligned_intermediate, "d_scaled") if "d_scaled" in shared_intermediate else None
+    elo_part = (
+        f"max_abs_diff_{elo_col}={max_diff_elo:.6f}" if (elo_col and max_diff_elo is not None)
+        else "max_abs_diff_elo_diff_for_prob=NA"
+    )
+    d_scaled_part = (
+        f"max_abs_diff_d_scaled={max_diff_d_scaled:.6f}" if max_diff_d_scaled is not None
+        else "max_abs_diff_d_scaled=NA"
+    )
+    print(f"[HFA_COMPARE_INTERMEDIATE] key={inter_key} {elo_part} {d_scaled_part}")
+
+    prob_cols = _detect_probability_columns(df_a, df_b)
+    merged, _, prob_key = _build_hfa_aligned_dataframe(df_a, df_b, prob_cols)
+    if merged.empty:
+        raise RuntimeError("[ERROR] HFA compare merge returned 0 rows")
+    home_col, draw_col, away_col = prob_cols
+    d_home = (
+        pd.to_numeric(merged[f"{home_col}_a"], errors="coerce")
+        - pd.to_numeric(merged[f"{home_col}_b"], errors="coerce")
+    ).abs()
+    d_draw = (
+        pd.to_numeric(merged[f"{draw_col}_a"], errors="coerce")
+        - pd.to_numeric(merged[f"{draw_col}_b"], errors="coerce")
+    ).abs()
+    d_away = (
+        pd.to_numeric(merged[f"{away_col}_a"], errors="coerce")
+        - pd.to_numeric(merged[f"{away_col}_b"], errors="coerce")
+    ).abs()
+    any_diff = (d_home > 1e-12) | (d_draw > 1e-12) | (d_away > 1e-12)
+    num_rows_with_any_diff = int(any_diff.sum())
+    print(
+        f"[HFA_SELF_CHECK] key={prob_key} cols={prob_cols} "
+        f"max_abs_diff_prob_home={float(d_home.max(skipna=True)):.6f} "
+        f"max_abs_diff_prob_draw={float(d_draw.max(skipna=True)):.6f} "
+        f"max_abs_diff_prob_away={float(d_away.max(skipna=True)):.6f} "
+        f"num_rows_with_any_diff={num_rows_with_any_diff}"
+    )
+    if num_rows_with_any_diff == 0:
+        print("[ERROR] HFA_ON and HFA_OFF prediction CSVs are identical (no probability differences detected)")
+        raise RuntimeError("HFA self-check failed: no probability differences")
+
+
+def _run_hfa_self_check_generation():
+    args = [a for a in RAW_CLI_ARGS if a not in {"--self-check-hfa", "--skip-hfa-self-check"}]
+    on_path = os.path.join(BASE_DIR, f"{LEAGUE}_{SEASON_YEAR}_predictions_hfa_on.csv")
+    off_path = os.path.join(BASE_DIR, f"{LEAGUE}_{SEASON_YEAR}_predictions_hfa_off.csv")
+    script_path = os.path.abspath(__file__)
+    print("[SELF_CHECK] force recalculation active; cache reuse disabled")
+    for mode, out_path, label in [(1, on_path, "HFA_ON"), (0, off_path, "HFA_OFF")]:
+        env = os.environ.copy()
+        env["ENABLE_HFA"] = str(mode)
+        env["OUTPUT_PRED_CSV"] = out_path
+        env["SKIP_HFA_SELF_CHECK"] = "1"
+        cmd = [sys.executable, script_path] + args
+        if "--force" not in cmd:
+            cmd.append("--force")
+        print(f"[HFA_SELF_CHECK] generating {label}: out={out_path}")
+        subprocess.run(cmd, check=True, cwd=BASE_DIR, env=env)
+        meta_path = f"{out_path}.meta.json"
+        if os.path.exists(meta_path):
+            try:
+                with open(meta_path, "r", encoding="utf-8") as f:
+                    meta = json.load(f)
+                c = meta.get("hfa_apply_count", {})
+                print(
+                    f"[HFA_APPLY_COUNT] label={label} applied={int(c.get('applied', 0))} "
+                    f"skipped={int(c.get('skipped', 0))} "
+                    f"reason_counts={json.dumps(c.get('reason_counts', {}), ensure_ascii=False, sort_keys=True)}"
+                )
+            except Exception as e:
+                print(f"[HFA_APPLY_COUNT][WARN] label={label} meta read failed: {e}")
+        else:
+            print(f"[HFA_APPLY_COUNT][WARN] label={label} meta not found: {meta_path}")
+    _compare_hfa_probability_files(on_path, off_path, label_a="HFA_ON", label_b="HFA_OFF")
+
+
+def log_run_config():
+    print(
+        "[CONFIG] "
+        f"HDA_MODEL_MODE={HDA_MODEL_MODE} HDA_FEATURE_PROFILE={HDA_FEATURE_PROFILE or 'default'} "
+        f"HDA_MODEL_EFFECTIVE={HDA_MODEL_MODE_EFFECTIVE} HDA_MODEL_PATH={HDA_MODEL_PATH} "
+        f"ENABLE_HFA={ENABLE_HFA_INT} HFA_ELO={HFA_ELO:.2f} HFA_BASE_APPLIED={HFA_ELO if ENABLE_HFA else 0.0:.2f} "
+        f"ENABLE_MATCHUP_BIAS={int(ENABLE_MATCHUP_BIAS)} MATCHUP_BIAS_COEF={MATCHUP_BIAS_COEF:.3f} "
+        f"OUT={output_csv} FORCE={int(FORCE_RECALC)} "
+        f"ELO_DIFF_SCALE={ELO_DIFF_SCALE:.3f} DRAW_DECAY_SCALE={DRAW_DECAY_SCALE:.1f} "
+        f"DRAW_BLEND_WEIGHT={DRAW_BLEND_WEIGHT:.3f} ELO_DRAW_MIN={ELO_DRAW_MIN:.3f} "
+        f"ELO_DRAW_MAX={ELO_DRAW_MAX:.3f} ELO_DRAW_BASE={ELO_DRAW_BASE:.3f} "
+        f"ELO_DRAW_BUMP={ELO_DRAW_BUMP:.3f} ELO_DRAW_DIFF_SCALE={ELO_DRAW_DIFF_SCALE:.3f} "
+        f"DRAW_ASSIGN_BY_EXPECTATION={int(DRAW_ASSIGN_BY_EXPECTATION)} "
+        f"DRAW_EXPECTATION_MULTIPLIER={DRAW_EXPECTATION_MULTIPLIER:.3f}"
+    )
+
+
+def log_hfa_apply_path():
+    print("[HFA_APPLY_PATH] active_path=compute_probabilities_and_result:elo_diff_for_prob (single source of HFA addition)")
+
+
+_init_hda_model()
+log_run_config()
+log_hfa_apply_path()
+if SELF_CHECK_HFA and (not SKIP_HFA_SELF_CHECK):
+    _run_hfa_self_check_generation()
+    sys.exit(0)
 
 TEAM_NAME_ALIAS_RAW_MAP = {
     "G大阪": "G大阪",
@@ -596,28 +1212,31 @@ def build_elo_context(
 ):
     profile_diff_raw = float(home_advantage_diff)
     profile_diff_clipped = float(np.clip(profile_diff_raw, -HOME_ADV_PROFILE_DIFF_CLIP, HOME_ADV_PROFILE_DIFF_CLIP))
-    base_hfa = 0.0
-    if ENABLE_HFA:
-        base_hfa = float(HFA_ELO) + profile_diff_clipped * float(HOME_ADV_ELO_COEF)
-        base_hfa = float(np.clip(base_hfa, -HFA_ABS_MAX, HFA_ABS_MAX))
+    matchup_bias = 0.0
+    if ENABLE_MATCHUP_BIAS:
+        matchup_bias = float(profile_diff_clipped) * float(MATCHUP_BIAS_COEF)
+    elo_diff_before_hfa = float(home_elo) - float(away_elo) + float(matchup_bias)
+    base_hfa = float(HFA_ELO) if ENABLE_HFA else 0.0
     hfa_mult = 1.0
-    if bool(stats_home_missing) or bool(stats_away_missing):
-        hfa_mult = float(HFA_STATS_MISSING_MULT)
-    elif bool(data_quality_warn):
-        hfa_mult = float(HFA_DATA_QUALITY_MULT)
-    applied_hfa = float(base_hfa) * float(hfa_mult)
-
-    elo_diff_raw = (float(home_elo) - float(away_elo)) + applied_hfa
+    applied_hfa = float(base_hfa)
+    elo_diff_raw = float(elo_diff_before_hfa) + float(applied_hfa)
     elo_diff = float(elo_diff_raw) * float(ELO_DIFF_SCALE)
     expected_home = 1.0 / (1.0 + 10.0 ** (-elo_diff / 400.0))
+
     return {
         "hfa_enabled": bool(ENABLE_HFA),
+        "matchup_bias_enabled": bool(ENABLE_MATCHUP_BIAS),
+        "matchup_bias_coef": float(MATCHUP_BIAS_COEF),
+        "matchup_bias": float(matchup_bias),
         "home_advantage_profile_diff_raw": profile_diff_raw,
         "home_advantage_profile_diff_clipped": profile_diff_clipped,
+        "elo_diff_before_hfa": float(elo_diff_before_hfa),
+        "elo_diff_after_hfa": float(elo_diff_raw),
         "base_hfa": float(base_hfa),
         "hfa_mult": float(hfa_mult),
         "applied_hfa": float(applied_hfa),
         "elo_diff_raw": float(elo_diff_raw),
+        "elo_diff_scaled": float(elo_diff),
         "elo_diff": float(elo_diff),
         "expected_home": float(expected_home),
     }
@@ -634,14 +1253,539 @@ def log_prob_summary(df, label):
     avg_draw = float(df["prob_draw"].mean())
     sum_draw = float(df["prob_draw"].sum())
     d_count = int((df["predicted_result"].astype(str) == "D").sum())
+    actual_d_rate = None
+    if "actual_result" in df.columns:
+        actual = df["actual_result"].astype(str).str.upper()
+        valid = actual.isin(["H", "D", "A"])
+        if int(valid.sum()) > 0:
+            actual_d_rate = float((actual[valid] == "D").mean())
+    elif {"home_score", "away_score"}.issubset(df.columns):
+        hs = pd.to_numeric(df["home_score"], errors="coerce")
+        aw = pd.to_numeric(df["away_score"], errors="coerce")
+        valid = hs.notna() & aw.notna()
+        if int(valid.sum()) > 0:
+            actual_d_rate = float((hs[valid] == aw[valid]).mean())
+    draw_diff_text = ""
+    if actual_d_rate is not None:
+        draw_diff_pp = (avg_draw - float(actual_d_rate)) * 100.0
+        draw_diff_text = f" actual_D_rate={actual_d_rate:.3f} draw_diff_pp={draw_diff_pp:.2f}"
+    if HDA_MODEL_MODE_EFFECTIVE == "multinom":
+        print(
+            f"[{label}] rows={rows} avg_prob_draw={avg_draw:.3f} "
+            f"sum_prob_draw={sum_draw:.3f} predicted_D_count={d_count} "
+            f"ELO_DIFF_SCALE={ELO_DIFF_SCALE:.2f}{draw_diff_text} "
+            "legacy_draw_adjustment=disabled"
+        )
+    else:
+        print(
+            f"[{label}] rows={rows} avg_prob_draw={avg_draw:.3f} "
+            f"sum_prob_draw={sum_draw:.3f} predicted_D_count={d_count} "
+            f"ELO_DIFF_SCALE={ELO_DIFF_SCALE:.2f}{draw_diff_text} "
+            f"DRAW_DECAY_SCALE={DRAW_DECAY_SCALE:.1f} "
+            f"ELO_DRAW_DIFF_SCALE={ELO_DRAW_DIFF_SCALE:.3f} "
+            f"ELO_DRAW_MIN={ELO_DRAW_MIN:.3f} ELO_DRAW_MAX={ELO_DRAW_MAX:.3f} "
+            f"DRAW_BLEND_WEIGHT={DRAW_BLEND_WEIGHT:.3f}"
+        )
+
+
+def log_prob_draw_distribution(df, label):
+    if "prob_draw" not in df.columns or df.empty:
+        print(f"[PROB_DRAW_DIST:{label}] unavailable")
+        return
+    s = pd.to_numeric(df["prob_draw"], errors="coerce").dropna()
+    if s.empty:
+        print(f"[PROB_DRAW_DIST:{label}] unavailable")
+        return
+    q = s.quantile([0.05, 0.25, 0.5, 0.75, 0.95])
     print(
-        f"[{label}] rows={rows} avg_prob_draw={avg_draw:.3f} "
-        f"sum_prob_draw={sum_draw:.3f} predicted_D_count={d_count} "
-        f"ELO_DIFF_SCALE={ELO_DIFF_SCALE:.2f} "
-        f"DRAW_DECAY_SCALE={DRAW_DECAY_SCALE:.1f} "
-        f"ELO_DRAW_DIFF_SCALE={ELO_DRAW_DIFF_SCALE:.3f} "
-        f"ELO_DRAW_MIN={ELO_DRAW_MIN:.3f} ELO_DRAW_MAX={ELO_DRAW_MAX:.3f} "
-        f"DRAW_BLEND_WEIGHT={DRAW_BLEND_WEIGHT:.3f}"
+        f"[PROB_DRAW_DIST:{label}] rows={len(s)} min={float(s.min()):.3f} "
+        f"p05={float(q.loc[0.05]):.3f} p25={float(q.loc[0.25]):.3f} "
+        f"p50={float(q.loc[0.5]):.3f} p75={float(q.loc[0.75]):.3f} "
+        f"p95={float(q.loc[0.95]):.3f} max={float(s.max()):.3f}"
+    )
+
+
+def log_prob_distribution(df, label, col):
+    if col not in df.columns or df.empty:
+        print(f"[PROB_DIST:{label}] col={col} unavailable")
+        return
+    s = pd.to_numeric(df[col], errors="coerce").dropna()
+    if s.empty:
+        print(f"[PROB_DIST:{label}] col={col} unavailable")
+        return
+    q = s.quantile([0.05, 0.25, 0.5, 0.75, 0.95])
+    print(
+        f"[PROB_DIST:{label}] col={col} rows={len(s)} "
+        f"min={float(s.min()):.3f} p05={float(q.loc[0.05]):.3f} p25={float(q.loc[0.25]):.3f} "
+        f"p50={float(q.loc[0.5]):.3f} p75={float(q.loc[0.75]):.3f} p95={float(q.loc[0.95]):.3f} "
+        f"max={float(s.max()):.3f}"
+    )
+
+
+def log_max_prob_distribution(df, label):
+    candidates = [
+        ("prob_home", "prob_draw", "prob_away"),
+        ("prob_home_win", "prob_draw", "prob_away_win"),
+    ]
+    cols = None
+    for c in candidates:
+        if set(c).issubset(df.columns):
+            cols = c
+            break
+    if cols is None or df.empty:
+        print(f"[MAX_PROB_DIST:{label}] unavailable")
+        return
+    ph = pd.to_numeric(df[cols[0]], errors="coerce")
+    pdw = pd.to_numeric(df[cols[1]], errors="coerce")
+    pa = pd.to_numeric(df[cols[2]], errors="coerce")
+    mx = pd.concat([ph, pdw, pa], axis=1).max(axis=1).dropna()
+    if mx.empty:
+        print(f"[MAX_PROB_DIST:{label}] unavailable")
+        return
+    q = mx.quantile([0.05, 0.25, 0.5, 0.75, 0.95])
+    print(
+        f"[MAX_PROB_DIST:{label}] rows={len(mx)} "
+        f"min={float(mx.min()):.3f} p05={float(q.loc[0.05]):.3f} p25={float(q.loc[0.25]):.3f} "
+        f"p50={float(q.loc[0.5]):.3f} p75={float(q.loc[0.75]):.3f} p95={float(q.loc[0.95]):.3f} "
+        f"max={float(mx.max()):.3f}"
+    )
+
+
+def _feature_series_for_name(df, name):
+    if name in df.columns:
+        return pd.to_numeric(df[name], errors="coerce")
+    if name == "abs_elo_diff_for_prob" and "elo_diff_for_prob" in df.columns:
+        return pd.to_numeric(df["elo_diff_for_prob"], errors="coerce").abs()
+    if name in {"d_scaled", "abs_d_scaled"} and "elo_diff_for_prob" in df.columns:
+        base = pd.to_numeric(df["elo_diff_for_prob"], errors="coerce").abs()
+        return base
+    return pd.Series([np.nan] * len(df), index=df.index, dtype="float64")
+
+
+def log_multinom_feature_distribution(df, label):
+    if HDA_MODEL_MODE_EFFECTIVE != "multinom" or HDA_MODEL_BUNDLE is None:
+        return
+    if df is None or df.empty:
+        print(f"[FEATURE_DIST:{label}] unavailable")
+        return
+    names = list(HDA_MODEL_BUNDLE.get("feature_names", []))
+    mu = np.asarray(HDA_MODEL_BUNDLE.get("feature_mean", []), dtype=float)
+    sigma = np.asarray(HDA_MODEL_BUNDLE.get("feature_std", []), dtype=float)
+    for i, name in enumerate(names):
+        s = _feature_series_for_name(df, name)
+        rows = int(len(s))
+        missing = int(s.isna().sum())
+        valid = s.dropna()
+        if valid.empty:
+            print(f"[FEATURE_DIST:{label}] col={name} rows={rows} missing={missing} unique=0 unavailable")
+            continue
+        q = valid.quantile([0.05, 0.25, 0.5, 0.75, 0.95])
+        print(
+            f"[FEATURE_DIST:{label}] col={name} rows={rows} missing={missing} unique={int(valid.nunique())} "
+            f"min={float(valid.min()):.3f} p05={float(q.loc[0.05]):.3f} p25={float(q.loc[0.25]):.3f} "
+            f"p50={float(q.loc[0.5]):.3f} p75={float(q.loc[0.75]):.3f} p95={float(q.loc[0.95]):.3f} "
+            f"max={float(valid.max()):.3f}"
+        )
+        if i < len(mu) and i < len(sigma):
+            den = 1.0 if abs(float(sigma[i])) < 1e-12 else float(sigma[i])
+            s_std = (valid - float(mu[i])) / den
+            q2 = s_std.quantile([0.05, 0.25, 0.5, 0.75, 0.95])
+            print(
+                f"[FEATURE_DIST_STD:{label}] col={name} rows={int(len(s_std))} "
+                f"min={float(s_std.min()):.3f} p05={float(q2.loc[0.05]):.3f} p25={float(q2.loc[0.25]):.3f} "
+                f"p50={float(q2.loc[0.5]):.3f} p75={float(q2.loc[0.75]):.3f} p95={float(q2.loc[0.95]):.3f} "
+                f"max={float(s_std.max()):.3f}"
+            )
+
+
+def log_actual_hda_ratio(df, label):
+    if df is None or df.empty:
+        print(f"[ACTUAL_HDA:{label}] unavailable")
+        return
+    if "actual_result" in df.columns:
+        actual = df["actual_result"].astype(str).str.upper()
+    elif {"home_score", "away_score"}.issubset(df.columns):
+        hs = pd.to_numeric(df["home_score"], errors="coerce")
+        aw = pd.to_numeric(df["away_score"], errors="coerce")
+        actual = pd.Series(np.where(hs > aw, "H", np.where(hs < aw, "A", "D")), index=df.index)
+        actual = actual.where(hs.notna() & aw.notna(), pd.NA).astype("object")
+    else:
+        print(f"[ACTUAL_HDA:{label}] unavailable")
+        return
+    actual = actual[actual.isin(["H", "D", "A"])]
+    if actual.empty:
+        print(f"[ACTUAL_HDA:{label}] unavailable")
+        return
+    total = int(len(actual))
+    h = int((actual == "H").sum())
+    d = int((actual == "D").sum())
+    a = int((actual == "A").sum())
+    print(
+        f"[ACTUAL_HDA:{label}] rows={total} H={100.0*h/total:.1f}% ({h}) "
+        f"D={100.0*d/total:.1f}% ({d}) A={100.0*a/total:.1f}% ({a})"
+    )
+
+
+def _calc_hda_dist_from_series(series):
+    s = pd.Series(series, dtype="object").astype(str).str.upper()
+    s = s[s.isin(["H", "D", "A"])]
+    n = int(len(s))
+    h = int((s == "H").sum())
+    d = int((s == "D").sum())
+    a = int((s == "A").sum())
+    hp = (100.0 * h / n) if n > 0 else 0.0
+    dp = (100.0 * d / n) if n > 0 else 0.0
+    ap = (100.0 * a / n) if n > 0 else 0.0
+    return {"rows": n, "H_cnt": h, "D_cnt": d, "A_cnt": a, "H_pct": hp, "D_pct": dp, "A_pct": ap}
+
+
+def log_pred_dist(df, label, scope="all"):
+    if df is None or df.empty:
+        print(f"[PRED_DIST:{label}] scope={scope} unavailable")
+        return
+    col = "final_result" if "final_result" in df.columns else "predicted_result"
+    if col not in df.columns:
+        print(f"[PRED_DIST:{label}] scope={scope} unavailable")
+        return
+    dist = _calc_hda_dist_from_series(df[col])
+    if dist["rows"] <= 0:
+        print(f"[PRED_DIST:{label}] scope={scope} unavailable")
+        return
+    print(
+        f"[PRED_DIST:{label}] scope={scope} rows={dist['rows']} "
+        f"H={dist['H_pct']:.1f}% ({dist['H_cnt']}) "
+        f"D={dist['D_pct']:.1f}% ({dist['D_cnt']}) "
+        f"A={dist['A_pct']:.1f}% ({dist['A_cnt']})"
+    )
+
+
+def log_draw_argmax_stats(df, label, threshold=0.23):
+    candidates = [
+        ("prob_home", "prob_draw", "prob_away"),
+        ("prob_home_win", "prob_draw", "prob_away_win"),
+    ]
+    cols = None
+    for c in candidates:
+        if set(c).issubset(df.columns):
+            cols = c
+            break
+    if cols is None or df.empty:
+        print(f"[DRAW_ARGMAX:{label}] unavailable")
+        return
+    ch, cd, ca = cols
+    ph = pd.to_numeric(df[ch], errors="coerce")
+    pdw = pd.to_numeric(df[cd], errors="coerce")
+    pa = pd.to_numeric(df[ca], errors="coerce")
+    valid = ph.notna() & pdw.notna() & pa.notna()
+    if int(valid.sum()) == 0:
+        print(f"[DRAW_ARGMAX:{label}] unavailable")
+        return
+    cnt_argmax = int(((pdw >= ph) & (pdw >= pa) & valid).sum())
+    cnt_threshold = int(((pdw >= float(threshold)) & valid).sum())
+    print(
+        f"[DRAW_ARGMAX:{label}] rows={int(valid.sum())} "
+        f"prob_draw_argmax_count={cnt_argmax} prob_draw_ge_{threshold:.2f}_count={cnt_threshold}"
+    )
+
+
+def _parse_round_no_env(value):
+    s = str(value).strip()
+    if not s:
+        return None
+    m = re.search(r"([0-9]+)", unicodedata.normalize("NFKC", s))
+    if not m:
+        return None
+    try:
+        return int(m.group(1))
+    except Exception:
+        return None
+
+
+def _resolve_round_filter(df):
+    if df is None or df.empty:
+        return pd.Series([], dtype=bool), "empty_df", True
+
+    if TOTO_ROUND_ID:
+        if "toto_round_id" in df.columns:
+            mask = df["toto_round_id"].astype(str).str.strip() == TOTO_ROUND_ID
+            return mask, f"toto_round_id={TOTO_ROUND_ID}", False
+        print(f"[WARN] TOTO_ROUND_IDが指定されていますが 'toto_round_id' 列がありません: {TOTO_ROUND_ID}")
+
+    round_no = _parse_round_no_env(ROUND_NO_ENV)
+    if round_no is not None:
+        if "節" in df.columns:
+            mask = df["節"].map(extract_round_number).astype("Int64") == int(round_no)
+            return mask.fillna(False), f"round_no={int(round_no)} (from 節)", False
+        if "round" in df.columns:
+            mask = df["round"].map(extract_round_number).astype("Int64") == int(round_no)
+            return mask.fillna(False), f"round_no={int(round_no)} (from round)", False
+        print(f"[WARN] ROUND_NOが指定されていますが '節'/'round' 列がありません: {ROUND_NO_ENV}")
+
+    print("[WARN] フィルタ未指定のため全件集計")
+    return pd.Series([True] * len(df), index=df.index), "ALL", True
+
+
+def _load_toto_targets():
+    if not os.path.exists(TOTO_ORDER_CSV):
+        return pd.DataFrame()
+    try:
+        src = pd.read_csv(TOTO_ORDER_CSV, header=None, encoding="utf-8-sig")
+    except Exception as e:
+        print(f"[WARN] toto並び順CSVの読み込み失敗: {TOTO_ORDER_CSV} ({e})")
+        return pd.DataFrame()
+    if src.empty:
+        return pd.DataFrame()
+    # 想定: col0=match_no, col1=home_team, col2='vs', col3=away_team
+    if src.shape[1] < 4:
+        print(f"[WARN] toto並び順CSVの列数が不足: {TOTO_ORDER_CSV}")
+        return pd.DataFrame()
+    out = pd.DataFrame(
+        {
+            "match_no": pd.to_numeric(src.iloc[:, 0], errors="coerce"),
+            "home_team": src.iloc[:, 1].astype(str),
+            "away_team": src.iloc[:, 3].astype(str),
+        }
+    )
+    out = out.dropna(subset=["match_no"]).copy()
+    out["match_no"] = out["match_no"].astype(int)
+    out["_home_key"] = normalize_team_series(out["home_team"])
+    out["_away_key"] = normalize_team_series(out["away_team"])
+    out = out.dropna(subset=["_home_key", "_away_key"])
+    out["_pair_key"] = out["_home_key"].astype(str) + "||" + out["_away_key"].astype(str)
+    out = out.drop_duplicates(subset=["_pair_key"], keep="first")
+    return out
+
+
+def _resolve_toto_target_filter(df):
+    if df is None or df.empty:
+        return None, None
+    targets = _load_toto_targets()
+    if targets.empty:
+        return None, None
+    if not {"home_team", "away_team"}.issubset(df.columns):
+        print("[WARN] toto並び順フィルタを適用できません（home_team/away_team列不足）")
+        return None, None
+    work = df.copy()
+    work["_home_key"] = normalize_team_series(work["home_team"])
+    work["_away_key"] = normalize_team_series(work["away_team"])
+    work["_pair_key"] = work["_home_key"].astype(str) + "||" + work["_away_key"].astype(str)
+    target_keys = set(targets["_pair_key"].astype(str).tolist())
+    mask = work["_pair_key"].isin(target_keys)
+    return mask, f"toto_order_csv={os.path.basename(TOTO_ORDER_CSV)}"
+
+
+def calc_hda_ratio(series_of_HDA) -> dict:
+    if series_of_HDA is None:
+        return {
+            "H": {"count": 0, "pct": 0.0},
+            "D": {"count": 0, "pct": 0.0},
+            "A": {"count": 0, "pct": 0.0},
+            "total": 0,
+        }
+    s = pd.Series(series_of_HDA).astype(str).str.upper().str.strip()
+    valid = s[s.isin(["H", "D", "A"])]
+    total = int(len(valid))
+    h = int((valid == "H").sum())
+    d = int((valid == "D").sum())
+    a = int((valid == "A").sum())
+    denom = total if total > 0 else 1
+    return {
+        "H": {"count": h, "pct": (h * 100.0 / denom) if total > 0 else 0.0},
+        "D": {"count": d, "pct": (d * 100.0 / denom) if total > 0 else 0.0},
+        "A": {"count": a, "pct": (a * 100.0 / denom) if total > 0 else 0.0},
+        "total": total,
+    }
+
+
+def _enrich_scores_from_results(df_pred_filtered, df_results):
+    if df_results is None or df_results.empty or df_pred_filtered.empty:
+        return df_pred_filtered
+
+    out = df_pred_filtered.copy()
+    res = df_results.copy()
+    for col in ["home_score", "away_score"]:
+        if col not in out.columns:
+            out[col] = pd.NA
+
+    # 1) match_id があれば最優先で突合
+    if "match_id" in out.columns and "match_id" in res.columns:
+        right = res[["match_id", "home_score", "away_score"]].copy()
+        right = right.dropna(subset=["match_id"]).drop_duplicates(subset=["match_id"], keep="last")
+        merged = out.merge(right, on="match_id", how="left", suffixes=("", "__res"))
+        for col in ["home_score", "away_score"]:
+            merged[col] = pd.to_numeric(merged[col], errors="coerce").fillna(
+                pd.to_numeric(merged[f"{col}__res"], errors="coerce")
+            )
+        return merged.drop(columns=["home_score__res", "away_score__res"], errors="ignore")
+
+    # 2) datetime + home_team + away_team
+    key_cols = {"datetime", "home_team", "away_team"}
+    if key_cols.issubset(set(out.columns)) and key_cols.issubset(set(res.columns)):
+        left = out.copy()
+        right = res.copy()
+        left["_dt_key"] = pd.to_datetime(left["datetime"], errors="coerce")
+        right["_dt_key"] = pd.to_datetime(right["datetime"], errors="coerce")
+        left["_home_key"] = normalize_team_series(left["home_team"]) if "normalize_team_series" in globals() else left["home_team"].astype(str)
+        left["_away_key"] = normalize_team_series(left["away_team"]) if "normalize_team_series" in globals() else left["away_team"].astype(str)
+        right["_home_key"] = normalize_team_series(right["home_team"]) if "normalize_team_series" in globals() else right["home_team"].astype(str)
+        right["_away_key"] = normalize_team_series(right["away_team"]) if "normalize_team_series" in globals() else right["away_team"].astype(str)
+        right = right[["_dt_key", "_home_key", "_away_key", "home_score", "away_score"]].drop_duplicates(
+            subset=["_dt_key", "_home_key", "_away_key"], keep="last"
+        )
+        merged = left.merge(right, on=["_dt_key", "_home_key", "_away_key"], how="left", suffixes=("", "__res"))
+        for col in ["home_score", "away_score"]:
+            merged[col] = pd.to_numeric(merged[col], errors="coerce").fillna(
+                pd.to_numeric(merged[f"{col}__res"], errors="coerce")
+            )
+        return merged.drop(
+            columns=["home_score__res", "away_score__res", "_dt_key", "_home_key", "_away_key"],
+            errors="ignore",
+        )
+
+    return out
+
+
+def _write_round_summary_csv(filter_label, pred_ratio, actual_ratio):
+    safe = re.sub(r"[^0-9A-Za-z._-]+", "_", str(filter_label)).strip("._")
+    if not safe:
+        safe = "all"
+    out_path = os.path.join(MERGE_QC_DIR, f"round_summary_{safe}.csv")
+    os.makedirs(MERGE_QC_DIR, exist_ok=True)
+    rows = [
+        {
+            "kind": "pred",
+            "H_cnt": pred_ratio["H"]["count"],
+            "D_cnt": pred_ratio["D"]["count"],
+            "A_cnt": pred_ratio["A"]["count"],
+            "total": pred_ratio["total"],
+            "H_pct": pred_ratio["H"]["pct"],
+            "D_pct": pred_ratio["D"]["pct"],
+            "A_pct": pred_ratio["A"]["pct"],
+            "filter": filter_label,
+        }
+    ]
+    if actual_ratio is not None:
+        rows.append(
+            {
+                "kind": "actual",
+                "H_cnt": actual_ratio["H"]["count"],
+                "D_cnt": actual_ratio["D"]["count"],
+                "A_cnt": actual_ratio["A"]["count"],
+                "total": actual_ratio["total"],
+                "H_pct": actual_ratio["H"]["pct"],
+                "D_pct": actual_ratio["D"]["pct"],
+                "A_pct": actual_ratio["A"]["pct"],
+                "filter": filter_label,
+            }
+        )
+    pd.DataFrame(rows).to_csv(out_path, index=False, encoding="utf-8-sig")
+    print(f"[ROUND_SUMMARY_CSV] saved={out_path}")
+
+
+def summarize_round_hda(df_pred, df_results=None, round_filter_label="auto"):
+    if df_pred is None or df_pred.empty:
+        print("[ROUND_SUMMARY] filter=empty rows=0")
+        print("[PRED_RATIO] H=0.0% (0) D=0.0% (0) A=0.0% (0)")
+        print("[ACTUAL_RATIO] unavailable (scores not found or not finished)")
+        return
+
+    mask, filter_label = _resolve_toto_target_filter(df_pred)
+    if mask is None:
+        mask, filter_label, _ = _resolve_round_filter(df_pred)
+    pred_filtered = df_pred.loc[mask].copy()
+    rows = int(len(pred_filtered))
+    if filter_label.startswith("toto_order_csv=") and rows != 13:
+        print(f"[WARN] toto対象の抽出件数が13ではありません: rows={rows} (LEAGUE={LEAGUE})")
+    print(f"[ROUND_SUMMARY] filter={filter_label} rows={rows}")
+
+    pred_ratio = calc_hda_ratio(pred_filtered.get("predicted_result", pd.Series(dtype="object")))
+    print(
+        f"[PRED_RATIO] H={pred_ratio['H']['pct']:.1f}% ({pred_ratio['H']['count']}) "
+        f"D={pred_ratio['D']['pct']:.1f}% ({pred_ratio['D']['count']}) "
+        f"A={pred_ratio['A']['pct']:.1f}% ({pred_ratio['A']['count']})"
+    )
+
+    if rows == 0:
+        print("[ACTUAL_RATIO] unavailable (scores not found or not finished)")
+        _write_round_summary_csv(filter_label, pred_ratio, None)
+        return
+
+    actual_source = _enrich_scores_from_results(pred_filtered, df_results)
+    hs = pd.to_numeric(actual_source.get("home_score"), errors="coerce")
+    aw = pd.to_numeric(actual_source.get("away_score"), errors="coerce")
+    actual_result = pd.Series(
+        [get_result(h, a) for h, a in zip(hs.tolist(), aw.tolist())],
+        index=actual_source.index,
+        dtype="object",
+    )
+    resolved_count = int(actual_result.notna().sum())
+    if resolved_count != rows:
+        print("[ACTUAL_RATIO] unavailable (scores not found or not finished)")
+        _write_round_summary_csv(filter_label, pred_ratio, None)
+        return
+
+    actual_ratio = calc_hda_ratio(actual_result)
+    print(
+        f"[ACTUAL_RATIO] H={actual_ratio['H']['pct']:.1f}% ({actual_ratio['H']['count']}) "
+        f"D={actual_ratio['D']['pct']:.1f}% ({actual_ratio['D']['count']}) "
+        f"A={actual_ratio['A']['pct']:.1f}% ({actual_ratio['A']['count']})"
+    )
+    _write_round_summary_csv(filter_label, pred_ratio, actual_ratio)
+
+
+def log_decision_rule_once():
+    if getattr(log_decision_rule_once, "_done", False):
+        return
+    if DRAW_ASSIGN_BY_EXPECTATION:
+        rule_desc = "FORCE_DRAW_BY_EXPECTATION_ASSIGN > ARGMAX"
+    else:
+        rule_desc = "ARGMAX"
+    print(f"[DECISION_RULE] {rule_desc}")
+    log_decision_rule_once._done = True
+
+
+def dump_decision_artifacts(df, label="pred", threshold=0.25):
+    if not DUMP_DECISION:
+        return
+    required = {"prob_home_win", "prob_draw", "prob_away_win", "predicted_result"}
+    if not required.issubset(df.columns):
+        print(f"[DUMP_DECISION][WARN] required_columns_missing label={label} need={sorted(required)}")
+        return
+
+    os.makedirs(MERGE_QC_DIR, exist_ok=True)
+    work = df.copy()
+    work["prob_home_win"] = pd.to_numeric(work["prob_home_win"], errors="coerce")
+    work["prob_draw"] = pd.to_numeric(work["prob_draw"], errors="coerce")
+    work["prob_away_win"] = pd.to_numeric(work["prob_away_win"], errors="coerce")
+    work["draw_gap"] = work[["prob_home_win", "prob_away_win"]].max(axis=1) - work["prob_draw"]
+
+    keep_cols = [c for c in ["match_id", "match_no", "league", "節", "home_team", "away_team"] if c in work.columns]
+    keep_cols += ["prob_home_win", "prob_draw", "prob_away_win", "predicted_result", "draw_gap"]
+    for c in [
+        "decision_reason",
+        "argmax_result",
+        "argmax_raw_result",
+        "argmax_max_prob",
+        "argmax_raw_max_prob",
+        "d_scaled",
+        "elo_diff_for_prob",
+        "decision_draw_expectation_multiplier",
+        "decision_draw_assign_enabled",
+    ]:
+        if c in work.columns:
+            keep_cols.append(c)
+
+    full_csv = os.path.join(MERGE_QC_DIR, f"decision_scores_{label}.csv")
+    work[keep_cols].to_csv(full_csv, index=False, encoding="utf-8-sig")
+
+    cond = (work["prob_draw"] >= float(threshold)) & (work["predicted_result"].astype(str).str.upper() != "D")
+    top50 = work.loc[cond, keep_cols].sort_values(["draw_gap", "prob_draw"], ascending=[True, False]).head(50)
+    top50_csv = os.path.join(MERGE_QC_DIR, f"decision_draw_candidates_{label}_top50.csv")
+    top50.to_csv(top50_csv, index=False, encoding="utf-8-sig")
+    print(
+        f"[DUMP_DECISION] label={label} total={len(work)} "
+        f"cond=(prob_draw>={threshold} and predicted_result!=D) matched={int(cond.sum())} "
+        f"saved_full={full_csv} saved_top50={top50_csv}"
     )
 
 
@@ -876,20 +2020,47 @@ def compute_probabilities_and_result(
         data_quality_warn=data_quality_warn,
     )
 
-    prob_home_win, prob_draw, prob_away_win = predict_poisson_probabilities(
-        elo_ctx["elo_diff"],
-        home_xg_stats,
-        away_xg_stats,
-        home_travel_distance,
-        away_travel_distance,
-        home_fatigue_score,
-        away_fatigue_score,
-        home_rank_motivation_score,
-        away_rank_motivation_score,
-        home_absence_impact,
-        away_absence_impact,
-        weather_flags,
-    )
+    # HFAの単一適用点: 確率計算に渡す差分（elo_diff_for_prob）をここで確定させる
+    elo_diff_before_hfa = float(elo_ctx["elo_diff_before_hfa"])
+    applied_hfa = float(elo_ctx["applied_hfa"]) if ENABLE_HFA else 0.0
+    elo_diff_after_hfa = float(elo_diff_before_hfa + applied_hfa)
+    elo_diff_for_prob = float(elo_diff_after_hfa) * float(ELO_DIFF_SCALE)
+
+    if not ENABLE_HFA:
+        _update_hfa_apply_counter("ENABLE_HFA=0", applied=False)
+    elif float(HFA_ELO) <= 0.0:
+        _update_hfa_apply_counter("HFA_ELO<=0", applied=False)
+    elif abs(applied_hfa) > 1e-12:
+        _update_hfa_apply_counter("applied", applied=True)
+    else:
+        _update_hfa_apply_counter("applied_hfa_zero_other", applied=False)
+
+    if HDA_MODEL_MODE_EFFECTIVE == "multinom" and HDA_MODEL_BUNDLE is not None:
+        (prob_home_win, prob_draw, prob_away_win), model_feats = _predict_hda_multinom_probs(elo_diff_for_prob)
+        draw_model_input = float(model_feats.get("d_scaled", abs(elo_diff_for_prob)))
+        draw_poi = float("nan")
+        draw_elo = float("nan")
+    else:
+        prob_home_win, prob_draw, prob_away_win = predict_poisson_probabilities(
+            elo_diff_for_prob,
+            home_xg_stats,
+            away_xg_stats,
+            home_travel_distance,
+            away_travel_distance,
+            home_fatigue_score,
+            away_fatigue_score,
+            home_rank_motivation_score,
+            away_rank_motivation_score,
+            home_absence_impact,
+            away_absence_impact,
+            weather_flags,
+        )
+        prob_home_win, prob_draw, prob_away_win, draw_model_input, draw_poi, draw_elo = calibrate_draw_probability(
+            prob_home_win,
+            prob_draw,
+            prob_away_win,
+            elo_diff_for_prob,
+        )
     sum_before_round = prob_home_win + prob_draw + prob_away_win
     if not np.isclose(sum_before_round, 1.0, atol=1e-6):
         print(
@@ -897,20 +2068,17 @@ def compute_probabilities_and_result(
             f"(home={prob_home_win:.6f}, draw={prob_draw:.6f}, away={prob_away_win:.6f})"
         )
 
-    if elo_ctx["elo_diff"] > 0 and prob_home_win < prob_away_win:
+    if elo_diff_for_prob > 0 and prob_home_win < prob_away_win:
         print(
-            f"[PROB_QC][WARN] match_id={match_id} elo_diff={elo_ctx['elo_diff']:.4f} "
+            f"[PROB_QC][WARN] match_id={match_id} elo_diff_for_prob={elo_diff_for_prob:.4f} "
             f"なのに prob_home({prob_home_win:.4f}) < prob_away({prob_away_win:.4f})"
         )
 
-    prob_home_win, prob_draw, prob_away_win, draw_model_input, draw_poi, draw_elo = calibrate_draw_probability(
-        prob_home_win,
-        prob_draw,
-        prob_away_win,
-        elo_ctx["elo_diff"],
+    predicted_result, decision_reason, decision_metrics = decide_result(
+        prob_home_win, prob_draw, prob_away_win
     )
 
-    predicted_result = decide_predicted_result(prob_home_win, prob_draw, prob_away_win)
+    expected_home_for_prob = 1.0 / (1.0 + 10.0 ** (-elo_diff_for_prob / 400.0))
 
     debug_row = {
         "match_id": match_id,
@@ -918,22 +2086,37 @@ def compute_probabilities_and_result(
         "away_elo": float(away_elo),
         "home_advantage_diff_input": float(home_advantage_diff),
         "hfa_enabled": elo_ctx["hfa_enabled"],
+        "matchup_bias_enabled": elo_ctx["matchup_bias_enabled"],
+        "matchup_bias_coef": elo_ctx["matchup_bias_coef"],
+        "matchup_bias": elo_ctx["matchup_bias"],
         "home_advantage_profile_diff_raw": elo_ctx["home_advantage_profile_diff_raw"],
         "home_advantage_profile_diff_clipped": elo_ctx["home_advantage_profile_diff_clipped"],
         "HFA_base": elo_ctx["base_hfa"],
         "HFA_multiplier": elo_ctx["hfa_mult"],
-        "HFA_applied": elo_ctx["applied_hfa"],
-        "elo_diff_raw": elo_ctx["elo_diff_raw"],
-        "elo_diff": elo_ctx["elo_diff"],
-        "expected_home": elo_ctx["expected_home"],
+        "hfa_clip_min": float("nan"),
+        "hfa_clip_max": float("nan"),
+        "elo_diff_scale_factor": float(ELO_DIFF_SCALE),
+        "hfa_added_to_diff": applied_hfa,
+        "HFA_applied": applied_hfa,
+        "elo_diff_before_hfa": elo_diff_before_hfa,
+        "elo_diff_after_hfa": elo_diff_after_hfa,
+        "elo_diff_raw": elo_diff_after_hfa,
+        "elo_diff_scaled": elo_diff_for_prob,
+        "elo_diff_for_prob": elo_diff_for_prob,
+        "elo_diff": elo_diff_for_prob,
+        "expected_home": expected_home_for_prob,
         "draw_model_input": draw_model_input,
         "draw_model_output": prob_draw,
         "draw_model_poi": draw_poi,
         "draw_model_elo": draw_elo,
+        "hda_model_mode_effective": HDA_MODEL_MODE_EFFECTIVE,
         "prob_home_win": prob_home_win,
         "prob_draw": prob_draw,
         "prob_away_win": prob_away_win,
         "predicted_result": predicted_result,
+        "decision_reason": decision_reason,
+        "argmax_result": decision_metrics.get("argmax_result"),
+        "argmax_max_prob": decision_metrics.get("argmax_max_prob"),
     }
 
     if DEBUG_ELO_PROB or (DEBUG_MATCH_ID and str(match_id) == DEBUG_MATCH_ID):
@@ -952,18 +2135,41 @@ def compute_probabilities_and_result(
     return prob_home_win, prob_draw, prob_away_win, predicted_result, debug_row
 
 
+def decide_result(
+    prob_home_win,
+    prob_draw,
+    prob_away_win,
+    force_draw=False,
+    force_reason=None,
+):
+    if pd.isna(prob_home_win) or pd.isna(prob_draw) or pd.isna(prob_away_win):
+        return None, "UNDECIDED_NAN", {"argmax_result": None, "argmax_max_prob": None}
+    ph = float(prob_home_win)
+    pdw = float(prob_draw)
+    pa = float(prob_away_win)
+    argmax_max = max(ph, pdw, pa)
+    # Base rule: calibrated H/D/A probabilities の argmax
+    if ph >= pdw and ph >= pa:
+        argmax_result = "H"
+    elif pa >= ph and pa >= pdw:
+        argmax_result = "A"
+    else:
+        argmax_result = "D"
+
+    if force_draw:
+        reason = force_reason or "FORCE_DRAW_BY_RULE"
+        return "D", reason, {"argmax_result": argmax_result, "argmax_max_prob": float(argmax_max)}
+    return argmax_result, "ARGMAX", {"argmax_result": argmax_result, "argmax_max_prob": float(argmax_max)}
+
+
 def decide_predicted_result(
     prob_home_win,
     prob_draw,
     prob_away_win,
 ):
-    if pd.isna(prob_home_win) or pd.isna(prob_draw) or pd.isna(prob_away_win):
-        return None
-    if prob_home_win >= prob_draw and prob_home_win >= prob_away_win:
-        return "H"
-    if prob_away_win >= prob_home_win and prob_away_win >= prob_draw:
-        return "A"
-    return "D"
+    # 互換ラッパー: 決定ロジックは decide_result() に集約
+    decided, _, _ = decide_result(prob_home_win, prob_draw, prob_away_win)
+    return decided
 
 
 def assign_draw_results_by_expectation(df, output_col="predicted_result"):
@@ -973,7 +2179,11 @@ def assign_draw_results_by_expectation(df, output_col="predicted_result"):
 
     out = df.copy()
     out["__base_pred"] = out.apply(
-        lambda r: decide_predicted_result(r["prob_home_win"], r["prob_draw"], r["prob_away_win"]),
+        lambda r: decide_result(r["prob_home_win"], r["prob_draw"], r["prob_away_win"])[0],
+        axis=1,
+    )
+    out["decision_reason"] = out.apply(
+        lambda r: decide_result(r["prob_home_win"], r["prob_draw"], r["prob_away_win"])[1],
         axis=1,
     )
 
@@ -1011,6 +2221,9 @@ def assign_draw_results_by_expectation(df, output_col="predicted_result"):
 
         draw_idx_set = set(draw_idx.tolist())
         b[output_col] = b.index.map(lambda idx: "D" if idx in draw_idx_set else b.at[idx, "__base_pred"])
+        b["decision_reason"] = b.index.map(
+            lambda idx: "FORCE_DRAW_BY_EXPECTATION_ASSIGN" if idx in draw_idx_set else b.at[idx, "decision_reason"]
+        )
         assigned_d = int((b.loc[valid, output_col] == "D").sum())
         print(
             f"[DRAW_ASSIGN] round={round_label} matches={block_count} "
@@ -1048,6 +2261,9 @@ def assign_draw_results_by_expectation(df, output_col="predicted_result"):
             pieces.append(_assign_block(block, label))
         out = pd.concat(pieces, axis=0).sort_index()
 
+    # 最終結果列を output_col に一本化しつつ、互換列 predicted_result も同期する
+    if output_col in out.columns and output_col != "predicted_result":
+        out["predicted_result"] = out[output_col]
     out = out.drop(columns=["__base_pred", "__round_group"], errors="ignore")
     return out
 
@@ -1057,10 +2273,16 @@ def recalculate_predicted_result(df, output_col="predicted_result"):
     required_cols = {"prob_home_win", "prob_draw", "prob_away_win"}
     if not required_cols.issubset(out.columns):
         return out
-    out[output_col] = out.apply(
-        lambda r: decide_predicted_result(r["prob_home_win"], r["prob_draw"], r["prob_away_win"]),
-        axis=1,
-    )
+    def _decide_triplet(row):
+        return decide_result(row["prob_home_win"], row["prob_draw"], row["prob_away_win"])
+
+    decided = out.apply(_decide_triplet, axis=1)
+    out[output_col] = decided.map(lambda x: x[0])
+    out["final_result"] = out[output_col]
+    out["argmax_result"] = decided.map(lambda x: x[2].get("argmax_result"))
+    out["argmax_max_prob"] = decided.map(lambda x: x[2].get("argmax_max_prob"))
+    if "decision_reason" not in out.columns:
+        out["decision_reason"] = decided.map(lambda x: x[1])
     return out
 
 
@@ -1070,9 +2292,47 @@ def recalculate_predicted_highest_prob_result(df, output_col="predicted_highest_
     if not required_cols.issubset(out.columns):
         return out
     out[output_col] = out.apply(
-        lambda r: decide_predicted_result(r["prob_home_win_raw"], r["prob_draw_raw"], r["prob_away_win_raw"]),
+        lambda r: decide_result(r["prob_home_win_raw"], r["prob_draw_raw"], r["prob_away_win_raw"])[0],
         axis=1,
     )
+    out["argmax_raw_result"] = out[output_col]
+    out["argmax_raw_max_prob"] = out[["prob_home_win_raw", "prob_draw_raw", "prob_away_win_raw"]].max(axis=1)
+    return out
+
+
+def sync_and_validate_prediction_results(df, label, raise_on_error=True):
+    out = df.copy()
+    if "final_result" not in out.columns and "predicted_result" in out.columns:
+        out["final_result"] = out["predicted_result"]
+    if "predicted_result" not in out.columns and "final_result" in out.columns:
+        out["predicted_result"] = out["final_result"]
+    if "predicted_result" in out.columns and "final_result" in out.columns:
+        mismatch = out["predicted_result"].astype(str) != out["final_result"].astype(str)
+        m = int(mismatch.sum())
+        if m > 0:
+            sample_cols = [c for c in ["match_id", "match_no", "home_team", "away_team", "predicted_result", "final_result"] if c in out.columns]
+            sample = out.loc[mismatch, sample_cols].head(10).to_dict(orient="records")
+            msg = f"[CONSISTENCY][ERROR:{label}] predicted_result!=final_result rows={m} sample={sample}"
+            print(msg)
+            if raise_on_error:
+                raise RuntimeError(msg)
+        out["predicted_result"] = out["final_result"]
+
+    if "decision_reason" in out.columns and "final_result" in out.columns:
+        force_mask = out["decision_reason"].astype(str).str.contains("FORCE_DRAW", na=False)
+        bad_force = force_mask & (out["final_result"].astype(str) != "D")
+        bad = int(bad_force.sum())
+        if bad > 0:
+            sample_cols = [c for c in ["match_id", "match_no", "home_team", "away_team", "decision_reason", "final_result"] if c in out.columns]
+            sample = out.loc[bad_force, sample_cols].head(10).to_dict(orient="records")
+            msg = f"[CONSISTENCY][ERROR:{label}] FORCE_DRAW reason but final_result!=D rows={bad} sample={sample}"
+            print(msg)
+            if raise_on_error:
+                raise RuntimeError(msg)
+
+    if "argmax_raw_result" in out.columns and "final_result" in out.columns:
+        diff = int((out["argmax_raw_result"].astype(str) != out["final_result"].astype(str)).sum())
+        print(f"[CONSISTENCY:{label}] raw_vs_final_diff_rows={diff}")
     return out
 
 
@@ -1093,11 +2353,11 @@ def log_prediction_consistency(df, label):
 
     work = df.copy()
     work["_raw_argmax"] = work.apply(
-        lambda r: decide_predicted_result(r["prob_home_win_raw"], r["prob_draw_raw"], r["prob_away_win_raw"]),
+        lambda r: decide_result(r["prob_home_win_raw"], r["prob_draw_raw"], r["prob_away_win_raw"])[0],
         axis=1,
     )
     work["_cal_argmax"] = work.apply(
-        lambda r: decide_predicted_result(r["prob_home_win"], r["prob_draw"], r["prob_away_win"]),
+        lambda r: decide_result(r["prob_home_win"], r["prob_draw"], r["prob_away_win"])[0],
         axis=1,
     )
 
@@ -1678,7 +2938,7 @@ def load_allowed_teams():
 
     if LEAGUE == "j2":
         # 2026特別大会（J2/J3混在）ではリーグ外除外を無効化し、日程側の定義に従う
-        if SEASON_YEAR >= 2026 and os.environ.get("ENABLE_J2_STRICT_FILTER", "0") != "1":
+        if SEASON_YEAR >= 2026 and (not _env_flag("ENABLE_J2_STRICT_FILTER", 0)):
             print("J2許可チームフィルタを無効化します（2026特別大会モード）。")
             return None
         return load_j2_allowed_teams()
@@ -1730,7 +2990,9 @@ def compute_elo_map_from_results(results_df, base_elo_map=None):
 
 
 def load_or_build_prev_final_elo(df_prev_results):
-    if os.path.exists(prev_final_elo_csv):
+    if FORCE_RECALC:
+        print(f"[FORCE] 前年最終ELOキャッシュを再利用しません: {prev_final_elo_csv}")
+    elif os.path.exists(prev_final_elo_csv):
         try:
             prev_elo_df = pd.read_csv(prev_final_elo_csv)
             if {"team", "elo"}.issubset(prev_elo_df.columns):
@@ -2094,6 +3356,7 @@ else:
     print("前年データは未使用（ファイルなし）。")
 
 df_2025 = pd.read_csv(csv_season)
+df_2025 = enrich_scores_from_latest_results(df_2025, csv_season_latest)
 
 # datetime 列の補完（date列がある場合）
 if "datetime" not in df_2025.columns and "date" in df_2025.columns:
@@ -2374,15 +3637,25 @@ for _, row in df_2025_future.iterrows():
         quality_flags["stats_away_missing"],
         quality_flags["data_quality_warn"],
     )
-    prob_home_win, prob_draw, prob_away_win = calibrate_probabilities(
-        prob_home_win_raw,
-        prob_draw_raw,
-        prob_away_win_raw,
-        row.get("league", LEAGUE),
-    )
+    if HDA_MODEL_MODE_EFFECTIVE == "multinom":
+        prob_home_win, prob_draw, prob_away_win = _normalize_probs(
+            prob_home_win_raw, prob_draw_raw, prob_away_win_raw
+        )
+    else:
+        prob_home_win, prob_draw, prob_away_win = calibrate_probabilities(
+            prob_home_win_raw,
+            prob_draw_raw,
+            prob_away_win_raw,
+            row.get("league", LEAGUE),
+        )
     prob_home_win, prob_draw, prob_away_win = _normalize_probs(prob_home_win, prob_draw, prob_away_win)
-    predicted_result = decide_predicted_result(prob_home_win, prob_draw, prob_away_win)
-    predicted_highest_prob_result = decide_predicted_result(prob_home_win_raw, prob_draw_raw, prob_away_win_raw)
+    predicted_result, decision_reason, decision_metrics = decide_result(prob_home_win, prob_draw, prob_away_win)
+    argmax_result = decision_metrics.get("argmax_result")
+    argmax_max_prob = decision_metrics.get("argmax_max_prob")
+    predicted_highest_prob_result, _, raw_decision_metrics = decide_result(
+        prob_home_win_raw, prob_draw_raw, prob_away_win_raw
+    )
+    argmax_max_prob_raw = raw_decision_metrics.get("argmax_max_prob")
     if not np.isclose(prob_home_win + prob_draw + prob_away_win, 1.0, atol=1e-6):
         print(
             f"[PROB_QC][WARN] match_id={row.get('match_id')} calibrated_prob_sum="
@@ -2398,6 +3671,9 @@ for _, row in df_2025_future.iterrows():
             "prob_draw_cal": prob_draw,
             "prob_away_win_cal": prob_away_win,
             "predicted_result_cal": predicted_result,
+            "decision_reason_cal": decision_reason,
+            "argmax_result_cal": argmax_result,
+            "argmax_max_prob_cal": argmax_max_prob,
         }
     )
     elo_debug_rows.append({**debug_row, "phase": "prediction"})
@@ -2416,16 +3692,37 @@ for _, row in df_2025_future.iterrows():
         "home_advantage_diff": round(home_advantage_diff, 4),
         "home_advantage_profile_diff": round(home_advantage_profile_diff, 4),
         "hfa_applied_elo": round(debug_row["HFA_applied"], 4),
+        "hfa_added_to_diff": round(debug_row["hfa_added_to_diff"], 4),
+        "hfa_clip_min": round(debug_row["hfa_clip_min"], 4),
+        "hfa_clip_max": round(debug_row["hfa_clip_max"], 4),
+        "elo_diff_scale_factor": round(debug_row["elo_diff_scale_factor"], 4),
+        "elo_diff_before_hfa": round(debug_row["elo_diff_before_hfa"], 4),
+        "elo_diff_after_hfa": round(debug_row["elo_diff_after_hfa"], 4),
+        "elo_diff_scaled": round(debug_row["elo_diff_scaled"], 4),
         "elo_diff_for_prob": round(debug_row["elo_diff"], 4),
+        "elo_diff_used_for_prob": round(debug_row["elo_diff_for_prob"], 4),
         "expected_home_two_way": round(debug_row["expected_home"], 4),
         "is_home_advantage_positive": bool(is_home_advantage_positive),
         "prob_home_win_raw": prob_home_win_raw,
         "prob_draw_raw": prob_draw_raw,
         "prob_away_win_raw": prob_away_win_raw,
+        "prob_home_raw": prob_home_win_raw,
+        "prob_away_raw": prob_away_win_raw,
         "prob_home_win": prob_home_win,
         "prob_draw": prob_draw,
         "prob_away_win": prob_away_win,
+        "prob_home": prob_home_win,
+        "prob_away": prob_away_win,
+        "final_result": predicted_result,
         "predicted_result": predicted_result,
+        "decision_reason": decision_reason,
+        "argmax_result": argmax_result,
+        "argmax_max_prob": argmax_max_prob,
+        "argmax_raw_result": predicted_highest_prob_result,
+        "argmax_raw_max_prob": argmax_max_prob_raw,
+        "d_scaled": debug_row.get("draw_model_input"),
+        "decision_draw_expectation_multiplier": DRAW_EXPECTATION_MULTIPLIER,
+        "decision_draw_assign_enabled": bool(DRAW_ASSIGN_BY_EXPECTATION),
         "predicted_highest_prob_result": predicted_highest_prob_result,
     })
 
@@ -2436,16 +3733,33 @@ df_pred = recalculate_predicted_result(df_pred, "predicted_result")
 df_pred = recalculate_predicted_highest_prob_result(df_pred, "predicted_highest_prob_result")
 if DRAW_ASSIGN_BY_EXPECTATION:
     # 最終ラベルは「調整後確率」をベースに、節単位の期待ドロー数へ合わせてDを付与する
-    df_pred = assign_draw_results_by_expectation(df_pred, "predicted_result")
+    df_pred = assign_draw_results_by_expectation(df_pred, "final_result")
 else:
     print("[DRAW_ASSIGN] disabled (DRAW_ASSIGN_BY_EXPECTATION=0)")
+df_pred = sync_and_validate_prediction_results(df_pred, "PRED", raise_on_error=True)
+log_decision_rule_once()
+log_pred_dist(df_pred, "PRED", scope="all")
+try:
+    round_mask_pred, round_label_pred, _ = _resolve_round_filter(df_pred)
+    if len(round_mask_pred) == len(df_pred) and int(round_mask_pred.sum()) > 0:
+        log_pred_dist(df_pred.loc[round_mask_pred], "PRED", scope=f"round:{round_label_pred}")
+except Exception as e:
+    print(f"[PRED_DIST:PRED][WARN] round scope unavailable: {e}")
 log_prediction_consistency(df_pred, "PRED")
 log_prob_summary(df_pred, "PRED_SUMMARY")
+log_prob_draw_distribution(df_pred, "PRED")
+log_draw_argmax_stats(df_pred, "PRED")
+log_actual_hda_ratio(df_pred, "PRED")
 log_absence_effective_summary(df_pred, "PRED")
+summarize_round_hda(df_pred, df_results=df_2025, round_filter_label="auto")
+dump_decision_artifacts(df_pred, label="pred", threshold=0.25)
 df_pred = drop_internal_output_columns(df_pred)
 report_missing_rates(df_pred, "final_predictions_df")
 df_pred.to_csv(output_csv, index=False, encoding="utf-8-sig")
 print(f"予測結果を {output_csv} に出力しました。")
+if output_csv != LEGACY_OUTPUT_CSV:
+    df_pred.to_csv(LEGACY_OUTPUT_CSV, index=False, encoding="utf-8-sig")
+    print(f"[LEGACY_ALIAS] 互換出力を更新しました: {LEGACY_OUTPUT_CSV}")
 
 # --- 2025年終了済み試合のバックテストと的中率計算 ---
 backtest_results = []
@@ -2534,15 +3848,25 @@ for _, row in sort_results_for_elo(df_2025_finished).iterrows():
         quality_flags["stats_away_missing"],
         quality_flags["data_quality_warn"],
     )
-    prob_home_win, prob_draw, prob_away_win = calibrate_probabilities(
-        prob_home_win_raw,
-        prob_draw_raw,
-        prob_away_win_raw,
-        row.get("league", LEAGUE),
-    )
+    if HDA_MODEL_MODE_EFFECTIVE == "multinom":
+        prob_home_win, prob_draw, prob_away_win = _normalize_probs(
+            prob_home_win_raw, prob_draw_raw, prob_away_win_raw
+        )
+    else:
+        prob_home_win, prob_draw, prob_away_win = calibrate_probabilities(
+            prob_home_win_raw,
+            prob_draw_raw,
+            prob_away_win_raw,
+            row.get("league", LEAGUE),
+        )
     prob_home_win, prob_draw, prob_away_win = _normalize_probs(prob_home_win, prob_draw, prob_away_win)
-    predicted_label = decide_predicted_result(prob_home_win, prob_draw, prob_away_win)
-    predicted_highest_prob_result = decide_predicted_result(prob_home_win_raw, prob_draw_raw, prob_away_win_raw)
+    predicted_label, decision_reason_bt, decision_metrics_bt = decide_result(prob_home_win, prob_draw, prob_away_win)
+    argmax_result_bt = decision_metrics_bt.get("argmax_result")
+    argmax_max_prob_bt = decision_metrics_bt.get("argmax_max_prob")
+    predicted_highest_prob_result, _, raw_decision_metrics_bt = decide_result(
+        prob_home_win_raw, prob_draw_raw, prob_away_win_raw
+    )
+    argmax_max_prob_raw_bt = raw_decision_metrics_bt.get("argmax_max_prob")
     if not np.isclose(prob_home_win + prob_draw + prob_away_win, 1.0, atol=1e-6):
         print(
             f"[PROB_QC][WARN] match_id={row.get('match_id')} calibrated_prob_sum="
@@ -2557,6 +3881,9 @@ for _, row in sort_results_for_elo(df_2025_finished).iterrows():
             "prob_draw_cal": prob_draw,
             "prob_away_win_cal": prob_away_win,
             "predicted_result_cal": predicted_label,
+            "decision_reason_cal": decision_reason_bt,
+            "argmax_result_cal": argmax_result_bt,
+            "argmax_max_prob_cal": argmax_max_prob_bt,
         }
     )
     elo_debug_rows.append({**debug_row, "phase": "backtest"})
@@ -2574,16 +3901,37 @@ for _, row in sort_results_for_elo(df_2025_finished).iterrows():
         "home_advantage_diff": round(home_advantage_diff, 4),
         "home_advantage_profile_diff": round(home_advantage_profile_diff, 4),
         "hfa_applied_elo": round(debug_row["HFA_applied"], 4),
+        "hfa_added_to_diff": round(debug_row["hfa_added_to_diff"], 4),
+        "hfa_clip_min": round(debug_row["hfa_clip_min"], 4),
+        "hfa_clip_max": round(debug_row["hfa_clip_max"], 4),
+        "elo_diff_scale_factor": round(debug_row["elo_diff_scale_factor"], 4),
+        "elo_diff_before_hfa": round(debug_row["elo_diff_before_hfa"], 4),
+        "elo_diff_after_hfa": round(debug_row["elo_diff_after_hfa"], 4),
+        "elo_diff_scaled": round(debug_row["elo_diff_scaled"], 4),
         "elo_diff_for_prob": round(debug_row["elo_diff"], 4),
+        "elo_diff_used_for_prob": round(debug_row["elo_diff_for_prob"], 4),
         "expected_home_two_way": round(debug_row["expected_home"], 4),
         "is_home_advantage_positive": bool(is_home_advantage_positive),
         "prob_home_win_raw": prob_home_win_raw,
         "prob_draw_raw": prob_draw_raw,
         "prob_away_win_raw": prob_away_win_raw,
+        "prob_home_raw": prob_home_win_raw,
+        "prob_away_raw": prob_away_win_raw,
         "prob_home_win": prob_home_win,
         "prob_draw": prob_draw,
         "prob_away_win": prob_away_win,
+        "prob_home": prob_home_win,
+        "prob_away": prob_away_win,
+        "final_result": predicted_label,
         "predicted_result": predicted_label,
+        "decision_reason": decision_reason_bt,
+        "argmax_result": argmax_result_bt,
+        "argmax_max_prob": argmax_max_prob_bt,
+        "argmax_raw_result": predicted_highest_prob_result,
+        "argmax_raw_max_prob": argmax_max_prob_raw_bt,
+        "d_scaled": debug_row.get("draw_model_input"),
+        "decision_draw_expectation_multiplier": DRAW_EXPECTATION_MULTIPLIER,
+        "decision_draw_assign_enabled": bool(DRAW_ASSIGN_BY_EXPECTATION),
         "predicted_highest_prob_result": predicted_highest_prob_result,
         "actual_result": actual_result,
         "is_correct": is_correct
@@ -2605,8 +3953,20 @@ if "stats_source_csv" not in df_backtest.columns:
 df_backtest = add_data_quality_flags(df_backtest)
 df_backtest = recalculate_predicted_result(df_backtest, "predicted_result")
 df_backtest = recalculate_predicted_highest_prob_result(df_backtest, "predicted_highest_prob_result")
+if DRAW_ASSIGN_BY_EXPECTATION:
+    df_backtest = assign_draw_results_by_expectation(df_backtest, "final_result")
+df_backtest = sync_and_validate_prediction_results(df_backtest, "BACKTEST", raise_on_error=True)
+log_pred_dist(df_backtest, "BACKTEST", scope="all")
 log_prediction_consistency(df_backtest, "BACKTEST")
 log_prob_summary(df_backtest, "BACKTEST_SUMMARY")
+log_multinom_feature_distribution(df_backtest, "BACKTEST")
+log_prob_draw_distribution(df_backtest, "BACKTEST")
+log_prob_distribution(df_backtest, "BACKTEST", "prob_home")
+log_prob_distribution(df_backtest, "BACKTEST", "prob_draw")
+log_prob_distribution(df_backtest, "BACKTEST", "prob_away")
+log_max_prob_distribution(df_backtest, "BACKTEST")
+log_draw_argmax_stats(df_backtest, "BACKTEST")
+log_actual_hda_ratio(df_backtest, "BACKTEST")
 log_absence_effective_summary(df_backtest, "BACKTEST")
 if "actual_result" in df_backtest.columns and "predicted_result" in df_backtest.columns:
     df_backtest["is_correct"] = df_backtest["actual_result"] == df_backtest["predicted_result"]
@@ -2617,6 +3977,37 @@ df_backtest = drop_internal_output_columns(df_backtest)
 report_missing_rates(df_backtest, "final_backtest_df")
 df_backtest.to_csv(backtest_output_csv, index=False, encoding="utf-8-sig")
 print(f"2025年終了済み試合のバックテスト結果を {backtest_output_csv} に出力しました。")
+print(
+    f"[HFA_APPLY_COUNT] applied={HFA_APPLY_COUNTER['applied']} "
+    f"skipped={HFA_APPLY_COUNTER['skipped']} "
+    f"reason_counts={json.dumps(HFA_APPLY_COUNTER['reason_counts'], ensure_ascii=False, sort_keys=True)}"
+)
+if ENABLE_HFA and float(HFA_ELO) > 0:
+    evaluated = int(HFA_APPLY_COUNTER["applied"]) + int(HFA_APPLY_COUNTER["skipped"])
+    if evaluated <= 0:
+        print("[ERROR] HFA apply counter has zero evaluated rows under ENABLE_HFA=1 and HFA_ELO>0")
+        raise RuntimeError("HFA apply counter invalid: no evaluated rows")
+
+try:
+    run_meta = {
+        "output_csv": output_csv,
+        "league": LEAGUE,
+        "season_year": int(SEASON_YEAR),
+        "enable_hfa": int(ENABLE_HFA_INT),
+        "hfa_elo": float(HFA_ELO),
+        "pred_rows": int(len(df_pred)) if "df_pred" in globals() else 0,
+        "hfa_apply_count": {
+            "applied": int(HFA_APPLY_COUNTER["applied"]),
+            "skipped": int(HFA_APPLY_COUNTER["skipped"]),
+            "reason_counts": HFA_APPLY_COUNTER["reason_counts"],
+        },
+    }
+    meta_path = f"{output_csv}.meta.json"
+    with open(meta_path, "w", encoding="utf-8") as f:
+        json.dump(run_meta, f, ensure_ascii=False, indent=2)
+    print(f"[RUN_META] saved={meta_path}")
+except Exception as e:
+    print(f"[RUN_META][WARN] failed to write meta: {e}")
 
 if elo_debug_rows:
     debug_df = pd.DataFrame(elo_debug_rows)
@@ -2659,12 +4050,11 @@ def build_report():
         "INITIAL_ELO": INITIAL_ELO,
         "ELO_UPDATE_HOME_ADVANTAGE": ELO_UPDATE_HOME_ADVANTAGE,
         "HFA_ELO": HFA_ELO,
-        "ENABLE_HFA": ENABLE_HFA,
+        "ENABLE_HFA": ENABLE_HFA_INT,
+        "ENABLE_MATCHUP_BIAS": int(ENABLE_MATCHUP_BIAS),
+        "MATCHUP_BIAS_COEF": MATCHUP_BIAS_COEF,
         "HOME_ADV_ELO_COEF": HOME_ADV_ELO_COEF,
         "HOME_ADV_PROFILE_DIFF_CLIP": HOME_ADV_PROFILE_DIFF_CLIP,
-        "HFA_ABS_MAX": HFA_ABS_MAX,
-        "HFA_DATA_QUALITY_MULT": HFA_DATA_QUALITY_MULT,
-        "HFA_STATS_MISSING_MULT": HFA_STATS_MISSING_MULT,
         "ELO_DIFF_TEMPERATURE": ELO_DIFF_TEMPERATURE,
         "J1_WIN_PROB_CAP": J1_WIN_PROB_CAP,
         "GOAL_SCALING_FACTOR": GOAL_SCALING_FACTOR,
@@ -2702,8 +4092,10 @@ def build_report():
         "prob_home_win",
         "prob_draw",
         "prob_away_win",
+        "final_result",
         "predicted_result",
         "predicted_highest_prob_result",
+        "argmax_raw_result",
     ]
     if "predicted_result" not in df_pred.columns:
         df_pred = recalculate_predicted_result(df_pred, "predicted_result")
@@ -2719,8 +4111,10 @@ def build_report():
         "prob_home_win",
         "prob_draw",
         "prob_away_win",
+        "final_result",
         "predicted_result",
         "predicted_highest_prob_result",
+        "argmax_raw_result",
         "actual_result",
         "is_correct",
     ]
