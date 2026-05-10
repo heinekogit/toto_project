@@ -1,0 +1,4 @@
+﻿kind,rows,matched,missing,excluded_leagues,H_cnt,D_cnt,A_cnt,total,H_pct,D_pct,A_pct,max_abs_diff_prob_home,max_abs_diff_prob_draw,max_abs_diff_prob_away,num_rows_with_any_diff
+HFA_ON,13,0,13,j3,0,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0
+HFA_OFF,13,0,13,j3,0,0,0,0,0.0,0.0,0.0,0.0,0.0,0.0,0
+DIFF_PP,13,0,13,j3,,,,0,0.0,0.0,0.0,0.0,0.0,0.0,0

@@ -1,0 +1,227 @@
+================================================================================
+3/2　
+までに、惨敗結果を受けて、検証しつつdraw調整。２択＋draw的なアプローチを3軸に変更。
+
+================================================================================
+3/3
+drawが出る比率に違和感ないので、全体の検証をしたい意向。
+希望としては、
+・日程による疲労度
+　　試合間のアキが正しく把握されて、使われているか
+　　移動が正しく把握されて、使われているか
+　　海外大会参加をまだ計算に入れていない
+・天候による影響
+　　悪天候で技術・連携の強いチームに不利になる、とか、あるいは
+　　悪天候に強いチーム
+　　など
+・順位によるモチベーション
+・ホームによるモチベーション（これはもう正しく反映になってるのだっけ？）
+等々、が正しく把握・予測に使われているかを確認していきたい
+ほか、
+ELo？を、どう使っているのか、把握したい
+
+＜現在＞　---------------------------------------------------------------------------------------------------------------
+予測の入力として使っている要素（11_prediction_01.py 内）
+
+1) Elo系（基礎）
+	•	home_elo / away_elo（前年＋当年終了試合で更新した Elo）
+	•	home_advantage_profile_diff（HOME/AWAY成績差から計算した profile 差分）
+	•	HFA（ENABLE_HFA=1の時に elo_diff に定数加算する経路）
+
+→ これらはループ内で compute_probabilities_and_result(...) に渡されます（下の「最終入力」参照）。
+⸻
+2) 外部スタッツ（チームスタッツ）
+	•	team_master_stats_csv を HOME用 / AWAY用に分けてマージ
+	•	例：stats_ゴール期待値_home / _away（xG）を ループ内で取り出して使用
+マージ箇所
+	•	merge_external_stats(... team_master_stats_csv ... merge_col_prefix="stats_")
+	•	stats_future / stats_finished のステージで実施
+使用箇所（ループ内）
+	•	home_xg_stats = row.get("stats_ゴール期待値_home")
+	•	away_xg_stats = row.get("stats_ゴール期待値_away")
+⸻
+3) 疲労度（試合単位）
+	•	team_fatigue_scores_csv の
+	•	home_fatigue_score, away_fatigue_score
+を ["datetime","home_team","away_team"] で 試合単位マージして使う
+マージ箇所
+	•	stage="fatigue_future" / "fatigue_finished"
+使用箇所（ループ内）
+	•	home_fatigue_score = row.get("home_fatigue_score")
+	•	away_fatigue_score = row.get("away_fatigue_score")
+⸻
+4) 移動距離（チーム×チーム行列）
+	•	team_travel_distances.csv を 行列として読み込み
+	•	予測ループ内で home→away, away→home を lookup して
+	•	home_travel_distance, away_travel_distance
+として使う
+読み込み
+	•	team_travel_distances_csv を読み込み→ normalize_travel_distance_matrix(...)
+使用箇所（ループ内）
+	•	home_travel_distance, away_travel_distance を lookup して compute_probabilities_and_result に渡す
+⸻
+5) 天候
+	•	weather_cache_csv を match_id でマージして、
+	•	is_rain, is_heavy_rain, is_strong_wind
+を使う（無ければ weather_missing=True）
+マージ箇所
+	•	merge_weather_cache(... stage="weather_cache_future/finished")
+使用箇所（ループ内）
+	•	weather_flags = {"is_rain":..., "is_heavy_rain":..., "is_strong_wind":...}
+⸻
+6) 欠場影響（チーム×節）
+	•	absences_with_impact.csv を チーム×節の map にして試合へマージ
+	•	その後、行から「有効欠場影響」を合成して
+	•	home_absence_impact, away_absence_impact
+として使う
+マージ箇所
+	•	load_absence_impact_team_round_map(...)
+	•	merge_absence_impacts(... stage="absence_future/finished")
+使用箇所（ループ内）
+	•	absence_effective = compute_effective_absence_impacts(row)
+	•	home_absence_impact = absence_effective["absence_effective_total_home"]
+	•	away_absence_impact = absence_effective["absence_effective_total_away"]
+⸻
+7) 順位由来モチベ（ランキング推移）
+	•	team_motivation_csv をチームでマージし、
+	•	rankmot_motivation_score_3w/5w 系を拾って
+	•	home_rank_motivation_score, away_rank_motivation_score
+として使う
+マージ箇所
+	•	merge_external_stats(... team_motivation_csv ... merge_col_prefix="rankmot_")
+使用箇所（ループ内）
+	•	_pick_first_non_na_value(row, ["rankmot_motivation_score_3w", "rankmot_motivation_score_5w"]) 等
+⸻
+8) 管理系（別CSV）
+	•	team_management_master_csv を merge_external_stats でマージしている（列は management_..._home/_away になる）
+	•	ただし、確率計算に直接渡してるのは現状 quality_flags["management_missing"] ではなく、stats_*_missing と data_quality_warn 側が主（下参照）
+	•	※管理系の個別数値を compute_probabilities... に渡す形では今は見当たりません（少なくとも、あなたが貼ったループ部分では渡していない）。
+⸻
+9) データ品質フラグ（missing/warn）
+	•	compute_row_quality_flags(row) で作って、
+	•	stats_home_missing
+	•	stats_away_missing
+	•	data_quality_warn
+などを 確率計算に渡している
+⸻
+最終的に「確率計算」に渡している引数（ここが“真”）
+予測ループのこの呼び出しが、いまのシステムで「使っている要素」の確定版です：
+	•	compute_probabilities_and_result( に渡しているもの
+	•	match_id
+	•	elo_for_prediction[home], elo_for_prediction[away]
+	•	home_advantage_profile_diff
+	•	home_xg_stats, away_xg_stats
+	•	home_travel_distance, away_travel_distance
+	•	home_fatigue_score, away_fatigue_score
+	•	home_rank_motivation_score, away_rank_motivation_score
+	•	home_absence_impact, away_absence_impact
+	•	weather_flags
+	•	stats_home_missing, stats_away_missing, data_quality_warn
+
+＜将来的な完成形＞　---------------------------------------------------------------------------------------------------------------
+① チーム実力構造系
+	•	攻撃力指数（xG系、得点期待値）
+	•	守備力指数（被xG、失点期待値）
+	•	攻守分離Elo（攻撃Elo／守備Elo）
+	•	得失点差トレンド
+	•	セットプレー強度
+	•	空中戦勝率
+⸻
+② 直近コンディション系
+	•	直近5試合フォーム（勝点移動平均）
+	•	直近得点力変化率
+	•	直近失点悪化率
+	•	シュート数・被シュート数の推移
+	•	監督交代直後効果
+⸻
+③ 選手構成・戦力差
+	•	主力欠場の質（単純人数でなく“影響度”）
+	•	先発固定度（スタメン安定性）
+	•	ベンチ層の厚さ
+	•	外国人選手依存度
+	•	ゴールキーパー差
+⸻
+④ 戦術相性（matchup）
+	•	ハイプレス vs ビルドアップ型
+	•	カウンター型 vs ポゼッション型
+	•	ロングボール耐性
+	•	守備ブロックの高さ
+	•	フォーメーション相性
+⸻
+⑤ 試合状況・環境
+	•	ダービー（地域対決）
+	•	観客動員数
+	•	人工芝 vs 天然芝
+	•	スタジアムサイズ
+	•	キックオフ時刻（昼/夜）
+⸻
+⑥ シーズン文脈
+	•	優勝争い圧力
+	•	残留争い圧力
+	•	消化試合度
+	•	昇格直後チーム効果
+	•	下位カテゴリからの昇格組の初年度補正
+⸻
+⑦ 市場・外部情報
+	•	オッズ変動
+	•	市場インプライド確率との差
+	•	SNS/報道ノイズ（怪我・内部問題）
+⸻
+⑧ 試合タイプ別傾向
+	•	ロースコア傾向チーム
+	•	引き分け率の構造的高さ
+	•	先制時の勝率
+	•	ビハインド時の逆転率
+⸻
+⑨ 分散・不確実性系
+	•	実力差が小さい試合のノイズ増大
+	•	J2特有の分散の大きさ
+	•	昇格降格入替直後の不安定性
+
+
+
+3/5
+	2.	base_pick を 2軸で決定
+
+diff = abs(pH - pA)
+
+if diff >= T_DRAW:
+base_pick = “H” if pH > pA else “A”
+decision_reason = “BALANCE_HA”
+
+else:
+base_pick = “D”
+decision_reason = “BALANCE_DRAW”
+
+⸻
+
+	3.	pD による安全ゲート（補助3軸）
+
+if base_pick == “D” and pD < D_MIN:
+base_pick = “H” if pH > pA else “A”
+decision_reason = “DRAW_BLOCK_PD”
+
+⸻
+
+	4.	draw_cand 判定
+
+draw_cand = (abs(pH - pA) < T_DRAW)
+
+
+
+3/8
+予想システムで、home有利、の計算は効いていなかったらしい。
+buyplanでもっとhome偏重になっていたので問題にならなかった、らしい。
+
+
+
+
+
+
+
+
+
+
+
+
+

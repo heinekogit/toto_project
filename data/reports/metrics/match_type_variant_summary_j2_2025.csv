@@ -1,0 +1,6 @@
+﻿variant,matches,hits,hit_rate,pred_H,pred_D,pred_A,changed_matches,improved_vs_main,worsened_vs_main
+predicted_result_main,380,161,0.4236842105263158,170,80,130,,,
+predicted_result_type_a,380,157,0.4131578947368421,187,57,136,,,
+predicted_result_type_b,380,157,0.4131578947368421,178,65,137,,,
+main_vs_type_a,380,355,0.9342105263157895,,,,25,6,10
+main_vs_type_b,380,365,0.9605263157894737,,,,15,2,6

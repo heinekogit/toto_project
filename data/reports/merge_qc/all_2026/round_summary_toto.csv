@@ -1,0 +1,2 @@
+﻿kind,H_cnt,D_cnt,A_cnt,total,H_pct,D_pct,A_pct,filter,rows,matched,missing,excluded_leagues
+pred_matched_only,0,0,0,0,0.0,0.0,0.0,toto_order_csv,13,0,13,j3

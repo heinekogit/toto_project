@@ -6,7 +6,12 @@ ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ROOT_DIR not in sys.path:
     sys.path.insert(0, ROOT_DIR)
 
-from buyplan import generate_patterns
+from buyplan import (
+    _evaluate_away_value_candidate,
+    _evaluate_draw_branch_candidate,
+    _evaluate_draw_candidate,
+    generate_patterns,
+)
 
 
 def _build_dummy_matches(n: int):
@@ -59,7 +64,50 @@ def test_pattern10_protects_top2_for_small_n():
             assert b["selected"] == t["selected"], f"protected changed: {b['match_id']}"
 
 
+def test_draw_best_close_ha_is_marked_as_branch_candidate():
+    p_home = 0.31
+    p_draw = 0.37
+    p_away = 0.32
+    draw_eval = _evaluate_draw_candidate(p_home, p_draw, p_away)
+    branch_eval = _evaluate_draw_branch_candidate(p_home, p_draw, p_away, draw_eval)
+    assert draw_eval["best_sym"] == "0"
+    assert branch_eval["ok"] is True
+
+
+def test_draw_best_but_lopsided_ha_is_not_branch_candidate():
+    p_home = 0.18
+    p_draw = 0.43
+    p_away = 0.39
+    draw_eval = _evaluate_draw_candidate(p_home, p_draw, p_away)
+    branch_eval = _evaluate_draw_branch_candidate(p_home, p_draw, p_away, draw_eval)
+    assert draw_eval["best_sym"] == "0"
+    assert branch_eval["ok"] is False
+
+
+def test_close_home_edge_can_be_marked_as_away_value_candidate():
+    p_home = 0.36
+    p_draw = 0.33
+    p_away = 0.31
+    draw_eval = _evaluate_draw_candidate(p_home, p_draw, p_away)
+    away_eval = _evaluate_away_value_candidate(p_home, p_draw, p_away, draw_eval)
+    assert draw_eval["best_sym"] == "1"
+    assert away_eval["ok"] is True
+
+
+def test_large_home_edge_is_not_away_value_candidate():
+    p_home = 0.49
+    p_draw = 0.28
+    p_away = 0.23
+    draw_eval = _evaluate_draw_candidate(p_home, p_draw, p_away)
+    away_eval = _evaluate_away_value_candidate(p_home, p_draw, p_away, draw_eval)
+    assert away_eval["ok"] is False
+
+
 if __name__ == "__main__":
     test_pattern_count_and_change_count_for_13_matches()
     test_pattern10_protects_top2_for_small_n()
+    test_draw_best_close_ha_is_marked_as_branch_candidate()
+    test_draw_best_but_lopsided_ha_is_not_branch_candidate()
+    test_close_home_edge_can_be_marked_as_away_value_candidate()
+    test_large_home_edge_is_not_away_value_candidate()
     print("ok")

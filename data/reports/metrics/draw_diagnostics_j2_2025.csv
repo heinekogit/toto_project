@@ -1,0 +1,2 @@
+﻿league,matches,actual_d_count,predicted_d_count,draw_candidate_count,actual_d_hit_argmax,actual_d_hit_candidate_rule,hit_rate_argmax,hit_rate_candidate_rule,avg_prob_draw_on_actual_d,avg_gap_on_actual_d,draw_candidate_prob_min,draw_candidate_gap_max
+J2,380,108,80,132,25,36,0.4236842105263158,0.3868421052631579,0.33575043871685667,0.049693371587651844,0.33,0.02

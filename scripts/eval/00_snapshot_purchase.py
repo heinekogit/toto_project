@@ -5,22 +5,28 @@ import shutil
 import sys
 
 
+def eval_base_dir(round_id: str) -> str:
+    if str(round_id).startswith("toto"):
+        return os.path.join("data", "eval", "toto_rounds", round_id)
+    return os.path.join("data", "eval", "rounds", round_id)
+
+
 def parse_args():
     p = argparse.ArgumentParser(description="購入時点スナップショット保存")
-    p.add_argument("--round", required=True, help="round02 のようなラウンドID")
+    p.add_argument("--round", required=True, help="round02 / toto1608 のような評価ID")
     p.add_argument("--srcdir", default="data/purchase_reference")
-    p.add_argument("--outdir", default=None, help="既定: data/eval/rounds/{round}/snapshot")
+    p.add_argument("--outdir", default=None, help="既定: data/eval/{rounds|toto_rounds}/{round}/snapshot")
     return p.parse_args()
 
 
 def main():
     args = parse_args()
     round_id = args.round
-    outdir = args.outdir or os.path.join("data", "eval", "rounds", round_id, "snapshot")
+    outdir = args.outdir or os.path.join(eval_base_dir(round_id), "snapshot")
     srcdir = args.srcdir
 
     required = ["predictions.csv", "buyplan.csv"]
-    optional = ["buyplan.html"]
+    optional = ["buyplan.html", "predictions_buyplan_context.csv"]
 
     os.makedirs(os.path.dirname(outdir), exist_ok=True)
     if os.path.exists(outdir):
@@ -58,4 +64,3 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"ERROR: {e}")
         sys.exit(1)
-

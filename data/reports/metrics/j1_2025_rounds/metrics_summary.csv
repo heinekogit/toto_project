@@ -1,0 +1,3 @@
+﻿N,logloss,brier,top1_accuracy,pred_H_pct,pred_D_pct,pred_A_pct,pred_H_cnt,pred_D_cnt,pred_A_cnt,actual_H_pct,actual_D_pct,actual_A_pct,actual_H_cnt,actual_D_cnt,actual_A_cnt,prob_cols,set,league,dataset,season_year,season_label
+380,1.104476741538411,0.6558259888501701,0.4605263157894737,51.31578947368421,0.0,48.68421052631579,195,0,185,44.21052631578947,25.526315789473685,30.263157894736842,168,97,115,"prob_home_win,prob_draw,prob_away_win",baseline,j1,2025_rounds,2025,j1_2025_rounds
+380,1.0650834266218587,0.6388263670960451,0.4605263157894737,51.31578947368421,0.0,48.68421052631579,195,0,185,44.21052631578947,25.526315789473685,30.263157894736842,168,97,115,"prob_home_win,prob_draw,prob_away_win",current,j1,2025_rounds,2025,j1_2025_rounds

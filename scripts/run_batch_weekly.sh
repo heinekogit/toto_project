@@ -118,6 +118,9 @@ for LEAGUE in $LEAGUES; do
   describe_step "03_rankings_motivation.py" "モチベーション関連指標を更新（順位文脈の補助特徴量）"
   run_step_safe "03_rankings_motivation.py" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" "$PYTHON" "$ROOT_DIR/scripts/03_rankings_motivation.py"
 
+  describe_step "11_prediction_01.py" "予測CSVを更新（節タイプ補正は無効化）"
+  run_step_safe "11_prediction_01.py" ENABLE_ROUND_TYPE_DRAW_CONTROL="0" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" STATS_ASOF_DATE="$STATS_ASOF_DATE" "$PYTHON" "$ROOT_DIR/scripts/11_prediction_01.py"
+
   # 試合直前：天候取得（任意）
   if [[ "$RUN_WEATHER" == "1" ]]; then
     MATCHES_FILE="$ROOT_DIR/data/${LEAGUE}_${SEASON_YEAR}_upcoming.csv"

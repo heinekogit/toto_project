@@ -1,0 +1,3 @@
+﻿match_no,home_team,away_team,buyplan_base_choice,buyplan_base_reason,p_home,p_draw,p_away,best,second,margin_best_second,entropy,closeness_2axis,draw_candidate,weak_draw_candidate_calc,draw_count_10,why_not_balance_draw
+6,FC東京,横浜FM,0,2AXIS_CLOSE_DRAW,0.3736716045036207,0.3395603770636274,0.2867680184327517,1,0,0.086903586070869,1.0927911151652183,0.4206427595275399,False,True,0,2AXIS_CLOSE_DRAW
+7,浦和,水戸,0,2AXIS_CLOSE_DRAW,0.3796279715002489,0.339012892277527,0.2813591362222239,1,0,0.0982688352780249,1.0912079578385734,0.3448744314798337,False,True,0,2AXIS_CLOSE_DRAW

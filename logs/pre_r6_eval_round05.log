@@ -1,0 +1,43 @@
+==> snapshot
+[INFO] 既存snapshotを再利用: /Users/dev_tomo/Desktop/tt_prj_restart/data/eval/rounds/round05/snapshot
+[OK] snapshot節番号チェック: round05 == 第5節
+==> export actual results
+試合結果をスクレイピング中: https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=35
+出力CSVパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv
+[WARN][HTTP] retry attempt=1/3 wait=1.0s url=https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=35 error=ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'data.j-league.or.jp\', port=443): Max retries exceeded with url: /SFMS01/search?competition_years=20261&competition_frame_ids=35 (Caused by NameResolutionError("HTTPSConnection(host=\'data.j-league.or.jp\', port=443): Failed to resolve \'data.j-league.or.jp\' ([Errno 8] nodename nor servname provided, or not known)"))'))
+[WARN][HTTP] retry attempt=2/3 wait=2.0s url=https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=35 error=ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'data.j-league.or.jp\', port=443): Max retries exceeded with url: /SFMS01/search?competition_years=20261&competition_frame_ids=35 (Caused by NameResolutionError("HTTPSConnection(host=\'data.j-league.or.jp\', port=443): Failed to resolve \'data.j-league.or.jp\' ([Errno 8] nodename nor servname provided, or not known)"))'))
+ERROR: 01_update_match_results.py network failure https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=35: ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'data.j-league.or.jp\', port=443): Max retries exceeded with url: /SFMS01/search?competition_years=20261&competition_frame_ids=35 (Caused by NameResolutionError("HTTPSConnection(host=\'data.j-league.or.jp\', port=443): Failed to resolve \'data.j-league.or.jp\' ([Errno 8] nodename nor servname provided, or not known)"))'))
+試合結果をスクレイピング中: https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=36
+出力CSVパス: /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_latest_results.csv
+[WARN][HTTP] retry attempt=1/3 wait=1.0s url=https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=36 error=ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'data.j-league.or.jp\', port=443): Max retries exceeded with url: /SFMS01/search?competition_years=20261&competition_frame_ids=36 (Caused by NameResolutionError("HTTPSConnection(host=\'data.j-league.or.jp\', port=443): Failed to resolve \'data.j-league.or.jp\' ([Errno 8] nodename nor servname provided, or not known)"))'))
+[WARN][HTTP] retry attempt=2/3 wait=2.0s url=https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=36 error=ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'data.j-league.or.jp\', port=443): Max retries exceeded with url: /SFMS01/search?competition_years=20261&competition_frame_ids=36 (Caused by NameResolutionError("HTTPSConnection(host=\'data.j-league.or.jp\', port=443): Failed to resolve \'data.j-league.or.jp\' ([Errno 8] nodename nor servname provided, or not known)"))'))
+ERROR: 01_update_match_results.py network failure https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=36: ConnectionError(MaxRetryError('HTTPSConnectionPool(host=\'data.j-league.or.jp\', port=443): Max retries exceeded with url: /SFMS01/search?competition_years=20261&competition_frame_ids=36 (Caused by NameResolutionError("HTTPSConnection(host=\'data.j-league.or.jp\', port=443): Failed to resolve \'data.j-league.or.jp\' ([Errno 8] nodename nor servname provided, or not known)"))'))
+[INFO] 対象試合は buyplan.csv を使用: /Users/dev_tomo/Desktop/tt_prj_restart/data/eval/rounds/round05/snapshot/buyplan.csv (13試合)
+[RUN] /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/01_update_match_results.py (LEAGUE=j1, SEASON_YEAR=2026)
+[WARN] 結果更新をスキップして既存CSVを使用します: league=j1 reason=01_update_match_results.py failed: league=j1 rc=1
+[RUN] /Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/bin/python /Users/dev_tomo/Desktop/tt_prj_restart/scripts/01_update_match_results.py (LEAGUE=j2, SEASON_YEAR=2026)
+[WARN] 結果更新をスキップして既存CSVを使用します: league=j2 reason=01_update_match_results.py failed: league=j2 rc=1
+[OK] actual results exported: /Users/dev_tomo/Desktop/tt_prj_restart/data/eval/rounds/round05/actual_results.csv
+[INFO] result source files:
+  J1: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv
+  J2: /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_latest_results.csv
+[INFO] match key logs:
+  match_no=1 league=J1 key=home_team+away_team 千葉 vs 柏
+  match_no=2 league=J1 key=home_team+away_team 鹿島 vs 東京Ｖ
+  match_no=3 league=J1 key=home_team+away_team 福岡 vs 名古屋
+  match_no=4 league=J1 key=home_team+away_team 岡山 vs 京都
+  match_no=5 league=J1 key=home_team+away_team Ｇ大阪 vs 長崎
+  match_no=6 league=J1 key=home_team+away_team FC東京 vs 横浜FM
+  match_no=7 league=J1 key=home_team+away_team 浦和 vs 水戸
+  match_no=8 league=J1 key=home_team+away_team Ｃ大阪 vs 清水
+  match_no=9 league=J2 key=home_team+away_team 仙台 vs 湘南
+  match_no=10 league=J2 key=home_team+away_team 藤枝 vs 磐田
+  match_no=11 league=J2 key=home_team+away_team 八戸 vs 横浜FC
+  match_no=12 league=J2 key=home_team+away_team 山形 vs 秋田
+  match_no=13 league=J2 key=home_team+away_team いわき vs 大宮
+==> score buyplan
+[OK] evaluation saved: /Users/dev_tomo/Desktop/tt_prj_restart/data/eval/rounds/round05/evaluation.csv
+[OK] history updated: /Users/dev_tomo/Desktop/tt_prj_restart/data/eval/candidate_history.csv
+==> build scored html
+[OK] scored html saved: /Users/dev_tomo/Desktop/tt_prj_restart/data/eval/rounds/round05/buyplan_scored.html
+完了: /Users/dev_tomo/Desktop/tt_prj_restart/data/eval/rounds/round05

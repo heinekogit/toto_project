@@ -1,0 +1,2 @@
+﻿league,節,match_id,datetime,home_team,away_team,home_elo_at_prediction,away_elo_at_prediction,elo_diff_before_hfa,hfa_added_to_diff,elo_diff_after_hfa,diff_raw_no_hfa,prob_home_win_before_signfix,prob_draw_raw,prob_away_win_before_signfix,argmax_result,final_result,predicted_result,decision_reason,sign_gap
+j2,第５節第２日,j2_2026_03081303_八戸_横浜FC,2026-03-08 13:03:00,八戸,横浜FC,1492,1492,-0.6146,4.2,3.5854,-0.6146,0.3357526140718585,0.3407061361702235,0.323541249757918,D,D,D,NARROW_DRAW_OVERRIDE,0.012211364313940543

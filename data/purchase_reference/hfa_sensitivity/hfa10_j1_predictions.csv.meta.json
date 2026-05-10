@@ -1,0 +1,47 @@
+{
+  "output_csv": "data/purchase_reference/hfa_sensitivity/hfa10_j1_predictions.csv",
+  "league": "j1",
+  "season_year": 2026,
+  "enable_hfa": 1,
+  "hfa_elo": 10.0,
+  "draw_tweak_mode": "off",
+  "draw_tweak_enabled": 0,
+  "draw_assign_by_expectation_raw": 1,
+  "draw_assign_by_expectation_effective": 0,
+  "draw_expectation_multiplier_raw": 1.0,
+  "draw_expectation_multiplier_effective": 1.0,
+  "backtest_decision_rule": "both",
+  "draw_assign_group_mode": "toto_contest",
+  "backtest_compare_dataset": "current",
+  "backtest_compare_csv": "",
+  "draw_margin": 0.03,
+  "close_ha_gap": 0.06,
+  "close_ha_min_level": 0.33,
+  "close_ha_gap_weight": 0.2,
+  "close_ha_draw_score_min": -0.03,
+  "close_ha_draw_score_min_grid_raw": "-0.03,-0.02,-0.01,0.00,0.01",
+  "close_d_top_gap": 0.06,
+  "close_d_top_gap_grid": "0.02,0.03,0.04,0.05,0.06,0.07,0.08",
+  "backtest_margin_scan": 0,
+  "draw_margin_grid_raw": "+0.05,+0.04,+0.03,+0.02,+0.01,0.00,-0.01,-0.02,-0.03",
+  "j1_target_d_range_raw": "2,4",
+  "j2_target_d_range_raw": "1,3",
+  "pred_rows": 140,
+  "hfa_apply_count": {
+    "applied": 155,
+    "skipped": 0,
+    "reason_counts": {
+      "applied": 155
+    }
+  },
+  "elo_sign_fix_count": {
+    "enabled": 0,
+    "total": 0,
+    "neg_to_away": 0,
+    "pos_to_home": 0
+  },
+  "multinom_sign_detect": {
+    "sign": 1,
+    "swap_ha": 0
+  }
+}

@@ -1,0 +1,136 @@
+[PATH] 採用: /Users/dev_tomo/Desktop/tt_prj_restart/data/team_master_stats_j1_2025.csv (rows=20)
+[PATH] 採用: /Users/dev_tomo/Desktop/tt_prj_restart/data/manual/team_management_master.csv (rows=20)
+[PATH] absence snapshot(最新)を採用: /Users/dev_tomo/Desktop/tt_prj_restart/data/absence_snapshots/absences_with_impact_asof_20260305.csv
+[PATH] 採用: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2025_motivation.csv (rows=20)
+[PATH] 読み込み失敗のためスキップ: /Users/dev_tomo/Desktop/tt_prj_restart/data/manual/weather_features_j1_2025.csv (No columns to parse from file)
+[PATH] 採用: /Users/dev_tomo/Desktop/tt_prj_restart/data/manual/weather_cache.csv (rows=193)
+[MULTINOM_SIGN_DETECT] disabled_for_constrained_model sign=1 swap_ha=0
+[MODEL_CONFIG] league=j1 class_weight=balanced alpha=unknown baseline_eps=unknown
+[CONFIG] HDA_MODEL_MODE=multinom HDA_FEATURE_PROFILE=default HDA_MODEL_EFFECTIVE=multinom HDA_MODEL_PATH=/Users/dev_tomo/Desktop/tt_prj_restart/data/models/hda_multinom_calibrated_j1.joblib ENABLE_HFA=0 HFA_ELO=35.00 HFA_BASE_APPLIED=0.00 ENABLE_MATCHUP_BIAS=0 MATCHUP_BIAS_COEF=60.000 OUT=/Users/dev_tomo/Desktop/tt_prj_restart/j1_2025_predictions_hfa_off.csv FORCE=0 ELO_DIFF_SCALE=1.000 ELO_D_VALUE=700.0 HFA_PROB_WEIGHT=0.600 MULTINOM_ELO_DIFF_SIGN=1 MULTINOM_SWAP_HA_OUTPUT=0 DRAW_DECAY_SCALE=320.0 DRAW_BLEND_WEIGHT=0.600 ELO_DRAW_MIN=0.100 ELO_DRAW_MAX=0.380 ELO_DRAW_BASE=0.330 ELO_DRAW_BUMP=0.000 ELO_DRAW_DIFF_SCALE=1.000 ENFORCE_ELO_SIGN_MONOTONIC=0 DRAW_ASSIGN_BY_EXPECTATION=1 DRAW_EXPECTATION_MULTIPLIER=1.000 DRAW_MARGIN=0.030 CLOSE_HA_GAP=0.060 CLOSE_HA_MIN_LEVEL=0.330 CLOSE_HA_GAP_WEIGHT=0.200 CLOSE_HA_DRAW_SCORE_MIN=-0.030 CLOSE_HA_DRAW_SCORE_MIN_GRID=-0.03,-0.02,-0.01,0.00,0.01 CLOSE_D_TOP_GAP=0.060 CLOSE_D_TOP_GAP_GRID=0.02,0.03,0.04,0.05,0.06,0.07,0.08 DRAW_ASSIGN_GROUP_MODE=toto_contest BACKTEST_DECISION_RULE=argmax BACKTEST_COMPARE_DATASET=current BACKTEST_COMPARE_CSV=- BACKTEST_MARGIN_SCAN=0 DRAW_MARGIN_GRID=+0.05,+0.04,+0.03,+0.02,+0.01,0.00,-0.01,-0.02,-0.03
+[HFA_APPLY_PATH] active_path=compute_probabilities_and_result:elo_diff_for_prob (single source of HFA addition)
+前年データを読み込みました: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2024_results.csv
+[MERGE_QC] チーム名差分: matches_only=0 CSV保存 -> /Users/dev_tomo/Desktop/tt_prj_restart/data/reports/merge_qc/j1_2025/team_name_diff_matches_vs_stats.csv
+[MERGE_QC] 正規化後チーム名差分: matches_only=0 CSV保存 -> /Users/dev_tomo/Desktop/tt_prj_restart/data/reports/merge_qc/j1_2025/team_name_diff_matches_vs_stats_after_canonical.csv
+[MERGE_QC] fatigue_future left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['datetime', 'home_team', 'away_team']
+[MERGE_QC] fatigue_future right: rows=380 unique_keys=380 duplicate_keys=0 keys=['datetime', 'home_team', 'away_team']
+[MERGE_QC] fatigue_future result: rows_before=0 rows_after=0 delta=0 validate=one_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] fatigue_future: left_only=0
+[MERGE_QC] fatigue_finished left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['datetime', 'home_team', 'away_team']
+[MERGE_QC] fatigue_finished right: rows=380 unique_keys=380 duplicate_keys=0 keys=['datetime', 'home_team', 'away_team']
+[MERGE_QC] fatigue_finished result: rows_before=0 rows_after=0 delta=0 validate=one_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] fatigue_finished: left_only=0
+[MISSING_QC] after_fatigue_future: rows=0 のため欠損率をスキップ
+[MISSING_QC] after_fatigue_finished: rows=0 のため欠損率をスキップ
+[MERGE_QC] weather_cache_future left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['match_id']
+[MERGE_QC] weather_cache_future right: rows=193 unique_keys=193 duplicate_keys=0 keys=['match_id']
+[MERGE_QC] weather_cache_future indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] weather_cache_future: left_only=0
+[MERGE_QC] weather_cache_finished left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['match_id']
+[MERGE_QC] weather_cache_finished right: rows=193 unique_keys=193 duplicate_keys=0 keys=['match_id']
+[MERGE_QC] weather_cache_finished indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] weather_cache_finished: left_only=0
+[MISSING_QC] after_weather_cache_future: rows=0 のため欠損率をスキップ
+[MISSING_QC] after_weather_cache_finished: rows=0 のため欠損率をスキップ
+天候キャッシュを /Users/dev_tomo/Desktop/tt_prj_restart/data/manual/weather_cache.csv から読み込みました。
+[MERGE_QC] stats_future_home left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['_merge_home_team']
+[MERGE_QC] stats_future_home right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] stats_future_home result: rows_before=0 rows_after=0 delta=0 validate=many_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] stats_future_home: left_only=0
+[MERGE_QC] stats_future_away left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['_merge_away_team']
+[MERGE_QC] stats_future_away right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] stats_future_away result: rows_before=0 rows_after=0 delta=0 validate=many_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] stats_future_away: left_only=0
+[MERGE_QC] stats_finished_home left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['_merge_home_team']
+[MERGE_QC] stats_finished_home right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] stats_finished_home result: rows_before=0 rows_after=0 delta=0 validate=many_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] stats_finished_home: left_only=0
+[MERGE_QC] stats_finished_away left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['_merge_away_team']
+[MERGE_QC] stats_finished_away right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] stats_finished_away result: rows_before=0 rows_after=0 delta=0 validate=many_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] stats_finished_away: left_only=0
+[MISSING_QC] after_stats_future: rows=0 のため欠損率をスキップ
+[MISSING_QC] after_stats_finished: rows=0 のため欠損率をスキップ
+[MERGE_QC] management_future_home left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['_merge_home_team']
+[MERGE_QC] management_future_home right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] management_future_home result: rows_before=0 rows_after=0 delta=0 validate=many_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] management_future_home: left_only=0
+[MERGE_QC] management_future_away left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['_merge_away_team']
+[MERGE_QC] management_future_away right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] management_future_away result: rows_before=0 rows_after=0 delta=0 validate=many_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] management_future_away: left_only=0
+[MERGE_QC] management_finished_home left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['_merge_home_team']
+[MERGE_QC] management_finished_home right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] management_finished_home result: rows_before=0 rows_after=0 delta=0 validate=many_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] management_finished_home: left_only=0
+[MERGE_QC] management_finished_away left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['_merge_away_team']
+[MERGE_QC] management_finished_away right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] management_finished_away result: rows_before=0 rows_after=0 delta=0 validate=many_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] management_finished_away: left_only=0
+[MISSING_QC] after_management_future: rows=0 のため欠損率をスキップ
+[MISSING_QC] after_management_finished: rows=0 のため欠損率をスキップ
+[MERGE_QC] rankmot_future_home left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['_merge_home_team']
+[MERGE_QC] rankmot_future_home right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] rankmot_future_home result: rows_before=0 rows_after=0 delta=0 validate=many_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] rankmot_future_home: left_only=0
+[MERGE_QC] rankmot_future_away left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['_merge_away_team']
+[MERGE_QC] rankmot_future_away right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] rankmot_future_away result: rows_before=0 rows_after=0 delta=0 validate=many_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] rankmot_future_away: left_only=0
+[MERGE_QC] rankmot_finished_home left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['_merge_home_team']
+[MERGE_QC] rankmot_finished_home right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] rankmot_finished_home result: rows_before=0 rows_after=0 delta=0 validate=many_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] rankmot_finished_home: left_only=0
+[MERGE_QC] rankmot_finished_away left_before: rows=0 unique_keys=0 duplicate_keys=0 keys=['_merge_away_team']
+[MERGE_QC] rankmot_finished_away right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] rankmot_finished_away result: rows_before=0 rows_after=0 delta=0 validate=many_to_one indicator={'left_only': 0, 'right_only': 0, 'both': 0}
+[MERGE_QC] rankmot_finished_away: left_only=0
+[MISSING_QC] after_rankmot_future: rows=0 のため欠損率をスキップ
+[MISSING_QC] after_rankmot_finished: rows=0 のため欠損率をスキップ
+[ABSENCE][WARN] 対象節が特定できないため欠場影響を無効化します。
+[MISSING_QC] after_absence_future: rows=0 のため欠損率をスキップ
+[MISSING_QC] after_absence_finished: rows=0 のため欠損率をスキップ
+移動距離データを /Users/dev_tomo/Desktop/tt_prj_restart/data/team_travel_distances.csv から読み込みました。
+前年最終ELOを読み込みました: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2024_final_elo.csv (19チーム)
+J1許可チームを team_master_stats から推定しました: 20 (/Users/dev_tomo/Desktop/tt_prj_restart/data/team_master_stats_j1_2025.csv)
+[DECISION_RULE] FORCE_DRAW_BY_EXPECTATION_ASSIGN > ARGMAX
+[PRED_DIST_FINAL:PRED] unavailable
+[PRED_DIST_ARGMAX:PRED] unavailable
+[PROB_MEAN:PRED] unavailable
+[FORCE_DRAW_COUNT:PRED] unavailable
+[PRED_DIST:PRED] scope=all unavailable
+[PRED_DIST_EXPECT:PRED] scope=all unavailable
+[PRED_CHECK:PRED] required_columns_missing
+[ELO_SIGN_CHECK:PRED_RAW] unavailable
+[ELO_SIGN_CHECK:PRED_POST] unavailable
+[PROB_DRAW_DIST:PRED] unavailable
+[DRAW_ARGMAX:PRED] unavailable
+[ACTUAL_HDA:PRED] unavailable
+[ROUND_SUMMARY] filter=empty rows=0
+[PRED_RATIO] H=0.0% (0) D=0.0% (0) A=0.0% (0)
+[ACTUAL_RATIO] unavailable (scores not found or not finished)
+[MISSING_QC] final_predictions_df: rows=0 のため欠損率をスキップ
+予測結果を /Users/dev_tomo/Desktop/tt_prj_restart/j1_2025_predictions_hfa_off.csv に出力しました。
+[LEGACY_ALIAS] 互換出力を更新しました: /Users/dev_tomo/Desktop/tt_prj_restart/j1_2025_predictions.csv
+Traceback (most recent call last):
+  File "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/lib/python3.13/site-packages/pandas/core/indexes/base.py", line 3641, in get_loc
+    return self._engine.get_loc(casted_key)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "pandas/_libs/index.pyx", line 168, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 197, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7668, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7676, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'final_result'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/11_prediction_01.py", line 5746, in <module>
+    df_backtest_argmax = _apply_backtest_decision_rule(df_backtest.copy(), "argmax")
+  File "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/11_prediction_01.py", line 3541, in _apply_backtest_decision_rule
+    out["predicted_result"] = out["final_result"]
+                              ~~~^^^^^^^^^^^^^^^^
+  File "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/lib/python3.13/site-packages/pandas/core/frame.py", line 4378, in __getitem__
+    indexer = self.columns.get_loc(key)
+  File "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/.venv/lib/python3.13/site-packages/pandas/core/indexes/base.py", line 3648, in get_loc
+    raise KeyError(key) from err
+KeyError: 'final_result'

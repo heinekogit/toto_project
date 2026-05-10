@@ -87,7 +87,7 @@ for LEAGUE in $LEAGUES; do
   # 互換維持: 従来の固定パスも最新スナップショットで更新
   run_step cp "$WEATHER_SNAPSHOT_OUT" "$WEATHER_OUT"
 
-  run_step LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" STATS_ASOF_DATE="$STATS_ASOF_DATE" "$PYTHON" "$ROOT_DIR/scripts/11_prediction_01.py"
+  run_step ENABLE_ROUND_TYPE_DRAW_CONTROL="0" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" STATS_ASOF_DATE="$STATS_ASOF_DATE" "$PYTHON" "$ROOT_DIR/scripts/11_prediction_01.py"
 done
 
 echo "完了"

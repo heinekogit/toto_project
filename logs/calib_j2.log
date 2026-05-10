@@ -1,0 +1,11 @@
+[CALIB_TRAIN] league=j2 season=2025 rows=380 dataset=rounds class_weight=balanced backend=constrained_softmax_1d_scipy l2_lambda=0.001 h_max=0.6 diff_definition=diff_raw_no_hfa
+[CALIB_PARAMS] k=0.004894 b0=-0.016585 h=0.003848 bD=0.016585 opt_success=True iters=8
+[CALIB_EVAL] accuracy=0.4079 logloss=1.075687
+[CALIB_HDA] pred=H:175 D:43 A:162 actual=H:143 D:108 A:129
+[CALIB_SIGN_CHECK] neg_cases=173 violated=0 rate=0.00% pos_cases=188 violated=0 rate=0.00%
+[CALIB_PROBE] diff=-200.0 pH=0.092865 pD=0.254490 pA=0.652645
+[CALIB_PROBE] diff=-25.0 pH=0.291442 pD=0.339173 pA=0.369385
+[CALIB_PROBE] diff=+0.0 pH=0.330897 pD=0.340743 pA=0.328360
+[CALIB_PROBE] diff=+25.0 pH=0.372009 pD=0.338963 pA=0.289028
+[CALIB_PROBE] diff=+200.0 pH=0.654852 pD=0.253393 pA=0.091756
+[CALIB_OUT] model=/Users/dev_tomo/Desktop/tt_prj_restart/data/models/hda_multinom_calibrated_j2.joblib

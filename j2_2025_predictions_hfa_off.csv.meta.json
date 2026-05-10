@@ -1,0 +1,15 @@
+{
+  "output_csv": "/Users/dev_tomo/Desktop/tt_prj_restart/j2_2025_predictions_hfa_off.csv",
+  "league": "j2",
+  "season_year": 2025,
+  "enable_hfa": 0,
+  "hfa_elo": 35.0,
+  "pred_rows": 0,
+  "hfa_apply_count": {
+    "applied": 0,
+    "skipped": 380,
+    "reason_counts": {
+      "ENABLE_HFA=0": 380
+    }
+  }
+}

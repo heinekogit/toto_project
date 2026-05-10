@@ -1,0 +1,1 @@
+﻿match_no,match_id,home_team,away_team,pred_result_off,pred_result_on,changed,prob_home_off,prob_draw_off,prob_away_off,prob_home_on,prob_draw_on,prob_away_on,diff_prob_home,diff_prob_draw,diff_prob_away,argmax_off,argmax_on,decide_reason_off,decide_reason_on,draw_gap_off,draw_gap_on

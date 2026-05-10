@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang='ja'>
+<head>
+<meta charset='utf-8'>
+<title>Trial Flag 集計一覧</title>
+<style>
+body{font-family:system-ui,-apple-system,sans-serif;margin:24px;color:#1a1a1a;}
+table{border-collapse:collapse;width:100%;font-size:13px;margin:12px 0 24px;}
+th,td{border:1px solid #ddd;padding:8px 10px;text-align:left;vertical-align:top;}
+thead th{background:#f5f5f5;}
+tr.warn td{background:#fff6db;}
+tr.danger td{background:#ffe0e0;}
+.meta{margin:8px 0 16px;font-size:14px;}
+.meta b{color:#b42318;}
+.small{color:#666;font-size:12px;}
+</style>
+</head>
+<body>
+<h2>Trial Flag 集計一覧</h2>
+<div class='meta'>対象リーグ: <b>J1/J2</b> / 対象節数: <b>15</b> / 対象試合数: <b>92</b> / GO: <b>34</b> / CAUTION: <b>44</b> / HOLD: <b>14</b></div>
+<div class='small'>CAUTION率 60%以上は赤、45%以上は黄で強調表示。</div>
+<h3>節別サマリー</h3>
+<table>
+<thead><tr><th>League</th><th>Round</th><th>Matches</th><th>GO</th><th>CAUTION</th><th>HOLD</th><th>GO率</th><th>CAUTION率</th><th>HOLD率</th></tr></thead>
+<tbody>
+<tr><td>J1</td><td>第５節</td><td>10</td><td>4</td><td>3</td><td>3</td><td>40.0%</td><td>30.0%</td><td>30.0%</td></tr>
+<tr class='warn'><td>J1</td><td>第６節</td><td>10</td><td>5</td><td>5</td><td>0</td><td>50.0%</td><td>50.0%</td><td>0.0%</td></tr>
+<tr><td>J1</td><td>第８節</td><td>10</td><td>3</td><td>3</td><td>4</td><td>30.0%</td><td>30.0%</td><td>40.0%</td></tr>
+<tr class='danger'><td>J2</td><td>第７節</td><td>6</td><td>2</td><td>4</td><td>0</td><td>33.3%</td><td>66.7%</td><td>0.0%</td></tr>
+<tr class='warn'><td>J2</td><td>第８節</td><td>7</td><td>3</td><td>4</td><td>0</td><td>42.9%</td><td>57.1%</td><td>0.0%</td></tr>
+<tr class='danger'><td>J2</td><td>第９節</td><td>4</td><td>0</td><td>3</td><td>1</td><td>0.0%</td><td>75.0%</td><td>25.0%</td></tr>
+<tr class='warn'><td>J2</td><td>第１０節</td><td>4</td><td>1</td><td>2</td><td>1</td><td>25.0%</td><td>50.0%</td><td>25.0%</td></tr>
+<tr><td>J2</td><td>第１１節</td><td>6</td><td>4</td><td>1</td><td>1</td><td>66.7%</td><td>16.7%</td><td>16.7%</td></tr>
+<tr class='danger'><td>J2</td><td>第１２節</td><td>5</td><td>1</td><td>4</td><td>0</td><td>20.0%</td><td>80.0%</td><td>0.0%</td></tr>
+<tr class='danger'><td>J2</td><td>第１３節</td><td>5</td><td>2</td><td>3</td><td>0</td><td>40.0%</td><td>60.0%</td><td>0.0%</td></tr>
+<tr class='warn'><td>J2</td><td>第１４節</td><td>4</td><td>2</td><td>2</td><td>0</td><td>50.0%</td><td>50.0%</td><td>0.0%</td></tr>
+<tr class='danger'><td>J2</td><td>第１５節</td><td>5</td><td>1</td><td>3</td><td>1</td><td>20.0%</td><td>60.0%</td><td>20.0%</td></tr>
+<tr><td>J2</td><td>第１６節</td><td>5</td><td>2</td><td>2</td><td>1</td><td>40.0%</td><td>40.0%</td><td>20.0%</td></tr>
+<tr class='danger'><td>J2</td><td>第１７節</td><td>5</td><td>2</td><td>3</td><td>0</td><td>40.0%</td><td>60.0%</td><td>0.0%</td></tr>
+<tr><td>J2</td><td>第１８節</td><td>6</td><td>2</td><td>2</td><td>2</td><td>33.3%</td><td>33.3%</td><td>33.3%</td></tr>
+</tbody></table>
+<h3>CAUTION 試合</h3>
+<table>
+<thead><tr><th>League</th><th>Round</th><th>Match</th><th>予想</th><th>Score</th><th>理由</th></tr></thead>
+<tbody>
+<tr><td>J1</td><td>第５節</td><td>千葉 vs 柏</td><td>H</td><td>2.785</td><td>被シュート成功率差=H優位(整合,7.45); シュート成功率差=A優位(逆行,-1.88)</td></tr>
+<tr><td>J1</td><td>第５節</td><td>FC東京 vs 横浜FM</td><td>H</td><td>1.420</td><td>被シュート成功率差=H優位(整合,6.91); シュート成功率差=A優位(逆行,-4.07)</td></tr>
+<tr><td>J1</td><td>第５節</td><td>神戸 vs 広島</td><td>D</td><td>-3.755</td><td>被シュート成功率差=H優位(5.97); シュート成功率差=H優位(1.54)</td></tr>
+<tr><td>J1</td><td>第６節</td><td>横浜FM vs 千葉</td><td>H</td><td>-1.390</td><td>被シュート成功率差=A優位(逆行,-8.16); シュート成功率差=H優位(整合,5.38)</td></tr>
+<tr><td>J1</td><td>第６節</td><td>柏 vs 町田</td><td>H</td><td>-4.700</td><td>被シュート成功率差=A優位(逆行,-3.20); シュート成功率差=A優位(逆行,-6.20)</td></tr>
+<tr><td>J1</td><td>第６節</td><td>広島 vs Ｇ大阪</td><td>H</td><td>-2.915</td><td>被シュート成功率差=A優位(逆行,-4.51); シュート成功率差=A優位(逆行,-1.32)</td></tr>
+<tr><td>J1</td><td>第６節</td><td>東京Ｖ vs 浦和</td><td>A</td><td>0.255</td><td>被シュート成功率差=A優位(整合,-6.39); シュート成功率差=H優位(逆行,5.88)</td></tr>
+<tr><td>J1</td><td>第６節</td><td>長崎 vs 福岡</td><td>A</td><td>-5.730</td><td>被シュート成功率差=H優位(逆行,6.29); シュート成功率差=H優位(逆行,5.17)</td></tr>
+<tr><td>J1</td><td>第８節</td><td>清水 vs 広島</td><td>A</td><td>-3.200</td><td>被シュート成功率差=H優位(逆行,7.08); シュート成功率差=拮抗(中立,-0.68)</td></tr>
+<tr><td>J1</td><td>第８節</td><td>Ｃ大阪 vs 神戸</td><td>A</td><td>0.540</td><td>被シュート成功率差=H優位(逆行,2.08); シュート成功率差=A優位(整合,-3.16)</td></tr>
+<tr><td>J1</td><td>第８節</td><td>浦和 vs 町田</td><td>A</td><td>-0.400</td><td>被シュート成功率差=H優位(逆行,5.07); シュート成功率差=A優位(整合,-4.27)</td></tr>
+<tr><td>J2</td><td>第７節</td><td>新潟 vs 富山</td><td>A</td><td>-3.655</td><td>被シュート成功率差=H優位(逆行,2.99); シュート成功率差=H優位(逆行,4.32)</td></tr>
+<tr><td>J2</td><td>第７節</td><td>札幌 vs 甲府</td><td>D</td><td>-6.255</td><td>被シュート成功率差=A優位(-5.08); シュート成功率差=A優位(-7.43)</td></tr>
+<tr><td>J2</td><td>第７節</td><td>今治 vs 徳島</td><td>H</td><td>-9.370</td><td>被シュート成功率差=A優位(逆行,-3.98); シュート成功率差=A優位(逆行,-14.76)</td></tr>
+<tr><td>J2</td><td>第７節</td><td>山形 vs 仙台</td><td>A</td><td>-0.935</td><td>被シュート成功率差=拮抗(中立,0.20); シュート成功率差=H優位(逆行,1.67)</td></tr>
+<tr><td>J2</td><td>第８節</td><td>横浜FC vs 湘南</td><td>H</td><td>-3.715</td><td>被シュート成功率差=A優位(逆行,-6.57); シュート成功率差=A優位(逆行,-0.86)</td></tr>
+<tr><td>J2</td><td>第８節</td><td>甲府 vs 大宮</td><td>A</td><td>-1.935</td><td>被シュート成功率差=H優位(逆行,4.08); シュート成功率差=拮抗(中立,-0.21)</td></tr>
+<tr><td>J2</td><td>第８節</td><td>藤枝 vs 札幌</td><td>A</td><td>-4.600</td><td>被シュート成功率差=H優位(逆行,2.60); シュート成功率差=H優位(逆行,6.60)</td></tr>
+<tr><td>J2</td><td>第８節</td><td>富山 vs 今治</td><td>A</td><td>-0.345</td><td>被シュート成功率差=A優位(整合,-3.47); シュート成功率差=H優位(逆行,4.16)</td></tr>
+<tr><td>J2</td><td>第９節</td><td>横浜FC vs 秋田</td><td>H</td><td>-2.040</td><td>被シュート成功率差=A優位(逆行,-6.47); シュート成功率差=H優位(整合,2.39)</td></tr>
+<tr><td>J2</td><td>第９節</td><td>磐田 vs 甲府</td><td>H</td><td>-9.225</td><td>被シュート成功率差=A優位(逆行,-8.52); シュート成功率差=A優位(逆行,-9.93)</td></tr>
+<tr><td>J2</td><td>第９節</td><td>鳥栖 vs 大分</td><td>H</td><td>-3.115</td><td>被シュート成功率差=A優位(逆行,-3.19); シュート成功率差=A優位(逆行,-3.04)</td></tr>
+<tr><td>J2</td><td>第１０節</td><td>甲府 vs 札幌</td><td>A</td><td>-6.255</td><td>被シュート成功率差=H優位(逆行,5.08); シュート成功率差=H優位(逆行,7.43)</td></tr>
+<tr><td>J2</td><td>第１０節</td><td>栃木Ｃ vs 八戸</td><td>H</td><td>-0.245</td><td>被シュート成功率差=A優位(逆行,-9.01); シュート成功率差=H優位(整合,8.52)</td></tr>
+<tr><td>J2</td><td>第１１節</td><td>大宮 vs 磐田</td><td>D</td><td>-7.290</td><td>被シュート成功率差=H優位(4.44); シュート成功率差=H優位(10.14)</td></tr>
+<tr><td>J2</td><td>第１２節</td><td>今治 vs 富山</td><td>H</td><td>-0.345</td><td>被シュート成功率差=H優位(整合,3.47); シュート成功率差=A優位(逆行,-4.16)</td></tr>
+<tr><td>J2</td><td>第１２節</td><td>仙台 vs 山形</td><td>H</td><td>-0.935</td><td>被シュート成功率差=拮抗(中立,-0.20); シュート成功率差=A優位(逆行,-1.67)</td></tr>
+<tr><td>J2</td><td>第１２節</td><td>藤枝 vs 大宮</td><td>A</td><td>-0.280</td><td>被シュート成功率差=H優位(逆行,1.60); シュート成功率差=A優位(整合,-1.04)</td></tr>
+<tr><td>J2</td><td>第１２節</td><td>八戸 vs 秋田</td><td>H</td><td>-4.255</td><td>被シュート成功率差=拮抗(中立,0.52); シュート成功率差=A優位(逆行,-9.03)</td></tr>
+<tr><td>J2</td><td>第１３節</td><td>大宮 vs 甲府</td><td>H</td><td>-1.935</td><td>被シュート成功率差=A優位(逆行,-4.08); シュート成功率差=拮抗(中立,0.21)</td></tr>
+<tr><td>J2</td><td>第１３節</td><td>札幌 vs 藤枝</td><td>H</td><td>-4.600</td><td>被シュート成功率差=A優位(逆行,-2.60); シュート成功率差=A優位(逆行,-6.60)</td></tr>
+<tr><td>J2</td><td>第１３節</td><td>横浜FC vs 八戸</td><td>H</td><td>2.215</td><td>被シュート成功率差=A優位(逆行,-6.99); シュート成功率差=H優位(整合,11.42)</td></tr>
+<tr><td>J2</td><td>第１４節</td><td>磐田 vs いわき</td><td>H</td><td>-4.900</td><td>被シュート成功率差=A優位(逆行,-5.61); シュート成功率差=A優位(逆行,-4.19)</td></tr>
+<tr><td>J2</td><td>第１４節</td><td>鳥栖 vs 宮崎</td><td>H</td><td>-6.460</td><td>被シュート成功率差=A優位(逆行,-2.71); シュート成功率差=A優位(逆行,-10.21)</td></tr>
+<tr><td>J2</td><td>第１５節</td><td>八戸 vs 湘南</td><td>H</td><td>-5.930</td><td>被シュート成功率差=拮抗(中立,0.42); シュート成功率差=A優位(逆行,-12.28)</td></tr>
+<tr><td>J2</td><td>第１５節</td><td>栃木Ｃ vs 横浜FC</td><td>H</td><td>-2.460</td><td>被シュート成功率差=A優位(逆行,-2.02); シュート成功率差=A優位(逆行,-2.90)</td></tr>
+<tr><td>J2</td><td>第１５節</td><td>甲府 vs 磐田</td><td>A</td><td>-9.225</td><td>被シュート成功率差=H優位(逆行,8.52); シュート成功率差=H優位(逆行,9.93)</td></tr>
+<tr><td>J2</td><td>第１６節</td><td>いわき vs 甲府</td><td>H</td><td>-4.325</td><td>被シュート成功率差=A優位(逆行,-2.91); シュート成功率差=A優位(逆行,-5.74)</td></tr>
+<tr><td>J2</td><td>第１６節</td><td>大分 vs 鳥栖</td><td>A</td><td>-3.115</td><td>被シュート成功率差=H優位(逆行,3.19); シュート成功率差=H優位(逆行,3.04)</td></tr>
+<tr><td>J2</td><td>第１７節</td><td>栃木Ｃ vs 山形</td><td>D</td><td>-6.755</td><td>被シュート成功率差=A優位(-10.02); シュート成功率差=A優位(-3.49)</td></tr>
+<tr><td>J2</td><td>第１７節</td><td>湘南 vs 仙台</td><td>A</td><td>-0.355</td><td>被シュート成功率差=A優位(整合,-1.23); シュート成功率差=H優位(逆行,1.94)</td></tr>
+<tr><td>J2</td><td>第１７節</td><td>磐田 vs 藤枝</td><td>H</td><td>-7.570</td><td>被シュート成功率差=A優位(逆行,-6.04); シュート成功率差=A優位(逆行,-9.10)</td></tr>
+<tr><td>J2</td><td>第１８節</td><td>札幌 vs 磐田</td><td>A</td><td>-2.970</td><td>被シュート成功率差=H優位(逆行,3.44); シュート成功率差=H優位(逆行,2.50)</td></tr>
+<tr><td>J2</td><td>第１８節</td><td>藤枝 vs いわき</td><td>A</td><td>-2.670</td><td>被シュート成功率差=拮抗(中立,0.43); シュート成功率差=H優位(逆行,4.91)</td></tr>
+</tbody></table>
+</body></html>

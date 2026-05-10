@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang='ja'>
+<head>
+<meta charset='utf-8'>
+<title>BuyPlan（toto 13試合）</title>
+<style>
+body{font-family:system-ui,-apple-system,sans-serif;margin:20px;line-height:1.45;color:#111;}
+.header{border:1px solid #ddd;background:#fafafa;padding:12px 14px;margin-bottom:12px;}
+.title{font-size:22px;font-weight:700;margin-bottom:6px;}
+.sub{font-size:12px;color:#444;display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:6px;}
+.note{font-size:12px;color:#555;}
+.table-wrap{overflow-x:auto;border:1px solid #ddd;}
+table{border-collapse:collapse;width:100%;font-size:12px;min-width:1300px;}
+th,td{border:1px solid #ddd;padding:6px;text-align:center;}
+th{background:#f5f5f5;position:sticky;top:0;z-index:1;}
+tbody tr:nth-child(even){background:#fcfcfc;}
+.left{text-align:left;white-space:nowrap;}
+.match{font-weight:700;}
+.pick{font-size:14px;font-weight:700;min-width:34px;}
+.cand-head{min-width:58px;}
+.warn{background:#fff5f5;border:1px solid #f0b7b7;padding:10px;margin-bottom:14px;}
+.info{background:#f7faff;border:1px solid #bcd3ff;padding:10px;margin-bottom:14px;}
+.footer{font-size:11px;color:#555;margin-top:10px;}
+</style>
+</head>
+<body>
+<div class='header'>
+<div class='title'>BuyPlan（toto 13試合）</div>
+<div class='sub'>
+<span>toto_round_id: <b>UNKNOWN</b></span>
+<span>scenario: <b>候補ごとに固定割当</b></span>
+<span>scenario一覧: <b>候補01:Lock 01（LOCK遵守） / 候補02:Lock 02（LOCK遵守） / 候補03:Lock 03（LOCK遵守） / 候補04:Prob 01（確率忠実） / 候補05:Prob 02（確率忠実） / 候補06:Prob 03（確率忠実） / 候補07:Prob 04（確率忠実） / 候補08:Prob 05（確率忠実） / 候補09:Exp 01（実験） / 候補10:Exp 02（実験）</b></span>
+<span>生成日時: <b>2026-03-17 23:49:43</b></span>
+<span>入力: <b>/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/rounds/round04/snapshot/predictions.csv</b></span>
+<span>出力先: <b>/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/backtest/round04</b></span>
+</div>
+<div class='note'>記号: 1=ホーム勝ち / 0=引分 / 2=アウェイ勝ち</div>
+<div class='note'>10口はユニーク生成（重複なし）</div>
+<div class='note'>unique_ticket_count=1 / duplicate_count=9</div>
+</div>
+<div class='warn'><b>⚠ 情報不足（NO_DATA）</b><ul>
+<li>M01 (UNKNOWN) 横浜FM vs 千葉 : フォールバック=1固定</li>
+<li>M02 (UNKNOWN) 名古屋 vs 神戸 : フォールバック=1固定</li>
+<li>M03 (UNKNOWN) 水戸 vs FC東京 : フォールバック=1固定</li>
+<li>M04 (UNKNOWN) 京都 vs Ｃ大阪 : フォールバック=1固定</li>
+<li>M05 (UNKNOWN) 広島 vs Ｇ大阪 : フォールバック=1固定</li>
+<li>M06 (UNKNOWN) 柏 vs 町田 : フォールバック=1固定</li>
+<li>M07 (UNKNOWN) 清水 vs 岡山 : フォールバック=1固定</li>
+<li>M08 (UNKNOWN) 鹿島 vs 川崎Ｆ : フォールバック=1固定</li>
+<li>M09 (UNKNOWN) 東京Ｖ vs 浦和 : フォールバック=1固定</li>
+<li>M10 (UNKNOWN) 長崎 vs 福岡 : フォールバック=1固定</li>
+<li>M11 (UNKNOWN) 八戸 vs 栃木Ｃ : フォールバック=1固定</li>
+<li>M12 (UNKNOWN) 宮崎 vs 大分 : フォールバック=1固定</li>
+<li>M13 (UNKNOWN) 磐田 vs 札幌 : フォールバック=1固定</li>
+</ul></div>
+<div class='info'><b>警告ログ</b><ul>
+<li>predictions側で重複カードが 3 件あるため、先頭行を採用します。</li>
+<li>toto並び順で未一致のカードが 13 件あります。未一致カードは NO_DATA 補完します。</li>
+<li>predictions側にtoto対象外カードが 14 件あります。toto13試合以外は無視します。</li>
+<li>確率カラムが見つかりません。status=OK でもフォールバックで処理します。</li>
+<li>ticket02 の重複を解消できませんでした（探索不足）</li>
+<li>ticket03 の重複を解消できませんでした（探索不足）</li>
+<li>ticket04 の重複を解消できませんでした（探索不足）</li>
+<li>ticket05 の重複を解消できませんでした（探索不足）</li>
+<li>ticket06 の重複を解消できませんでした（探索不足）</li>
+<li>ticket07 の重複を解消できませんでした（探索不足）</li>
+<li>ticket08 の重複を解消できませんでした（探索不足）</li>
+<li>ticket09 の重複を解消できませんでした（探索不足）</li>
+<li>ticket10 の重複を解消できませんでした（探索不足）</li>
+<li>基準票ソース: predicted_result採用=0, best_symbolフォールバック=0</li>
+<li>LOCK遵守: tickets=3, 0採用件数=0, 平均margin=0.000, 総flip数=0</li>
+<li>確率忠実: tickets=5, 0採用件数=0, 平均margin=0.000, 総flip数=0</li>
+<li>実験: tickets=2, 0採用件数=0, 平均margin=0.000, 総flip数=0</li>
+<li>探索ログ: second_pickが0の試合数(全OK)=0, second_pickが0の試合数(探索対象)=0, 探索枠でsecond=0を採用した件数=0</li>
+<li>LOCK variation: ticket02_flips=0, ticket03_flips=0</li>
+<li>全体比率: 0総出現回数=0, 1/0/2比率=1.000/0.000/0.000</li>
+<li>draw_distribution: adjust_count=0</li>
+<li>[BUYPLAN_EXTREME_MARGIN_RELEASE] count=0 matches=</li>
+<li>draw候補ゲート: candidate_matches=0 rate=0.000</li>
+<li>[BUYPLAN_WEAK_DRAW_CAND] matches= selected_for_exp= selected_for_distribution=</li>
+<li>[BUYPLAN_DRAW_POLICY] strong_draw_count=0 weak_draw_count=0 final_zero_count=0</li>
+<li>[BUYPLAN_TARGET_DRAW] scenario=Lock target_draw_count_range=2..3</li>
+<li>[BUYPLAN_TARGET_DRAW] scenario=Prob target_draw_count_range=3..4</li>
+<li>[BUYPLAN_TARGET_DRAW] scenario=Exp target_draw_count_range=4..5</li>
+<li>重複/偏り調整: draw_distribution_adjust_count=0 unique_repair_count=0 same_symbol_cap_adjust_count=0 unique_ticket_count=1 duplicate_count=9</li>
+<li>duplicate_count が 0 ではありません（要確認）</li>
+<li>ticket01(lock) is immutable and matches base_pick</li>
+<li>ticket02-03(lock) are margin-based lock variations (flips=0/0)</li>
+<li>M01 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+<li>M02 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+<li>M03 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+<li>M04 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+<li>M05 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+<li>M06 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+<li>M07 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+<li>M08 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+<li>M09 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+<li>M10 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+<li>M11 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+<li>M12 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+<li>M13 が全口同値です: symbol=1 (pH=0.333 pD=0.333 pA=0.333 margin=0.000)</li>
+</ul></div>
+<div class='table-wrap'><table>
+<thead><tr><th class='match'>match_no</th><th class='left'>league</th><th class='left'>home_team</th><th class='left'>away_team</th><th class='left'>best/second</th>
+<th class='cand-head'>候補01(基準)<br><small>Lock 01（LOCK遵守）</small></th>
+<th class='cand-head'>候補02<br><small>Lock 02（LOCK遵守）</small></th>
+<th class='cand-head'>候補03<br><small>Lock 03（LOCK遵守）</small></th>
+<th class='cand-head'>候補04<br><small>Prob 01（確率忠実）</small></th>
+<th class='cand-head'>候補05<br><small>Prob 02（確率忠実）</small></th>
+<th class='cand-head'>候補06<br><small>Prob 03（確率忠実）</small></th>
+<th class='cand-head'>候補07<br><small>Prob 04（確率忠実）</small></th>
+<th class='cand-head'>候補08<br><small>Prob 05（確率忠実）</small></th>
+<th class='cand-head'>候補09<br><small>Exp 01（実験）</small></th>
+<th class='cand-head'>候補10<br><small>Exp 02（実験）</small></th>
+</tr></thead><tbody>
+<tr>
+<td class='match'>1</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>横浜FM</td>
+<td class='left'>千葉</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+<tr>
+<td class='match'>2</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>名古屋</td>
+<td class='left'>神戸</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+<tr>
+<td class='match'>3</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>水戸</td>
+<td class='left'>FC東京</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+<tr>
+<td class='match'>4</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>京都</td>
+<td class='left'>Ｃ大阪</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+<tr>
+<td class='match'>5</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>広島</td>
+<td class='left'>Ｇ大阪</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+<tr>
+<td class='match'>6</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>柏</td>
+<td class='left'>町田</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+<tr>
+<td class='match'>7</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>清水</td>
+<td class='left'>岡山</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+<tr>
+<td class='match'>8</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>鹿島</td>
+<td class='left'>川崎Ｆ</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+<tr>
+<td class='match'>9</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>東京Ｖ</td>
+<td class='left'>浦和</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+<tr>
+<td class='match'>10</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>長崎</td>
+<td class='left'>福岡</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+<tr>
+<td class='match'>11</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>八戸</td>
+<td class='left'>栃木Ｃ</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+<tr>
+<td class='match'>12</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>宮崎</td>
+<td class='left'>大分</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+<tr>
+<td class='match'>13</td>
+<td class='left'>UNKNOWN</td>
+<td class='left'>磐田</td>
+<td class='left'>札幌</td>
+<td class='left'></td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+<td class='pick'>1*</td>
+</tr>
+</tbody></table></div>
+<h3>候補の変更点（flip_desc）</h3>
+<table>
+<thead><tr><th>ticket</th><th class='left'>scenario_name</th><th class='left'>description</th></tr></thead><tbody>
+<tr><td>候補01</td><td class='left'>Lock 01（LOCK遵守）</td><td class='left'>lock_base_immutable</td></tr>
+<tr><td>候補02</td><td class='left'>Lock 02（LOCK遵守）</td><td class='left'>lock_margin_variation_lt_0.04</td></tr>
+<tr><td>候補03</td><td class='left'>Lock 03（LOCK遵守）</td><td class='left'>lock_margin_variation_lt_0.06</td></tr>
+<tr><td>候補04</td><td class='left'>Prob 01（確率忠実）</td><td class='left'>gradual_sway_04</td></tr>
+<tr><td>候補05</td><td class='left'>Prob 02（確率忠実）</td><td class='left'>gradual_sway_05</td></tr>
+<tr><td>候補06</td><td class='left'>Prob 03（確率忠実）</td><td class='left'>gradual_sway_06</td></tr>
+<tr><td>候補07</td><td class='left'>Prob 04（確率忠実）</td><td class='left'>gradual_sway_07</td></tr>
+<tr><td>候補08</td><td class='left'>Prob 05（確率忠実）</td><td class='left'>draw_hypothesis_08</td></tr>
+<tr><td>候補09</td><td class='left'>Exp 01（実験）</td><td class='left'>close_reversal_09</td></tr>
+<tr><td>候補10</td><td class='left'>Exp 02（実験）</td><td class='left'>strong_break_10</td></tr>
+</tbody></table>
+<div class='footer'>warnings=45 / duplicate_skips=0 / generated_variants=0 / unique_ticket_count=1 / duplicate_count=9</div>
+</body></html>

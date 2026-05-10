@@ -1,0 +1,14 @@
+match_no,league,home_team,away_team,best_second,actual_symbol,actual_result,ticket01,ticket01_is_hit,ticket02,ticket02_is_hit,ticket03,ticket03_is_hit,ticket04,ticket04_is_hit,ticket05,ticket05_is_hit,ticket06,ticket06_is_hit,ticket07,ticket07_is_hit,ticket08,ticket08_is_hit,ticket09,ticket09_is_hit,ticket10,ticket10_is_hit
+1,J1,横浜FM,千葉,best=0 second=1 third=2 (base=0) margin=0.040,1,H,0,False,0,False,0,False,1,True,0,False,0,False,0,False,0,False,0,False,0,False
+2,J1,名古屋,神戸,best=2 second=0 third=1 (base=2) margin=0.018,2,A,2,True,2,True,2,True,2,True,2,True,0,False,2,True,2,True,0,False,2,True
+3,J1,水戸,FC東京,best=1 second=0 third=2 (base=1) margin=0.035,0,D,1,False,1,False,1,False,0,True,1,False,1,False,1,False,1,False,1,False,1,False
+4,J1,京都,Ｃ大阪,best=1 second=0 third=2 (base=1) margin=0.061,2,A,1,False,1,False,1,False,1,False,1,False,1,False,1,False,0,False,1,False,2,True
+5,J1,広島,Ｇ大阪,best=1 second=0 third=2 (base=1) margin=0.038,1,H,1,True,1,True,1,True,1,True,1,True,1,True,0,False,1,True,1,True,1,True
+6,J1,柏,町田,best=1 second=0 third=2 (base=1) margin=0.075,2,A,1,False,1,False,1,False,1,False,1,False,1,False,1,False,0,False,1,False,2,True
+7,J1,清水,岡山,best=1 second=0 third=2 (base=1) margin=0.024,0,D,1,False,1,False,1,False,1,False,0,True,1,False,1,False,1,False,0,True,1,False
+8,J1,鹿島,川崎Ｆ,best=1 second=0 third=2 (base=1) margin=0.085,1,H,1,True,1,True,1,True,1,True,1,True,1,True,1,True,0,False,1,True,1,True
+9,J1,東京Ｖ,浦和,best=2 second=0 third=1 (base=2) margin=0.008,1,H,2,False,2,False,2,False,2,False,2,False,0,False,2,False,2,False,0,False,2,False
+10,J1,長崎,福岡,best=1 second=0 third=2 (base=1) margin=0.006,1,H,1,True,1,True,0,False,1,True,1,True,0,False,1,True,1,True,0,False,1,True
+11,J2,八戸,栃木Ｃ,best=1 second=0 third=2 (base=1) margin=0.028,2,A,1,False,1,False,1,False,1,False,0,False,1,False,1,False,1,False,1,False,1,False
+12,J2,宮崎,大分,best=1 second=0 third=2 (base=1) margin=0.052,1,H,1,True,1,True,1,True,1,True,1,True,1,True,0,False,1,True,1,True,1,True
+13,J2,磐田,札幌,best=1 second=0 third=2 (base=1) margin=0.028,2,A,1,False,1,False,1,False,1,False,1,False,1,False,0,False,1,False,1,False,1,False

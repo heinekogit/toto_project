@@ -11,6 +11,19 @@
 SEASON_YEAR=2026 ROUND=round02 ./scripts/run_evaluate_round.sh 2>&1 | tee logs/run_evaluate_round_round02.log
 ```
 
+### mixed開催時
+- `J1/J2` で節番号がずれる開催回も評価可能。
+- この場合の `ROUND` は「保存先ID」として使う。
+- 例: `J1第8節 + J2第7節` を `round07` として保存する。
+
+```bash
+SEASON_YEAR=2026 ROUND=round07 ./scripts/run_evaluate_round.sh 2>&1 | tee logs/run_evaluate_round_round07.log
+```
+
+- 前提:
+  - `data/purchase_reference/predictions.csv` が mixed開催の13試合になっていること
+  - 同一リーグ内で複数節が混ざっていないこと
+
 ## 個別実行
 ```bash
 scripts/.venv/bin/python scripts/eval/00_snapshot_purchase.py --round round02

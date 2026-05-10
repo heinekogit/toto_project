@@ -2,7 +2,7 @@
 <html lang='ja'>
 <head>
 <meta charset='utf-8'>
-<title>Backtest J1 2026 第１８節: backtest_j1_2026_rounds.csv</title>
+<title>Backtest J1 2026 第１８節</title>
 <style>
 body{font-family:system-ui, -apple-system, sans-serif; margin:24px;}
 table{border-collapse:collapse; width:100%; font-size:12px;}
@@ -16,15 +16,19 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 </head>
 <body>
 <div style='margin-bottom:12px;'><a href='../index.html'>← indexに戻る</a></div>
-<h2>Backtest J1 2026 第１８節: backtest_j1_2026_rounds.csv</h2>
-<div class='summary'>的中数: <b>0/10</b> / 的中率: <b>0.0%</b></div>
+<h2>Backtest J1 2026 第１８節</h2>
+<div class='summary'>的中数: <b>0/0</b> / 的中率: <b>-</b></div>
 <table>
 <thead><tr>
+<th>league</th>
 <th>節</th>
 <th>match_id</th>
 <th>datetime</th>
 <th>home_team</th>
 <th>away_team</th>
+<th>actual_result</th>
+<th>is_correct</th>
+<th>predicted_result</th>
 <th>home_score</th>
 <th>away_score</th>
 <th>home_advantage_diff</th>
@@ -33,17 +37,18 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <th>prob_draw</th>
 <th>prob_away_win</th>
 <th>predicted_highest_prob_result</th>
-<th>actual_result</th>
-<th>is_correct</th>
-<th>predicted_result</th>
 </tr></thead>
 <tbody>
 <tr class='desc-row'>
+<td></td>
 <td>節</td>
 <td>試合ID</td>
 <td>試合日時</td>
 <td>ホーム</td>
 <td>アウェイ</td>
+<td>実際の結果</td>
+<td>的中</td>
+<td></td>
 <td>ホーム得点</td>
 <td>アウェイ得点</td>
 <td></td>
@@ -52,189 +57,6 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td>引き分け確率</td>
 <td>アウェイ勝ち確率</td>
 <td>予測結果</td>
-<td>実際の結果</td>
-<td>的中</td>
-<td></td>
-</tr>
-<tr>
-<td>第１８節第２日</td>
-<td>j1_2026_05241700_清水_Ｇ大阪</td>
-<td>2026-05-24 17:00:00</td>
-<td>清水</td>
-<td>Ｇ大阪</td>
-<td></td>
-<td></td>
-<td>0.0</td>
-<td>False</td>
-<td>0.241</td>
-<td>0.233</td>
-<td>0.527</td>
-<td>A</td>
-<td></td>
-<td>False</td>
-<td>A</td>
-</tr>
-<tr>
-<td>第１８節第２日</td>
-<td>j1_2026_05241255_岡山_Ｃ大阪</td>
-<td>2026-05-24 12:55:00</td>
-<td>岡山</td>
-<td>Ｃ大阪</td>
-<td></td>
-<td></td>
-<td>-3.0</td>
-<td>False</td>
-<td>0.157</td>
-<td>0.212</td>
-<td>0.632</td>
-<td>A</td>
-<td></td>
-<td>False</td>
-<td>A</td>
-</tr>
-<tr>
-<td>第１８節第３日</td>
-<td>j1_2026_05241400_東京Ｖ_横浜FM</td>
-<td>2026-05-24 14:00:00</td>
-<td>東京Ｖ</td>
-<td>横浜FM</td>
-<td></td>
-<td></td>
-<td>3.0</td>
-<td>True</td>
-<td>0.82</td>
-<td>0.147</td>
-<td>0.032</td>
-<td>H</td>
-<td></td>
-<td>False</td>
-<td>H</td>
-</tr>
-<tr>
-<td>第１８節第３日</td>
-<td>j1_2026_05241400_水戸_川崎Ｆ</td>
-<td>2026-05-24 14:00:00</td>
-<td>水戸</td>
-<td>川崎Ｆ</td>
-<td></td>
-<td></td>
-<td>-1.0</td>
-<td>False</td>
-<td>0.227</td>
-<td>0.23</td>
-<td>0.543</td>
-<td>A</td>
-<td></td>
-<td>False</td>
-<td>A</td>
-</tr>
-<tr>
-<td>第１８節第１日</td>
-<td>j1_2026_05231900_京都_長崎</td>
-<td>2026-05-23 19:00:00</td>
-<td>京都</td>
-<td>長崎</td>
-<td></td>
-<td></td>
-<td>1.0</td>
-<td>True</td>
-<td>0.64</td>
-<td>0.21</td>
-<td>0.15</td>
-<td>H</td>
-<td></td>
-<td>False</td>
-<td>H</td>
-</tr>
-<tr>
-<td>第１８節第１日</td>
-<td>j1_2026_05231400_福岡_神戸</td>
-<td>2026-05-23 14:00:00</td>
-<td>福岡</td>
-<td>神戸</td>
-<td></td>
-<td></td>
-<td>-0.5</td>
-<td>False</td>
-<td>0.17</td>
-<td>0.215</td>
-<td>0.615</td>
-<td>A</td>
-<td></td>
-<td>False</td>
-<td>A</td>
-</tr>
-<tr>
-<td>第１８節第１日</td>
-<td>j1_2026_05231400_広島_名古屋</td>
-<td>2026-05-23 14:00:00</td>
-<td>広島</td>
-<td>名古屋</td>
-<td></td>
-<td></td>
-<td>0.0</td>
-<td>False</td>
-<td>0.351</td>
-<td>0.256</td>
-<td>0.393</td>
-<td>D</td>
-<td></td>
-<td>False</td>
-<td>D</td>
-</tr>
-<tr>
-<td>第１８節第２日</td>
-<td>j1_2026_05231800_柏_千葉</td>
-<td>2026-05-23 18:00:00</td>
-<td>柏</td>
-<td>千葉</td>
-<td></td>
-<td></td>
-<td>0.0</td>
-<td>False</td>
-<td>0.297</td>
-<td>0.245</td>
-<td>0.458</td>
-<td>D</td>
-<td></td>
-<td>False</td>
-<td>D</td>
-</tr>
-<tr>
-<td>第１８節第２日</td>
-<td>j1_2026_05231730_鹿島_FC東京</td>
-<td>2026-05-23 17:30:00</td>
-<td>鹿島</td>
-<td>FC東京</td>
-<td></td>
-<td></td>
-<td>3.0</td>
-<td>True</td>
-<td>0.634</td>
-<td>0.211</td>
-<td>0.155</td>
-<td>H</td>
-<td></td>
-<td>False</td>
-<td>H</td>
-</tr>
-<tr>
-<td>第１８節第１日</td>
-<td>j1_2026_05221930_町田_浦和</td>
-<td>2026-05-22 19:30:00</td>
-<td>町田</td>
-<td>浦和</td>
-<td></td>
-<td></td>
-<td>-1.0</td>
-<td>False</td>
-<td>0.259</td>
-<td>0.237</td>
-<td>0.504</td>
-<td>A</td>
-<td></td>
-<td>False</td>
-<td>A</td>
 </tr>
 </tbody></table>
 </body></html>

@@ -1,0 +1,11 @@
+{
+  "status": "skip",
+  "date": "2026-03-29",
+  "purchase_executed": false,
+  "scope": "prediction_only",
+  "official_parallel_count": false,
+  "reason": "Representative week; toto card included J2/J3 only, and J3 is outside the current prediction/buyplan coverage.",
+  "purchase_reference_snapshot_taken": false,
+  "purchase_reference_snapshot_reason": "Active purchase_reference contents still point to older round data (toto_round_id: 第8節).",
+  "notes_file": "README.md"
+}

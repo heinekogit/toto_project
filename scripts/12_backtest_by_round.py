@@ -374,6 +374,21 @@ def load_j2_allowed_teams():
             col = "team_name" if "team_name" in df.columns else df.columns[0]
             teams = set(df[col].dropna().astype(str).str.strip())
             if teams:
+                # 2026特別大会では実カード側の参加チーム数を下回る許可リストは不整合とみなし無効化
+                if SEASON_YEAR >= 2026 and os.path.exists(RESULTS_CSV):
+                    try:
+                        cur = pd.read_csv(RESULTS_CSV)
+                        cur_teams = set(cur.get("home_team", pd.Series(dtype="object")).dropna().astype(str).str.strip())
+                        cur_teams |= set(cur.get("away_team", pd.Series(dtype="object")).dropna().astype(str).str.strip())
+                        cur_teams = {t for t in cur_teams if t}
+                        if cur_teams and len(teams) < len(cur_teams) and os.environ.get("ENABLE_J2_STRICT_FILTER_FORCE", "0") != "1":
+                            print(
+                                f"警告: J2許可チームCSV({len(teams)}チーム)が実カードのチーム数({len(cur_teams)}チーム)より少ないため、"
+                                "2026特別大会モードとしてフィルタを無効化します。"
+                            )
+                            return None
+                    except Exception as e:
+                        print(f"警告: J2許可チーム整合性チェックに失敗しました: {e}")
                 print(f"J2許可チームを {J2_ALLOWED_TEAMS_CSV} から読み込みました: {len(teams)}")
                 return teams
         except Exception as e:

@@ -1,0 +1,106 @@
+[TRAIN_SCHEMA] elo_diff fallback source=/Users/dev_tomo/Desktop/tt_prj_restart/backtest_j1_2025.csv matched_rows=380/380
+[TRAIN_SCHEMA] league=j1 source=/Users/dev_tomo/Desktop/tt_prj_restart/backtest_j1_2025_rounds.csv rows=380
+[FEATURE_SET] league=j1 feature_profile=j1_core features=['elo_diff_for_prob', 'abs_elo_diff_for_prob']
+[CLASS_MAP] order=['H', 'D', 'A'] mapping={'H': 0, 'D': 1, 'A': 2}
+[Y_DIST] league=j1 feature_profile=j1_core split=train rows=266 H=44.0% (117) D=24.1% (64) A=32.0% (85)
+[Y_DIST] league=j1 feature_profile=j1_core split=valid rows=114 H=44.7% (51) D=28.9% (33) A=26.3% (30)
+[GRID] league=j1 feature_profile=j1_core start l2=0.010000
+[TRAIN_LOSS] iter=10 loss=1.046065
+[TRAIN_LOSS] iter=20 loss=1.046065
+[TRAIN_LOSS] iter=30 loss=1.046065
+[TRAIN_LOSS] iter=40 loss=1.046065
+[TRAIN_LOSS] iter=50 loss=1.046065
+[TRAIN_OPT] league=j1 feature_profile=j1_core l2=0.010000 status=0 success=1 iters=50 final_loss=1.046065 grad_norm=2.892848e-08 gtol=1.0e-10 ftol=1.0e-12
+[LOGITS_STATS] league=j1 feature_profile=j1_core split=valid l2=0.010000 H(min/p50/max)=-0.257/0.229/1.472 D(min/p50/max)=-2.002/-0.529/-0.016 A(min/p50/max)=-0.224/0.108/1.697 max_abs=2.002
+[PRED_DIST] league=j1 feature_profile=j1_core split=valid_pred rows=114 pred_H=71.1% (81) pred_D=0.0% (0) pred_A=28.9% (33)
+[GRID_EVAL] league=j1 feature_profile=j1_core l2=0.010000 accuracy=0.5088 logloss=1.070815 avg_prob_draw=0.184 actual_D_rate=0.289 draw_diff_pp=-10.58
+[PROB_DRAW_DIST:BACKTEST] league=j1 feature_profile=j1_core l2=0.010000 min=0.022 p50=0.181 p95=0.312 max=0.322
+[GRID] league=j1 feature_profile=j1_core start l2=0.030000
+[TRAIN_LOSS] iter=10 loss=1.047549
+[TRAIN_LOSS] iter=20 loss=1.047549
+[TRAIN_LOSS] iter=30 loss=1.047549
+[TRAIN_LOSS] iter=40 loss=1.047549
+[TRAIN_LOSS] iter=50 loss=1.047549
+[TRAIN_OPT] league=j1 feature_profile=j1_core l2=0.030000 status=0 success=1 iters=50 final_loss=1.047549 grad_norm=3.678053e-09 gtol=1.0e-10 ftol=1.0e-12
+[LOGITS_STATS] league=j1 feature_profile=j1_core split=valid l2=0.030000 H(min/p50/max)=-0.255/0.238/1.371 D(min/p50/max)=-1.815/-0.505/-0.041 A(min/p50/max)=-0.208/0.094/1.603 max_abs=1.815
+[PRED_DIST] league=j1 feature_profile=j1_core split=valid_pred rows=114 pred_H=71.1% (81) pred_D=0.0% (0) pred_A=28.9% (33)
+[GRID_EVAL] league=j1 feature_profile=j1_core l2=0.030000 accuracy=0.5088 logloss=1.064366 avg_prob_draw=0.187 actual_D_rate=0.289 draw_diff_pp=-10.23
+[PROB_DRAW_DIST:BACKTEST] league=j1 feature_profile=j1_core l2=0.030000 min=0.029 p50=0.186 p95=0.305 max=0.314
+[GRID] league=j1 feature_profile=j1_core start l2=0.100000
+[TRAIN_LOSS] iter=10 loss=1.051303
+[TRAIN_LOSS] iter=20 loss=1.051303
+[TRAIN_LOSS] iter=30 loss=1.051303
+[TRAIN_LOSS] iter=40 loss=1.051303
+[TRAIN_LOSS] iter=50 loss=1.051303
+[TRAIN_OPT] league=j1 feature_profile=j1_core l2=0.100000 status=0 success=1 iters=50 final_loss=1.051303 grad_norm=3.492210e-09 gtol=1.0e-10 ftol=1.0e-12
+[LOGITS_STATS] league=j1 feature_profile=j1_core split=valid l2=0.100000 H(min/p50/max)=-0.224/0.257/1.139 D(min/p50/max)=-1.417/-0.453/-0.098 A(min/p50/max)=-0.170/0.069/1.354 max_abs=1.417
+[PRED_DIST] league=j1 feature_profile=j1_core split=valid_pred rows=114 pred_H=76.3% (87) pred_D=0.0% (0) pred_A=23.7% (27)
+[GRID_EVAL] league=j1 feature_profile=j1_core l2=0.100000 accuracy=0.5175 logloss=1.053426 avg_prob_draw=0.196 actual_D_rate=0.289 draw_diff_pp=-9.30
+[PROB_DRAW_DIST:BACKTEST] league=j1 feature_profile=j1_core l2=0.100000 min=0.052 p50=0.198 p95=0.290 max=0.297
+[GRID] league=j1 feature_profile=j1_core start l2=0.300000
+[TRAIN_LOSS] iter=10 loss=1.056892
+[TRAIN_LOSS] iter=20 loss=1.056892
+[TRAIN_LOSS] iter=30 loss=1.056892
+[TRAIN_LOSS] iter=40 loss=1.056892
+[TRAIN_LOSS] iter=50 loss=1.056892
+[TRAIN_OPT] league=j1 feature_profile=j1_core l2=0.300000 status=0 success=1 iters=50 final_loss=1.056892 grad_norm=1.555589e-08 gtol=1.0e-10 ftol=1.0e-12
+[LOGITS_STATS] league=j1 feature_profile=j1_core split=valid l2=0.300000 H(min/p50/max)=-0.119/0.280/0.837 D(min/p50/max)=-0.961/-0.391/-0.171 A(min/p50/max)=-0.117/0.024/0.951 max_abs=0.961
+[PRED_DIST] league=j1 feature_profile=j1_core split=valid_pred rows=114 pred_H=82.5% (94) pred_D=0.0% (0) pred_A=17.5% (20)
+[GRID_EVAL] league=j1 feature_profile=j1_core l2=0.300000 accuracy=0.5175 logloss=1.049081 avg_prob_draw=0.211 actual_D_rate=0.289 draw_diff_pp=-7.85
+[PROB_DRAW_DIST:BACKTEST] league=j1 feature_profile=j1_core l2=0.300000 min=0.100 p50=0.215 p95=0.271 max=0.275
+[GRID] league=j1 feature_profile=j1_core start l2=1.000000
+[TRAIN_LOSS] iter=10 loss=1.063002
+[TRAIN_LOSS] iter=20 loss=1.063002
+[TRAIN_LOSS] iter=30 loss=1.063002
+[TRAIN_LOSS] iter=40 loss=1.063002
+[TRAIN_LOSS] iter=50 loss=1.063002
+[TRAIN_OPT] league=j1 feature_profile=j1_core l2=1.000000 status=0 success=1 iters=50 final_loss=1.063002 grad_norm=2.094272e-09 gtol=1.0e-10 ftol=1.0e-12
+[LOGITS_STATS] league=j1 feature_profile=j1_core split=valid l2=1.000000 H(min/p50/max)=0.070/0.298/0.546 D(min/p50/max)=-0.579/-0.336/-0.241 A(min/p50/max)=-0.062/-0.003/0.466 max_abs=0.579
+[PRED_DIST] league=j1 feature_profile=j1_core split=valid_pred rows=114 pred_H=93.9% (107) pred_D=0.0% (0) pred_A=6.1% (7)
+[GRID_EVAL] league=j1 feature_profile=j1_core l2=1.000000 accuracy=0.4825 logloss=1.058737 avg_prob_draw=0.227 actual_D_rate=0.289 draw_diff_pp=-6.26
+[PROB_DRAW_DIST:BACKTEST] league=j1 feature_profile=j1_core l2=1.000000 min=0.169 p50=0.230 p95=0.254 max=0.255
+[GRID] league=j1 feature_profile=j1_core start l2=3.000000
+[TRAIN_LOSS] iter=10 loss=1.066334
+[TRAIN_LOSS] iter=20 loss=1.066334
+[TRAIN_LOSS] iter=30 loss=1.066334
+[TRAIN_LOSS] iter=40 loss=1.066334
+[TRAIN_LOSS] iter=50 loss=1.066334
+[TRAIN_OPT] league=j1 feature_profile=j1_core l2=3.000000 status=0 success=1 iters=50 final_loss=1.066334 grad_norm=1.057249e-08 gtol=1.0e-10 ftol=1.0e-12
+[LOGITS_STATS] league=j1 feature_profile=j1_core split=valid l2=3.000000 H(min/p50/max)=0.205/0.304/0.400 D(min/p50/max)=-0.404/-0.311/-0.275 A(min/p50/max)=-0.032/-0.008/0.184 max_abs=0.404
+[PRED_DIST] league=j1 feature_profile=j1_core split=valid_pred rows=114 pred_H=100.0% (114) pred_D=0.0% (0) pred_A=0.0% (0)
+[WARN_PRED_COLLAPSE] league=j1 feature_profile=j1_core split=valid_pred max_class_share_pct=100.0 threshold=95.0
+[GRID_EVAL] league=j1 feature_profile=j1_core l2=3.000000 accuracy=0.4474 logloss=1.070061 avg_prob_draw=0.235 actual_D_rate=0.289 draw_diff_pp=-5.42
+[PROB_DRAW_DIST:BACKTEST] league=j1 feature_profile=j1_core l2=3.000000 min=0.211 p50=0.237 p95=0.246 max=0.246
+[GRID_BEST] league=j1 feature_profile=j1_core l2=0.300000 logloss=1.049081 accuracy=0.5175
+[LOGITS_STATS] league=j1 feature_profile=j1_core split=valid_best l2=0.300000 H(min/p50/max)=-0.119/0.280/0.837 D(min/p50/max)=-0.961/-0.391/-0.171 A(min/p50/max)=-0.117/0.024/0.951 max_abs=0.961
+[PRED_DIST] league=j1 feature_profile=j1_core split=valid_best_pred rows=114 pred_H=82.5% (94) pred_D=0.0% (0) pred_A=17.5% (20)
+[TRAIN_EVAL] league=j1 feature_profile=j1_core rows=380 train=266 test=114 accuracy=0.5175 logloss=1.049081
+[TRAIN_EVAL] confusion_matrix rows=actual(H,D,A) cols=pred(H,D,A)
+[TRAIN_EVAL] league=j1 feature_profile=j1_core confusion=[[48, 0, 3], [27, 0, 6], [19, 0, 11]]
+[TRAIN_EVAL] league=j1 feature_profile=j1_core confusion_named={"H": {"H": 48, "D": 0, "A": 3}, "D": {"H": 27, "D": 0, "A": 6}, "A": {"H": 19, "D": 0, "A": 11}}
+[BASELINE] league=j1 feature_profile=j1_core type=always_H accuracy=0.4474 logloss=15.269775
+[TRAIN_LOSS] iter=10 loss=1.068578
+[TRAIN_LOSS] iter=20 loss=1.068578
+[TRAIN_LOSS] iter=30 loss=1.068578
+[TRAIN_LOSS] iter=40 loss=1.068578
+[TRAIN_LOSS] iter=50 loss=1.068578
+[INTERCEPT_ONLY_EVAL] league=j1 feature_profile=j1_core rows=380 train=266 test=114 accuracy=0.4474 logloss=1.080044
+[INTERCEPT_ONLY_OPT] league=j1 feature_profile=j1_core status=0 success=1 iters=50 final_loss=1.068578 grad_norm=2.300356e-12
+[PROB_DRAW_DIST:INTERCEPT_ONLY:j1:j1_core] rows=114 min=0.241 p05=0.241 p25=0.241 p50=0.241 p75=0.241 p95=0.241 max=0.241
+[TRAIN_PROB_CHECK] league=j1 feature_profile=j1_core rows=380 prob_draw_argmax_count=0 prob_draw_ge_0.23_count=229
+[GRID_BEST_CHECK] league=j1 feature_profile=j1_core best_logloss=1.049081 grid_min_logloss=1.049081 status=ok
+[GRID_OUT] league=j1 feature_profile=j1_core csv=/Users/dev_tomo/Desktop/tt_prj_restart/data/models/hda_multinom_grid_2025_j1__j1_core.csv
+[TRAIN_OUT] league=j1 feature_profile=j1_core model=/Users/dev_tomo/Desktop/tt_prj_restart/data/models/hda_multinom_train2025_j1__j1_core.joblib
+[TRAIN_OUT] league=j1 feature_profile=j1_core metrics=/Users/dev_tomo/Desktop/tt_prj_restart/data/models/hda_multinom_train2025_j1__j1_core.metrics.json
+[MODEL_EVAL] league=j1 feature_profile=j1_core rows=380
+[CLASS_MAP] order=['H', 'D', 'A'] mapping={'H': 0, 'D': 1, 'A': 2}
+[Y_DIST] league=j1 feature_profile=j1_core split=eval_actual rows=380 H=44.2% (168) D=25.5% (97) A=30.3% (115)
+[PRED_DIST] league=j1 feature_profile=j1_core split=eval_pred rows=380 pred_H=87.9% (334) pred_D=0.0% (0) pred_A=12.1% (46)
+[LOGITS_STATS] league=j1 feature_profile=j1_core split=eval H(min/p50/max)=-0.119/0.288/0.837 D(min/p50/max)=-0.961/-0.301/-0.170 A(min/p50/max)=-0.118/-0.035/0.951 max_abs=0.961
+[ACTUAL_HDA:EVAL] league=j1 feature_profile=j1_core H=44.2% (168) D=25.5% (97) A=30.3% (115)
+[PRED_HDA:EVAL] league=j1 feature_profile=j1_core H=87.9% (334) D=0.0% (0) A=12.1% (46)
+[DRAW_EVAL] league=j1 feature_profile=j1_core avg_prob_draw=0.232 actual_D_rate=0.255 draw_diff_pp=-2.36
+[PROB_DRAW_DIST:EVAL] league=j1 feature_profile=j1_core min=0.100 p05=0.156 p25=0.214 p50=0.240 p75=0.260 p95=0.274 max=0.275
+[MAX_PROB_DIST:EVAL] league=j1 feature_profile=j1_core min=0.386 p05=0.394 p25=0.420 p50=0.441 p75=0.479 p95=0.542 max=0.662
+[MODEL_EVAL_OUT] league=j1 feature_profile=j1_core path=/Users/dev_tomo/Desktop/tt_prj_restart/data/models/hda_eval_summary_j1__j1_core.json
+[J1_PROFILE_DIFF] draw_diff_pp_full=-2.77 draw_diff_pp_core=-2.36 delta_pp=-0.41

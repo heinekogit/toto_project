@@ -1,0 +1,14 @@
+match_no,league,home_team,away_team,best_second,actual_symbol,actual_result,ticket01,ticket01_is_hit,ticket02,ticket02_is_hit,ticket03,ticket03_is_hit,ticket04,ticket04_is_hit,ticket05,ticket05_is_hit,ticket06,ticket06_is_hit,ticket07,ticket07_is_hit,ticket08,ticket08_is_hit,ticket09,ticket09_is_hit,ticket10,ticket10_is_hit
+1,J1,千葉,柏,best=2 second=0 third=1 (base=2) margin=0.173,1,H,2,False,2,False,2,False,2,False,2,False,2,False,2,False,0,False,2,False,2,False
+2,J1,鹿島,東京Ｖ,best=1 second=0 third=2 (base=1) margin=0.268,1,H,1,True,1,True,1,True,1,True,1,True,1,True,1,True,0,False,1,True,1,True
+3,J1,福岡,名古屋,best=1 second=0 third=2 (base=1) margin=0.023,2,A,1,False,1,False,1,False,0,False,0,False,1,False,1,False,1,False,0,False,1,False
+4,J1,岡山,京都,best=2 second=0 third=1 (base=2) margin=0.174,1,H,2,False,2,False,2,False,2,False,2,False,2,False,2,False,0,False,2,False,2,False
+5,J1,Ｇ大阪,長崎,best=1 second=0 third=2 (base=1) margin=0.013,1,H,1,True,1,True,1,True,1,True,0,False,1,True,1,True,1,True,0,False,1,True
+6,J1,FC東京,横浜FM,best=1 second=0 third=2 (base=1) margin=0.007,1,H,1,True,1,True,0,False,1,True,1,True,0,False,1,True,1,True,0,False,1,True
+7,J1,浦和,水戸,best=1 second=0 third=2 (base=1) margin=0.013,1,H,1,True,1,True,1,True,1,True,1,True,0,False,1,True,1,True,0,False,1,True
+8,J1,Ｃ大阪,清水,best=1 second=0 third=2 (base=1) margin=0.036,0,D,1,False,1,False,1,False,1,False,1,False,1,False,0,True,1,False,1,False,1,False
+9,J2,仙台,湘南,best=1 second=0 third=2 (base=1) margin=0.031,0,D,1,False,1,False,1,False,1,False,1,False,0,True,1,False,1,False,1,False,1,False
+10,J2,藤枝,磐田,best=2 second=0 third=1 (base=2) margin=0.161,0,D,2,False,2,False,2,False,2,False,2,False,2,False,0,True,2,False,2,False,2,False
+11,J2,八戸,横浜FC,best=0 second=1 third=2 (base=0) margin=0.047,0,D,0,True,0,True,0,True,1,False,0,True,0,True,0,True,0,True,0,True,2,False
+12,J2,山形,秋田,best=1 second=0 third=2 (base=1) margin=0.051,2,A,1,False,1,False,1,False,1,False,1,False,1,False,0,False,1,False,1,False,2,True
+13,J2,いわき,大宮,best=0 second=1 third=2 (base=0) margin=0.042,0,D,0,True,0,True,0,True,1,False,0,True,0,True,0,True,0,True,0,True,0,True

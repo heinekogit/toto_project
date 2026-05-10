@@ -13,7 +13,7 @@ a{color:#1a73e8; text-decoration:none;}
 </head>
 <body>
 <h2>作業管理ページ</h2>
-<div class='row'>更新: 2026-02-28 08:25</div>
+<div class='row'>更新: 2026-05-09 01:10</div>
 <div class='box'>
 <div class='row'><span class='label'>準備</span>週次バッチ起動: <code>/scripts/run_batch_weekly.sh</code></div>
 <div class='row'><span class='label'>準備</span>試合直前バッチ: <code>/scripts/run_batch_matchday.sh</code></div>
@@ -33,7 +33,9 @@ a{color:#1a73e8; text-decoration:none;}
 <div class='row'><span class='label'>最新表示</span>
 <a href='html/predictions_round_all_2026_第１８節.html'>最新の予想を開く</a>
  / 
-<a href='html/backtest_round_all_2026_第１８節.html'>最新のバックテストを開く</a>
+<a href='html/backtest_round_all_2026_第１５節.html'>最新のバックテストを開く</a>
+ / 
+<a href='html/backtest_toto_all_2026_toto1627.html'>最新のtoto回バックテストを開く</a>
  <button onclick='reloadNoCache()'>再読込(キャッシュ回避)</button></div>
 </div>
 <div class='box'>
@@ -41,27 +43,13 @@ a{color:#1a73e8; text-decoration:none;}
 <div class='row'><span class='label'>予想</span>
 <select id='predRound'>
 <option value=''>選択してください</option>
-<option value='html/predictions_round_all_2026_第１節.html'>第１節</option>
-<option value='html/predictions_round_all_2026_第２節.html'>第２節</option>
-<option value='html/predictions_round_all_2026_第３節.html'>第３節</option>
-<option value='html/predictions_round_all_2026_第４節.html'>第４節</option>
-<option value='html/predictions_round_all_2026_第５節.html'>第５節</option>
-<option value='html/predictions_round_all_2026_第６節.html'>第６節</option>
-<option value='html/predictions_round_all_2026_第７節.html'>第７節</option>
-<option value='html/predictions_round_all_2026_第８節.html'>第８節</option>
-<option value='html/predictions_round_all_2026_第９節.html'>第９節</option>
-<option value='html/predictions_round_all_2026_第１０節.html'>第１０節</option>
-<option value='html/predictions_round_all_2026_第１１節.html'>第１１節</option>
-<option value='html/predictions_round_all_2026_第１２節.html'>第１２節</option>
-<option value='html/predictions_round_all_2026_第１３節.html'>第１３節</option>
-<option value='html/predictions_round_all_2026_第１４節.html'>第１４節</option>
-<option value='html/predictions_round_all_2026_第１５節.html'>第１５節</option>
+<option value='html/predictions_round_j1_2026_第１２節.html'>第１２節</option>
 <option value='html/predictions_round_all_2026_第１６節.html'>第１６節</option>
 <option value='html/predictions_round_all_2026_第１７節.html'>第１７節</option>
 <option value='html/predictions_round_all_2026_第１８節.html'>第１８節</option>
 </select>
 <button onclick="openRound('predRound')">表示</button>
-<button onclick="downloadPredRoundCsv()">CSV出力</button>
+<button onclick="downloadPredRoundCsv()">buyplan用CSV出力</button>
 </div>
 <div class='row'><span class='label'>バックテスト</span>
 <select id='backRound'>
@@ -119,9 +107,6 @@ a{color:#1a73e8; text-decoration:none;}
 <option value='html/backtest_round_all_2026_第１３節.html'>ALL 2026 第１３節</option>
 <option value='html/backtest_round_all_2026_第１４節.html'>ALL 2026 第１４節</option>
 <option value='html/backtest_round_all_2026_第１５節.html'>ALL 2026 第１５節</option>
-<option value='html/backtest_round_all_2026_第１６節.html'>ALL 2026 第１６節</option>
-<option value='html/backtest_round_all_2026_第１７節.html'>ALL 2026 第１７節</option>
-<option value='html/backtest_round_all_2026_第１８節.html'>ALL 2026 第１８節</option>
 <option value='html/backtest_round_j1_2025_第１節.html'>J1 2025 第１節</option>
 <option value='html/backtest_round_j1_2025_第２節.html'>J1 2025 第２節</option>
 <option value='html/backtest_round_j1_2025_第３節.html'>J1 2025 第３節</option>
@@ -237,8 +222,30 @@ a{color:#1a73e8; text-decoration:none;}
 </select>
 <button onclick="openRound('backRound')">表示</button>
 </div>
+<div class='row'><span class='label'>toto回BT</span>
+<select id='backTotoRound'>
+<option value=''>選択してください</option>
+<option value='html/backtest_toto_all_2026_toto1608.html'>backtest_toto_all_2026_toto1608.html</option>
+<option value='html/backtest_toto_all_2026_toto1609.html'>backtest_toto_all_2026_toto1609.html</option>
+<option value='html/backtest_toto_all_2026_toto1610.html'>backtest_toto_all_2026_toto1610.html</option>
+<option value='html/backtest_toto_all_2026_toto1613.html'>backtest_toto_all_2026_toto1613.html</option>
+<option value='html/backtest_toto_all_2026_toto1614.html'>backtest_toto_all_2026_toto1614.html</option>
+<option value='html/backtest_toto_all_2026_toto1616.html'>backtest_toto_all_2026_toto1616.html</option>
+<option value='html/backtest_toto_all_2026_toto1618.html'>backtest_toto_all_2026_toto1618.html</option>
+<option value='html/backtest_toto_all_2026_toto1619.html'>backtest_toto_all_2026_toto1619.html</option>
+<option value='html/backtest_toto_all_2026_toto1620.html'>backtest_toto_all_2026_toto1620.html</option>
+<option value='html/backtest_toto_all_2026_toto1621.html'>backtest_toto_all_2026_toto1621.html</option>
+<option value='html/backtest_toto_all_2026_toto1622.html'>backtest_toto_all_2026_toto1622.html</option>
+<option value='html/backtest_toto_all_2026_toto1624.html'>backtest_toto_all_2026_toto1624.html</option>
+<option value='html/backtest_toto_all_2026_toto1625.html'>backtest_toto_all_2026_toto1625.html</option>
+<option value='html/backtest_toto_all_2026_toto1626.html'>backtest_toto_all_2026_toto1626.html</option>
+<option value='html/backtest_toto_all_2026_toto1627.html'>backtest_toto_all_2026_toto1627.html</option>
+</select>
+<button onclick="openRound('backTotoRound')">表示</button>
+</div>
 </div>
 <div class='box'>
+<div class='row'><span class='label'>メモ</span>予想CSV出力は選択した節だけを含む buyplan 用CSV</div>
 <div class='row'><span class='label'>メモ</span>各レポートHTMLは下記スクリプトで更新</div>
 <div class='row'><code>python data/reports/view_predictions.py</code></div>
 <div class='row'><code>python data/reports/view_report_json.py</code></div>
@@ -257,9 +264,10 @@ function downloadPredRoundCsv(){
   const htmlPath = sel.value;
   const file = htmlPath.split('/').pop();
   const csvPath = 'csv/' + file.replace('.html', '.csv');
+  const stem = file.replace('.html', '').replace(/^predictions_round_/, '');
   const a = document.createElement('a');
   a.href = csvPath;
-  a.download = 'selected_round_predictions.csv';
+  a.download = 'purchase_reference_predictions_' + stem + '.csv';
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);

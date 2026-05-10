@@ -358,11 +358,9 @@ def scrape_match_schedule():
         # EAST/WEST 等をまたいで取得した重複試合を除外
         df = df.drop_duplicates(subset=["節", "datetime", "home_team", "away_team"], keep="first")
 
-        # 所属推定フィルタを適用
-        # 2026移行モードのJ2はJ3相当チームが混在しやすいため、常にフィルタを掛ける。
-        # 既存運用への影響を抑えるため、その他リーグは従来通り非移行モードでのみ適用。
-        should_apply_team_filter = (not TRANSITION_2026_MODE) or (TRANSITION_2026_MODE and LEAGUE == "j2")
-        if should_apply_team_filter:
+        # 所属推定フィルタを適用。
+        # 2026移行モードは J1/J2 とも混在カードが出るため、両リーグで適用する。
+        if LEAGUE in {"j1", "j2"}:
             allowed_teams = _estimate_allowed_teams_for_league()
             if allowed_teams:
                 before = len(df)

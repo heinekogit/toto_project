@@ -1,0 +1,9 @@
+﻿metric_key,metric_label,mean_abs_draw_all,mean_abs_draw_correct,mean_abs_draw_wrong
+flab_expected_for_xg_diff,攻撃xG差,0.47733333333333333,0.6174999999999999,0.19700000000000006
+flab_expected_against_xg_diff,被xG差,0.36866666666666675,0.2705000000000001,0.5650000000000001
+flab_chance_build_rate_diff,チャンス構築率差,3.626666666666667,4.51,1.8600000000000012
+flab_chance_allowed_build_rate_diff,被チャンス構築率差,2.2933333333333334,1.67,3.540000000000001
+flab_chance_shot_conversion_diff,シュート成功率差,4.096666666666667,4.35,3.59
+flab_chance_allowed_shot_conversion_diff,被シュート成功率差,1.9833333333333334,2.6999999999999997,0.5500000000000007
+flab_possession_rate_diff,保持率差,3.0499666666666676,2.9642000000000017,3.221499999999999
+flab_possession_attack_cbp_diff,攻撃CBP差,2.7000000000000006,3.8500000000000005,0.40000000000000036

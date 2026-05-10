@@ -1,0 +1,14 @@
+match_no,league,home_team,away_team,best_second,actual_symbol,actual_result,ticket01,ticket01_is_hit,ticket02,ticket02_is_hit,ticket03,ticket03_is_hit,ticket04,ticket04_is_hit,ticket05,ticket05_is_hit,ticket06,ticket06_is_hit,ticket07,ticket07_is_hit,ticket08,ticket08_is_hit,ticket09,ticket09_is_hit,ticket10,ticket10_is_hit
+1,J1,千葉,水戸,best=1 second=0 third=2 (base=1) margin=0.132,0,D,1,False,1,False,1,False,1,False,1,False,1,False,1,False,0,True,1,False,1,False
+2,J1,広島,清水,best=1 second=2 third=0 (base=1) margin=0.147,0,D,1,False,1,False,1,False,1,False,1,False,1,False,2,False,1,False,1,False,1,False
+3,J1,福岡,長崎,best=2 second=0 third=1 (base=2) margin=0.071,1,H,0,False,0,False,0,False,2,False,0,False,2,False,2,False,2,False,2,False,2,False
+4,J1,神戸,名古屋,best=1 second=2 third=0 (base=1) margin=0.310,1,H,1,True,1,True,1,True,1,True,1,True,1,True,1,True,2,False,1,True,1,True
+5,J1,横浜FM,FC東京,best=2 second=0 third=1 (base=2) margin=0.062,2,A,2,True,2,True,2,True,2,True,2,True,0,False,2,True,2,True,2,True,1,False
+6,J1,京都,岡山,best=1 second=2 third=0 (base=1) margin=0.015,1,H,1,True,1,True,1,True,2,False,1,True,1,True,1,True,1,True,2,False,1,True
+7,J1,Ｇ大阪,Ｃ大阪,best=1 second=2 third=0 (base=1) margin=0.163,2,A,1,False,1,False,1,False,1,False,1,False,1,False,2,True,1,False,1,False,1,False
+8,J1,浦和,東京Ｖ,best=1 second=0 third=2 (base=1) margin=0.322,0,D,1,False,1,False,1,False,1,False,1,False,1,False,1,False,0,True,1,False,1,False
+9,J1,川崎Ｆ,鹿島,best=2 second=0 third=1 (base=2) margin=0.217,2,A,2,True,2,True,2,True,2,True,2,True,2,True,0,False,2,True,2,True,2,True
+10,J1,町田,柏,best=2 second=0 third=1 (base=2) margin=0.074,1,H,0,False,0,False,2,False,2,False,0,False,2,False,2,False,2,False,2,False,2,False
+11,J2,秋田,湘南,best=0 second=1 third=2 (base=0) margin=0.049,2,A,0,False,0,False,0,False,0,False,0,False,0,False,0,False,0,False,0,False,0,False
+12,J2,甲府,札幌,best=2 second=0 third=1 (base=2) margin=0.038,1,H,2,False,2,False,2,False,2,False,2,False,0,False,2,False,2,False,0,False,2,False
+13,J2,山形,横浜FC,best=1 second=0 third=2 (base=1) margin=0.007,1,H,1,True,0,False,1,True,1,True,1,True,0,False,1,True,1,True,0,False,1,True

@@ -1,0 +1,13 @@
+scenario,from_stage,to_stage,delta_best,delta_second,delta_third,delta_other
+experimental,after_ticket_generation,after_draw_distribution,0,1,0,-1
+experimental,after_draw_distribution,after_same_symbol_cap,0,0,0,0
+experimental,after_same_symbol_cap,after_unique_repair,0,0,0,0
+experimental,after_unique_repair,after_final_range,0,0,0,0
+lock_strict,after_ticket_generation,after_draw_distribution,4,-4,0,0
+lock_strict,after_draw_distribution,after_same_symbol_cap,0,0,0,0
+lock_strict,after_same_symbol_cap,after_unique_repair,0,0,0,0
+lock_strict,after_unique_repair,after_final_range,0,0,0,0
+prob_faithful,after_ticket_generation,after_draw_distribution,-3,6,-3,0
+prob_faithful,after_draw_distribution,after_same_symbol_cap,0,0,0,0
+prob_faithful,after_same_symbol_cap,after_unique_repair,-1,1,0,0
+prob_faithful,after_unique_repair,after_final_range,1,-1,0,0

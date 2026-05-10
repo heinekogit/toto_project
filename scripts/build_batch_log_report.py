@@ -9,9 +9,23 @@ from collections import Counter
 
 ISSUE_PATTERNS = [
     (
-        re.compile(r"Network/DNS unavailable|Could not resolve host|Temporary failure in name resolution", re.I),
+        re.compile(
+            r"Network/DNS unavailable|Could not resolve host|Temporary failure in name resolution|"
+            r"NameResolutionError|socket\.gaierror|MaxRetryError",
+            re.I,
+        ),
         "ネットワーク/DNSエラー",
         "外部サイトへ接続できていません。ネットワーク疎通とDNSを確認してください。",
+    ),
+    (
+        re.compile(r"\[PROB_QC\]\[WARN\]|elo_diff_for_prob=.*prob_home.*prob_away", re.I),
+        "確率整合性警告",
+        "Elo差と H/A 勝率の向きが一致しない試合があります。即停止ではありませんが、モデル整合性の要確認です。",
+    ),
+    (
+        re.compile(r"\[MERGE_QC\]\[WARN\]|\[MISSING_QC\]\[WARN\]", re.I),
+        "データ結合/欠損警告",
+        "前段データの結合漏れや欠損率上昇があります。入力CSVやチーム名対応を確認してください。",
     ),
     (
         re.compile(r"command not found", re.I),
@@ -34,7 +48,7 @@ ISSUE_PATTERNS = [
         "Python処理中に例外が発生しています。該当STEPの詳細ログを確認してください。",
     ),
     (
-        re.compile(r"429|Too Many Requests|rate limit", re.I),
+        re.compile(r"\b429\b|Too Many Requests|rate limit(?:ed|ing)?", re.I),
         "レート制限",
         "取得先のアクセス制限に達しています。時間をおいて再実行してください。",
     ),

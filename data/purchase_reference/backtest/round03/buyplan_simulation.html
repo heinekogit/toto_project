@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang='ja'><head><meta charset='utf-8'>
+<title>buyplanシミュレーション</title>
+<style>
+body{font-family:system-ui,-apple-system,sans-serif;margin:20px;}
+table{border-collapse:collapse;width:100%;font-size:12px;}
+th,td{border:1px solid #ddd;padding:6px;text-align:center;}
+th{background:#f5f5f5;}
+.left{text-align:left;white-space:nowrap;}
+.ok{color:#0a7d27;font-weight:700;}
+.ng{color:#b3261e;font-weight:700;}
+.nav{margin:10px 0 14px;padding:10px 12px;border:1px solid #ddd;background:#fafafa;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.nav label{font-weight:700;}
+.nav select{font:inherit;padding:4px 8px;min-width:180px;}
+</style></head><body>
+<h2>buyplanシミュレーション</h2>
+<p>更新日時: <b>2026-04-19 23:44:40</b></p>
+<p>actual source: <b>/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/rounds/round03/actual_results.csv</b></p>
+<p><a href='../../buyplan_simulation.html'>buyplanシミュレーション一覧へ</a></p>
+<p>best: <b>ticket07 7/13</b> / avg_hit: <b>37.7%</b></p>
+<p>候補別D本数: <b>候補01=D3本 / 候補02=D3本 / 候補03=D2本 / 候補04=D1本 / 候補05=D5本 / 候補06=D3本 / 候補07=D5本 / 候補08=D5本 / 候補09=D2本 / 候補10=D3本</b></p>
+<p>節内D気配: <b>10試合</b> / 候補優先度: <b>候補01=通常 / 候補02=通常 / 候補03=通常 / 候補04=注意 / 候補05=通常 / 候補06=通常 / 候補07=通常 / 候補08=通常 / 候補09=通常 / 候補10=通常</b></p>
+<h3>Match Detail</h3><table><thead><tr>
+<th>match_no</th>
+<th>league</th>
+<th>home_team</th>
+<th>away_team</th>
+<th>best/second</th>
+<th>actual</th>
+<th>ticket01</th>
+<th>ticket02</th>
+<th>ticket03</th>
+<th>ticket04</th>
+<th>ticket05</th>
+<th>ticket06</th>
+<th>ticket07</th>
+<th>ticket08</th>
+<th>ticket09</th>
+<th>ticket10</th>
+</tr>
+<tr>
+<th colspan='6'>ラベル</th>
+<th>LOCK遵守<br><small>揺らし0 / D3 / 通常</small></th>
+<th>LOCK遵守<br><small>揺らし0 / D3 / 通常</small></th>
+<th>LOCK遵守<br><small>揺らし1 / D2 / 通常</small></th>
+<th>探索 小<br><small>揺らし2 / D1 / 注意</small></th>
+<th>探索 中小<br><small>揺らし2 / D5 / 通常</small></th>
+<th>探索 中<br><small>揺らし3 / D3 / 通常</small></th>
+<th>探索 中大<br><small>揺らし3 / D5 / 通常</small></th>
+<th>探索 大<br><small>揺らし2 / D5 / 通常</small></th>
+<th>実験 接戦反転<br><small>揺らし3 / D2 / 通常</small></th>
+<th>実験 strong_break<br><small>揺らし1 / D3 / 通常</small></th>
+</tr></thead><tbody>
+<tr>
+<td>1</td>
+<td>J1</td>
+<td class='left'>横浜FM</td>
+<td class='left'>浦和</td>
+<td class='left'>best=0 second=1 third=2 (base=0) margin=0.028</td>
+<td>2</td>
+<td class='ng'>0</td>
+<td class='ng'>0</td>
+<td class='ng'>0</td>
+<td class='ng'>1</td>
+<td class='ng'>0</td>
+<td class='ng'>0</td>
+<td class='ng'>0</td>
+<td class='ng'>0</td>
+<td class='ng'>1</td>
+<td class='ng'>0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>J1</td>
+<td class='left'>清水</td>
+<td class='left'>神戸</td>
+<td class='left'>best=2 second=1 third=0 (base=2) margin=0.214</td>
+<td>1</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ok'>1</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>J1</td>
+<td class='left'>鹿島</td>
+<td class='left'>柏</td>
+<td class='left'>best=2 second=1 third=0 (base=2) margin=0.159</td>
+<td>1</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ok'>1</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+</tr>
+<tr>
+<td>4</td>
+<td>J1</td>
+<td class='left'>岡山</td>
+<td class='left'>Ｇ大阪</td>
+<td class='left'>best=2 second=0 third=1 (base=2) margin=0.088</td>
+<td>2</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+<td class='ng'>0</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+<td class='ng'>1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>J1</td>
+<td class='left'>Ｃ大阪</td>
+<td class='left'>広島</td>
+<td class='left'>best=2 second=0 third=1 (base=2) margin=0.221</td>
+<td>2</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+<td class='ng'>0</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+<td class='ok'>2</td>
+</tr>
+<tr>
+<td>6</td>
+<td>J1</td>
+<td class='left'>川崎Ｆ</td>
+<td class='left'>FC東京</td>
+<td class='left'>best=1 second=0 third=2 (base=1) margin=0.293</td>
+<td>2</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+<td class='ng'>0</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+</tr>
+<tr>
+<td>7</td>
+<td>J1</td>
+<td class='left'>名古屋</td>
+<td class='left'>長崎</td>
+<td class='left'>best=0 second=2 third=1 (base=0) margin=0.155</td>
+<td>2</td>
+<td class='ng'>0</td>
+<td class='ng'>0</td>
+<td class='ng'>0</td>
+<td class='ng'>0</td>
+<td class='ng'>0</td>
+<td class='ok'>2</td>
+<td class='ng'>0</td>
+<td class='ng'>0</td>
+<td class='ng'>0</td>
+<td class='ng'>0</td>
+</tr>
+<tr>
+<td>8</td>
+<td>J1</td>
+<td class='left'>水戸</td>
+<td class='left'>千葉</td>
+<td class='left'>best=0 second=1 third=2 (base=0) margin=0.014</td>
+<td>0</td>
+<td class='ok'>0</td>
+<td class='ok'>0</td>
+<td class='ng'>1</td>
+<td class='ng'>2</td>
+<td class='ok'>0</td>
+<td class='ok'>0</td>
+<td class='ok'>0</td>
+<td class='ok'>0</td>
+<td class='ng'>1</td>
+<td class='ok'>0</td>
+</tr>
+<tr>
+<td>9</td>
+<td>J1</td>
+<td class='left'>京都</td>
+<td class='left'>福岡</td>
+<td class='left'>best=1 second=0 third=2 (base=1) margin=0.417</td>
+<td>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ng'>0</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+</tr>
+<tr>
+<td>10</td>
+<td>J1</td>
+<td class='left'>東京Ｖ</td>
+<td class='left'>町田</td>
+<td class='left'>best=2 second=0 third=1 (base=2) margin=0.231</td>
+<td>0</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ok'>0</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+</tr>
+<tr>
+<td>11</td>
+<td>J2</td>
+<td class='left'>宮崎</td>
+<td class='left'>鳥栖</td>
+<td class='left'></td>
+<td>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+<td class='ok'>1</td>
+</tr>
+<tr>
+<td>12</td>
+<td>J2</td>
+<td class='left'>徳島</td>
+<td class='left'>富山</td>
+<td class='left'>best=1 second=0 third=2 (base=1) margin=0.548</td>
+<td>2</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+<td class='ng'>0</td>
+<td class='ng'>1</td>
+<td class='ng'>1</td>
+</tr>
+<tr>
+<td>13</td>
+<td>J2</td>
+<td class='left'>藤枝</td>
+<td class='left'>甲府</td>
+<td class='left'>best=2 second=0 third=1 (base=2) margin=0.032</td>
+<td>0</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ok'>0</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ng'>2</td>
+<td class='ok'>0</td>
+<td class='ng'>2</td>
+</tr>
+</tbody><tfoot>
+<tr>
+<td colspan='6' class='left'><b>hits</b></td>
+<td><b>5</b></td>
+<td><b>5</b></td>
+<td><b>4</b></td>
+<td><b>4</b></td>
+<td><b>5</b></td>
+<td><b>6</b></td>
+<td><b>7</b></td>
+<td><b>4</b></td>
+<td><b>5</b></td>
+<td><b>4</b></td>
+</tr>
+<tr>
+<td colspan='6' class='left'><b>hit_rate</b></td>
+<td><b>38.5%</b></td>
+<td><b>38.5%</b></td>
+<td><b>30.8%</b></td>
+<td><b>30.8%</b></td>
+<td><b>38.5%</b></td>
+<td><b>46.2%</b></td>
+<td><b>53.8%</b></td>
+<td><b>30.8%</b></td>
+<td><b>38.5%</b></td>
+<td><b>30.8%</b></td>
+</tr>
+</tfoot></table></body></html>

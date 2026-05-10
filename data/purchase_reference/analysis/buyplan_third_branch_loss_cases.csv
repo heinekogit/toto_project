@@ -1,0 +1,4 @@
+match_no,scenario,third_initial,third_after_draw_distribution,loss_cause,loss_transition,best_prob,second_prob,third_prob,top_gap,spread,decision_reason
+3,prob_faithful,1,0,draw_distribution,after_ticket_generation->after_draw_distribution,0.3578,0.3407,0.3015,0.0171,0.0563,BALANCE_DRAW
+11,prob_faithful,1,0,draw_distribution,after_ticket_generation->after_draw_distribution,0.3407,0.3327,0.3265,0.008,0.0142,BALANCE_DRAW
+13,prob_faithful,1,0,draw_distribution,after_ticket_generation->after_draw_distribution,0.3407,0.3374,0.3219,0.0033,0.0188,BALANCE_DRAW

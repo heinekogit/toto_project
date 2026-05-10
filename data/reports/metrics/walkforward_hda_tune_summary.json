@@ -1,0 +1,51 @@
+{
+  "objective": "hybrid",
+  "inputs": [
+    "backtest_j1_2025.csv",
+    "backtest_j2_2025.csv",
+    "backtest_j1_2026.csv",
+    "backtest_j2_2026.csv"
+  ],
+  "min_train_round": 5,
+  "grid": {
+    "draw_boost": [
+      1.0,
+      1.02,
+      1.04,
+      1.06,
+      1.08,
+      1.1
+    ],
+    "temperature": [
+      0.95,
+      1.0,
+      1.05,
+      1.1
+    ],
+    "home_shift": [
+      -0.02,
+      -0.01,
+      0.0,
+      0.01,
+      0.02
+    ]
+  },
+  "summary": {
+    "fold_count": 33,
+    "test_total_N": 660,
+    "mean_test_logloss_selected": 1.070099737966709,
+    "mean_test_brier_selected": 0.6459122109137231,
+    "mean_test_accuracy_selected": 0.44242424242424244,
+    "mean_test_logloss_baseline": 1.071688082351592,
+    "mean_test_brier_baseline": 0.6469801503345791,
+    "mean_test_accuracy_baseline": 0.43333333333333335,
+    "mean_delta_logloss": -0.001588344384883069,
+    "mean_delta_brier": -0.0010679394208558527,
+    "mean_delta_accuracy": 0.009090909090909092
+  },
+  "recommended_params": {
+    "draw_boost": 1.0,
+    "temperature": 1.1,
+    "home_shift": 0.02
+  }
+}

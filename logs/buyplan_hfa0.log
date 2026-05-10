@@ -1,0 +1,119 @@
+[BUYPLAN_CONFIG] 2AXIS_ENABLE=1 HA_DRAW_MARGIN=0.060 DRAW_MIN=0.200 REL_CLOSE(ratio/gap/spread)=0.80/0.06/0.12 REL_SCORE_ALPHA=0.50 LOCK02_MARGIN=0.040 LOCK03_MARGIN=0.060 WEAK_DRAW_MARGIN=0.100 WEAK_DRAW_ENTROPY_MIN=1.090 TARGET_DRAW_RANGE(lock/prob/exp)=2-3/3-4/4-5 C_DIFF=0.150 D_MIN=0.260 W_DRAW(base/lock/prob/exp)=0.350/0.350/0.350/0.350 MAX_STRONG=0.580 CAP_D_MATCHES(default/lock/prob/exp)=3/2/3/4 MARGIN_D_MAX=0.080 ENTROPY_MIN=1.050 BEST_MAX_FOR_D=0.480 DRAW_MATCH_CAP=4 ZERO_RATIO_CAP=0.330 PER_MATCH_SAME_SYMBOL_CAP=8
+[INFO] toto差分チェック: 不一致なし (data/purchase_reference/hfa_sensitivity/hfa0/buyplan_toto_diff.csv)
+[INFO] toto並び順を適用: matched=13
+[BUYPLAN_MATCH] M01 千葉 vs 柏 pH=0.1753 pD=0.3112 pA=0.5134 best=2 second=0 margin=0.2022 entropy=1.0108 closeness=0.6619 score=0.8175 draw_candidate=0 weak_draw_candidate=0 reason=ha_not_close
+[BUYPLAN_BASE] match_id=j1_2026_03071300_千葉_柏 pH=0.1753 pA=0.5134 pD=0.3112 diff=0.3381 base_pick=2 decision_reason=BALANCE_HA
+[BUYPLAN_RELATIVE_EVAL] match_no=01 symbol=1 prob=0.1753 rank=3 top_prob=0.5134 ratio_to_top=0.3415 gap_to_above=0.1359 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=01 symbol=0 prob=0.3112 rank=2 top_prob=0.5134 ratio_to_top=0.6062 gap_to_above=0.2022 gap_to_below=0.1359 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=01 symbol=2 prob=0.5134 rank=1 top_prob=0.5134 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.2022 is_close_branch=0
+[BUYPLAN_MATCH] M02 鹿島 vs 東京Ｖ pH=0.5832 pD=0.2862 pA=0.1306 best=1 second=0 margin=0.2969 entropy=0.9384 closeness=0.5474 score=0.6905 draw_candidate=0 weak_draw_candidate=0 reason=ha_not_close
+[BUYPLAN_BASE] match_id=j1_2026_03071600_鹿島_東京Ｖ pH=0.5832 pA=0.1306 pD=0.2862 diff=0.4526 base_pick=1 decision_reason=BALANCE_HA
+[BUYPLAN_RELATIVE_EVAL] match_no=02 symbol=1 prob=0.5832 rank=1 top_prob=0.5832 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.2969 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=02 symbol=0 prob=0.2862 rank=2 top_prob=0.5832 ratio_to_top=0.4909 gap_to_above=0.2969 gap_to_below=0.1557 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=02 symbol=2 prob=0.1306 rank=3 top_prob=0.5832 ratio_to_top=0.2239 gap_to_above=0.1557 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_MATCH] M03 福岡 vs 名古屋 pH=0.3578 pD=0.3407 pA=0.3015 best=1 second=0 margin=0.0171 entropy=1.0961 closeness=0.9437 score=1.1140 draw_candidate=1 weak_draw_candidate=0 reason=ha_close
+[BUYPLAN_BASE] match_id=j1_2026_03071600_福岡_名古屋 pH=0.3578 pA=0.3015 pD=0.3407 diff=0.0563 base_pick=0 decision_reason=BALANCE_DRAW
+[BUYPLAN_RELATIVE_EVAL] match_no=03 symbol=1 prob=0.3578 rank=1 top_prob=0.3578 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0171 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=03 symbol=0 prob=0.3407 rank=2 top_prob=0.3578 ratio_to_top=0.9522 gap_to_above=0.0171 gap_to_below=0.0392 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=03 symbol=2 prob=0.3015 rank=3 top_prob=0.3578 ratio_to_top=0.8426 gap_to_above=0.0392 gap_to_below=0.0000 is_close_branch=1
+[BUYPLAN_MATCH] M04 岡山 vs 京都 pH=0.1746 pD=0.3109 pA=0.5145 best=2 second=0 margin=0.2035 entropy=1.0099 closeness=0.6602 score=0.8156 draw_candidate=0 weak_draw_candidate=0 reason=ha_not_close
+[BUYPLAN_BASE] match_id=j1_2026_03081255_岡山_京都 pH=0.1746 pA=0.5145 pD=0.3109 diff=0.3398 base_pick=2 decision_reason=BALANCE_HA
+[BUYPLAN_RELATIVE_EVAL] match_no=04 symbol=1 prob=0.1746 rank=3 top_prob=0.5145 ratio_to_top=0.3394 gap_to_above=0.1363 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=04 symbol=0 prob=0.3109 rank=2 top_prob=0.5145 ratio_to_top=0.6044 gap_to_above=0.2035 gap_to_below=0.1363 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=04 symbol=2 prob=0.5145 rank=1 top_prob=0.5145 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.2035 is_close_branch=0
+[BUYPLAN_MATCH] M05 Ｇ大阪 vs 長崎 pH=0.3678 pD=0.3400 pA=0.2922 best=1 second=0 margin=0.0277 entropy=1.0942 closeness=0.9244 score=1.0944 draw_candidate=0 weak_draw_candidate=1 reason=ha_not_close
+[BUYPLAN_BASE] match_id=j1_2026_03081500_Ｇ大阪_長崎 pH=0.3678 pA=0.2922 pD=0.3400 diff=0.0756 base_pick=1 decision_reason=BALANCE_HA
+[BUYPLAN_RELATIVE_EVAL] match_no=05 symbol=1 prob=0.3678 rank=1 top_prob=0.3678 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0277 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=05 symbol=0 prob=0.3400 rank=2 top_prob=0.3678 ratio_to_top=0.9246 gap_to_above=0.0277 gap_to_below=0.0479 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=05 symbol=2 prob=0.2922 rank=3 top_prob=0.3678 ratio_to_top=0.7945 gap_to_above=0.0479 gap_to_below=0.0000 is_close_branch=1
+[BUYPLAN_MATCH] M06 FC東京 vs 横浜FM pH=0.3737 pD=0.3396 pA=0.2868 best=1 second=0 margin=0.0341 entropy=1.0928 closeness=0.9131 score=1.0829 draw_candidate=0 weak_draw_candidate=1 reason=ha_not_close
+[BUYPLAN_BASE] match_id=j1_2026_03071400_FC東京_横浜FM pH=0.3737 pA=0.2868 pD=0.3396 diff=0.0869 base_pick=1 decision_reason=BALANCE_HA
+[BUYPLAN_RELATIVE_EVAL] match_no=06 symbol=1 prob=0.3737 rank=1 top_prob=0.3737 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0341 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=06 symbol=0 prob=0.3396 rank=2 top_prob=0.3737 ratio_to_top=0.9087 gap_to_above=0.0341 gap_to_below=0.0528 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=06 symbol=2 prob=0.2868 rank=3 top_prob=0.3737 ratio_to_top=0.7674 gap_to_above=0.0528 gap_to_below=0.0000 is_close_branch=1
+[BUYPLAN_MATCH] M07 浦和 vs 水戸 pH=0.3796 pD=0.3390 pA=0.2814 best=1 second=0 margin=0.0406 entropy=1.0912 closeness=0.9017 score=1.0712 draw_candidate=0 weak_draw_candidate=1 reason=ha_not_close
+[BUYPLAN_BASE] match_id=j1_2026_03071500_浦和_水戸 pH=0.3796 pA=0.2814 pD=0.3390 diff=0.0983 base_pick=1 decision_reason=BALANCE_HA
+[BUYPLAN_RELATIVE_EVAL] match_no=07 symbol=1 prob=0.3796 rank=1 top_prob=0.3796 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0406 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=07 symbol=0 prob=0.3390 rank=2 top_prob=0.3796 ratio_to_top=0.8930 gap_to_above=0.0406 gap_to_below=0.0577 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=07 symbol=2 prob=0.2814 rank=3 top_prob=0.3796 ratio_to_top=0.7411 gap_to_above=0.0577 gap_to_below=0.0000 is_close_branch=1
+[BUYPLAN_MATCH] M08 Ｃ大阪 vs 清水 pH=0.4003 pD=0.3366 pA=0.2631 best=1 second=0 margin=0.0637 entropy=1.0843 closeness=0.8628 score=1.0311 draw_candidate=0 weak_draw_candidate=0 reason=ha_not_close
+[BUYPLAN_BASE] match_id=j1_2026_03071500_Ｃ大阪_清水 pH=0.4003 pA=0.2631 pD=0.3366 diff=0.1372 base_pick=1 decision_reason=BALANCE_HA
+[BUYPLAN_RELATIVE_EVAL] match_no=08 symbol=1 prob=0.4003 rank=1 top_prob=0.4003 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0637 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=08 symbol=0 prob=0.3366 rank=2 top_prob=0.4003 ratio_to_top=0.8409 gap_to_above=0.0637 gap_to_below=0.0735 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=08 symbol=2 prob=0.2631 rank=3 top_prob=0.4003 ratio_to_top=0.6572 gap_to_above=0.0735 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_MATCH] M09 仙台 vs 湘南 pH=0.3949 pD=0.3366 pA=0.2685 best=1 second=0 margin=0.0583 entropy=1.0865 closeness=0.8736 score=1.0419 draw_candidate=0 weak_draw_candidate=0 reason=ha_not_close
+[BUYPLAN_BASE] match_id=j2_2026_03071400_仙台_湘南 pH=0.3949 pA=0.2685 pD=0.3366 diff=0.1264 base_pick=1 decision_reason=BALANCE_HA
+[BUYPLAN_RELATIVE_EVAL] match_no=09 symbol=1 prob=0.3949 rank=1 top_prob=0.3949 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0583 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=09 symbol=0 prob=0.3366 rank=2 top_prob=0.3949 ratio_to_top=0.8524 gap_to_above=0.0583 gap_to_below=0.0681 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=09 symbol=2 prob=0.2685 rank=3 top_prob=0.3949 ratio_to_top=0.6800 gap_to_above=0.0681 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_MATCH] M10 藤枝 vs 磐田 pH=0.1827 pD=0.3136 pA=0.5037 best=2 second=0 margin=0.1901 entropy=1.0197 closeness=0.6790 score=0.8358 draw_candidate=0 weak_draw_candidate=0 reason=ha_not_close
+[BUYPLAN_BASE] match_id=j2_2026_03071400_藤枝_磐田 pH=0.1827 pA=0.5037 pD=0.3136 diff=0.3210 base_pick=2 decision_reason=BALANCE_HA
+[BUYPLAN_RELATIVE_EVAL] match_no=10 symbol=1 prob=0.1827 rank=3 top_prob=0.5037 ratio_to_top=0.3628 gap_to_above=0.1309 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=10 symbol=0 prob=0.3136 rank=2 top_prob=0.5037 ratio_to_top=0.6226 gap_to_above=0.1901 gap_to_below=0.1309 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=10 symbol=2 prob=0.5037 rank=1 top_prob=0.5037 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.1901 is_close_branch=0
+[BUYPLAN_MATCH] M11 八戸 vs 横浜FC pH=0.3327 pD=0.3407 pA=0.3265 best=0 second=1 margin=0.0080 entropy=1.0985 closeness=0.9938 score=1.1642 draw_candidate=1 weak_draw_candidate=0 reason=ha_close
+[BUYPLAN_BASE] match_id=j2_2026_03081300_八戸_横浜FC pH=0.3327 pA=0.3265 pD=0.3407 diff=0.0062 base_pick=0 decision_reason=BALANCE_DRAW
+[BUYPLAN_RELATIVE_EVAL] match_no=11 symbol=1 prob=0.3327 rank=2 top_prob=0.3407 ratio_to_top=0.9765 gap_to_above=0.0080 gap_to_below=0.0062 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=11 symbol=0 prob=0.3407 rank=1 top_prob=0.3407 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0080 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=11 symbol=2 prob=0.3265 rank=3 top_prob=0.3407 ratio_to_top=0.9583 gap_to_above=0.0062 gap_to_below=0.0000 is_close_branch=1
+[BUYPLAN_MATCH] M12 山形 vs 秋田 pH=0.4134 pD=0.3340 pA=0.2525 best=1 second=0 margin=0.0794 entropy=1.0790 closeness=0.8391 score=1.0061 draw_candidate=0 weak_draw_candidate=0 reason=ha_not_close
+[BUYPLAN_BASE] match_id=j2_2026_03081400_山形_秋田 pH=0.4134 pA=0.2525 pD=0.3340 diff=0.1609 base_pick=1 decision_reason=BALANCE_HA
+[BUYPLAN_RELATIVE_EVAL] match_no=12 symbol=1 prob=0.4134 rank=1 top_prob=0.4134 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0794 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=12 symbol=0 prob=0.3340 rank=2 top_prob=0.4134 ratio_to_top=0.8079 gap_to_above=0.0794 gap_to_below=0.0815 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=12 symbol=2 prob=0.2525 rank=3 top_prob=0.4134 ratio_to_top=0.6108 gap_to_above=0.0815 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_MATCH] M13 いわき vs 大宮 pH=0.3374 pD=0.3407 pA=0.3219 best=0 second=1 margin=0.0033 entropy=1.0983 closeness=0.9845 score=1.1548 draw_candidate=1 weak_draw_candidate=0 reason=ha_close
+[BUYPLAN_BASE] match_id=j2_2026_03071400_いわき_大宮 pH=0.3374 pA=0.3219 pD=0.3407 diff=0.0155 base_pick=0 decision_reason=BALANCE_DRAW
+[BUYPLAN_RELATIVE_EVAL] match_no=13 symbol=1 prob=0.3374 rank=2 top_prob=0.3407 ratio_to_top=0.9904 gap_to_above=0.0033 gap_to_below=0.0155 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=13 symbol=0 prob=0.3407 rank=1 top_prob=0.3407 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0033 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=13 symbol=2 prob=0.3219 rank=3 top_prob=0.3407 ratio_to_top=0.9449 gap_to_above=0.0155 gap_to_below=0.0000 is_close_branch=1
+[BUYPLAN_LOCK_IMMUTABLE] ticket=01 reason=lock_base_protected
+[BUYPLAN_LOCK_VARIATION] ticket=02 margin_threshold=0.04 flips=2
+[BUYPLAN_LOCK_VARIATION] ticket=03 margin_threshold=0.06 flips=3
+[BUYPLAN_EXP_CANDIDATE] match_no=01 dominant_symbol=2 dominant_count=8 branch_symbol=0 branch_prob=0.3112 score=0.249941
+[BUYPLAN_EXP_CANDIDATE] match_no=02 dominant_symbol=1 dominant_count=8 branch_symbol=0 branch_prob=0.2862 score=0.213378
+[BUYPLAN_EXP_CANDIDATE] match_no=04 dominant_symbol=2 dominant_count=8 branch_symbol=0 branch_prob=0.3109 score=0.249408
+[BUYPLAN_EXP_CANDIDATE] match_no=05 dominant_symbol=1 dominant_count=8 branch_symbol=0 branch_prob=0.3400 score=0.327215
+[BUYPLAN_EXP_CANDIDATE] match_no=05 dominant_symbol=1 dominant_count=8 branch_symbol=2 branch_prob=0.2922 score=0.262158
+[BUYPLAN_EXP_PICK] ticket=09 match_no=05 from_symbol=1 to_symbol=0 reason=dominant_coverage
+[BUYPLAN_EXP_PICK] ticket=10 match_no=01 from_symbol=2 to_symbol=0 reason=dominant_coverage
+[BUYPLAN_REPAIR_KEEP] ticket=03 match_no=11 symbol=1 prob=0.3327 ratio_to_top=0.9765 reason=close_branch_protected_draw_range_add_scan
+[BUYPLAN_REPAIR_KEEP] ticket=03 match_no=13 symbol=1 prob=0.3374 ratio_to_top=0.9904 reason=close_branch_protected_draw_range_add_scan
+[BUYPLAN_REPAIR_DROP] ticket=03 match_no=11 from_symbol=1 to_symbol=0 from_prob=0.3327 to_prob=0.3407 from_ratio_to_top=0.9765 to_ratio_to_top=1.0000 reason=draw_distribution_range_add
+[BUYPLAN_REPAIR_KEEP] ticket=03 match_no=13 symbol=1 prob=0.3374 ratio_to_top=0.9904 reason=close_branch_protected_draw_range_add_scan
+[BUYPLAN_REPAIR_DROP] ticket=03 match_no=13 from_symbol=1 to_symbol=0 from_prob=0.3374 to_prob=0.3407 from_ratio_to_top=0.9904 to_ratio_to_top=1.0000 reason=draw_distribution_range_add
+[BUYPLAN_DRAW_DISTRIBUTION] adjust_count=3
+[BUYPLAN_SYMBOL_CAP] adjust_count=0
+[BUYPLAN_UNIQUE_REPAIR] before_duplicate_count=0 after_duplicate_count=0 repair_matches= fallback_used=false protected_cells_skipped=0
+[WARN] 基準票ソース: predicted_result採用=0, best_symbolフォールバック=13
+[WARN] LOCK遵守: tickets=3, 0採用件数=4, 平均margin=0.000, 総flip数=0
+[WARN] 確率忠実: tickets=5, 0採用件数=15, 平均margin=0.139, 総flip数=12
+[WARN] 実験: tickets=2, 0採用件数=8, 平均margin=0.207, 総flip数=2
+[WARN] 探索ログ: second_pickが0の試合数(全OK)=0, second_pickが0の試合数(探索対象)=0, 探索枠でsecond=0を採用した件数=0
+[WARN] LOCK variation: ticket02_flips=2, ticket03_flips=3
+[WARN] 全体比率: 0総出現回数=30, 1/0/2比率=0.469/0.231/0.300
+[WARN] draw_distribution: adjust_count=3
+[WARN] draw候補ゲート: candidate_matches=3 rate=0.231
+[WARN] [BUYPLAN_WEAK_DRAW_CAND] matches=M05; M06; M07 selected_for_exp= selected_for_distribution=
+[WARN] [BUYPLAN_DRAW_POLICY] strong_draw_count=3 weak_draw_count=3 final_zero_count=30
+[WARN] [BUYPLAN_TARGET_DRAW] scenario=Lock target_draw_count_range=2..3
+[WARN] [BUYPLAN_TARGET_DRAW] scenario=Prob target_draw_count_range=3..4
+[WARN] [BUYPLAN_TARGET_DRAW] scenario=Exp target_draw_count_range=4..5
+[WARN] 重複/偏り調整: draw_distribution_adjust_count=3 unique_repair_count=0 same_symbol_cap_adjust_count=0 unique_ticket_count=10 duplicate_count=0
+[WARN] draw_distribution_adjust_matches=ticket=02 M11 1->0; draw_distribution_range:ticket=03 M11 1->0; draw_distribution_range:ticket=03 M13 1->0
+[WARN] ticket01(lock) is immutable and matches base_pick
+[BUYPLAN_LOCK01_CHECK] immutable=true all_match=true
+[WARN] ticket02-03(lock) are margin-based lock variations (flips=2/3)
+[BUYPLAN_RANGE_CHECK] ticket=02 mode=lock_strict draw_count=2 range=2..3 in_range=1
+[BUYPLAN_RANGE_CHECK] ticket=03 mode=lock_strict draw_count=2 range=2..3 in_range=1
+[BUYPLAN_RANGE_CHECK] ticket=04 mode=prob_faithful draw_count=3 range=3..4 in_range=1
+[BUYPLAN_RANGE_CHECK] ticket=05 mode=prob_faithful draw_count=3 range=3..4 in_range=1
+[BUYPLAN_RANGE_CHECK] ticket=06 mode=prob_faithful draw_count=3 range=3..4 in_range=1
+[BUYPLAN_RANGE_CHECK] ticket=07 mode=prob_faithful draw_count=3 range=3..4 in_range=1
+[BUYPLAN_RANGE_CHECK] ticket=08 mode=prob_faithful draw_count=3 range=3..4 in_range=1
+[BUYPLAN_RANGE_CHECK] ticket=09 mode=experimental draw_count=4 range=4..5 in_range=1
+[BUYPLAN_RANGE_CHECK] ticket=10 mode=experimental draw_count=4 range=4..5 in_range=1
+[WARN] M02 が全口同値です: symbol=1 (pH=0.583 pD=0.286 pA=0.131 margin=0.453)
+[WARN] M04 が全口同値です: symbol=2 (pH=0.175 pD=0.311 pA=0.514 margin=0.340)
+[WARN] M11 が全口同値です: symbol=0 (pH=0.333 pD=0.341 pA=0.327 margin=0.006)
+[OK] data/purchase_reference/hfa_sensitivity/hfa0/buyplan.csv
+[OK] data/purchase_reference/hfa_sensitivity/hfa0/buyplan.html

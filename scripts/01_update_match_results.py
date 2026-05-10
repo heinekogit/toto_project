@@ -55,6 +55,19 @@ FALLBACK_FRAME_ID_BY_LEAGUE = {
     "j3": "36",
 }
 
+# 2026移行モードは frame=35/36 に J1/J2 相当カードが混在するため、
+# リーグ別の固定チーム集合でカードを確定させる。
+TRANSITION_TEAM_ALLOWLIST_2026 = {
+    "j1": {
+        "鹿島", "水戸", "浦和", "千葉", "柏", "FC東京", "東京Ｖ", "町田", "川崎Ｆ", "横浜FM",
+        "清水", "名古屋", "京都", "Ｇ大阪", "Ｃ大阪", "神戸", "岡山", "広島", "福岡", "長崎",
+    },
+    "j2": {
+        "札幌", "八戸", "仙台", "秋田", "山形", "いわき", "栃木Ｃ", "大宮", "横浜FC", "湘南",
+        "甲府", "新潟", "富山", "磐田", "藤枝", "徳島", "今治", "鳥栖", "大分", "宮崎",
+    },
+}
+
 
 def _parse_id_set(text):
     return {v.strip() for v in str(text).split(",") if v.strip()}
@@ -225,6 +238,72 @@ def _parse_toto_score(score_value):
     return None, None
 
 
+def _is_expected_unplayed_score_text(score_value):
+    s = unicodedata.normalize("NFKC", str(score_value)).replace("\u3000", " ").strip().lower()
+    if not s or s in {"nan", "none", "-"}:
+        return True
+    return bool(re.fullmatch(r"v\s*s\.?", s))
+
+
+def _normalize_team_name(name):
+    return unicodedata.normalize("NFKC", str(name)).replace("\u3000", " ").strip()
+
+
+def _build_card_key(row):
+    h = _normalize_team_name(row.get("home_team", ""))
+    a = _normalize_team_name(row.get("away_team", ""))
+    dt = row.get("datetime")
+    if pd.notna(dt):
+        dt_str = pd.to_datetime(dt, errors="coerce")
+        if pd.notna(dt_str):
+            return f"{dt_str.strftime('%Y-%m-%d %H:%M')}|{h}|{a}"
+    round_text = unicodedata.normalize("NFKC", str(row.get("節", ""))).strip()
+    return f"NO_DT|{round_text}|{h}|{a}"
+
+
+def _log_cross_league_duplicate_cards(df_results):
+    if LEAGUE not in {"j1", "j2"}:
+        return
+    other_league = "j2" if LEAGUE == "j1" else "j1"
+    other_path = os.path.join(OUTPUT_CSV_DIR, f"{other_league}_{SEASON_YEAR}_latest_results.csv")
+    if not os.path.exists(other_path):
+        print(f"[J1J2_DUP_CHECK] skipped: counterpart file not found ({other_path})")
+        return
+    required_cols = {"home_team", "away_team", "datetime"}
+    try:
+        df_other = pd.read_csv(other_path)
+    except Exception as e:
+        print(f"[J1J2_DUP_CHECK] skipped: failed to read counterpart CSV ({e})")
+        return
+    if not required_cols.issubset(df_other.columns):
+        print("[J1J2_DUP_CHECK] skipped: counterpart CSV missing required columns")
+        return
+
+    left = df_results.copy()
+    right = df_other.copy()
+    left["datetime"] = pd.to_datetime(left["datetime"], errors="coerce")
+    right["datetime"] = pd.to_datetime(right["datetime"], errors="coerce")
+    left["__card_key"] = left.apply(_build_card_key, axis=1)
+    right["__card_key"] = right.apply(_build_card_key, axis=1)
+
+    dup_keys = sorted(set(left["__card_key"]) & set(right["__card_key"]))
+    if not dup_keys:
+        print(f"[J1J2_DUP_CHECK] no duplicate cards between {LEAGUE.upper()} and {other_league.upper()}")
+        return
+
+    dup_rows = left[left["__card_key"].isin(dup_keys)][["節", "datetime", "home_team", "away_team"]].copy()
+    dup_rows = dup_rows.sort_values(["datetime", "home_team", "away_team"], na_position="last")
+    samples = [
+        f"{row.home_team} vs {row.away_team}"
+        for row in dup_rows.itertuples(index=False)
+    ]
+    print(
+        f"[WARN] J1/J2 duplicate cards detected: {len(dup_keys)} cards between "
+        f"{LEAGUE.upper()} and {other_league.upper()}"
+    )
+    print(f"[J1J2_DUP_CARDS] {' ; '.join(samples[:20])}")
+
+
 def _load_ranked_teams(results_csv_path):
     if not os.path.exists(results_csv_path):
         return []
@@ -264,6 +343,13 @@ def _load_ranked_teams(results_csv_path):
 def _estimate_allowed_teams_for_league():
     if LEAGUE not in {"j1", "j2"}:
         return None
+    if TRANSITION_2026_MODE and str(SEASON_YEAR) == "2026":
+        fixed = TRANSITION_TEAM_ALLOWLIST_2026.get(LEAGUE)
+        if fixed:
+            print(
+                f"[INFO] 固定チームリストを適用: league={LEAGUE}, season={SEASON_YEAR}, teams={len(fixed)}"
+            )
+            return fixed
     try:
         prev_year = str(int(SEASON_YEAR) - 1)
     except Exception:
@@ -357,8 +443,14 @@ def scrape_match_results():
         df_results['home_score'] = pd.to_numeric(parsed_df['home_score_raw'], errors='coerce')
         df_results['away_score'] = pd.to_numeric(parsed_df['away_score_raw'], errors='coerce')
         # デバッグ: 非空スコアなのに抽出失敗した値を先頭だけ表示
-        score_text_non_empty = df_results['score_full'].astype(str).str.strip().replace("nan", "")
-        unparsed_mask = score_text_non_empty.ne("") & (df_results['home_score'].isna() | df_results['away_score'].isna())
+        score_text = df_results['score_full'].astype(str)
+        score_text_non_empty = score_text.str.strip().replace("nan", "")
+        expected_unplayed_mask = score_text.apply(_is_expected_unplayed_score_text)
+        unparsed_mask = (
+            score_text_non_empty.ne("")
+            & (~expected_unplayed_mask)
+            & (df_results['home_score'].isna() | df_results['away_score'].isna())
+        )
         if unparsed_mask.any():
             samples = (
                 df_results.loc[unparsed_mask, ['節', 'home_team', 'away_team', 'score_full']]
@@ -381,9 +473,8 @@ def scrape_match_results():
         )
 
         # 所属推定フィルタを適用（2026移行モードの混在カード除去にも使う）
-        # ただし2026移行モードでは前年J1/J2だけでは昇格チームを取りこぼすため既定で無効化。
-        strict_league_filter = os.environ.get("STRICT_LEAGUE_FILTER", "0") == "1"
-        if LEAGUE in {"j1", "j2"} and (not TRANSITION_2026_MODE or strict_league_filter):
+        # 2026 は固定チーム集合を優先し、それ以外は前年成績から推定する。
+        if LEAGUE in {"j1", "j2"}:
             allowed_teams = _estimate_allowed_teams_for_league()
             if allowed_teams:
                 before = len(df_results)
@@ -391,8 +482,8 @@ def scrape_match_results():
                     df_results['home_team'].isin(allowed_teams) & df_results['away_team'].isin(allowed_teams)
                 ].copy()
                 print(f"リーグ所属フィルタを適用: {before} -> {len(df_results)}")
-        elif LEAGUE in {"j1", "j2"} and TRANSITION_2026_MODE:
-            print("リーグ所属フィルタをスキップ: TRANSITION_2026_MODE")
+            else:
+                print("リーグ所属フィルタをスキップ: 許可チーム推定に必要な前年データが不足")
 
         df_results['match_id'] = df_results.apply(
             lambda row: f"{LEAGUE}_{SEASON_YEAR}_{row['datetime'].strftime('%m%d%H%M')}_{row['home_team']}_{row['away_team']}" if pd.notna(row['datetime']) else "",
@@ -429,6 +520,8 @@ def scrape_match_results():
 
         if df_results.empty:
             raise RuntimeError("取得データが0件です。")
+
+        _log_cross_league_duplicate_cards(df_results)
 
         print(f"データをCSVに保存しようとしています: {OUTPUT_CSV_PATH}")
         df_results.to_csv(OUTPUT_CSV_PATH, index=False, encoding="utf-8-sig")

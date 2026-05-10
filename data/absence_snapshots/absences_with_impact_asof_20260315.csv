@@ -1,0 +1,48 @@
+﻿season,round_start,expected_rounds,team,player_name,absence_type,availability,note,match_player_key,match_status,weight_minutes,weight_attack,weight_defense,impact_attack,impact_defense,impact_total,impact_total_per_round,regular_flag,debug_reason
+2026,2,18,甲府,林田 滉也,injury,out,右膝前十字靱帯不全損傷、右膝内側側副靱帯損傷、右母趾基節骨骨折で全治未定,2026|甲府|林田滉也,matched,0.020833,0.0,0.020833,0.0,0.020833,0.016667,0.000926,False,def_proxy=minutes_share
+2026,3,3,松本,松岡瑠夢,injury,out,右足関節外側靭帯損傷で全治約3週間,2026|松本|松岡瑠夢,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,3,5,名古屋,和泉竜司,injury,out,右ハムストリング肉離れ,2026|名古屋|和泉竜司,matched,0.021277,0.0,0.021277,0.0,0.021277,0.017021,0.003404,False,def_proxy=minutes_share
+2026,3,5,G大阪,宇佐美貴史,injury,out,左ハムストリング肉離れ、左ヒラメ筋肉離れ,2026|G大阪|宇佐美貴史,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,0.005,False,def_proxy=minutes_share; team_goals_total=0
+2026,4,5,大宮,尾崎優成,injury,out,左大腿二頭筋肉離れ,2026|大宮|尾崎優成,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,4,5,大宮,磯﨑麻玖,injury,out,右大腿二頭筋肉離れ,2026|大宮|磯﨑麻玖,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,4,8,栃木C,川田修平,injury,out,大腿直筋筋損傷で復帰まで6〜8週週を要する見込み,2026|栃木C|川田修平,not_found,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,not found; player not found
+2026,4,8,鹿児島,江川慶城,injury,out,右膝関節内側側副靱帯損傷で全治約8週間,2026|鹿児島|江川慶城,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,4,5,金沢,大山啓輔,injury,out,左ハムストリング肉離れ,2026|金沢|大山啓輔,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,0.005,False,def_proxy=minutes_share
+2026,4,12,湘南,髙橋直也,injury,out,左内側膝蓋大腿靭帯損傷,2026|湘南|髙橋直也,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,4,5,秋田,野々村鷹人,injury,out,右ハムストリングス肉離れ,2026|秋田|野々村鷹人,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,4,3,広島,トルガイアルスラン,injury,out,左ヒラメ筋損傷による治療のためドイツへ一時帰国した,2026|広島|トルガイアルスラン,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,0.016667,False,def_proxy=minutes_share
+2026,4,6,C大阪,鷹啄トラビス,injury,out,腰椎椎間板ヘルニア,2026|C大阪|鷹啄トラビス,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,4,12,C大阪,キムジンヒョン,injury,out,右足関節靱帯損傷,2026|C大阪|キムジンヒョン,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,0.002083,False,def_proxy=minutes_share
+2026,4,12,G大阪,横井佑弥,injury,out,右前十字靭帯損傷、外側半月板損傷,2026|G大阪|横井佑弥,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share; team_goals_total=0
+2026,4,5,G大阪,福岡将太,injury,out,左ハムストリング肉離れ,2026|G大阪|福岡将太,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,0.01,False,def_proxy=minutes_share; team_goals_total=0
+2026,4,5,G大阪,佐々木翔悟,injury,out,右ハムストリング肉離れ,2026|G大阪|佐々木翔悟,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,0.005,False,def_proxy=minutes_share; team_goals_total=0
+2026,4,3,群馬,山口一真,injury,out,左ヒラメ筋損傷,2026|群馬|山口一真,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share; team_goals_total=0
+2026,4,10,藤枝,大森彗斗,injury,out,左大腿二頭筋肉離れ,2026|藤枝|大森彗斗,matched,0.021277,0.0,0.021277,0.0,0.021277,0.017021,0.001702,False,def_proxy=minutes_share
+2026,4,8,札幌,マリオセルジオ,injury,out,不明,2026|札幌|マリオセルジオ,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,5,12,神戸,岩波拓也,injury,out,右鎖骨粉砕骨折,2026|神戸|岩波拓也,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,5,14,磐田,西久保駿介,injury,out,左舟状骨疲労骨折でトレーニング合流まで3~4ヶ月程度見込み,2026|磐田|西久保駿介,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,4,1,今治,ガブリエルゴメス,card,out,,2026|今治|ガブリエルゴメス,matched,0.066667,0.0,0.066667,0.0,0.066667,0.053333,0.053333,False,def_proxy=minutes_share; team_goals_total=0
+2026,4,1,神戸,山川哲史,card,out,,2026|神戸|山川哲史,matched,0.066667,0.0,0.066667,0.0,0.066667,0.053333,0.053333,False,def_proxy=minutes_share
+2026,4,2,柏,原田亘,card,out,,2026|柏|原田亘,matched,0.044444,0.0,0.044444,0.0,0.044444,0.035556,0.017778,False,def_proxy=minutes_share
+2026,4,1,水戸,鳥海芳樹,card,out,,2026|水戸|鳥海芳樹,matched,0.0625,0.333333,0.0625,0.333333,0.0625,0.116667,0.116667,False,def_proxy=minutes_share
+2026,5,1,大宮,小島幹敏,card,out,,2026|大宮|小島幹敏,matched,0.06383,0.090909,0.06383,0.090909,0.06383,0.069246,0.069246,False,def_proxy=minutes_share
+2026,5,2,札幌,アマドゥバカヨコ,card,out,,2026|札幌|アマドゥバカヨコ,matched,0.06383,0.333333,0.06383,0.333333,0.06383,0.11773,0.058865,False,def_proxy=minutes_share
+2026,5,2,福岡,見木友哉,card,out,,2026|福岡|見木友哉,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,0.025,False,def_proxy=minutes_share
+2026,5,12,札幌,中村桐耶,injury,out,左膝後十字靭帯不全、外側半月板損傷,2026|札幌|中村桐耶,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,5,5,FC東京,高宇洋,injury,out,右ハムストリング肉離れ,2026|FC東京|高宇洋,matched,0.042553,0.0,0.042553,0.0,0.042553,0.034043,0.006809,False,def_proxy=minutes_share
+2026,5,8,松本,高橋祥平,injury,out,左大腿二頭筋断裂,2026|松本|高橋祥平,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,5,8,琉球,曽田一騎,injury,out,右ヒラメ筋肉離れで全治約8週間,2026|琉球|曽田一騎,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,0.00625,False,def_proxy=minutes_share
+2026,5,8,琉球,岩本翔,injury,out,左大腿二頭筋肉離れで全治約8週間,2026|琉球|岩本翔,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,5,24,山口,沼田航征,injury,out,右肩腱板断裂、右肩反復性肩関節脱臼の手術を行い、術後6ヶ月程度の加療予定,2026|山口|沼田航征,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,0.001042,False,def_proxy=minutes_share
+2026,5,8,甲府,野澤陸,injury,out,右ヒラメ筋損傷、右腓腹筋損傷で全治約6~8週間,2026|甲府|野澤陸,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,5,16,FC大阪,吉田源太郎,injury,out,反復性肩関節脱臼で全治約4ヶ月,2026|FC大阪|吉田源太郎,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,0.001563,False,def_proxy=minutes_share
+2026,6,8,松本,富澤雅也,injury,out,右大腿四頭筋損傷,2026|松本|富澤雅也,matched,0.066667,0.0,0.066667,0.0,0.066667,0.053333,0.006667,False,def_proxy=minutes_share
+2026,6,5,FC東京,森重真人,injury,out,左ハムストリング肉離れ,2026|FC東京|森重真人,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,6,20,川崎F,山市秀翔,病気,out,右鎖骨下静脈血栓症、右胸郭出口症候群,2026|川崎F|山市秀翔,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,6,8,琉球,鈴木順也,injury,out,左ヒラメ筋肉離れで全治約8週間,2026|琉球|鈴木順也,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,0.00625,False,def_proxy=minutes_share
+2026,6,8,藤枝,近藤優成,injury,out,左肘肘関節脱臼で全治約8週間,2026|藤枝|近藤優成,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,6,10,甲府,スタチオーリミケーレ,injury,out,左大腿二頭筋損傷で全治約8~10週間,2026|甲府|スタチオーリミケーレ,matched,0.0625,0.142857,0.0625,0.142857,0.0625,0.078571,0.007857,False,def_proxy=minutes_share
+2026,6,1,福岡,辻岡佑真,card,out,,2026|福岡|辻岡佑真,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share
+2026,6,1,水戸,フォファナマリック,card,out,,2026|水戸|フォファナマリック,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,0.025,False,def_proxy=minutes_share
+2026,6,20,C大阪,イェンギクシニ,injury,out,左大腿直筋腱断裂,2026|C大阪|イェンギクシニ,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,0.0025,False,def_proxy=minutes_share
+2026,6,1,大宮,木寺優直,injury,out,コンディション不良,2026|大宮|木寺優直,matched,0.0,0.0,0.0,0.0,0.0,0.0,0.0,False,def_proxy=minutes_share

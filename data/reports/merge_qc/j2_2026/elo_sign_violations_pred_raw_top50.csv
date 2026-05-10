@@ -1,0 +1,2 @@
+﻿league,節,match_id,datetime,home_team,away_team,home_elo,away_elo,elo_diff_before_hfa,hfa_added_to_diff,elo_diff_after_hfa,diff_raw_no_hfa,prob_home_win_before_signfix,prob_draw_raw,prob_away_win_before_signfix,argmax_result,final_result,predicted_result,decision_reason,sign_gap
+j2,第１６節第１日,j2_2026_05091400_札幌_大宮,2026-05-09 14:00:00,札幌,大宮,1512,1515,-2.8089,4.2,1.3911,-2.8089,0.33276986456570573,0.3407345003838118,0.3264956350504825,D,A,A,MATCH_TYPE_MAIN_OVERRIDE,0.0062742295152232175

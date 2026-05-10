@@ -1,0 +1,604 @@
+[BUYPLAN_CONFIG] 2AXIS_ENABLE=1 BASE_MODE=shape_relative BASE_TOP_GAP(strong/mid)=0.080/0.040 SHAPE_STRENGTH(strong/mid)=0.330/0.230 SHAPE_DRAW(r31/spread/entropy)=0.780/0.120/1.060 HA_DRAW_MARGIN=0.060 DRAW_MIN=0.200 SMALL_GAP_RULE(strength/ratio31/entropy)=0.220/0.850/1.090 WEAK_DRAW_RULE(strength/ratio31/entropy)=0.280/0.750/1.090 REL_CLOSE(ratio/gap/spread)=0.80/0.06/0.12 REL_SCORE_ALPHA=0.50 LOCK02_MARGIN=0.040 LOCK03_MARGIN=0.060 WEAK_DRAW_MARGIN=0.100 WEAK_DRAW_ENTROPY_MIN=1.090 TARGET_DRAW_RANGE(lock/prob/exp)=2-3/3-4/4-5 C_DIFF=0.150 D_MIN=0.260 W_DRAW(base/lock/prob/exp)=0.350/0.350/0.350/0.350 MAX_STRONG=0.580 CAP_D_MATCHES(default/lock/prob/exp)=3/2/3/4 MARGIN_D_MAX=0.080 ENTROPY_MIN=1.050 BEST_MAX_FOR_D=0.480 DRAW_MATCH_CAP=4 ZERO_RATIO_CAP=0.330 PER_MATCH_SAME_SYMBOL_CAP=8 ENABLE_LAYER(small_gap/weak_draw/same_cap/final_range)=0/0/0/0
+[WARN] toto差分を出力しました: data/purchase_reference/buyplan_toto_diff.csv (missing_in_predictions=0, missing_in_toto_order=2)
+[INFO] toto並び順を適用: matched=13
+[WARN] predictions側にtoto対象外カードが 2 件あります。toto13試合以外は無視します。
+[BUYPLAN_MATCH] M01 千葉 vs 柏 pH=0.1753 pD=0.3112 pA=0.5134 best=2 second=0 margin=0.2022 spread=0.3381 entropy=1.0108 r21=0.6062 r31=0.3415 strength=0.4237 closeness=0.6619 score=0.8175 draw_candidate=0 weak_draw_candidate=0 reason=shape_not_close_3way
+[BUYPLAN_BASE] match_id=j1_2026_03071300_千葉_柏 pH=0.1753 pA=0.5134 pD=0.3112 diff=0.3381 base_pick=2 decision_reason=SHAPE_STRONG_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=01 pH=0.1753 pD=0.3112 pA=0.5134 best=2 second=0 top_gap=0.2022 spread=0.3381 entropy=1.0108 r21=0.6062 r31=0.3415 strength=0.4237 closeness=0.0000 base_pick=2 reason=SHAPE_STRONG_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=01 symbol=1 prob=0.1753 rank=3 top_prob=0.5134 ratio_to_top=0.3415 gap_to_above=0.1359 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=01 symbol=0 prob=0.3112 rank=2 top_prob=0.5134 ratio_to_top=0.6062 gap_to_above=0.2022 gap_to_below=0.1359 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=01 symbol=2 prob=0.5134 rank=1 top_prob=0.5134 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.2022 is_close_branch=0
+[BUYPLAN_MATCH] M02 鹿島 vs 東京Ｖ pH=0.5832 pD=0.2862 pA=0.1306 best=1 second=0 margin=0.2969 spread=0.4526 entropy=0.9384 r21=0.4909 r31=0.2239 strength=0.5299 closeness=0.5474 score=0.6905 draw_candidate=0 weak_draw_candidate=0 reason=shape_not_close_3way
+[BUYPLAN_BASE] match_id=j1_2026_03071600_鹿島_東京Ｖ pH=0.5832 pA=0.1306 pD=0.2862 diff=0.4526 base_pick=1 decision_reason=SHAPE_STRONG_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=02 pH=0.5832 pD=0.2862 pA=0.1306 best=1 second=0 top_gap=0.2969 spread=0.4526 entropy=0.9384 r21=0.4909 r31=0.2239 strength=0.5299 closeness=0.0000 base_pick=1 reason=SHAPE_STRONG_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=02 symbol=1 prob=0.5832 rank=1 top_prob=0.5832 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.2969 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=02 symbol=0 prob=0.2862 rank=2 top_prob=0.5832 ratio_to_top=0.4909 gap_to_above=0.2969 gap_to_below=0.1557 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=02 symbol=2 prob=0.1306 rank=3 top_prob=0.5832 ratio_to_top=0.2239 gap_to_above=0.1557 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_MATCH] M03 福岡 vs 名古屋 pH=0.3578 pD=0.3407 pA=0.3015 best=1 second=0 margin=0.0171 spread=0.0563 entropy=1.0961 r21=0.9522 r31=0.8426 strength=0.0770 closeness=0.9437 score=1.1140 draw_candidate=1 weak_draw_candidate=0 reason=shape_close_3way
+[BUYPLAN_BASE] match_id=j1_2026_03071600_福岡_名古屋 pH=0.3578 pA=0.3015 pD=0.3407 diff=0.0563 base_pick=1 decision_reason=SHAPE_WEAK_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=03 pH=0.3578 pD=0.3407 pA=0.3015 best=1 second=0 top_gap=0.0171 spread=0.0563 entropy=1.0961 r21=0.9522 r31=0.8426 strength=0.0770 closeness=0.6246 base_pick=1 reason=SHAPE_WEAK_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=03 symbol=1 prob=0.3578 rank=1 top_prob=0.3578 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0171 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=03 symbol=0 prob=0.3407 rank=2 top_prob=0.3578 ratio_to_top=0.9522 gap_to_above=0.0171 gap_to_below=0.0392 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=03 symbol=2 prob=0.3015 rank=3 top_prob=0.3578 ratio_to_top=0.8426 gap_to_above=0.0392 gap_to_below=0.0000 is_close_branch=1
+[BUYPLAN_MATCH] M04 岡山 vs 京都 pH=0.1746 pD=0.3109 pA=0.5145 best=2 second=0 margin=0.2035 spread=0.3398 entropy=1.0099 r21=0.6044 r31=0.3394 strength=0.4254 closeness=0.6602 score=0.8156 draw_candidate=0 weak_draw_candidate=0 reason=shape_not_close_3way
+[BUYPLAN_BASE] match_id=j1_2026_03081255_岡山_京都 pH=0.1746 pA=0.5145 pD=0.3109 diff=0.3398 base_pick=2 decision_reason=SHAPE_STRONG_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=04 pH=0.1746 pD=0.3109 pA=0.5145 best=2 second=0 top_gap=0.2035 spread=0.3398 entropy=1.0099 r21=0.6044 r31=0.3394 strength=0.4254 closeness=0.0000 base_pick=2 reason=SHAPE_STRONG_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=04 symbol=1 prob=0.1746 rank=3 top_prob=0.5145 ratio_to_top=0.3394 gap_to_above=0.1363 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=04 symbol=0 prob=0.3109 rank=2 top_prob=0.5145 ratio_to_top=0.6044 gap_to_above=0.2035 gap_to_below=0.1363 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=04 symbol=2 prob=0.5145 rank=1 top_prob=0.5145 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.2035 is_close_branch=0
+[BUYPLAN_MATCH] M05 Ｇ大阪 vs 長崎 pH=0.3678 pD=0.3400 pA=0.2922 best=1 second=0 margin=0.0277 spread=0.0756 entropy=1.0942 r21=0.9246 r31=0.7945 strength=0.1067 closeness=0.9244 score=1.0944 draw_candidate=1 weak_draw_candidate=0 reason=shape_close_3way
+[BUYPLAN_BASE] match_id=j1_2026_03081500_Ｇ大阪_長崎 pH=0.3678 pA=0.2922 pD=0.3400 diff=0.0756 base_pick=1 decision_reason=SHAPE_WEAK_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=05 pH=0.3678 pD=0.3400 pA=0.2922 best=1 second=0 top_gap=0.0277 spread=0.0756 entropy=1.0942 r21=0.9246 r31=0.7945 strength=0.1067 closeness=0.4961 base_pick=1 reason=SHAPE_WEAK_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=05 symbol=1 prob=0.3678 rank=1 top_prob=0.3678 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0277 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=05 symbol=0 prob=0.3400 rank=2 top_prob=0.3678 ratio_to_top=0.9246 gap_to_above=0.0277 gap_to_below=0.0479 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=05 symbol=2 prob=0.2922 rank=3 top_prob=0.3678 ratio_to_top=0.7945 gap_to_above=0.0479 gap_to_below=0.0000 is_close_branch=1
+[BUYPLAN_MATCH] M06 FC東京 vs 横浜FM pH=0.3737 pD=0.3396 pA=0.2868 best=1 second=0 margin=0.0341 spread=0.0869 entropy=1.0928 r21=0.9087 r31=0.7674 strength=0.1235 closeness=0.9131 score=1.0829 draw_candidate=0 weak_draw_candidate=1 reason=shape_not_close_3way
+[BUYPLAN_BASE] match_id=j1_2026_03071400_FC東京_横浜FM pH=0.3737 pA=0.2868 pD=0.3396 diff=0.0869 base_pick=1 decision_reason=SHAPE_WEAK_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=06 pH=0.3737 pD=0.3396 pA=0.2868 best=1 second=0 top_gap=0.0341 spread=0.0869 entropy=1.0928 r21=0.9087 r31=0.7674 strength=0.1235 closeness=0.4206 base_pick=1 reason=SHAPE_WEAK_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=06 symbol=1 prob=0.3737 rank=1 top_prob=0.3737 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0341 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=06 symbol=0 prob=0.3396 rank=2 top_prob=0.3737 ratio_to_top=0.9087 gap_to_above=0.0341 gap_to_below=0.0528 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=06 symbol=2 prob=0.2868 rank=3 top_prob=0.3737 ratio_to_top=0.7674 gap_to_above=0.0528 gap_to_below=0.0000 is_close_branch=1
+[BUYPLAN_MATCH] M07 浦和 vs 水戸 pH=0.3796 pD=0.3390 pA=0.2814 best=1 second=0 margin=0.0406 spread=0.0983 entropy=1.0912 r21=0.8930 r31=0.7411 strength=0.1401 closeness=0.9017 score=1.0712 draw_candidate=0 weak_draw_candidate=0 reason=shape_not_close_3way
+[BUYPLAN_BASE] match_id=j1_2026_03071500_浦和_水戸 pH=0.3796 pA=0.2814 pD=0.3390 diff=0.0983 base_pick=1 decision_reason=SHAPE_WEAK_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=07 pH=0.3796 pD=0.3390 pA=0.2814 best=1 second=0 top_gap=0.0406 spread=0.0983 entropy=1.0912 r21=0.8930 r31=0.7411 strength=0.1401 closeness=0.3449 base_pick=1 reason=SHAPE_WEAK_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=07 symbol=1 prob=0.3796 rank=1 top_prob=0.3796 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0406 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=07 symbol=0 prob=0.3390 rank=2 top_prob=0.3796 ratio_to_top=0.8930 gap_to_above=0.0406 gap_to_below=0.0577 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=07 symbol=2 prob=0.2814 rank=3 top_prob=0.3796 ratio_to_top=0.7411 gap_to_above=0.0577 gap_to_below=0.0000 is_close_branch=1
+[BUYPLAN_MATCH] M08 Ｃ大阪 vs 清水 pH=0.4003 pD=0.3366 pA=0.2631 best=1 second=0 margin=0.0637 spread=0.1372 entropy=1.0843 r21=0.8409 r31=0.6572 strength=0.1942 closeness=0.8628 score=1.0311 draw_candidate=0 weak_draw_candidate=0 reason=shape_not_close_3way
+[BUYPLAN_BASE] match_id=j1_2026_03071500_Ｃ大阪_清水 pH=0.4003 pA=0.2631 pD=0.3366 diff=0.1372 base_pick=1 decision_reason=SHAPE_WEAK_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=08 pH=0.4003 pD=0.3366 pA=0.2631 best=1 second=0 top_gap=0.0637 spread=0.1372 entropy=1.0843 r21=0.8409 r31=0.6572 strength=0.1942 closeness=0.0853 base_pick=1 reason=SHAPE_WEAK_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=08 symbol=1 prob=0.4003 rank=1 top_prob=0.4003 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0637 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=08 symbol=0 prob=0.3366 rank=2 top_prob=0.4003 ratio_to_top=0.8409 gap_to_above=0.0637 gap_to_below=0.0735 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=08 symbol=2 prob=0.2631 rank=3 top_prob=0.4003 ratio_to_top=0.6572 gap_to_above=0.0735 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_MATCH] M09 仙台 vs 湘南 pH=0.3949 pD=0.3366 pA=0.2685 best=1 second=0 margin=0.0583 spread=0.1264 entropy=1.0865 r21=0.8524 r31=0.6800 strength=0.1806 closeness=0.8736 score=1.0419 draw_candidate=0 weak_draw_candidate=0 reason=shape_not_close_3way
+[BUYPLAN_BASE] match_id=j2_2026_03071400_仙台_湘南 pH=0.3949 pA=0.2685 pD=0.3366 diff=0.1264 base_pick=1 decision_reason=SHAPE_WEAK_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=09 pH=0.3949 pD=0.3366 pA=0.2685 best=1 second=0 top_gap=0.0583 spread=0.1264 entropy=1.0865 r21=0.8524 r31=0.6800 strength=0.1806 closeness=0.1576 base_pick=1 reason=SHAPE_WEAK_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=09 symbol=1 prob=0.3949 rank=1 top_prob=0.3949 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0583 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=09 symbol=0 prob=0.3366 rank=2 top_prob=0.3949 ratio_to_top=0.8524 gap_to_above=0.0583 gap_to_below=0.0681 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=09 symbol=2 prob=0.2685 rank=3 top_prob=0.3949 ratio_to_top=0.6800 gap_to_above=0.0681 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_MATCH] M10 藤枝 vs 磐田 pH=0.1827 pD=0.3136 pA=0.5037 best=2 second=0 margin=0.1901 spread=0.3210 entropy=1.0197 r21=0.6226 r31=0.3628 strength=0.4072 closeness=0.6790 score=0.8358 draw_candidate=0 weak_draw_candidate=0 reason=shape_not_close_3way
+[BUYPLAN_BASE] match_id=j2_2026_03071400_藤枝_磐田 pH=0.1827 pA=0.5037 pD=0.3136 diff=0.3210 base_pick=2 decision_reason=SHAPE_STRONG_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=10 pH=0.1827 pD=0.3136 pA=0.5037 best=2 second=0 top_gap=0.1901 spread=0.3210 entropy=1.0197 r21=0.6226 r31=0.3628 strength=0.4072 closeness=0.0000 base_pick=2 reason=SHAPE_STRONG_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=10 symbol=1 prob=0.1827 rank=3 top_prob=0.5037 ratio_to_top=0.3628 gap_to_above=0.1309 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=10 symbol=0 prob=0.3136 rank=2 top_prob=0.5037 ratio_to_top=0.6226 gap_to_above=0.1901 gap_to_below=0.1309 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=10 symbol=2 prob=0.5037 rank=1 top_prob=0.5037 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.1901 is_close_branch=0
+[BUYPLAN_MATCH] M11 八戸 vs 横浜FC pH=0.3327 pD=0.3407 pA=0.3265 best=0 second=1 margin=0.0080 spread=0.0142 entropy=1.0985 r21=0.9765 r31=0.9583 strength=0.0252 closeness=0.9938 score=1.1642 draw_candidate=1 weak_draw_candidate=0 reason=shape_close_3way
+[BUYPLAN_BASE] match_id=j2_2026_03081300_八戸_横浜FC pH=0.3327 pA=0.3265 pD=0.3407 diff=0.0062 base_pick=0 decision_reason=SHAPE_WEAK_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=11 pH=0.3327 pD=0.3407 pA=0.3265 best=0 second=1 top_gap=0.0080 spread=0.0142 entropy=1.0985 r21=0.9765 r31=0.9583 strength=0.0252 closeness=0.9586 base_pick=0 reason=SHAPE_WEAK_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=11 symbol=1 prob=0.3327 rank=2 top_prob=0.3407 ratio_to_top=0.9765 gap_to_above=0.0080 gap_to_below=0.0062 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=11 symbol=0 prob=0.3407 rank=1 top_prob=0.3407 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0080 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=11 symbol=2 prob=0.3265 rank=3 top_prob=0.3407 ratio_to_top=0.9583 gap_to_above=0.0062 gap_to_below=0.0000 is_close_branch=1
+[BUYPLAN_MATCH] M12 山形 vs 秋田 pH=0.4134 pD=0.3340 pA=0.2525 best=1 second=0 margin=0.0794 spread=0.1609 entropy=1.0790 r21=0.8079 r31=0.6108 strength=0.2262 closeness=0.8391 score=1.0061 draw_candidate=0 weak_draw_candidate=0 reason=shape_not_close_3way
+[BUYPLAN_BASE] match_id=j2_2026_03081400_山形_秋田 pH=0.4134 pA=0.2525 pD=0.3340 diff=0.1609 base_pick=1 decision_reason=SHAPE_WEAK_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=12 pH=0.4134 pD=0.3340 pA=0.2525 best=1 second=0 top_gap=0.0794 spread=0.1609 entropy=1.0790 r21=0.8079 r31=0.6108 strength=0.2262 closeness=0.0000 base_pick=1 reason=SHAPE_WEAK_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=12 symbol=1 prob=0.4134 rank=1 top_prob=0.4134 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0794 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=12 symbol=0 prob=0.3340 rank=2 top_prob=0.4134 ratio_to_top=0.8079 gap_to_above=0.0794 gap_to_below=0.0815 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=12 symbol=2 prob=0.2525 rank=3 top_prob=0.4134 ratio_to_top=0.6108 gap_to_above=0.0815 gap_to_below=0.0000 is_close_branch=0
+[BUYPLAN_MATCH] M13 いわき vs 大宮 pH=0.3374 pD=0.3407 pA=0.3219 best=0 second=1 margin=0.0033 spread=0.0188 entropy=1.0983 r21=0.9904 r31=0.9449 strength=0.0237 closeness=0.9845 score=1.1548 draw_candidate=1 weak_draw_candidate=0 reason=shape_close_3way
+[BUYPLAN_BASE] match_id=j2_2026_03071400_いわき_大宮 pH=0.3374 pA=0.3219 pD=0.3407 diff=0.0155 base_pick=0 decision_reason=SHAPE_WEAK_BEST
+[BUYPLAN_BASE_COMPARE] mode=shape_relative match_no=13 pH=0.3374 pD=0.3407 pA=0.3219 best=0 second=1 top_gap=0.0033 spread=0.0188 entropy=1.0983 r21=0.9904 r31=0.9449 strength=0.0237 closeness=0.8967 base_pick=0 reason=SHAPE_WEAK_BEST
+[BUYPLAN_RELATIVE_EVAL] match_no=13 symbol=1 prob=0.3374 rank=2 top_prob=0.3407 ratio_to_top=0.9904 gap_to_above=0.0033 gap_to_below=0.0155 is_close_branch=1
+[BUYPLAN_RELATIVE_EVAL] match_no=13 symbol=0 prob=0.3407 rank=1 top_prob=0.3407 ratio_to_top=1.0000 gap_to_above=0.0000 gap_to_below=0.0033 is_close_branch=0
+[BUYPLAN_RELATIVE_EVAL] match_no=13 symbol=2 prob=0.3219 rank=3 top_prob=0.3407 ratio_to_top=0.9449 gap_to_above=0.0155 gap_to_below=0.0000 is_close_branch=1
+[BUYPLAN_LOCK_IMMUTABLE] ticket=01 reason=lock_base_protected
+[BUYPLAN_LOCK_VARIATION] ticket=02 margin_threshold=0.04 flips=5
+[BUYPLAN_LOCK_VARIATION] ticket=03 margin_threshold=0.06 flips=7
+[BUYPLAN_EXP_CANDIDATE] match_no=01 dominant_symbol=2 dominant_count=8 branch_symbol=0 branch_prob=0.3112 score=0.249941
+[BUYPLAN_EXP_CANDIDATE] match_no=02 dominant_symbol=1 dominant_count=8 branch_symbol=0 branch_prob=0.2862 score=0.213378
+[BUYPLAN_EXP_CANDIDATE] match_no=04 dominant_symbol=2 dominant_count=8 branch_symbol=0 branch_prob=0.3109 score=0.249408
+[BUYPLAN_EXP_CANDIDATE] match_no=10 dominant_symbol=2 dominant_count=8 branch_symbol=1 branch_prob=0.1827 score=0.124499
+[BUYPLAN_EXP_CANDIDATE] match_no=10 dominant_symbol=2 dominant_count=8 branch_symbol=0 branch_prob=0.3136 score=0.254423
+[BUYPLAN_EXP_CANDIDATE] match_no=12 dominant_symbol=1 dominant_count=8 branch_symbol=0 branch_prob=0.3340 score=0.301940
+[BUYPLAN_EXP_CANDIDATE] match_no=12 dominant_symbol=1 dominant_count=8 branch_symbol=2 branch_prob=0.2525 score=0.203394
+[BUYPLAN_EXP_PICK] ticket=09 match_no=12 from_symbol=1 to_symbol=0 reason=dominant_coverage
+[BUYPLAN_EXP_PICK] ticket=10 match_no=10 from_symbol=2 to_symbol=0 reason=dominant_coverage
+[BUYPLAN_SMALL_GAP_RULE] skipped=true
+[BUYPLAN_WEAK_DRAW_APPLY] skipped=true
+[BUYPLAN_STAGE_COUNTS] stage=after_ticket_generation H=71 D=30 A=29 total_cells=130
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=01 H=0 D=0 A=10 dominant=2 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=02 H=10 D=0 A=0 dominant=1 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=03 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=04 H=0 D=0 A=10 dominant=2 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=05 H=8 D=2 A=0 dominant=1 dominant_count=8 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=06 H=6 D=4 A=0 dominant=1 dominant_count=6 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=07 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=08 H=9 D=1 A=0 dominant=1 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=09 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=10 H=0 D=1 A=9 dominant=2 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=11 H=4 D=6 A=0 dominant=0 dominant_count=6 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=12 H=9 D=1 A=0 dominant=1 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_ticket_generation match_no=13 H=4 D=6 A=0 dominant=0 dominant_count=6 locked80=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=01 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=02 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=03 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=04 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=05 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=06 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=07 best=2 second=1 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=08 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=09 best=2 second=1 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=10 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=11 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=12 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=lock_strict match_no=13 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=01 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=02 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=03 best=4 second=1 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=04 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=05 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=06 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=07 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=08 best=4 second=1 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=09 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=10 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=11 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=12 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=prob_faithful match_no=13 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=01 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=02 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=03 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=04 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=05 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=06 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=07 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=08 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=09 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=10 best=1 second=1 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=11 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=12 best=1 second=1 third=0 other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_ticket_generation scenario=experimental match_no=13 best=2 second=0 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_ticket_generation ticket=01 mode=lock_strict best=13 second=0 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_ticket_generation ticket=02 mode=lock_strict best=8 second=5 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_ticket_generation ticket=03 mode=lock_strict best=6 second=7 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_ticket_generation ticket=04 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_ticket_generation ticket=05 mode=prob_faithful best=10 second=3 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_ticket_generation ticket=06 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_ticket_generation ticket=07 mode=prob_faithful best=10 second=3 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_ticket_generation ticket=08 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_ticket_generation ticket=09 mode=experimental best=12 second=1 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_ticket_generation ticket=10 mode=experimental best=12 second=1 third=0 other=0
+[BUYPLAN_DRAW_DISTRIBUTION] adjust_count=0 skipped=true
+[BUYPLAN_STAGE_COUNTS] stage=after_draw_distribution H=71 D=30 A=29 total_cells=130
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=01 H=0 D=0 A=10 dominant=2 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=02 H=10 D=0 A=0 dominant=1 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=03 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=04 H=0 D=0 A=10 dominant=2 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=05 H=8 D=2 A=0 dominant=1 dominant_count=8 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=06 H=6 D=4 A=0 dominant=1 dominant_count=6 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=07 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=08 H=9 D=1 A=0 dominant=1 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=09 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=10 H=0 D=1 A=9 dominant=2 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=11 H=4 D=6 A=0 dominant=0 dominant_count=6 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=12 H=9 D=1 A=0 dominant=1 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_draw_distribution match_no=13 H=4 D=6 A=0 dominant=0 dominant_count=6 locked80=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=01 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=01 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=02 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=02 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=03 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=03 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=04 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=04 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=05 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=05 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=06 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=06 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=07 best=2 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=07 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=08 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=08 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=09 best=2 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=09 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=10 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=10 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=11 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=11 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=12 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=12 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=lock_strict match_no=13 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=lock_strict match_no=13 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=01 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=01 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=02 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=02 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=03 best=4 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=03 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=04 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=04 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=05 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=05 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=06 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=06 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=07 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=07 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=08 best=4 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=08 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=09 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=09 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=10 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=10 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=11 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=11 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=12 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=12 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=prob_faithful match_no=13 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=prob_faithful match_no=13 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=01 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=01 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=02 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=02 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=03 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=03 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=04 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=04 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=05 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=05 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=06 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=06 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=07 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=07 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=08 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=08 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=09 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=09 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=10 best=1 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=10 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=11 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=11 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=12 best=1 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=12 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_draw_distribution scenario=experimental match_no=13 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_draw_distribution scenario=experimental match_no=13 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_draw_distribution ticket=01 mode=lock_strict best=13 second=0 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_draw_distribution ticket=02 mode=lock_strict best=8 second=5 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_draw_distribution ticket=03 mode=lock_strict best=6 second=7 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_draw_distribution ticket=04 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_draw_distribution ticket=05 mode=prob_faithful best=10 second=3 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_draw_distribution ticket=06 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_draw_distribution ticket=07 mode=prob_faithful best=10 second=3 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_draw_distribution ticket=08 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_draw_distribution ticket=09 mode=experimental best=12 second=1 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_draw_distribution ticket=10 mode=experimental best=12 second=1 third=0 other=0
+[BUYPLAN_SAME_SYMBOL_ADJUST] skipped=true
+[BUYPLAN_SYMBOL_CAP] adjust_count=0
+[BUYPLAN_STAGE_COUNTS] stage=after_same_symbol_cap H=71 D=30 A=29 total_cells=130
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=01 H=0 D=0 A=10 dominant=2 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=02 H=10 D=0 A=0 dominant=1 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=03 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=04 H=0 D=0 A=10 dominant=2 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=05 H=8 D=2 A=0 dominant=1 dominant_count=8 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=06 H=6 D=4 A=0 dominant=1 dominant_count=6 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=07 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=08 H=9 D=1 A=0 dominant=1 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=09 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=10 H=0 D=1 A=9 dominant=2 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=11 H=4 D=6 A=0 dominant=0 dominant_count=6 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=12 H=9 D=1 A=0 dominant=1 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_same_symbol_cap match_no=13 H=4 D=6 A=0 dominant=0 dominant_count=6 locked80=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=01 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=01 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=02 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=02 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=03 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=03 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=04 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=04 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=05 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=05 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=06 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=06 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=07 best=2 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=07 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=08 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=08 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=09 best=2 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=09 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=10 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=10 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=11 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=11 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=12 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=12 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=lock_strict match_no=13 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=lock_strict match_no=13 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=01 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=01 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=02 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=02 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=03 best=4 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=03 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=04 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=04 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=05 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=05 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=06 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=06 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=07 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=07 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=08 best=4 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=08 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=09 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=09 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=10 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=10 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=11 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=11 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=12 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=12 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=prob_faithful match_no=13 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=prob_faithful match_no=13 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=01 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=01 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=02 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=02 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=03 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=03 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=04 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=04 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=05 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=05 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=06 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=06 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=07 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=07 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=08 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=08 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=09 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=09 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=10 best=1 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=10 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=11 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=11 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=12 best=1 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=12 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_same_symbol_cap scenario=experimental match_no=13 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_same_symbol_cap scenario=experimental match_no=13 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_same_symbol_cap ticket=01 mode=lock_strict best=13 second=0 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_same_symbol_cap ticket=02 mode=lock_strict best=8 second=5 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_same_symbol_cap ticket=03 mode=lock_strict best=6 second=7 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_same_symbol_cap ticket=04 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_same_symbol_cap ticket=05 mode=prob_faithful best=10 second=3 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_same_symbol_cap ticket=06 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_same_symbol_cap ticket=07 mode=prob_faithful best=10 second=3 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_same_symbol_cap ticket=08 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_same_symbol_cap ticket=09 mode=experimental best=12 second=1 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_same_symbol_cap ticket=10 mode=experimental best=12 second=1 third=0 other=0
+[BUYPLAN_STAGE_COUNTS] stage=after_unique_repair H=71 D=30 A=29 total_cells=130
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=01 H=0 D=0 A=10 dominant=2 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=02 H=10 D=0 A=0 dominant=1 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=03 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=04 H=0 D=0 A=10 dominant=2 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=05 H=8 D=2 A=0 dominant=1 dominant_count=8 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=06 H=6 D=4 A=0 dominant=1 dominant_count=6 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=07 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=08 H=9 D=1 A=0 dominant=1 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=09 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=10 H=0 D=1 A=9 dominant=2 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=11 H=4 D=6 A=0 dominant=0 dominant_count=6 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=12 H=9 D=1 A=0 dominant=1 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_unique_repair match_no=13 H=4 D=6 A=0 dominant=0 dominant_count=6 locked80=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=01 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=01 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=02 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=02 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=03 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=03 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=04 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=04 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=05 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=05 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=06 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=06 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=07 best=2 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=07 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=08 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=08 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=09 best=2 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=09 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=10 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=10 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=11 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=11 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=12 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=12 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=lock_strict match_no=13 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=lock_strict match_no=13 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=01 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=01 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=02 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=02 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=03 best=4 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=03 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=04 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=04 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=05 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=05 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=06 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=06 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=07 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=07 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=08 best=4 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=08 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=09 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=09 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=10 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=10 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=11 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=11 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=12 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=12 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=prob_faithful match_no=13 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=prob_faithful match_no=13 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=01 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=01 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=02 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=02 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=03 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=03 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=04 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=04 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=05 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=05 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=06 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=06 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=07 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=07 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=08 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=08 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=09 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=09 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=10 best=1 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=10 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=11 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=11 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=12 best=1 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=12 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_unique_repair scenario=experimental match_no=13 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_unique_repair scenario=experimental match_no=13 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_unique_repair ticket=01 mode=lock_strict best=13 second=0 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_unique_repair ticket=02 mode=lock_strict best=8 second=5 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_unique_repair ticket=03 mode=lock_strict best=6 second=7 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_unique_repair ticket=04 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_unique_repair ticket=05 mode=prob_faithful best=10 second=3 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_unique_repair ticket=06 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_unique_repair ticket=07 mode=prob_faithful best=10 second=3 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_unique_repair ticket=08 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_unique_repair ticket=09 mode=experimental best=12 second=1 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_unique_repair ticket=10 mode=experimental best=12 second=1 third=0 other=0
+[BUYPLAN_FINAL_RANGE_ADJUST] skipped=true
+[BUYPLAN_STAGE_COUNTS] stage=after_final_range H=71 D=30 A=29 total_cells=130
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=01 H=0 D=0 A=10 dominant=2 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=02 H=10 D=0 A=0 dominant=1 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=03 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=04 H=0 D=0 A=10 dominant=2 dominant_count=10 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=05 H=8 D=2 A=0 dominant=1 dominant_count=8 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=06 H=6 D=4 A=0 dominant=1 dominant_count=6 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=07 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=08 H=9 D=1 A=0 dominant=1 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=09 H=7 D=3 A=0 dominant=1 dominant_count=7 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=10 H=0 D=1 A=9 dominant=2 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=11 H=4 D=6 A=0 dominant=0 dominant_count=6 locked80=0
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=12 H=9 D=1 A=0 dominant=1 dominant_count=9 locked80=1
+[BUYPLAN_STAGE_MATCH_COUNTS] stage=after_final_range match_no=13 H=4 D=6 A=0 dominant=0 dominant_count=6 locked80=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=01 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=01 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=02 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=02 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=03 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=03 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=04 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=04 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=05 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=05 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=06 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=06 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=07 best=2 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=07 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=08 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=08 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=09 best=2 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=09 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=10 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=10 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=11 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=11 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=12 best=3 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=12 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=lock_strict match_no=13 best=1 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=lock_strict match_no=13 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=01 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=01 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=02 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=02 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=03 best=4 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=03 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=04 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=04 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=05 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=05 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=06 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=06 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=07 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=07 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=08 best=4 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=08 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=09 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=09 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=10 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=10 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=11 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=11 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=12 best=5 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=12 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=prob_faithful match_no=13 best=3 second=2 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=prob_faithful match_no=13 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=01 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=01 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=02 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=02 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=03 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=03 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=04 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=04 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=05 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=05 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=06 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=06 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=07 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=07 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=08 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=08 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=09 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=09 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=10 best=1 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=10 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=11 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=11 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=12 best=1 second=1 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=12 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_BRANCH_AUDIT] stage=after_final_range scenario=experimental match_no=13 best=2 second=0 third=0 other=0
+[BUYPLAN_BRANCH_DELTA] stage=after_final_range scenario=experimental match_no=13 d_best=0 d_second=0 d_third=0 d_other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_final_range ticket=01 mode=lock_strict best=13 second=0 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_final_range ticket=02 mode=lock_strict best=8 second=5 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_final_range ticket=03 mode=lock_strict best=6 second=7 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_final_range ticket=04 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_final_range ticket=05 mode=prob_faithful best=10 second=3 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_final_range ticket=06 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_final_range ticket=07 mode=prob_faithful best=10 second=3 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_final_range ticket=08 mode=prob_faithful best=11 second=2 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_final_range ticket=09 mode=experimental best=12 second=1 third=0 other=0
+[BUYPLAN_TICKET_BRANCH] stage=after_final_range ticket=10 mode=experimental best=12 second=1 third=0 other=0
+[BUYPLAN_UNIQUE_REPAIR] before_duplicate_count=0 after_duplicate_count=0 repair_matches= fallback_used=false protected_cells_skipped=0
+[WARN] 基準票ソース: predicted_result採用=0, best_symbolフォールバック=13
+[WARN] LOCK遵守: tickets=3, 0採用件数=10, 平均margin=0.000, 総flip数=0
+[WARN] 確率忠実: tickets=5, 0採用件数=14, 平均margin=0.031, 総flip数=12
+[WARN] 実験: tickets=2, 0採用件数=6, 平均margin=0.135, 総flip数=2
+[WARN] 探索ログ: second_pickが0の試合数(全OK)=11, second_pickが0の試合数(探索対象)=11, 探索枠でsecond=0を採用した件数=8
+[WARN] LOCK variation: ticket02_flips=5, ticket03_flips=7
+[WARN] 全体比率: 0総出現回数=30, 1/0/2比率=0.546/0.231/0.223
+[WARN] draw_distribution: adjust_count=0
+[WARN] draw候補ゲート: candidate_matches=4 rate=0.308
+[WARN] [BUYPLAN_WEAK_DRAW_CAND] matches=M06 selected_for_exp= selected_for_distribution=
+[WARN] [BUYPLAN_DRAW_POLICY] strong_draw_count=4 weak_draw_count=1 final_zero_count=30
+[WARN] [BUYPLAN_TARGET_DRAW] scenario=Lock target_draw_count_range=2..3
+[WARN] [BUYPLAN_TARGET_DRAW] scenario=Prob target_draw_count_range=3..4
+[WARN] [BUYPLAN_TARGET_DRAW] scenario=Exp target_draw_count_range=4..5
+[WARN] 重複/偏り調整: draw_distribution_adjust_count=0 unique_repair_count=0 same_symbol_cap_adjust_count=0 unique_ticket_count=10 duplicate_count=0
+[WARN] ticket01(lock) is immutable and matches base_pick
+[BUYPLAN_LOCK01_CHECK] immutable=true all_match=true
+[WARN] ticket02-03(lock) are margin-based lock variations (flips=5/7)
+[BUYPLAN_RANGE_CHECK] ticket=02 mode=lock_strict draw_count=3 range=2..3 in_range=1
+[BUYPLAN_RANGE_CHECK] ticket=03 mode=lock_strict draw_count=5 range=2..3 in_range=0
+[BUYPLAN_RANGE_CHECK] ticket=04 mode=prob_faithful draw_count=0 range=3..4 in_range=0
+[BUYPLAN_RANGE_CHECK] ticket=05 mode=prob_faithful draw_count=1 range=3..4 in_range=0
+[BUYPLAN_RANGE_CHECK] ticket=06 mode=prob_faithful draw_count=4 range=3..4 in_range=1
+[BUYPLAN_RANGE_CHECK] ticket=07 mode=prob_faithful draw_count=5 range=3..4 in_range=0
+[BUYPLAN_RANGE_CHECK] ticket=08 mode=prob_faithful draw_count=4 range=3..4 in_range=1
+[BUYPLAN_RANGE_CHECK] ticket=09 mode=experimental draw_count=3 range=4..5 in_range=0
+[BUYPLAN_RANGE_CHECK] ticket=10 mode=experimental draw_count=3 range=4..5 in_range=0
+[WARN] M01 が全口同値です: symbol=2 (pH=0.175 pD=0.311 pA=0.513 margin=0.202)
+[WARN] M02 が全口同値です: symbol=1 (pH=0.583 pD=0.286 pA=0.131 margin=0.297)
+[WARN] M04 が全口同値です: symbol=2 (pH=0.175 pD=0.311 pA=0.514 margin=0.204)
+[OK] data/purchase_reference/buyplan.csv
+[OK] data/purchase_reference/buyplan.html

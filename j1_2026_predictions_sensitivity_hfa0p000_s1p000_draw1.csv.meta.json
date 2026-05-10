@@ -1,0 +1,15 @@
+{
+  "output_csv": "/Users/dev_tomo/Desktop/tt_prj_restart/j1_2026_predictions_sensitivity_hfa0p000_s1p000_draw1.csv",
+  "league": "j1",
+  "season_year": 2026,
+  "enable_hfa": 1,
+  "hfa_elo": 0.0,
+  "pred_rows": 140,
+  "hfa_apply_count": {
+    "applied": 0,
+    "skipped": 155,
+    "reason_counts": {
+      "HFA_ELO<=0": 155
+    }
+  }
+}

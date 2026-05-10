@@ -1,9 +1,18 @@
-■ 予想作成  ---------------------------------------------------------------------
+■ 事前  ================================================================================　
+・欠場情報（ケガ・カード）入力・CSV出力
+・ACL情報の入力・CSV出力
+・toto_節リスト入力・CSV出力
+・LABデータ保存・検証機データ出力
+   ［external _contents］以下に、LABデータのhtml保存
+
+
+
+■ 予想作成  ================================================================================
 # 1) 週次バッチ（2026/J1+J2）
 SEASON_YEAR=2026 LEAGUES='j1 j2' ./scripts/run_batch_weekly.sh 2>&1 | tee logs/run_batch_weekly.log
 
 # 2) 試合直前バッチ（2026/J1+J2）
-SEASON_YEAR=2026 LEAGUES='j1 j2' DRAW_EXPECTATION_MULTIPLIER=1.43 ./scripts/run_batch_matchday.sh 2>&1 | tee logs/run_batch_matchday.log
+SEASON_YEAR=2026 LEAGUES='j1 j2' ./scripts/run_batch_matchday.sh 2>&1 | tee logs/run_batch_matchday.log
 
 # 3) 節別ビュー再生成
 ./scripts/.venv/bin/python data/reports/build_round_views.py
@@ -11,31 +20,111 @@ SEASON_YEAR=2026 LEAGUES='j1 j2' DRAW_EXPECTATION_MULTIPLIER=1.43 ./scripts/run_
 # 4) ダッシュボード再生成
 ./scripts/.venv/bin/python data/reports/build_dashboard.py
 
---------------------------------------
+---------------------------
 1) 終了後のエラーチェック
 file:///Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_weekly_report.html
 file:///Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_matchday_report.html
+---------------------------
+
+# 5) predictions.csvを出力してDLより、所定の場所（data 以下 purchase_reference内）に差替で配置
 
 
-■ 次の節のbuyplan作成前に  --------------------------------------------------------
-前節の購入情報を保存する  
-ROUND=round04 SEASON_YEAR=2026 ./scripts/run_evaluate_round.sh
+■ 次の節のbuyplan作成前に  =========================================================================
+前節の購入情報を保存する （data/eval/rounds/）
+（roundの数値を前節に書き換える、もしくはシミュレーションをする（終わった最新節）ためにsnapshotにする。
+ROUND=round15 SEASON_YEAR=2026 ./scripts/run_evaluate_round.sh
+           ↑
+        節番号を変える
 
+■ buyplan（購入候補）の作成  ========================================================================
 ・toto公式の予想をPDFでバックアップ保存しておく。
+・purchase_reference に predictions.csv を置き換え配置
 
-■ 購入候補の作成  ----------------------------------------------------------------
-・manualに［toto並び順.csv］を作成
-・予想から出力したcsvを、［predictions.csv］と名前を替えて［purchase_reference］に格納
-その後で、
+./scripts/.venv/bin/python scripts/build_purchase_reference_predictions.py \
+  --season 2026 \
+  --round 16
+           ↑
+        節番号を変える
 
+                ・もし、J1/J2 で対象節が異なる開催回は、リーグ別に指定する
+                ./scripts/.venv/bin/python scripts/build_purchase_reference_predictions.py \
+                --season 2026 \
+               --j1-round 8 \
+               --j2-round 7
+
+buyplanのhtml出力まで
 ./scripts/.venv/bin/python buyplan.py \
   --in data/purchase_reference/predictions.csv \
-  --outdir data/purchase_reference
+  --outdir data/purchase_reference \
+  --toto-order-csv data/manual/toto節リスト.csv
 
 
-■ 的中結果検証（Jリーグ公式サイト更新後 ---------------------------------------------
-ROUND=round03 SEASON_YEAR=2026 ./scripts/run_evaluate_round.sh
+■ 的中結果検証（Jリーグ公式サイト更新後）  ==================================================================
+ROUND=round15 SEASON_YEAR=2026 ./scripts/run_evaluate_round.sh
+           ↑
+        節番号を変える
+
+
+● buyplanテスト（シミュレーション）  ======================================================================
+前節の購入情報を保存する  
+シミュレーションをする（終わった最新節）ためにsnapshotにする。
+ROUND=round11 SEASON_YEAR=2026 ./scripts/run_evaluate_round.sh
+
+その後、シミュレーション画面を生成
+./scripts/.venv/bin/python buyplan.py \
+  --in data/purchase_reference/predictions.csv \
+  --outdir data/purchase_reference \
+  --actual-csv data/eval/rounds/round06/actual_results.csv
+./scripts/.venv/bin/python scripts/build_buyplan_backtest.py
+./scripts/.venv/bin/python scripts/build_buyplan_simulation_index.py
+
+round数を終わった最新節の数に替えて使用。
+ROUND=round12 SEASON_YEAR=2026 ./scripts/run_evaluate_round.sh
+./scripts/.venv/bin/python scripts/build_buyplan_backtest.py --round round12
+./scripts/.venv/bin/python scripts/build_buyplan_simulation_index.py
 
 
 
+
+
+■ 検証データ作成  ================================================================================-
+
+
+
+
+
+
+
+＜廃止＞  ----------------------------------------------------------------------------
+
+
+■ 検証機用データ用意  =========================================================================
+・事前
+  ［external _contents］以下に、LABデータのhtml保存
+
+・スクリプト ---------------------------
+# 1) LABデータから比較CSVを作る
+./venv/bin/python scripts/build_football_lab_snapshot.py \
+  --league-dir /Users/dev_tomo/Desktop/tt_prj_restart/external_contents/20260404/j1 \
+  --prediction-csv /Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions.csv
+
+./venv/bin/python scripts/build_football_lab_snapshot.py \
+  --league-dir /Users/dev_tomo/Desktop/tt_prj_restart/external_contents/20260404/j2 \
+  --prediction-csv /Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions.csv
+
+# 2) J1/J2 の trial_flags を作る
+./venv/bin/python scripts/build_football_lab_trial_flags.py \
+  --compare-csv /Users/dev_tomo/Desktop/tt_prj_restart/data/external_metrics/predictions_football_lab_compare_20260404_j1.csv
+
+./venv/bin/python scripts/build_football_lab_trial_flags.py \
+  --compare-csv /Users/dev_tomo/Desktop/tt_prj_restart/data/external_metrics/predictions_football_lab_compare_20260404_j2.csv
+
+
+
+
+buyplan_caution 版の出力 ---------------------------------------------
+./scripts/run_buyplan_caution.sh
+    ↓
+履歴もバックアップされる
+data/purchase_reference/history_caution/YYYYMMDD_HHMMSS_buyplan_caution.html
 

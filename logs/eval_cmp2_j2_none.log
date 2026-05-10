@@ -1,0 +1,106 @@
+[TRAIN_SCHEMA] elo_diff fallback source=/Users/dev_tomo/Desktop/tt_prj_restart/backtest_j2_2025.csv matched_rows=380/380
+[TRAIN_SCHEMA] league=j2 source=/Users/dev_tomo/Desktop/tt_prj_restart/backtest_j2_2025_rounds.csv rows=380
+[FEATURE_SET] league=j2 feature_profile=j2_core features=['elo_diff_for_prob', 'abs_elo_diff_for_prob']
+[CLASS_MAP] order=['H', 'D', 'A'] mapping={'H': 0, 'D': 1, 'A': 2}
+[Y_DIST] league=j2 feature_profile=j2_core split=train rows=266 H=37.2% (99) D=28.9% (77) A=33.8% (90)
+[Y_DIST] league=j2 feature_profile=j2_core split=valid rows=114 H=38.6% (44) D=27.2% (31) A=34.2% (39)
+[GRID] league=j2 feature_profile=j2_core start l2=0.010000
+[TRAIN_LOSS] iter=10 loss=1.073790
+[TRAIN_LOSS] iter=20 loss=1.073790
+[TRAIN_LOSS] iter=30 loss=1.073790
+[TRAIN_LOSS] iter=40 loss=1.073790
+[TRAIN_LOSS] iter=50 loss=1.073790
+[TRAIN_OPT] league=j2 feature_profile=j2_core l2=0.010000 status=0 success=1 iters=50 final_loss=1.073790 grad_norm=2.417876e-08 gtol=1.0e-10 ftol=1.0e-12 class_weight=none alpha=1.000 class_w=[1.0, 1.0, 1.0]
+[LOGITS_STATS] league=j2 feature_profile=j2_core split=valid l2=0.010000 H(min/p50/max)=-0.515/0.146/0.742 D(min/p50/max)=-0.891/-0.116/-0.029 A(min/p50/max)=-0.534/-0.110/1.405 max_abs=1.405
+[PRED_DIST] league=j2 feature_profile=j2_core split=valid_pred rows=114 pred_H=60.5% (69) pred_D=0.0% (0) pred_A=39.5% (45)
+[GRID_EVAL] league=j2 feature_profile=j2_core l2=0.010000 accuracy=0.4474 logloss=1.068316 avg_prob_draw=0.267 actual_D_rate=0.272 draw_diff_pp=-0.45
+[PROB_DRAW_DIST:BACKTEST] league=j2 feature_profile=j2_core l2=0.010000 min=0.081 p50=0.286 p95=0.320 max=0.323
+[GRID] league=j2 feature_profile=j2_core start l2=0.030000
+[TRAIN_LOSS] iter=10 loss=1.074767
+[TRAIN_LOSS] iter=20 loss=1.074767
+[TRAIN_LOSS] iter=30 loss=1.074767
+[TRAIN_LOSS] iter=40 loss=1.074767
+[TRAIN_LOSS] iter=50 loss=1.074767
+[TRAIN_OPT] league=j2 feature_profile=j2_core l2=0.030000 status=0 success=1 iters=50 final_loss=1.074767 grad_norm=5.175888e-08 gtol=1.0e-10 ftol=1.0e-12 class_weight=none alpha=1.000 class_w=[1.0, 1.0, 1.0]
+[LOGITS_STATS] league=j2 feature_profile=j2_core split=valid l2=0.030000 H(min/p50/max)=-0.491/0.145/0.705 D(min/p50/max)=-0.849/-0.119/-0.034 A(min/p50/max)=-0.494/-0.104/1.341 max_abs=1.341
+[PRED_DIST] league=j2 feature_profile=j2_core split=valid_pred rows=114 pred_H=60.5% (69) pred_D=0.0% (0) pred_A=39.5% (45)
+[GRID_EVAL] league=j2 feature_profile=j2_core l2=0.030000 accuracy=0.4474 logloss=1.067525 avg_prob_draw=0.268 actual_D_rate=0.272 draw_diff_pp=-0.34
+[PROB_DRAW_DIST:BACKTEST] league=j2 feature_profile=j2_core l2=0.030000 min=0.088 p50=0.286 p95=0.319 max=0.321
+[GRID] league=j2 feature_profile=j2_core start l2=0.100000
+[TRAIN_LOSS] iter=10 loss=1.077517
+[TRAIN_LOSS] iter=20 loss=1.077517
+[TRAIN_LOSS] iter=30 loss=1.077517
+[TRAIN_LOSS] iter=40 loss=1.077517
+[TRAIN_LOSS] iter=50 loss=1.077517
+[TRAIN_OPT] league=j2 feature_profile=j2_core l2=0.100000 status=0 success=1 iters=50 final_loss=1.077517 grad_norm=1.111009e-09 gtol=1.0e-10 ftol=1.0e-12 class_weight=none alpha=1.000 class_w=[1.0, 1.0, 1.0]
+[LOGITS_STATS] league=j2 feature_profile=j2_core split=valid l2=0.100000 H(min/p50/max)=-0.420/0.143/0.604 D(min/p50/max)=-0.736/-0.127/-0.049 A(min/p50/max)=-0.391/-0.087/1.156 max_abs=1.156
+[PRED_DIST] league=j2 feature_profile=j2_core split=valid_pred rows=114 pred_H=62.3% (71) pred_D=0.0% (0) pred_A=37.7% (43)
+[GRID_EVAL] league=j2 feature_profile=j2_core l2=0.100000 accuracy=0.4298 logloss=1.066262 avg_prob_draw=0.272 actual_D_rate=0.272 draw_diff_pp=-0.04
+[PROB_DRAW_DIST:BACKTEST] league=j2 feature_profile=j2_core l2=0.100000 min=0.111 p50=0.287 p95=0.314 max=0.316
+[GRID] league=j2 feature_profile=j2_core start l2=0.300000
+[TRAIN_LOSS] iter=10 loss=1.082200
+[TRAIN_LOSS] iter=20 loss=1.082200
+[TRAIN_LOSS] iter=30 loss=1.082200
+[TRAIN_LOSS] iter=40 loss=1.082200
+[TRAIN_LOSS] iter=50 loss=1.082200
+[TRAIN_OPT] league=j2 feature_profile=j2_core l2=0.300000 status=0 success=1 iters=50 final_loss=1.082200 grad_norm=3.169752e-10 gtol=1.0e-10 ftol=1.0e-12 class_weight=none alpha=1.000 class_w=[1.0, 1.0, 1.0]
+[LOGITS_STATS] league=j2 feature_profile=j2_core split=valid l2=0.300000 H(min/p50/max)=-0.282/0.138/0.444 D(min/p50/max)=-0.553/-0.134/-0.076 A(min/p50/max)=-0.244/-0.057/0.835 max_abs=0.835
+[PRED_DIST] league=j2 feature_profile=j2_core split=valid_pred rows=114 pred_H=64.0% (73) pred_D=0.0% (0) pred_A=36.0% (41)
+[GRID_EVAL] league=j2 feature_profile=j2_core l2=0.300000 accuracy=0.4298 logloss=1.067495 avg_prob_draw=0.277 actual_D_rate=0.272 draw_diff_pp=0.50
+[PROB_DRAW_DIST:BACKTEST] league=j2 feature_profile=j2_core l2=0.300000 min=0.158 p50=0.288 p95=0.306 max=0.308
+[GRID] league=j2 feature_profile=j2_core start l2=1.000000
+[TRAIN_LOSS] iter=10 loss=1.087879
+[TRAIN_LOSS] iter=20 loss=1.087879
+[TRAIN_LOSS] iter=30 loss=1.087879
+[TRAIN_LOSS] iter=40 loss=1.087879
+[TRAIN_LOSS] iter=50 loss=1.087879
+[TRAIN_OPT] league=j2 feature_profile=j2_core l2=1.000000 status=0 success=1 iters=50 final_loss=1.087879 grad_norm=5.266674e-09 gtol=1.0e-10 ftol=1.0e-12 class_weight=none alpha=1.000 class_w=[1.0, 1.0, 1.0]
+[LOGITS_STATS] league=j2 feature_profile=j2_core split=valid l2=1.000000 H(min/p50/max)=-0.092/0.128/0.268 D(min/p50/max)=-0.338/-0.137/-0.107 A(min/p50/max)=-0.098/-0.019/0.429 max_abs=0.429
+[PRED_DIST] league=j2 feature_profile=j2_core split=valid_pred rows=114 pred_H=71.1% (81) pred_D=0.0% (0) pred_A=28.9% (33)
+[GRID_EVAL] league=j2 feature_profile=j2_core l2=1.000000 accuracy=0.4123 logloss=1.075106 avg_prob_draw=0.284 actual_D_rate=0.272 draw_diff_pp=1.16
+[PROB_DRAW_DIST:BACKTEST] league=j2 feature_profile=j2_core l2=1.000000 min=0.226 p50=0.289 p95=0.297 max=0.298
+[GRID] league=j2 feature_profile=j2_core start l2=3.000000
+[TRAIN_LOSS] iter=10 loss=1.091137
+[TRAIN_LOSS] iter=20 loss=1.091137
+[TRAIN_LOSS] iter=30 loss=1.091137
+[TRAIN_LOSS] iter=40 loss=1.091137
+[TRAIN_LOSS] iter=50 loss=1.091137
+[TRAIN_OPT] league=j2 feature_profile=j2_core l2=3.000000 status=0 success=1 iters=50 final_loss=1.091137 grad_norm=2.764789e-10 gtol=1.0e-10 ftol=1.0e-12 class_weight=none alpha=1.000 class_w=[1.0, 1.0, 1.0]
+[LOGITS_STATS] league=j2 feature_profile=j2_core split=valid l2=3.000000 H(min/p50/max)=0.029/0.121/0.176 D(min/p50/max)=-0.217/-0.136/-0.124 A(min/p50/max)=-0.026/0.004/0.188 max_abs=0.217
+[PRED_DIST] league=j2 feature_profile=j2_core split=valid_pred rows=114 pred_H=85.1% (97) pred_D=0.0% (0) pred_A=14.9% (17)
+[GRID_EVAL] league=j2 feature_profile=j2_core l2=3.000000 accuracy=0.4298 logloss=1.082704 avg_prob_draw=0.287 actual_D_rate=0.272 draw_diff_pp=1.52
+[PROB_DRAW_DIST:BACKTEST] league=j2 feature_profile=j2_core l2=3.000000 min=0.265 p50=0.289 p95=0.293 max=0.293
+[GRID_BEST] league=j2 feature_profile=j2_core l2=0.100000 logloss=1.066262 accuracy=0.4298
+[LOGITS_STATS] league=j2 feature_profile=j2_core split=valid_best l2=0.100000 H(min/p50/max)=-0.420/0.143/0.604 D(min/p50/max)=-0.736/-0.127/-0.049 A(min/p50/max)=-0.391/-0.087/1.156 max_abs=1.156
+[PRED_DIST] league=j2 feature_profile=j2_core split=valid_best_pred rows=114 pred_H=62.3% (71) pred_D=0.0% (0) pred_A=37.7% (43)
+[TRAIN_EVAL] league=j2 feature_profile=j2_core rows=380 train=266 test=114 accuracy=0.4298 logloss=1.066262
+[TRAIN_EVAL] confusion_matrix rows=actual(H,D,A) cols=pred(H,D,A)
+[TRAIN_EVAL] league=j2 feature_profile=j2_core confusion=[[32, 0, 12], [17, 0, 14], [22, 0, 17]]
+[TRAIN_EVAL] league=j2 feature_profile=j2_core confusion_named={"H": {"H": 32, "D": 0, "A": 12}, "D": {"H": 17, "D": 0, "A": 14}, "A": {"H": 22, "D": 0, "A": 17}}
+[BASELINE_CONFIG] league=j2 feature_profile=j2_core type=always_H_smoothed eps=1.0e-06 formula=P(H)=1-eps,P(D)=eps/2,P(A)=eps/2
+[BASELINE] league=j2 feature_profile=j2_core type=always_H accuracy=0.3860 logloss=8.908825
+[TRAIN_LOSS] iter=10 loss=1.093373
+[TRAIN_LOSS] iter=20 loss=1.093373
+[TRAIN_LOSS] iter=30 loss=1.093373
+[TRAIN_LOSS] iter=40 loss=1.093373
+[TRAIN_LOSS] iter=50 loss=1.093373
+[INTERCEPT_ONLY_EVAL] league=j2 feature_profile=j2_core rows=380 train=266 test=114 accuracy=0.3860 logloss=1.089322
+[INTERCEPT_ONLY_OPT] league=j2 feature_profile=j2_core status=0 success=1 iters=50 final_loss=1.093373 grad_norm=3.088817e-11
+[PROB_DRAW_DIST:INTERCEPT_ONLY:j2:j2_core] rows=114 min=0.289 p05=0.289 p25=0.289 p50=0.289 p75=0.289 p95=0.289 max=0.289
+[TRAIN_PROB_CHECK] league=j2 feature_profile=j2_core rows=380 prob_draw_argmax_count=0 prob_draw_ge_0.23_count=349
+[GRID_BEST_CHECK] league=j2 feature_profile=j2_core best_logloss=1.066262 grid_min_logloss=1.066262 status=ok
+[GRID_OUT] league=j2 feature_profile=j2_core csv=/Users/dev_tomo/Desktop/tt_prj_restart/data/models/hda_multinom_grid_2025_j2__j2_core.csv
+[TRAIN_OUT] league=j2 feature_profile=j2_core model=/Users/dev_tomo/Desktop/tt_prj_restart/data/models/hda_multinom_train2025_j2__j2_core.joblib
+[TRAIN_OUT] league=j2 feature_profile=j2_core metrics=/Users/dev_tomo/Desktop/tt_prj_restart/data/models/hda_multinom_train2025_j2__j2_core.metrics.json
+[MODEL_EVAL] league=j2 feature_profile=j2_core rows=380
+[CLASS_MAP] order=['H', 'D', 'A'] mapping={'H': 0, 'D': 1, 'A': 2}
+[Y_DIST] league=j2 feature_profile=j2_core split=eval_actual rows=380 H=37.6% (143) D=28.4% (108) A=33.9% (129)
+[PRED_DIST] league=j2 feature_profile=j2_core split=eval_pred rows=380 pred_H=68.9% (262) pred_D=0.0% (0) pred_A=31.1% (118)
+[LOGITS_STATS] league=j2 feature_profile=j2_core split=eval H(min/p50/max)=-0.420/0.122/0.604 D(min/p50/max)=-0.736/-0.100/-0.048 A(min/p50/max)=-0.391/-0.073/1.156 max_abs=1.156
+[ACTUAL_HDA:EVAL] league=j2 feature_profile=j2_core H=37.6% (143) D=28.4% (108) A=33.9% (129)
+[PRED_HDA:EVAL] league=j2 feature_profile=j2_core H=68.9% (262) D=0.0% (0) A=31.1% (118)
+[DRAW_EVAL] league=j2 feature_profile=j2_core avg_prob_draw=0.284 actual_D_rate=0.284 draw_diff_pp=-0.01
+[PROB_DRAW_DIST:EVAL] league=j2 feature_profile=j2_core min=0.111 p05=0.205 p25=0.274 p50=0.297 p75=0.308 p95=0.316 max=0.316
+[MAX_PROB_DIST:EVAL] league=j2 feature_profile=j2_core min=0.354 p05=0.360 p25=0.376 p50=0.403 p75=0.442 p95=0.533 max=0.737
+[MODEL_EVAL_OUT] league=j2 feature_profile=j2_core path=/Users/dev_tomo/Desktop/tt_prj_restart/data/models/hda_eval_summary_j2__j2_core.json
+[J1_PROFILE_DIFF] draw_diff_pp_full=-2.77 draw_diff_pp_core=-2.36 delta_pp=-0.41

@@ -1,0 +1,5 @@
+﻿league,節,match_id,datetime,home_team,away_team,predicted_result,flab_trial_flag,flab_trial_score,flab_trial_reason,flab_trial_available_metrics,flab_trial_agree_count,flab_trial_contradict_count,flab_trial_strong_contradict_count,flab_trial_avg_abs_edge,flab_trial_home_edge_allowed_shot_conversion,flab_trial_home_edge_shot_conversion
+j2,第１０節第１日,j2_2026_04121400_秋田_湘南,2026-04-12 14:00:00,秋田,湘南,D,HOLD,-1.675,被シュート成功率差=拮抗(-0.10); シュート成功率差=A優位(-3.25),2,0,0,0,1.675,-0.100,-3.250
+j2,第１０節第１日,j2_2026_04121400_山形_横浜FC,2026-04-12 14:00:00,山形,横浜FC,H,GO,4.295,"被シュート成功率差=H優位(整合,8.00); シュート成功率差=拮抗(中立,0.59)",2,1,0,0,4.295,8.000,0.590
+j2,第１０節第１日,j2_2026_04121400_栃木Ｃ_八戸,2026-04-12 14:00:00,栃木Ｃ,八戸,H,CAUTION,-0.245,"被シュート成功率差=A優位(逆行,-9.01); シュート成功率差=H優位(整合,8.52)",2,1,1,1,8.765,-9.010,8.520
+j2,第１０節第１日,j2_2026_04111400_甲府_札幌,2026-04-11 14:00:00,甲府,札幌,A,CAUTION,-6.255,"被シュート成功率差=H優位(逆行,5.08); シュート成功率差=H優位(逆行,7.43)",2,0,2,2,6.255,5.080,7.430

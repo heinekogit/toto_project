@@ -25,7 +25,51 @@ LEAGUE_FEATURE_CANDIDATES = {
 FEATURE_PROFILES = {
     "j1_full": ["elo_diff_for_prob", "abs_elo_diff_for_prob", "d_scaled", "abs_d_scaled"],
     "j1_core": ["elo_diff_for_prob", "abs_elo_diff_for_prob"],
+    "j1_draw_v1": [
+        "elo_diff_for_prob",
+        "abs_elo_diff_for_prob",
+        "home_advantage_diff",
+        "abs_home_advantage_diff",
+        "xg_diff_abs",
+        "xga_diff_abs",
+        "rank_gap_abs",
+        "absence_effective_total_diff_abs",
+    ],
+    "j1_draw_v2": [
+        "elo_diff_for_prob",
+        "abs_elo_diff_for_prob",
+        "home_advantage_diff",
+        "abs_home_advantage_diff",
+        "xg_diff",
+        "xg_diff_abs",
+        "xga_diff",
+        "xga_diff_abs",
+        "rank_gap",
+        "rank_gap_abs",
+        "absence_effective_total_diff",
+        "absence_effective_total_diff_abs",
+    ],
+    "j1_draw_v3": [
+        "elo_diff_for_prob",
+        "abs_elo_diff_for_prob",
+        "home_advantage_diff",
+        "abs_home_advantage_diff",
+        "xg_diff",
+        "xg_diff_abs",
+        "rank_gap",
+        "rank_gap_abs",
+    ],
     "j2_core": ["elo_diff_for_prob", "abs_elo_diff_for_prob"],
+    "j2_draw_v1": [
+        "elo_diff_for_prob",
+        "abs_elo_diff_for_prob",
+        "home_advantage_diff",
+        "abs_home_advantage_diff",
+        "xg_diff_abs",
+        "goal_concede_diff_abs",
+        "rank_gap_abs",
+        "fatigue_diff_abs",
+    ],
 }
 
 
@@ -43,7 +87,11 @@ def parse_args():
     p.add_argument("--class-weight", choices=["auto", "none", "balanced"], default="auto")
     p.add_argument("--class-weight-alpha", type=float, default=None)
     p.add_argument("--baseline-eps", type=float, default=1e-6)
-    p.add_argument("--feature-profile", choices=["auto", "j1_full", "j1_core", "j2_core"], default="auto")
+    p.add_argument(
+        "--feature-profile",
+        choices=["auto", "j1_full", "j1_core", "j1_draw_v1", "j1_draw_v2", "j1_draw_v3", "j2_core", "j2_draw_v1"],
+        default="auto",
+    )
     p.add_argument("--eval-backtest", action="store_true")
     p.add_argument("--out", default="")
     return p.parse_args()
@@ -79,6 +127,62 @@ def _read_first_existing(paths):
     raise FileNotFoundError(f"none of paths exist: {[str(p) for p in paths]}")
 
 
+def _snapshot_backtest_files(league, season):
+    snap_dir = DATA_DIR / "output_snapshots" / f"{league}_{season}"
+    if not snap_dir.exists():
+        return []
+    return sorted(snap_dir.glob(f"*_backtest*_backtest_{league}_{season}.csv"))
+
+
+def _load_canonical_snapshot_backtest(league, season):
+    files = _snapshot_backtest_files(league, season)
+    if not files:
+        return None, ""
+    parts = []
+    for p in files:
+        try:
+            sdf = pd.read_csv(p)
+        except Exception as e:
+            print(f"[TRAIN_SNAPSHOT][WARN] skip unreadable snapshot: {p} ({e})")
+            continue
+        if sdf.empty:
+            continue
+        sdf = sdf.copy()
+        sdf["__src_path"] = str(p)
+        sdf["__src_ts"] = p.stem[:15]
+        parts.append(sdf)
+    if not parts:
+        return None, ""
+    all_df = pd.concat(parts, ignore_index=True, sort=False)
+    all_df["__filled_n"] = all_df.notna().sum(axis=1)
+    if "match_id" in all_df.columns and all_df["match_id"].notna().any():
+        key_cols = ["match_id"]
+    else:
+        key_cols = [c for c in ["league", "datetime", "home_team", "away_team"] if c in all_df.columns]
+    if key_cols:
+        all_df = all_df.sort_values(key_cols + ["__filled_n", "__src_ts"], ascending=[True] * len(key_cols) + [False, False])
+        all_df = all_df.drop_duplicates(key_cols, keep="first")
+    all_df = all_df.drop(columns=["__filled_n", "__src_ts"], errors="ignore")
+    src_desc = f"snapshot_canonical(files={len(files)} rows={len(all_df)})"
+    return all_df, src_desc
+
+
+def _load_backtest_reference_df(league, season):
+    use_snapshot = str(os.environ.get("TRAIN_USE_OUTPUT_SNAPSHOT", "1")).strip() == "1"
+    if use_snapshot:
+        snap_df, snap_desc = _load_canonical_snapshot_backtest(league, season)
+        if snap_df is not None and not snap_df.empty:
+            print(f"[TRAIN_SCHEMA] backtest_reference={snap_desc}")
+            return snap_df, snap_desc
+        print("[TRAIN_SCHEMA][WARN] snapshot reference unavailable; fallback to base backtest csv")
+    fallback_paths = [
+        ROOT / f"backtest_{league}_{season}.csv",
+        DATA_DIR / f"backtest_{league}_{season}.csv",
+    ]
+    src, src_path = _read_first_existing(fallback_paths)
+    return src, str(src_path)
+
+
 def _norm_team(v):
     if pd.isna(v):
         return ""
@@ -89,11 +193,7 @@ def enrich_elo_diff_if_missing(df, league, season):
     if "elo_diff_for_prob" in df.columns and pd.to_numeric(df["elo_diff_for_prob"], errors="coerce").notna().any():
         return df
 
-    fallback_paths = [
-        ROOT / f"backtest_{league}_{season}.csv",
-        DATA_DIR / f"backtest_{league}_{season}.csv",
-    ]
-    src, src_path = _read_first_existing(fallback_paths)
+    src, src_path = _load_backtest_reference_df(league, season)
     if "elo_diff_for_prob" not in src.columns:
         raise RuntimeError(f"elo_diff_for_prob not found in fallback source: {src_path}")
 
@@ -124,6 +224,37 @@ def enrich_elo_diff_if_missing(df, league, season):
     return work
 
 
+def enrich_from_backtest_reference(df, league, season):
+    src, src_path = _load_backtest_reference_df(league, season)
+    work = df.copy()
+    enrich_cols = [c for c in src.columns if c not in work.columns]
+    if not enrich_cols:
+        return work
+
+    got = False
+    if "match_id" in work.columns and "match_id" in src.columns:
+        merged = work.merge(src[["match_id"] + enrich_cols].drop_duplicates("match_id"), on="match_id", how="left")
+        if any(c in merged.columns for c in enrich_cols):
+            work = merged
+            got = True
+
+    if not got:
+        for t in (work, src):
+            t["_dt"] = pd.to_datetime(t.get("datetime"), errors="coerce").dt.strftime("%Y-%m-%d %H:%M")
+            t["_home"] = t.get("home_team", pd.Series(index=t.index, dtype="object")).map(_norm_team)
+            t["_away"] = t.get("away_team", pd.Series(index=t.index, dtype="object")).map(_norm_team)
+        merged = work.merge(
+            src[["_dt", "_home", "_away"] + enrich_cols].drop_duplicates(["_dt", "_home", "_away"]),
+            on=["_dt", "_home", "_away"],
+            how="left",
+        )
+        work = merged.drop(columns=["_dt", "_home", "_away"], errors="ignore")
+
+    filled_counts = {c: int(pd.to_numeric(work.get(c), errors="coerce").notna().sum()) if c in work.columns else 0 for c in enrich_cols[:20]}
+    print(f"[TRAIN_SCHEMA] enrich_from_backtest_reference source={src_path} added_cols={len(enrich_cols)} sample_filled={filled_counts}")
+    return work
+
+
 def load_league_dataset(league, season):
     rounds_paths = [
         DATA_DIR / f"backtest_{league}_{season}_rounds.csv",
@@ -131,6 +262,7 @@ def load_league_dataset(league, season):
     ]
     df, src_path = _read_first_existing(rounds_paths)
     df = enrich_elo_diff_if_missing(df, league, season)
+    df = enrich_from_backtest_reference(df, league, season)
 
     if "actual_result" not in df.columns:
         df["actual_result"] = df.apply(lambda r: get_result(r.get("home_score"), r.get("away_score")), axis=1)
@@ -156,6 +288,45 @@ def load_league_dataset(league, season):
         df["abs_d_scaled"] = pd.to_numeric(df["abs_d_scaled"], errors="coerce")
     else:
         df["abs_d_scaled"] = pd.to_numeric(df["d_scaled"], errors="coerce").abs()
+
+    for col in [
+        "home_advantage_diff",
+        "stats_ゴール期待値_home",
+        "stats_ゴール期待値_away",
+        "stats_被ゴール期待値_home",
+        "stats_被ゴール期待値_away",
+        "rankmot_rank_latest_home",
+        "rankmot_rank_latest_away",
+        "absence_effective_total_home",
+        "absence_effective_total_away",
+        "home_fatigue_score",
+        "away_fatigue_score",
+        "stats_1試合平均失点数_home",
+        "stats_1試合平均失点数_away",
+    ]:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+
+    if "home_advantage_diff" in df.columns:
+        df["abs_home_advantage_diff"] = df["home_advantage_diff"].abs()
+    if {"stats_ゴール期待値_home", "stats_ゴール期待値_away"}.issubset(df.columns):
+        df["xg_diff"] = df["stats_ゴール期待値_home"] - df["stats_ゴール期待値_away"]
+        df["xg_diff_abs"] = df["xg_diff"].abs()
+    if {"stats_被ゴール期待値_home", "stats_被ゴール期待値_away"}.issubset(df.columns):
+        df["xga_diff"] = df["stats_被ゴール期待値_home"] - df["stats_被ゴール期待値_away"]
+        df["xga_diff_abs"] = df["xga_diff"].abs()
+    if {"rankmot_rank_latest_home", "rankmot_rank_latest_away"}.issubset(df.columns):
+        df["rank_gap"] = df["rankmot_rank_latest_home"] - df["rankmot_rank_latest_away"]
+        df["rank_gap_abs"] = df["rank_gap"].abs()
+    if {"absence_effective_total_home", "absence_effective_total_away"}.issubset(df.columns):
+        df["absence_effective_total_diff"] = df["absence_effective_total_home"] - df["absence_effective_total_away"]
+        df["absence_effective_total_diff_abs"] = df["absence_effective_total_diff"].abs()
+    if {"home_fatigue_score", "away_fatigue_score"}.issubset(df.columns):
+        df["fatigue_diff"] = df["home_fatigue_score"] - df["away_fatigue_score"]
+        df["fatigue_diff_abs"] = df["fatigue_diff"].abs()
+    if {"stats_1試合平均失点数_home", "stats_1試合平均失点数_away"}.issubset(df.columns):
+        df["goal_concede_diff"] = df["stats_1試合平均失点数_home"] - df["stats_1試合平均失点数_away"]
+        df["goal_concede_diff_abs"] = df["goal_concede_diff"].abs()
 
     df["round_no"] = df.get("節", pd.Series(index=df.index)).map(parse_round_no)
     df["dt_sort"] = pd.to_datetime(df.get("datetime"), errors="coerce")
@@ -545,9 +716,9 @@ def maybe_print_j1_profile_diff():
 def resolve_profile_for_league(args, league):
     if args.feature_profile == "auto":
         return "j1_full" if league == "j1" else "j2_core"
-    if league == "j1" and args.feature_profile not in {"j1_full", "j1_core"}:
+    if league == "j1" and args.feature_profile not in {"j1_full", "j1_core", "j1_draw_v1", "j1_draw_v2", "j1_draw_v3"}:
         raise RuntimeError(f"invalid feature_profile for j1: {args.feature_profile}")
-    if league == "j2" and args.feature_profile != "j2_core":
+    if league == "j2" and args.feature_profile not in {"j2_core", "j2_draw_v1"}:
         raise RuntimeError(f"invalid feature_profile for j2: {args.feature_profile}")
     return str(args.feature_profile)
 

@@ -125,21 +125,34 @@ def _latest_option(options):
     return max(options, key=_key)
 
 
+def _latest_option_prefer_all(options):
+    if not options:
+        return None
+    all_options = [opt for opt in options if opt[0] == "ALL"]
+    if all_options:
+        return _latest_option(all_options)
+    return _latest_option(options)
+
+
 def build_dashboard():
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
     if os.path.exists(HTML_DIR):
         all_pred_links = sorted([f for f in os.listdir(HTML_DIR) if f.startswith("predictions_round_") and f.endswith(".html")])
         all_back_links = sorted([f for f in os.listdir(HTML_DIR) if f.startswith("backtest_round_") and f.endswith(".html")])
+        all_back_toto_links = sorted([f for f in os.listdir(HTML_DIR) if f.startswith("backtest_toto_") and f.endswith(".html")])
     else:
         all_pred_links = []
         all_back_links = []
+        all_back_toto_links = []
 
     round_pred_links = _collapse_pred_options_by_round(_build_round_options(all_pred_links, "predictions_round_"))
     round_back_links = _build_round_options(all_back_links, "backtest_round_")
+    round_back_toto_links = [(f, f) for f in all_back_toto_links]
     latest_pred_opt = _latest_option(round_pred_links)
-    latest_back_opt = _latest_option(round_back_links)
+    latest_back_opt = _latest_option_prefer_all(round_back_links)
     latest_pred = latest_pred_opt[4] if latest_pred_opt else None
     latest_back = latest_back_opt[4] if latest_back_opt else None
+    latest_back_toto = all_back_toto_links[-1] if all_back_toto_links else None
     html = []
     html.append("<!doctype html>")
     html.append("<html lang='ja'>")
@@ -186,6 +199,11 @@ def build_dashboard():
         html.append(f"<a href='html/{latest_back}'>最新のバックテストを開く</a>")
     else:
         html.append("最新バックテストなし")
+    html.append(" / ")
+    if latest_back_toto:
+        html.append(f"<a href='html/{latest_back_toto}'>最新のtoto回バックテストを開く</a>")
+    else:
+        html.append("最新toto回バックテストなし")
     html.append(" <button onclick='reloadNoCache()'>再読込(キャッシュ回避)</button></div>")
     html.append("</div>")
 
@@ -200,7 +218,7 @@ def build_dashboard():
             html.append(f"<option value='html/{f}'>{display}</option>")
         html.append("</select>")
         html.append("<button onclick=\"openRound('predRound')\">表示</button>")
-        html.append("<button onclick=\"downloadPredRoundCsv()\">CSV出力</button>")
+        html.append("<button onclick=\"downloadPredRoundCsv()\">buyplan用CSV出力</button>")
     else:
         html.append("（未生成）")
     html.append("</div>")
@@ -216,9 +234,22 @@ def build_dashboard():
     else:
         html.append("（未生成）")
     html.append("</div>")
+
+    html.append("<div class='row'><span class='label'>toto回BT</span>")
+    if round_back_toto_links:
+        html.append("<select id='backTotoRound'>")
+        html.append("<option value=''>選択してください</option>")
+        for f, display in round_back_toto_links:
+            html.append(f"<option value='html/{f}'>{display}</option>")
+        html.append("</select>")
+        html.append("<button onclick=\"openRound('backTotoRound')\">表示</button>")
+    else:
+        html.append("（未生成）")
+    html.append("</div>")
     html.append("</div>")
 
     html.append("<div class='box'>")
+    html.append("<div class='row'><span class='label'>メモ</span>予想CSV出力は選択した節だけを含む buyplan 用CSV</div>")
     html.append("<div class='row'><span class='label'>メモ</span>各レポートHTMLは下記スクリプトで更新</div>")
     html.append("<div class='row'><code>python data/reports/view_predictions.py</code></div>")
     html.append("<div class='row'><code>python data/reports/view_report_json.py</code></div>")
@@ -238,9 +269,10 @@ def build_dashboard():
     html.append("  const htmlPath = sel.value;")
     html.append("  const file = htmlPath.split('/').pop();")
     html.append("  const csvPath = 'csv/' + file.replace('.html', '.csv');")
+    html.append("  const stem = file.replace('.html', '').replace(/^predictions_round_/, '');")
     html.append("  const a = document.createElement('a');")
     html.append("  a.href = csvPath;")
-    html.append("  a.download = 'selected_round_predictions.csv';")
+    html.append("  a.download = 'purchase_reference_predictions_' + stem + '.csv';")
     html.append("  document.body.appendChild(a);")
     html.append("  a.click();")
     html.append("  document.body.removeChild(a);")

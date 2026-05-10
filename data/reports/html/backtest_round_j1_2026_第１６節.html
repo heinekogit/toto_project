@@ -2,7 +2,7 @@
 <html lang='ja'>
 <head>
 <meta charset='utf-8'>
-<title>Backtest J1 2026 第１６節: backtest_j1_2026_rounds.csv</title>
+<title>Backtest J1 2026 第１６節</title>
 <style>
 body{font-family:system-ui, -apple-system, sans-serif; margin:24px;}
 table{border-collapse:collapse; width:100%; font-size:12px;}
@@ -16,15 +16,19 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 </head>
 <body>
 <div style='margin-bottom:12px;'><a href='../index.html'>← indexに戻る</a></div>
-<h2>Backtest J1 2026 第１６節: backtest_j1_2026_rounds.csv</h2>
-<div class='summary'>的中数: <b>0/10</b> / 的中率: <b>0.0%</b></div>
+<h2>Backtest J1 2026 第１６節</h2>
+<div class='summary'>的中数: <b>0/0</b> / 的中率: <b>-</b></div>
 <table>
 <thead><tr>
+<th>league</th>
 <th>節</th>
 <th>match_id</th>
 <th>datetime</th>
 <th>home_team</th>
 <th>away_team</th>
+<th>actual_result</th>
+<th>is_correct</th>
+<th>predicted_result</th>
 <th>home_score</th>
 <th>away_score</th>
 <th>home_advantage_diff</th>
@@ -33,17 +37,18 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <th>prob_draw</th>
 <th>prob_away_win</th>
 <th>predicted_highest_prob_result</th>
-<th>actual_result</th>
-<th>is_correct</th>
-<th>predicted_result</th>
 </tr></thead>
 <tbody>
 <tr class='desc-row'>
+<td></td>
 <td>節</td>
 <td>試合ID</td>
 <td>試合日時</td>
 <td>ホーム</td>
 <td>アウェイ</td>
+<td>実際の結果</td>
+<td>的中</td>
+<td></td>
 <td>ホーム得点</td>
 <td>アウェイ得点</td>
 <td></td>
@@ -52,189 +57,6 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td>引き分け確率</td>
 <td>アウェイ勝ち確率</td>
 <td>予測結果</td>
-<td>実際の結果</td>
-<td>的中</td>
-<td></td>
-</tr>
-<tr>
-<td>第１６節第１日</td>
-<td>j1_2026_05091400_水戸_浦和</td>
-<td>2026-05-09 14:00:00</td>
-<td>水戸</td>
-<td>浦和</td>
-<td></td>
-<td></td>
-<td>-2.0</td>
-<td>False</td>
-<td>0.141</td>
-<td>0.207</td>
-<td>0.653</td>
-<td>A</td>
-<td></td>
-<td>False</td>
-<td>A</td>
-</tr>
-<tr>
-<td>第１６節第２日</td>
-<td>j1_2026_05101600_名古屋_京都</td>
-<td>2026-05-10 16:00:00</td>
-<td>名古屋</td>
-<td>京都</td>
-<td></td>
-<td></td>
-<td>2.0</td>
-<td>True</td>
-<td>0.608</td>
-<td>0.217</td>
-<td>0.175</td>
-<td>H</td>
-<td></td>
-<td>False</td>
-<td>H</td>
-</tr>
-<tr>
-<td>第１６節第２日</td>
-<td>j1_2026_05101500_Ｇ大阪_広島</td>
-<td>2026-05-10 15:00:00</td>
-<td>Ｇ大阪</td>
-<td>広島</td>
-<td></td>
-<td></td>
-<td>-2.0</td>
-<td>False</td>
-<td>0.217</td>
-<td>0.227</td>
-<td>0.555</td>
-<td>D</td>
-<td></td>
-<td>False</td>
-<td>D</td>
-</tr>
-<tr>
-<td>第１６節第２日</td>
-<td>j1_2026_05101400_神戸_岡山</td>
-<td>2026-05-10 14:00:00</td>
-<td>神戸</td>
-<td>岡山</td>
-<td></td>
-<td></td>
-<td>2.0</td>
-<td>True</td>
-<td>0.561</td>
-<td>0.226</td>
-<td>0.212</td>
-<td>H</td>
-<td></td>
-<td>False</td>
-<td>H</td>
-</tr>
-<tr>
-<td>第１６節第２日</td>
-<td>j1_2026_05101400_清水_福岡</td>
-<td>2026-05-10 14:00:00</td>
-<td>清水</td>
-<td>福岡</td>
-<td></td>
-<td></td>
-<td>1.0</td>
-<td>True</td>
-<td>0.463</td>
-<td>0.244</td>
-<td>0.293</td>
-<td>D</td>
-<td></td>
-<td>False</td>
-<td>D</td>
-</tr>
-<tr>
-<td>第１６節第２日</td>
-<td>j1_2026_05101700_千葉_町田</td>
-<td>2026-05-10 17:00:00</td>
-<td>千葉</td>
-<td>町田</td>
-<td></td>
-<td></td>
-<td>-2.5</td>
-<td>False</td>
-<td>0.113</td>
-<td>0.197</td>
-<td>0.69</td>
-<td>A</td>
-<td></td>
-<td>False</td>
-<td>A</td>
-</tr>
-<tr>
-<td>第１６節第２日</td>
-<td>j1_2026_05101600_柏_川崎Ｆ</td>
-<td>2026-05-10 16:00:00</td>
-<td>柏</td>
-<td>川崎Ｆ</td>
-<td></td>
-<td></td>
-<td>-1.0</td>
-<td>False</td>
-<td>0.129</td>
-<td>0.203</td>
-<td>0.668</td>
-<td>A</td>
-<td></td>
-<td>False</td>
-<td>A</td>
-</tr>
-<tr>
-<td>第１６節第２日</td>
-<td>j1_2026_05101500_FC東京_東京Ｖ</td>
-<td>2026-05-10 15:00:00</td>
-<td>FC東京</td>
-<td>東京Ｖ</td>
-<td></td>
-<td></td>
-<td>-2.0</td>
-<td>False</td>
-<td>0.129</td>
-<td>0.203</td>
-<td>0.668</td>
-<td>A</td>
-<td></td>
-<td>False</td>
-<td>A</td>
-</tr>
-<tr>
-<td>第１６節第２日</td>
-<td>j1_2026_05101400_横浜FM_鹿島</td>
-<td>2026-05-10 14:00:00</td>
-<td>横浜FM</td>
-<td>鹿島</td>
-<td></td>
-<td></td>
-<td>-1.0</td>
-<td>False</td>
-<td>0.114</td>
-<td>0.197</td>
-<td>0.689</td>
-<td>A</td>
-<td></td>
-<td>False</td>
-<td>A</td>
-</tr>
-<tr>
-<td>第１６節第１日</td>
-<td>j1_2026_05091600_Ｃ大阪_長崎</td>
-<td>2026-05-09 16:00:00</td>
-<td>Ｃ大阪</td>
-<td>長崎</td>
-<td></td>
-<td></td>
-<td>1.0</td>
-<td>True</td>
-<td>0.696</td>
-<td>0.195</td>
-<td>0.109</td>
-<td>H</td>
-<td></td>
-<td>False</td>
-<td>H</td>
 </tr>
 </tbody></table>
 </body></html>
