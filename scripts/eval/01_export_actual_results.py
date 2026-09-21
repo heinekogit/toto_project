@@ -10,6 +10,7 @@ import pandas as pd
 
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+SPECIAL_RESULTS_CSV = os.path.join(ROOT_DIR, "data", "manual", "toto_special_results.csv")
 
 
 def eval_base_dir(round_id: str) -> str:
@@ -68,7 +69,13 @@ def to_result_102(home_score, away_score):
 def parse_args():
     p = argparse.ArgumentParser(description="対象ラウンドの実結果CSVを厳格抽出")
     p.add_argument("--round", required=True, help="round02 / toto1608")
-    p.add_argument("--season", required=True, type=int)
+    p.add_argument("--season", required=True, type=int, help="toto節リスト上の論理シーズン")
+    p.add_argument(
+        "--result-season",
+        type=int,
+        default=None,
+        help="結果CSVファイル上のシーズン。未指定時は--seasonと同じ",
+    )
     p.add_argument("--snapshot-dir", default=None, help="既定: data/eval/{rounds|toto_rounds}/{round}/snapshot")
     p.add_argument("--out", default=None, help="既定: data/eval/{rounds|toto_rounds}/{round}/actual_results.csv")
     p.add_argument("--python", default=os.path.join(ROOT_DIR, "scripts", ".venv", "bin", "python"))
@@ -219,6 +226,48 @@ def prepare_df(df):
     return out
 
 
+def load_special_results(logical_season, toto_round):
+    if not toto_round or not os.path.exists(SPECIAL_RESULTS_CSV):
+        return pd.DataFrame()
+    df = pd.read_csv(SPECIAL_RESULTS_CSV)
+    required = {
+        "logical_season", "toto_round", "match_no", "datetime", "home_team", "away_team",
+        "home_score", "away_score",
+    }
+    if not required.issubset(df.columns):
+        raise ValueError(f"カップ戦結果CSVの必須列不足: {sorted(required - set(df.columns))}")
+    logical = pd.to_numeric(df["logical_season"], errors="coerce")
+    rounds = pd.to_numeric(df["toto_round"], errors="coerce")
+    out = df[(logical == int(logical_season)) & (rounds == int(toto_round))].copy()
+    if out.empty:
+        return out
+    out["match_no"] = pd.to_numeric(out["match_no"], errors="coerce").astype("Int64")
+    out = prepare_df(out)
+    if out["match_no"].duplicated().any():
+        raise RuntimeError(f"カップ戦結果CSVでmatch_no重複: toto{toto_round}")
+    return out
+
+
+def resolve_special_match(pred_row, special_results):
+    if special_results.empty:
+        return None
+    match_no = pd.to_numeric(pred_row.get("match_no"), errors="coerce")
+    if pd.isna(match_no):
+        return None
+    hit = special_results[special_results["match_no"] == int(match_no)].copy()
+    if hit.empty:
+        return None
+    home_n = normalize_team_text(pred_row.get("home_team"))
+    away_n = normalize_team_text(pred_row.get("away_team"))
+    hit = hit[(hit["home_team_n"] == home_n) & (hit["away_team_n"] == away_n)]
+    if len(hit) != 1:
+        raise RuntimeError(
+            f"カップ戦結果突合失敗: match_no={int(match_no)} "
+            f"{pred_row.get('home_team')} vs {pred_row.get('away_team')} rows={len(hit)}"
+        )
+    return hit.iloc[0]
+
+
 def resolve_one_match(pred_row, df_results):
     home_n = normalize_team_text(pred_row["home_team"])
     away_n = normalize_team_text(pred_row["away_team"])
@@ -325,6 +374,7 @@ def infer_league_from_team_sets(pred_row, candidate_leagues, upcoming_team_sets)
 
 def main():
     args = parse_args()
+    result_season = int(args.result_season if args.result_season is not None else args.season)
     base_dir = eval_base_dir(args.round)
     snapshot_dir = args.snapshot_dir or os.path.join(base_dir, "snapshot")
     out_csv = args.out or os.path.join(base_dir, "actual_results.csv")
@@ -362,20 +412,23 @@ def main():
 
     for lg in target_leagues:
         try:
-            run_update_results(args.python, args.season, lg)
+            run_update_results(args.python, result_season, lg)
         except Exception as e:
             print(f"[WARN] 結果更新をスキップして既存CSVを使用します: league={lg} reason={e}")
 
     results_by_league = {}
     source_by_league = {}
     for lg in target_leagues:
-        src, df = load_results_csv(args.season, lg)
+        src, df = load_results_csv(result_season, lg)
         source_by_league[lg] = src
         results_by_league[lg] = prepare_df(df)
 
     rows = []
     key_logs = []
-    upcoming_team_sets = load_upcoming_team_sets(args.season)
+    upcoming_team_sets = load_upcoming_team_sets(result_season)
+    special_results = load_special_results(args.season, toto_context.get("toto_round"))
+    if not special_results.empty:
+        print(f"[INFO] カップ戦専用結果を読込: rows={len(special_results)} path={SPECIAL_RESULTS_CSV}")
     for _, r in pred.sort_values("match_no").iterrows():
         lg = r["league_n"]
         resolved_lg = None
@@ -383,7 +436,12 @@ def main():
         key_used = ""
         unresolved_reason = ""
         try:
-            if lg in results_by_league:
+            special_match = resolve_special_match(r, special_results)
+            if special_match is not None:
+                matched = special_match
+                key_used = "special_results:toto_round+match_no+teams"
+                resolved_lg = "cup"
+            elif lg in results_by_league:
                 matched, key_used = resolve_one_match(r, results_by_league[lg])
                 resolved_lg = lg
             else:
@@ -438,7 +496,7 @@ def main():
                 row["result"] = result
                 row["resolve_note"] = key_used
                 key_logs.append(
-                    f"match_no={r['match_no']} league={resolved_lg.upper()} key={key_used} "
+                    f"match_no={r['match_no']} league={str(resolved_lg).upper()} key={key_used} "
                     f"{r['home_team']} vs {r['away_team']}"
                 )
         else:

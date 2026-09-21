@@ -1,0 +1,4 @@
+﻿flag_name,matches,actual_h_count,actual_d_count,actual_a_count,actual_h_rate,actual_d_rate,actual_a_rate,main_hit_rate,buyplan_change_count,rescue_count,harm_count,net_rescue,all_same_count,all_same_side_count,avg_flag_score,sample_reason
+away_overread_draw_cover_flag,3,1,2,0,0.3333333333333333,0.6666666666666666,0.0,0.0,2,2,0,2,2,2,0.4893847215338849,pred=A|pd=0.345|pa=0.411|side_gap=0.167|top_gap=0.066|flip=0.558|entropy=0.619|away_path=0.670
+anchor_candidate_flag,1,0,0,0,0.0,0.0,0.0,0.0,0,0,0,0,1,1,0.5039773366563612,pred=H|mix_best=H|hold=0.409|top_gap=0.080|entropy=0.562|vol=0.213|draw_tension=0.295
+draw_core_candidate_flag,0,0,0,0,,,,,0,0,0,0,0,0,,

@@ -1,0 +1,208 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><title>toto1649 移動疲労シャドー</title>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;margin:28px;color:#172033}h1{font-size:24px}.note{background:#f2f6fb;padding:14px;border-radius:8px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{border:1px solid #d7deea;padding:7px;text-align:right}th:nth-child(2),td:nth-child(2),th:last-child,td:last-child{text-align:left}th{background:#eaf0f8;position:sticky;top:0}.summary{font-size:18px}code{background:#eef1f5;padding:2px 4px}</style>
+<h1>toto1649 移動距離・疲労シャドー比較</h1>
+<p class="summary">影響度 high: 0試合 / medium: 4試合 / 全13試合</p>
+<div class="note"><b>正式予測には未反映。</b> 現行の疲労計算と、正規化44クラブ距離行列を接続した場合を比較しています。xG変化は現行係数 <code>疲労1点 = xG -0.01</code> の一次影響です。確率・本命記号・buyplanは再計算していません。ホーム疲労増は過去のアウェイ移動が直近3試合から持ち越された分です。</div>
+<table border="1" class="dataframe shadow">
+  <thead>
+    <tr style="text-align: right;">
+      <th>No.</th>
+      <th>対戦</th>
+      <th>移動km</th>
+      <th>現行疲労 H/A</th>
+      <th>現行内訳 H</th>
+      <th>現行内訳 A</th>
+      <th>距離あり H/A</th>
+      <th>疲労増 H/A</th>
+      <th>xG変化 H/A</th>
+      <th>ホーム相対xG</th>
+      <th>影響度</th>
+      <th>見方</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>東京V－神戸</td>
+      <td>412</td>
+      <td>1.79 / 7.69</td>
+      <td>間隔 0.50 / 持越 1.29</td>
+      <td>間隔 0.50 / 持越 3.19 / AW 4.00</td>
+      <td>2.63 / 10.86</td>
+      <td>+0.84 / +3.17</td>
+      <td>-0.008 / -0.032</td>
+      <td>+0.023</td>
+      <td>low</td>
+      <td>ホーム側に相対追い風</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>C大阪－柏</td>
+      <td>428</td>
+      <td>3.03 / 6.53</td>
+      <td>間隔 0.50 / 持越 2.53</td>
+      <td>間隔 0.00 / 持越 2.53 / AW 4.00</td>
+      <td>3.77 / 9.02</td>
+      <td>+0.74 / +2.49</td>
+      <td>-0.007 / -0.025</td>
+      <td>+0.017</td>
+      <td>low</td>
+      <td>ホーム側に相対追い風</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>広島－名古屋</td>
+      <td>437</td>
+      <td>2.53 / 5.63</td>
+      <td>間隔 0.00 / 持越 2.53</td>
+      <td>間隔 0.50 / 持越 1.13 / AW 4.00</td>
+      <td>3.99 / 8.28</td>
+      <td>+1.46 / +2.65</td>
+      <td>-0.015 / -0.026</td>
+      <td>+0.012</td>
+      <td>low</td>
+      <td>相対差は小さい</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>千葉－岡山</td>
+      <td>573</td>
+      <td>3.98 / 6.69</td>
+      <td>間隔 0.50 / 持越 3.48</td>
+      <td>間隔 0.50 / 持越 2.19 / AW 4.00</td>
+      <td>4.85 / 10.23</td>
+      <td>+0.87 / +3.54</td>
+      <td>-0.009 / -0.035</td>
+      <td>+0.027</td>
+      <td>low</td>
+      <td>ホーム側に相対追い風</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>福岡－浦和</td>
+      <td>884</td>
+      <td>3.19 / 6.58</td>
+      <td>間隔 0.50 / 持越 2.69</td>
+      <td>間隔 0.50 / 持越 2.08 / AW 4.00</td>
+      <td>5.62 / 11.47</td>
+      <td>+2.43 / +4.89</td>
+      <td>-0.024 / -0.049</td>
+      <td>+0.025</td>
+      <td>medium</td>
+      <td>ホーム側に相対追い風</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>水戸－鹿島</td>
+      <td>44</td>
+      <td>2.08 / 6.69</td>
+      <td>間隔 0.00 / 持越 2.08</td>
+      <td>間隔 0.50 / 持越 2.19 / AW 4.00</td>
+      <td>2.89 / 7.21</td>
+      <td>+0.81 / +0.52</td>
+      <td>-0.008 / -0.005</td>
+      <td>-0.003</td>
+      <td>low</td>
+      <td>相対差は小さい</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>町田－川崎F</td>
+      <td>19</td>
+      <td>4.91 / 6.58</td>
+      <td>間隔 0.00 / 持越 4.91</td>
+      <td>間隔 0.50 / 持越 2.08 / AW 4.00</td>
+      <td>5.22 / 7.77</td>
+      <td>+0.31 / +1.19</td>
+      <td>-0.003 / -0.012</td>
+      <td>+0.009</td>
+      <td>low</td>
+      <td>相対差は小さい</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>横浜FM－京都</td>
+      <td>369</td>
+      <td>3.03 / 6.43</td>
+      <td>間隔 0.50 / 持越 2.53</td>
+      <td>間隔 0.50 / 持越 1.93 / AW 4.00</td>
+      <td>3.28 / 9.38</td>
+      <td>+0.25 / +2.95</td>
+      <td>-0.003 / -0.030</td>
+      <td>+0.027</td>
+      <td>low</td>
+      <td>ホーム側に相対追い風</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>清水－FC東京</td>
+      <td>121</td>
+      <td>2.08 / 6.53</td>
+      <td>間隔 0.00 / 持越 2.08</td>
+      <td>間隔 0.00 / 持越 2.53 / AW 4.00</td>
+      <td>2.64 / 9.37</td>
+      <td>+0.56 / +2.84</td>
+      <td>-0.006 / -0.028</td>
+      <td>+0.023</td>
+      <td>low</td>
+      <td>ホーム側に相対追い風</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>長崎－G大阪</td>
+      <td>571</td>
+      <td>2.42 / 7.91</td>
+      <td>間隔 0.00 / 持越 2.42</td>
+      <td>間隔 0.00 / 持越 3.91 / AW 4.00</td>
+      <td>4.63 / 11.68</td>
+      <td>+2.21 / +3.77</td>
+      <td>-0.022 / -0.038</td>
+      <td>+0.016</td>
+      <td>low</td>
+      <td>ホーム側に相対追い風</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>宮崎－富山</td>
+      <td>728</td>
+      <td>3.03 / 5.93</td>
+      <td>間隔 0.50 / 持越 2.53</td>
+      <td>間隔 0.00 / 持越 1.93 / AW 4.00</td>
+      <td>6.04 / 10.74</td>
+      <td>+3.01 / +4.81</td>
+      <td>-0.030 / -0.048</td>
+      <td>+0.018</td>
+      <td>medium</td>
+      <td>ホーム側に相対追い風</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>愛媛－秋田</td>
+      <td>925</td>
+      <td>3.69 / 6.19</td>
+      <td>間隔 1.00 / 持越 2.69</td>
+      <td>間隔 0.00 / 持越 2.19 / AW 4.00</td>
+      <td>3.69 / 11.67</td>
+      <td>+0.00 / +5.48</td>
+      <td>-0.000 / -0.055</td>
+      <td>+0.055</td>
+      <td>medium</td>
+      <td>ホーム側に相対追い風</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>鳥取－大宮</td>
+      <td>491</td>
+      <td>3.03 / 6.92</td>
+      <td>間隔 0.50 / 持越 2.53</td>
+      <td>間隔 0.50 / 持越 2.42 / AW 4.00</td>
+      <td>3.35 / 11.58</td>
+      <td>+0.32 / +4.66</td>
+      <td>-0.003 / -0.047</td>
+      <td>+0.043</td>
+      <td>medium</td>
+      <td>ホーム側に相対追い風</td>
+    </tr>
+  </tbody>
+</table>
+<p>生成元: /Users/dev_tomo/Desktop/tt_prj_restart/data/eval/travel_fatigue_shadow/toto1649_travel_fatigue_shadow.csv</p></html>

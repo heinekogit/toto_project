@@ -1,0 +1,15 @@
+city,country,lat,lon,coordinate_basis
+バンコク,タイ,13.7563,100.5018,city_center
+ジッダ,サウジアラビア,21.5433,39.1728,city_center
+KASC,サウジアラビア,21.6238,39.1114,King Abdullah Sports City
+大田広域市,韓国,36.3504,127.3845,city_center
+全北特別自治道,韓国,35.8242,127.1480,Jeonju city center
+ニューカッスル,オーストラリア,-32.9283,151.7817,city_center
+ハノイ,ベトナム,21.0278,105.8342,city_center
+シンガポール,シンガポール,1.3521,103.8198,country_center
+大田,韓国,36.3504,127.3845,city_center_alias
+ラチャブリ,タイ,13.5283,99.8134,city_center
+上海,中国,31.2304,121.4737,city_center
+浦項,韓国,36.0190,129.3435,city_center
+ブリーラム,タイ,14.9930,103.1029,city_center
+スヴァイリエン,カンボジア,11.0879,105.7993,city_center

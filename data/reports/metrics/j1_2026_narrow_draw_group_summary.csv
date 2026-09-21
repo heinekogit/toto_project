@@ -1,0 +1,7 @@
+﻿match_type,lab_basis_hint,matches,hits,hit_rate,actual_H,actual_D,actual_A
+neutral,draw_compressed,21,11,0.5238,5,11,5
+signal_conflict,draw_compressed,7,4,0.5714,1,4,2
+signal_conflict,basis_balanced,5,0,0.0,4,0,1
+neutral,split_side,2,0,0.0,0,0,2
+neutral,flat_draw_trap,2,2,1.0,0,2,0
+close_match,draw_compressed,1,0,0.0,0,0,1

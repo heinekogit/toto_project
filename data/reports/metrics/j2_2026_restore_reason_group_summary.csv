@@ -1,0 +1,13 @@
+﻿j2_restore_reason_group,matches,hits,hit_rate,unique_reasons,action_hint
+home_balanced,5,5,1.0,3,keep_group
+neutral_base,4,4,1.0,1,keep_group
+neutral_draw,4,4,1.0,4,keep_group
+home_draw,3,3,1.0,3,merge_ready
+away_flat,2,2,1.0,1,needs_more_data
+away_strong,2,2,1.0,1,needs_more_data
+neutral_balanced,2,2,1.0,2,needs_more_data
+away_draw,1,1,1.0,1,needs_more_data
+close_draw,1,1,1.0,1,needs_more_data
+close_flat,1,1,1.0,1,needs_more_data
+home_flat,1,1,1.0,1,needs_more_data
+signal_split,1,1,1.0,1,needs_more_data

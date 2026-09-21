@@ -1,0 +1,9 @@
+{
+  "league": "j2",
+  "season_year": 2025,
+  "thresholds": {
+    "H": 0.41,
+    "D": 0.3,
+    "A": 0.46
+  }
+}

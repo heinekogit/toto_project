@@ -1,0 +1,11 @@
+primary,secondary,cluster,basis_hint,matches,avg_H_count,avg_D_count,avg_A_count,dominant_share_mean,hit_H_rate,hit_D_rate,hit_A_rate
+A,D,draw_core,basis_balanced,2,0.0,1.0,9.0,0.9,0.0,0.5,0.5
+A,D,hold_core,basis_balanced,2,0.0,1.0,9.0,0.9,0.0,0.5,0.5
+D,A,draw_core,draw_compressed,2,1.5,1.0,7.5,0.75,0.5,0.5,0.0
+,,neutral,,1,10.0,0.0,0.0,1.0,0.0,0.0,0.0
+A,D,draw_core,draw_compressed,1,0.0,1.0,9.0,0.9,0.0,1.0,0.0
+A,D,hold_core,draw_compressed,1,0.0,1.0,9.0,0.9,0.0,0.0,1.0
+A,D,neutral,basis_balanced,1,0.0,1.0,9.0,0.9,0.0,0.0,1.0
+D,H,hold_core,basis_balanced,1,1.0,8.0,1.0,0.8,0.0,0.0,1.0
+D,A,low_tempo_draw,draw_compressed,1,0.0,7.0,3.0,0.7,0.0,0.0,1.0
+D,A,low_tempo_draw,flat_draw_trap,1,2.0,6.0,2.0,0.6,1.0,0.0,0.0

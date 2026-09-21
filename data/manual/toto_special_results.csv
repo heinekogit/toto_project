@@ -1,0 +1,4 @@
+logical_season,toto_round,match_no,datetime,competition,home_team,away_team,home_score,away_score,source_url
+2027,1649,11,2026-09-02 19:03:00,league_cup,宮崎,富山,1,2,https://www.jleague.jp/match/leaguecup/2026/090204/live-commentary/
+2027,1649,12,2026-09-02 19:03:00,league_cup,愛媛ＦＣ,秋田,1,0,https://www.jleague.jp/match/leaguecup/2026/090215/live-commentary/
+2027,1649,13,2026-09-02 19:04:00,league_cup,鳥取,大宮,3,1,https://www.jleague.jp/match/leaguecup/2026/090214/live-commentary/

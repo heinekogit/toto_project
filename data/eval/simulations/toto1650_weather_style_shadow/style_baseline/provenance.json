@@ -1,0 +1,10 @@
+{
+  "shadow_only": true,
+  "rain_weight": 0,
+  "wind_weight": 0,
+  "workspace": "/private/tmp/toto1650_style_baseline_1k47kdxz",
+  "base_replay": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/simulations/toto1650_latest",
+  "weather_thresholds_changed": false,
+  "predictor_sha256": "e5a049f8ada48386ac51d17b247232adc995c84eeddf324f0ee2b555adda4e02",
+  "weather_rules_sha256": "48918506aa62dedec4b4a70a743d09368c21682309725d09cda36d92415949fe"
+}

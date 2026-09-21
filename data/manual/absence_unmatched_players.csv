@@ -1,0 +1,6 @@
+﻿season,round_start,expected_rounds,origin_competition_key,applies_across_competitions,start_date,expected_weeks,expected_return_date,team,player_name,absence_type,availability,note,match_player_key,match_status,weight_minutes,weight_attack,weight_defense,impact_attack,impact_defense,impact_total,impact_total_per_round,regular_flag,debug_reason
+2026,,,regular_2026_27,1,2026-09-15,1.0,2026-09-22,長崎,エリソン,card,out,,2026|長崎|エリソン,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-09-15,1.0,2026-09-22,長崎,明本考浩,card,out,,2026|長崎|明本考浩,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-09-15,1.0,2026-09-22,長崎,宮本英治,card,out,,2026|長崎|宮本英治,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-09-15,1.0,2026-09-22,長崎,甲斐健太郎,card,out,,2026|長崎|甲斐健太郎,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-09-17,8.0,2026-11-12,いわき,岩下航,injury,out,,2026|いわき|岩下航,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found

@@ -3,6 +3,7 @@ import time
 from datetime import datetime, timezone
 import re
 import traceback
+from contextlib import contextmanager
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -10,8 +11,14 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException, WebDriverException, NoSuchElementException
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    SessionNotCreatedException,
+    TimeoutException,
+    WebDriverException,
+)
 from http_retry import get_with_retry
+from jleague_standings import parse_official_standings
 
 
 SEASON_YEAR = os.environ.get("SEASON_YEAR", "2025")
@@ -31,6 +38,7 @@ OUTPUT_CSV = os.path.join(DATA_DIR, f"{LEAGUE}_{SEASON_YEAR}_rankings_{FETCH_DAT
 SFRT01_URL = "https://data.j-league.or.jp/SFRT01/"
 SFRT01_COMP_URL = "https://data.j-league.or.jp/SFRT01/competition"
 SFRT01_SECTION_URL = "https://data.j-league.or.jp/SFRT01/competitionSection"
+OFFICIAL_STANDINGS_URL = f"https://www.jleague.jp/{LEAGUE}/standings/"
 
 
 _FULLWIDTH_ASCII = str.maketrans(
@@ -51,10 +59,143 @@ def _build_year_candidates(year):
         candidates.append(str(RANKING_YEAR_ID))
     year_str = str(year)
     candidates.append(year_str)
-    if len(year_str) == 4 and year_str.isdigit():
-        candidates.append(f"{year_str}1")
     # 順序を維持した重複除去
     return list(dict.fromkeys(candidates))
+
+
+def _league_keywords():
+    return {
+        "j1": ["j1", "j1league", "jリーグdivision1", "jleaguedivision1"],
+        "j2": ["j2", "j2league", "jリーグdivision2", "jleaguedivision2"],
+        "j3": ["j3", "j3league", "jリーグdivision3", "jleaguedivision3"],
+    }.get(LEAGUE, [LEAGUE])
+
+
+def _looks_like_target_competition(label, competition_name=""):
+    normalized_label = _normalize_text(label)
+    normalized_target = _normalize_text(competition_name)
+    if normalized_target and normalized_target in normalized_label:
+        return True
+    keywords = _league_keywords()
+    if any(k in normalized_label for k in keywords):
+        return True
+    blocked = ["cup", "カップ", "ルヴァン", "天皇杯"]
+    if any(b in normalized_label for b in blocked):
+        return False
+    return False
+
+
+def _build_selenium_manager_env():
+    env = os.environ.copy()
+    raw_path = env.get("PATH", "")
+    kept_parts = []
+    removed_parts = []
+    for part in raw_path.split(os.pathsep):
+        if not part:
+            continue
+        chromedriver_path = os.path.join(part, "chromedriver")
+        if os.path.isfile(chromedriver_path) and os.access(chromedriver_path, os.X_OK):
+            removed_parts.append(part)
+            continue
+        kept_parts.append(part)
+    env["PATH"] = os.pathsep.join(kept_parts)
+    if removed_parts:
+        print(
+            "[INFO] sanitized PATH for Selenium Manager, removed chromedriver dirs: "
+            + ", ".join(removed_parts)
+        )
+    return env
+
+
+@contextmanager
+def _temporary_env_vars(overrides):
+    original = {}
+    sentinel = object()
+    for key, value in overrides.items():
+        original[key] = os.environ.get(key, sentinel)
+        os.environ[key] = value
+    try:
+        yield
+    finally:
+        for key, previous in original.items():
+            if previous is sentinel:
+                os.environ.pop(key, None)
+            else:
+                os.environ[key] = previous
+
+
+def _get_chrome_major_version():
+    version_text = ""
+    candidates = [
+        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "/Applications/Chromium.app/Contents/MacOS/Chromium",
+    ]
+    for binary in candidates:
+        if not os.path.exists(binary):
+            continue
+        try:
+            import subprocess
+
+            completed = subprocess.run(
+                [binary, "--version"],
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=5,
+            )
+        except Exception:
+            continue
+        version_text = (completed.stdout or completed.stderr or "").strip()
+        if version_text:
+            break
+    match = re.search(r"(\d+)\.", version_text)
+    return match.group(1) if match else None
+
+
+def _clear_stale_cached_chromedrivers():
+    chrome_major = _get_chrome_major_version()
+    if not chrome_major:
+        return
+    cache_root = os.path.expanduser("~/.cache/selenium/chromedriver/mac-arm64")
+    if not os.path.isdir(cache_root):
+        return
+    removed = []
+    for entry in os.listdir(cache_root):
+        entry_path = os.path.join(cache_root, entry)
+        if not os.path.isdir(entry_path):
+            continue
+        if not entry.startswith(f"{chrome_major}."):
+            try:
+                import shutil
+
+                shutil.rmtree(entry_path)
+                removed.append(entry)
+            except Exception:
+                continue
+    if removed:
+        print(
+            "[INFO] removed stale cached chromedrivers: "
+            + ", ".join(sorted(removed))
+        )
+
+
+def _set_select_value(driver, name, value):
+    elem = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.NAME, name)))
+    try:
+        Select(elem).select_by_value(str(value))
+        return
+    except Exception:
+        pass
+    driver.execute_script(
+        """
+        const el = arguments[0];
+        const value = String(arguments[1]);
+        el.value = value;
+        el.dispatchEvent(new Event('change', {bubbles: true}));
+        """,
+        elem,
+        str(value),
+    )
 
 
 def build_driver(headless=True):
@@ -68,9 +209,23 @@ def build_driver(headless=True):
     driver_path = os.path.join(BASE_DIR, "chromedriver")
     if os.path.exists(driver_path):
         from selenium.webdriver.chrome.service import Service
-        return webdriver.Chrome(service=Service(executable_path=driver_path), options=options)
+        try:
+            return webdriver.Chrome(service=Service(executable_path=driver_path), options=options)
+        except SessionNotCreatedException as exc:
+            # ローカル固定の chromedriver が Chrome 本体に追随していない場合は
+            # Selenium Manager 側の解決にフォールバックする。
+            print(
+                f"[WARN] local chromedriver is incompatible, fallback to Selenium Manager: {exc.msg}"
+            )
+        except WebDriverException as exc:
+            print(
+                f"[WARN] local chromedriver failed to start, fallback to Selenium Manager: {exc}"
+            )
 
-    return webdriver.Chrome(options=options)
+    _clear_stale_cached_chromedrivers()
+    manager_env = _build_selenium_manager_env()
+    with _temporary_env_vars({"PATH": manager_env.get("PATH", "")}):
+        return webdriver.Chrome(options=options)
 
 
 def get_competition_ids(year, competition_name):
@@ -116,12 +271,7 @@ def get_competition_ids(year, competition_name):
             print(f"[INFO] competitionIdを名称一致で選択: {labels} yearId={year_id}")
             return ids, year_id
 
-        league_keywords = {
-            "j1": ["j1", "j1league", "jリーグdivision1", "jleaguedivision1"],
-            "j2": ["j2", "j2league", "jリーグdivision2", "jleaguedivision2"],
-            "j3": ["j3", "j3league", "jリーグdivision3", "jleaguedivision3"],
-        }
-        keywords = league_keywords.get(LEAGUE, [LEAGUE])
+        keywords = _league_keywords()
 
         fallback_candidates = []
         for value, label in options:
@@ -140,8 +290,11 @@ def get_competition_ids(year, competition_name):
 
         if len(options) == 1:
             value, label = options[0]
-            print(f"[INFO] competitionId候補が1件のみのため採用: {label} ({value}) yearId={year_id}")
-            return [value], year_id
+            if _looks_like_target_competition(label, competition_name):
+                print(f"[INFO] competitionId候補が1件のみのため採用: {label} ({value}) yearId={year_id}")
+                return [value], year_id
+            last_error = f"competitionId候補1件だが対象外: yearId={year_id}, label={label}({value})"
+            continue
 
         option_labels = ", ".join([f"{lbl}({val})" for val, lbl in options[:10]])
         last_error = f"competitionId未決定: yearId={year_id}, options={option_labels}"
@@ -255,7 +408,7 @@ def fetch_rankings_from_data_site():
                 # competitionIdごとにページを開き直し、DOM差異で<select>が崩れるケースを回避
                 driver.get(SFRT01_URL)
                 WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.NAME, "yearId")))
-                Select(driver.find_element(By.NAME, "yearId")).select_by_value(str(ranking_year_id))
+                _set_select_value(driver, "yearId", ranking_year_id)
                 time.sleep(2)
 
                 sections = get_sections(comp_id)
@@ -269,7 +422,7 @@ def fetch_rankings_from_data_site():
                     raise RuntimeError(f"competitionId要素が<select>ではありません: tag={comp_elem.tag_name}")
                 comp_select = Select(comp_elem)
                 try:
-                    comp_select.select_by_value(str(comp_id))
+                    _set_select_value(driver, "competitionId", comp_id)
                 except NoSuchElementException:
                     # UIの選択肢がAPI値とズレるケース向けフォールバック
                     options = [(opt.get_attribute("value"), opt.text.strip()) for opt in comp_select.options]
@@ -311,7 +464,7 @@ def fetch_rankings_from_data_site():
                             if str(value) != "0":
                                 continue
                         else:
-                            section_select.select_by_value(str(value))
+                            _set_select_value(driver, "competitionSectionId", value)
                         time.sleep(1)
                         driver.execute_script("document.forms[0].submit()")
                         time.sleep(3)
@@ -352,6 +505,33 @@ def fetch_rankings_from_data_site():
     print(f"出力: {OUTPUT_CSV}")
 
 
+def fetch_rankings_from_official_site():
+    if LEAGUE not in {"j1", "j2", "j3"}:
+        raise RuntimeError(f"公式順位ページ未対応リーグです: {LEAGUE}")
+    response = get_with_retry(OFFICIAL_STANDINGS_URL, timeout=(5, 30), max_retries=3)
+    response.raise_for_status()
+    df = parse_official_standings(
+        response.text,
+        season=SEASON_YEAR,
+        league=LEAGUE,
+        fetched_date=FETCH_DATE,
+    )
+    expected_teams = int(os.environ.get("EXPECTED_LEAGUE_TEAMS", "20"))
+    if len(df) != expected_teams or df["チーム"].nunique() != expected_teams:
+        raise RuntimeError(
+            f"公式順位ページのクラブ数が不正です: rows={len(df)} "
+            f"unique_teams={df['チーム'].nunique()} expected={expected_teams}"
+        )
+    os.makedirs(DATA_DIR, exist_ok=True)
+    df.to_csv(OUTPUT_CSV, index=False, encoding="utf-8-sig")
+    state = "PRESEASON_NEUTRAL" if int(df["preseason"].max()) == 1 else "ACTIVE"
+    print(
+        f"[RANKINGS] source=official url={OFFICIAL_STANDINGS_URL} "
+        f"state={state} teams={len(df)}"
+    )
+    print(f"出力: {OUTPUT_CSV}")
+
+
 def fetch_from_alt_urls():
     if not ALT_RANKING_URLS:
         return False
@@ -383,14 +563,14 @@ def fetch_from_alt_urls():
 
 if __name__ == "__main__":
     try:
-        fetch_rankings_from_data_site()
-    except (WebDriverException, RuntimeError) as e:
-        print(f"[警告] データサイトから取得できませんでした: {e}")
-        if not fetch_from_alt_urls():
-            print(f"[ERROR] 02_update_rankings.py failed: {repr(e)}")
-            traceback.print_exc()
-            raise
+        fetch_rankings_from_official_site()
     except Exception as e:
-        print(f"[ERROR] 02_update_rankings.py unexpected failure: {repr(e)}")
-        traceback.print_exc()
-        raise
+        print(f"[WARN] 公式順位ページから取得できませんでした。データサイトへフォールバック: {e}")
+        try:
+            fetch_rankings_from_data_site()
+        except (WebDriverException, RuntimeError, ValueError) as fallback_error:
+            print(f"[警告] データサイトからも取得できませんでした: {fallback_error}")
+            if not fetch_from_alt_urls():
+                print(f"[ERROR] 02_update_rankings.py failed: {repr(fallback_error)}")
+                traceback.print_exc()
+                raise

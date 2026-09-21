@@ -121,6 +121,38 @@ def load_rankings(path):
     return out
 
 
+def read_competition_key(path):
+    try:
+        meta = pd.read_csv(path, usecols=lambda c: c in {"competition_key"}, nrows=1)
+    except Exception:
+        return None
+    if "competition_key" not in meta.columns or meta.empty:
+        return None
+    value = str(meta.iloc[0]["competition_key"]).strip()
+    return value if value and value.lower() != "nan" else None
+
+
+def build_preseason_neutral(path):
+    raw = pd.read_csv(path)
+    team_col = find_column(raw.columns.tolist(), ["チーム", "クラブ"])
+    if not team_col:
+        raise ValueError(f"開幕前順位データにクラブ列がありません: {path}")
+    teams = raw[team_col].dropna().astype(str).str.strip()
+    teams = teams[teams.ne("")].drop_duplicates()
+    out = pd.DataFrame({"team_name": teams})
+    out["rank_latest"] = pd.NA
+    out["points_latest"] = 0
+    for window_size in [int(x.strip()) for x in WINDOW_SIZES.split(",") if x.strip().isdigit()] or [3, 5]:
+        out[f"rank_change_{window_size}w"] = 0
+        out[f"points_change_{window_size}w"] = 0
+        out[f"motivation_score_{window_size}w"] = 0.0
+    out["season"] = SEASON_YEAR
+    out["fetched_date"] = extract_date_from_filename(path).strftime("%Y%m%d")
+    out["competition_key"] = read_competition_key(path)
+    out["preseason"] = 1
+    return out
+
+
 def compute_window(files, window_size):
     if len(files) < 2:
         return None
@@ -179,6 +211,22 @@ def main():
     files_with_date = [x for x in files_with_date if x[1] is not None]
     files_with_date.sort(key=lambda x: x[1])
     files_sorted = [f for f, _ in files_with_date]
+
+    # 特別大会など別competitionの履歴を新リーグの順位変動へ混ぜない。
+    latest_key = read_competition_key(files_sorted[-1]) if files_sorted else None
+    if latest_key:
+        files_sorted = [f for f in files_sorted if read_competition_key(f) == latest_key]
+        files_with_date = [(f, extract_date_from_filename(f)) for f in files_sorted]
+        print(f"[INFO] competition_key={latest_key} の順位履歴のみ採用: files={len(files_sorted)}")
+
+    latest_raw = pd.read_csv(files_sorted[-1])
+    if "preseason" in latest_raw.columns and pd.to_numeric(latest_raw["preseason"], errors="coerce").fillna(0).eq(1).all():
+        neutral = build_preseason_neutral(files_sorted[-1])
+        os.makedirs(DATA_DIR, exist_ok=True)
+        neutral.to_csv(OUTPUT_CSV, index=False, encoding="utf-8-sig")
+        print(f"[RANKINGS_MOTIVATION] state=PRESEASON_NEUTRAL teams={len(neutral)}")
+        print(f"出力: {OUTPUT_CSV}")
+        return
 
     window_sizes = [int(x.strip()) for x in WINDOW_SIZES.split(",") if x.strip().isdigit()]
     if not window_sizes:

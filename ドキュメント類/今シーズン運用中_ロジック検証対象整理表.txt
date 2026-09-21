@@ -1,0 +1,267 @@
+今シーズン運用中 ロジック検証対象整理表
+
+目的
+使わなくなったロジックまで無差別に掘らず、
+今後の判断材料になるものだけを検証対象に切り分ける。
+
+前提
+- 先シーズンは終了済み
+- 先シーズン中は、予想システム・購入システムとも構築、調整、再構築が繰り返された
+- 節ごとに使用ファイルや結果ファイルの形式が変わっている可能性がある
+- そのため、全ロジックを同じ重さで検証するのは非効率
+
+基本方針
+- 今後も使う可能性があるものを優先して検証する
+- 現行判断に影響している過去ロジックは比較対象として押さえる
+- 完全に捨てた旧ロジックは原則アーカイブ扱いにする
+
+検証区分
+
+1. 主検証
+- 定義:
+  今後も使う可能性がある現行系ロジック
+- 検証の深さ:
+  厚く見る
+- 何を見るか:
+  hit rate
+  rescue / harm / net rescue
+  all-same 重なり
+  purchase_type の妥当性
+  ticket_guidance の副作用
+- 扱い:
+  採用 / 保留 / 不採用の判断対象
+
+2. 参考比較
+- 定義:
+  現行ロジックに直接つながる直近旧ロジック
+- 検証の深さ:
+  中くらい
+- 何を見るか:
+  なぜ変更されたか
+  現行との差
+  旧版で起きていた失敗が現行で消えているか
+- 扱い:
+  現行判断の背景資料
+
+3. アーカイブ
+- 定義:
+  完全に捨てた旧ロジック
+- 検証の深さ:
+  原則見ない
+- 何を見るか:
+  必要なときだけ、捨てた理由や当時の失敗パターンを確認する
+- 扱い:
+  原則は通期検証対象から外す
+
+主検証に入れる条件
+- 今でも名前や考え方が残っている
+- 現行コードや出力列に影響が残っている
+- 今後の反映候補として再利用の可能性がある
+- 今シーズンの節検証で採否を決める価値がある
+
+参考比較に入れる条件
+- 現行ロジックの直前世代である
+- 今の設計が、旧版の失敗を避けるために作られている
+- 現行との比較で、何を改善したかを説明したい
+
+アーカイブに落とす条件
+- 現在の分類名や出力列と接続しない
+- 今後の採用候補にならない
+- 比較しても今の意思決定に効かない
+- 再現に工数がかかる割に見返りが小さい
+
+例外的にアーカイブも見るケース
+- 旧ロジックの失敗が、今も別名で残っていそう
+- 現行ロジックの採用理由を説明するために必要
+- 旧結果ファイルが、現行比較の唯一の対照群になる
+
+節検証での実務ルール
+- 主検証:
+  毎節または複数節まとめて見る
+- 参考比較:
+  重要な差分が出たときだけ並べる
+- アーカイブ:
+  疑義が出たときだけ参照する
+
+運用手順
+1. ロジック名または分類名を列挙する
+2. それぞれを 主検証 / 参考比較 / アーカイブ に振り分ける
+3. 主検証だけは毎節の検証シートに載せる
+4. 参考比較は、現行との差分説明に使う
+5. アーカイブは、原則として集計表から外す
+
+整理欄
+- ロジック名:
+- 対象レイヤー: prediction / buyplan / purchase_type / policy / flag
+- 使用時期:
+- 現在の扱い: 主検証 / 参考比較 / アーカイブ
+- 判定理由:
+- 現行との関係:
+- 残すファイル:
+- 通期比較に使うか:
+- 備考:
+
+現時点のたたき台
+
+主検証
+- home_reversal_watch
+- j2_draw_trap
+- j1_draw_rescue_watch
+- j2_false_draw_watch
+- draw_trap 系
+- draw_watch 系
+- draw_rescue 系
+- chaos_draw_watch 系
+- chaos_side_watch 系
+- directional_stall 系
+
+参考比較
+- 現行 draw 系分類の直前世代
+- 現行 buyplan 配券思想の直前世代
+- 直近の prediction / buyplan 再構築前ロジック
+
+アーカイブ
+- 名前だけ残っていて、現行の出力列や分類と接続しない旧ロジック
+- 再現コストが高く、今後の採否判断に効かない旧実験
+
+現時点の具体化版
+
+1. 主検証に置くもの
+
+- home_reversal_watch
+  対象レイヤー: policy
+  理由: 正式 policy 枠として扱う前提が残っている
+  現行との関係: 今後の採否判断対象
+
+- j2_draw_trap
+  対象レイヤー: policy / purchase_type
+  理由: 現行の predictions_buyplan_context に継続出現している
+  現行との関係: J2 draw 系の主軸候補
+
+- j1_draw_rescue_watch
+  対象レイヤー: flag
+  理由: 観測継続前提でメモに残っている
+  現行との関係: J1 draw 救済観測の中核
+
+- j2_false_draw_watch
+  対象レイヤー: flag / purchase_type
+  理由: 現行の predictions_buyplan_context に継続出現している
+  現行との関係: j2_draw_trap と分離して効き方を見る対象
+
+- chaos_draw_watch
+  対象レイヤー: purchase_type
+  理由: report_j1_2025.json、report_j1_2026.json、backtest_j1_2025.csv で継続確認できる
+  現行との関係: draw 系の基底分類として残っている
+
+- chaos_side_watch
+  対象レイヤー: purchase_type
+  理由: predictions_buyplan_context.csv と backtest_j1_2025.csv の双方に確認できる
+  現行との関係: side 系不安定分類として継続
+
+- draw_trap
+  対象レイヤー: purchase_type
+  理由: report_j1_2025.json と round 系CSVに残っている
+  現行との関係: draw_watch / draw_rescue との境界整理対象
+
+- draw_watch
+  対象レイヤー: purchase_type / ticket_guidance
+  理由: predictions_buyplan_context.csv で rank1_draw_watch, draw_watch_split が現行利用されている
+  現行との関係: watch 系の実運用対象
+
+- draw_rescue
+  対象レイヤー: purchase_type / ticket_guidance
+  理由: predictions_buyplan_context.csv で rank1_draw_rescue, draw_rescue_split が現行利用されている
+  現行との関係: rescue/harm 判定の主対象
+
+- j2_directional_stall
+  対象レイヤー: purchase_type
+  理由: predictions_buyplan_context.csv に継続出現している
+  現行との関係: directional_stall 系の実体
+
+- ticket_guidance 群
+  対象レイヤー: buyplan
+  対象名: draw_core_keep / draw_watch_split / draw_rescue_split / side_with_cover / side_single / side_single_strong / draw_cut_to_side
+  理由: 現行出力で継続利用されている
+  現行との関係: prediction 側の意味づけが券面へどう出るかを見る主対象
+
+2. 参考比較に置くもの
+
+- NARROW_DRAW_OVERRIDE
+  対象レイヤー: prediction decision
+  理由: backtest_j1_2025.csv に頻出し、draw 系の旧判定色が濃い
+  現行との関係: draw 系の旧 main override として比較価値がある
+
+- J1_AWAY_RESTORE_OVERRIDE
+  対象レイヤー: prediction decision
+  理由: backtest_j1_2025.csv に確認でき、現行の draw/away 競合処理の前史と見られる
+  現行との関係: 現行 side / draw 競合整理の比較対象
+
+- J1_MAIN_DRAW_GUARD
+  対象レイヤー: prediction guard
+  理由: 旧 backtest に残っている draw 保護ルール
+  現行との関係: draw 過多抑制または保護の旧思想比較
+
+- BASE_FUSION
+  対象レイヤー: prediction fusion
+  理由: backtest_j1_2025.csv と report 系に広く残っている
+  現行との関係: 現在の fusion 系判断の直近前提
+
+- weak_flip_hold
+  対象レイヤー: prediction type adjustment
+  理由: old candidate 系出力に残り、hold/flip 解釈の旧版を示す
+  現行との関係: hold/stall/flip 再整理時の比較対象
+
+- j1_lab_sim_hold / j1_lab_sim_stall
+  対象レイヤー: prediction type adjustment
+  理由: snapshot candidate 出力に残っている
+  現行との関係: lab 系の旧シミュレーション層の比較対象
+
+- match_type 主分類群
+  対象レイヤー: match_type
+  対象名: away_strong / home_strong / neutral / signal_conflict / draw_risk
+  理由: 旧 backtest と現行 predictions 双方に継続して見える
+  現行との関係: purchase_type の手前で効いている基礎層なので、主検証の背景比較に使う
+
+3. アーカイブ寄りに置くもの
+
+- legacy_unused
+  対象レイヤー: legacy field marker
+  理由: 旧出力に残るが、現行判断材料として使っていない印が強い
+  現行との関係: 原則参照不要
+
+- flab_trial_flag / flab_trial_score / flab_trial_reason
+  対象レイヤー: trial metrics
+  理由: trial 名義で残っており、現行主判断軸として固定されていない
+  現行との関係: 必要時のみ参照
+
+- HFA sensitivity の個別比較系
+  対象レイヤー: parameter experiment
+  対象名: hfa0 / hfa10 / hfa21 など
+  理由: data/purchase_reference/hfa_sensitivity 配下の比較実験であり、通常運用とは分けるべき
+  現行との関係: HFA再調整時だけ参照
+
+- tri_argmax / balance_ha などの base_compare 系
+  対象レイヤー: base experiment
+  理由: 比較実験としての価値はあるが、今の節検証対象としては優先度が低い
+  現行との関係: 再構築時のみ比較対象
+
+- football_lab compare / trial_flags の外部比較群
+  対象レイヤー: external comparison
+  理由: 補助比較には使えるが、主採否判断の直接指標ではない
+  現行との関係: contradiction 調査時のみ参照
+
+今の運用でまず見る順序
+1. 主検証の purchase_type と ticket_guidance
+2. 主検証の policy / flag
+3. 参考比較の draw 系旧判定
+4. 必要時だけアーカイブ
+
+今の段階で無理に掘らないもの
+- legacy_unused が付いているだけの旧列
+- sensitivity 比較だけの単発実験
+- 現行の purchase_type / ticket_guidance と接続しない trial 系
+
+注意
+- アーカイブに落とすことは「無視」ではなく「今は掘らない」という整理
+- 通期検証では、全ロジックを横並びにせず、区分ごとに見る
+- 検証工数は、今後の改善判断に効くところへ集中させる

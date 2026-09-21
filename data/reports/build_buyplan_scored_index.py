@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import html
 import re
 from datetime import datetime
@@ -9,30 +10,60 @@ from pathlib import Path
 
 
 ROUND_RE = re.compile(r"^round(\d+)$")
+TOTO_RE = re.compile(r"^toto(\d+)$")
 
 
-def collect_scored_pages(rounds_dir: Path) -> list[tuple[int, Path]]:
+def load_toto_rounds_for_season(path: Path, season: str) -> set[int]:
+    if not season:
+        return set()
+    with path.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        return {
+            int(str(row.get("toto_round", "")).strip())
+            for row in reader
+            if str(row.get("season", "")).strip() == str(season).strip()
+            and str(row.get("toto_round", "")).strip().isdigit()
+        }
+
+
+def collect_scored_pages(
+    rounds_dir: Path,
+    kind: str = "round",
+    allowed_ids: set[int] | None = None,
+) -> list[tuple[int, Path]]:
     items: list[tuple[int, Path]] = []
+    pattern = TOTO_RE if kind == "toto" else ROUND_RE
+    if not rounds_dir.exists():
+        return items
     for child in rounds_dir.iterdir():
         if not child.is_dir():
             continue
-        m = ROUND_RE.match(child.name)
+        m = pattern.match(child.name)
         if not m:
+            continue
+        item_id = int(m.group(1))
+        if allowed_ids is not None and item_id not in allowed_ids:
             continue
         scored = child / "buyplan_scored.html"
         if scored.exists():
-            items.append((int(m.group(1)), scored))
+            items.append((item_id, scored))
     items.sort(key=lambda x: x[0], reverse=True)
     return items
 
 
-def build_html(items: list[tuple[int, Path]], limit: int) -> str:
+def build_html(
+    items: list[tuple[int, Path]],
+    limit: int,
+    kind: str = "round",
+    season: str = "",
+) -> str:
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     top = items[: max(0, limit)]
     lines: list[str] = []
     lines.append("<!doctype html>")
     lines.append("<html lang='ja'><head><meta charset='utf-8'>")
-    lines.append("<title>BuyPlan Scored 履歴</title>")
+    season_text = f"{season}シーズン " if season else ""
+    lines.append(f"<title>{html.escape(season_text)}BuyPlan採点履歴</title>")
     lines.append("<style>")
     lines.append("body{font-family:system-ui,-apple-system,sans-serif;margin:24px;color:#111;}")
     lines.append("h2{margin:0 0 12px 0;}")
@@ -44,14 +75,17 @@ def build_html(items: list[tuple[int, Path]], limit: int) -> str:
     lines.append("a{text-decoration:none;color:#0b57d0;}")
     lines.append("a:hover{text-decoration:underline;}")
     lines.append("</style></head><body>")
-    lines.append("<h2>BuyPlan Scored 履歴リンク（最新20節）</h2>")
+    unit = "開催回" if kind == "toto" else "節"
+    lines.append(f"<h2>{html.escape(season_text)}BuyPlan採点履歴（最新{limit}{unit}）</h2>")
     lines.append(f"<div class='meta'>生成日時: {html.escape(now)} / 件数: {len(top)}</div>")
     lines.append("<table><thead><tr><th>節</th><th>リンク</th></tr></thead><tbody>")
     for round_no, scored_path in top:
-        rel = f"round{round_no:02d}/buyplan_scored.html"
+        dirname = f"toto{round_no}" if kind == "toto" else f"round{round_no:02d}"
+        rel = f"{dirname}/buyplan_scored.html"
+        label = f"toto第{round_no}回" if kind == "toto" else f"第{round_no}節"
         lines.append(
             "<tr>"
-            f"<td>第{round_no}節</td>"
+            f"<td>{html.escape(label)}</td>"
             f"<td><a href='{html.escape(rel)}'>{html.escape(rel)}</a></td>"
             "</tr>"
         )
@@ -65,6 +99,9 @@ def build_html(items: list[tuple[int, Path]], limit: int) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Build index HTML for buyplan_scored pages.")
     parser.add_argument("--rounds-dir", default="data/eval/rounds", help="rounds root directory")
+    parser.add_argument("--kind", choices=["round", "toto"], default="round")
+    parser.add_argument("--season", default="", help="toto節リスト上のシーズン（toto時の絞り込み）")
+    parser.add_argument("--toto-order-csv", default="data/manual/toto節リスト.csv")
     parser.add_argument("--limit", type=int, default=20, help="max links to include")
     parser.add_argument(
         "--out",
@@ -77,8 +114,11 @@ def main() -> None:
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    items = collect_scored_pages(rounds_dir)
-    content = build_html(items, args.limit)
+    allowed_ids = None
+    if args.kind == "toto" and args.season:
+        allowed_ids = load_toto_rounds_for_season(Path(args.toto_order_csv), args.season)
+    items = collect_scored_pages(rounds_dir, kind=args.kind, allowed_ids=allowed_ids)
+    content = build_html(items, args.limit, kind=args.kind, season=args.season)
     out_path.write_text(content, encoding="utf-8")
     print(f"[OK] {out_path}")
 

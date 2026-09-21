@@ -1,0 +1,4 @@
+﻿label,rows,unique_reasons,nonempty_groups,unique_groups,top1_share,top3_share,restore_reason_kinds
+before_merge,84,22,27,12,0.4762,0.7262,20
+after_home_draw_merge,84,20,27,12,0.4762,0.7262,18
+after_home_balanced_merge,84,18,27,12,0.4762,0.7381,16

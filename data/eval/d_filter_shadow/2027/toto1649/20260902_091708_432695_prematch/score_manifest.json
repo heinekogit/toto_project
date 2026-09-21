@@ -1,0 +1,44 @@
+{
+  "round_id": "toto1649",
+  "shadow_dir": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/d_filter_shadow/2027/toto1649/20260902_091708_432695_prematch",
+  "actual_source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1649/actual_results.csv",
+  "matches": 10,
+  "summary": [
+    {
+      "policy": "false_draw_only",
+      "matches": 10,
+      "baseline_hits": 2,
+      "filtered_hits": 4,
+      "changed_matches": 5,
+      "rescue": 3,
+      "harm": 1,
+      "net_rescue": 2,
+      "baseline_hit_rate": 0.2,
+      "filtered_hit_rate": 0.4
+    },
+    {
+      "policy": "false_draw_plus_trap",
+      "matches": 10,
+      "baseline_hits": 2,
+      "filtered_hits": 4,
+      "changed_matches": 5,
+      "rescue": 3,
+      "harm": 1,
+      "net_rescue": 2,
+      "baseline_hit_rate": 0.2,
+      "filtered_hit_rate": 0.4
+    },
+    {
+      "policy": "topology_guard",
+      "matches": 10,
+      "baseline_hits": 2,
+      "filtered_hits": 4,
+      "changed_matches": 5,
+      "rescue": 3,
+      "harm": 1,
+      "net_rescue": 2,
+      "baseline_hit_rate": 0.2,
+      "filtered_hit_rate": 0.4
+    }
+  ]
+}

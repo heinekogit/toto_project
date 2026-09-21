@@ -1,0 +1,261 @@
+今シーズン運用中 第16節-第19節 主検証記入版
+
+目的
+主検証対象一覧を使って、直近対象節の観測結果を先に埋める。
+
+前提
+- 先シーズンは終了済み
+- 節によって出力形式が異なる
+- そのため、各節で使う元データを明記して記録する
+
+今回使った元データ
+- 第16節: data/reports/csv/predictions_round_all_2026_第１６節.csv
+- 第17節: data/reports/csv/predictions_round_all_2026_第１７節.csv
+- 第18節: data/reports/csv/predictions_round_all_2026_第１８節.csv
+- 第19節: data/eval/rounds/round19/snapshot/predictions_buyplan_context.csv + actual_results.csv
+
+注意
+- 第16節-第18節は report CSV を正本として扱った
+- 第19節は report CSV が見当たらなかったため、eval snapshot を正本として扱った
+- 第16節-第17節は旧寄り形式で、purchase_type はあるが評価の主軸は ticket_guidance 寄り
+- 第19節は4試合ぶんが actual_results との単純結合から漏れたため、下記の purchase_type / guidance 集計は13試合中9試合分ベース
+- 下記の hit は、まず primary_pick_symbol を簡易確認に使った記録
+
+----------------------------------------
+第16節
+----------------------------------------
+
+実結果 H/D/A
+- H: 5
+- D: 3
+- A: 7
+
+主検証対象の出現
+- j1_draw_rescue_watch: 7
+- chaos_side_watch: 5
+- j2_draw_trap: 2
+- j2_false_draw_watch: 1
+
+ticket_guidance 出現
+- draw_rescue_split: 5
+- side_with_cover: 5
+- draw_core_keep: 2
+- draw_cut_to_side: 3
+
+draw 系件数管理メモ
+- draw 系総量:
+  j1_draw_rescue_watch 7 + j2_draw_trap 2 + j2_false_draw_watch 1 = 10
+- draw_rescue 件数:
+  7
+- trap 出口:
+  side_with_cover 5
+  draw_cut_to_side 3
+- 件数管理観点:
+  通常上限感を明確に超過
+  draw_rescue を先に抑制検討すべき節
+
+簡易成績メモ
+- j1_draw_rescue_watch が最も多い
+- side 系と draw_rescue 系が中心
+- この節は A が多い節分布
+- primary_pick_symbol ベースの簡易確認では、主検証対象はかなり苦しい節
+
+buyplan 実績
+- best candidate: cand03
+- hits: 5 / 13
+- hit_rate: 0.3846
+- draw_hit_count: 1 / draw_pred_count 3
+
+節メモ
+- draw 系主導の構成に対して、実結果は A 多め
+- draw_rescue と draw_cut の効き方は悪かった可能性が高い
+- side 系を増やす判断材料として使える節
+
+----------------------------------------
+第17節
+----------------------------------------
+
+実結果 H/D/A
+- H: 3
+- D: 4
+- A: 8
+
+主検証対象の出現
+- j1_draw_rescue_watch: 7
+- chaos_side_watch: 4
+- j2_false_draw_watch: 2
+- j2_directional_stall: 1
+- j2_draw_trap: 1
+
+ticket_guidance 出現
+- draw_rescue_split: 6
+- draw_core_keep: 3
+- side_with_cover: 5
+- draw_cut_to_side: 1
+
+draw 系件数管理メモ
+- draw 系総量:
+  j1_draw_rescue_watch 7 + j2_false_draw_watch 2 + j2_draw_trap 1 = 10
+- draw_rescue 件数:
+  7
+- trap 出口:
+  side_with_cover 5
+  draw_cut_to_side 1
+- 件数管理観点:
+  第16節同様に過多
+  draw_rescue を厚くしすぎた疑いが強い
+
+簡易成績メモ
+- 第16節に続き j1_draw_rescue_watch が多い
+- A がかなり多い節分布
+- draw_rescue と side_with_cover が並行して多い
+- primary_pick_symbol ベースでは、この節も主検証対象の効きは弱い
+
+buyplan 実績
+- best candidate: cand04
+- hits: 3 / 12
+- hit_rate: 0.2500
+- draw_hit_count: 0 / draw_pred_count 3
+
+節メモ
+- draw 系観測が多い一方で、節分布は A 寄り
+- 第16節とセットで見ると、draw 救済を厚くしすぎた可能性がある
+- j2 系は件数が少なく、この2節だけでは強い判断はしづらい
+
+----------------------------------------
+第18節
+----------------------------------------
+
+実結果 H/D/A
+- H: 7
+- D: 1
+- A: 7
+
+主検証対象の出現
+- j1_draw_rescue_watch: 9
+- j2_draw_trap: 3
+- j2_false_draw_watch: 2
+- j2_directional_stall: 1
+- chaos_side_watch: 1
+
+ticket_guidance 出現
+- draw_rescue_split: 7
+- draw_cut_to_side: 5
+- draw_core_keep: 2
+- side_with_cover: 2
+
+draw 系件数管理メモ
+- draw 系総量:
+  j1_draw_rescue_watch 9 + j2_draw_trap 3 + j2_false_draw_watch 2 = 14
+- draw_rescue 件数:
+  9
+- trap 出口:
+  draw_cut_to_side 5
+  side_with_cover 2
+- 件数管理観点:
+  4節中で最も過多
+  D が1試合しかない節でこの件数は明確に抑制候補
+
+簡易成績メモ
+- D が1試合しかないのに、draw 系分類が非常に厚い
+- j1_draw_rescue_watch が突出
+- j2_draw_trap も3件あり、draw 系寄りの構成が目立つ
+- primary_pick_symbol ベースでは、この節も draw 系厚めの構成が裏目に出た可能性が高い
+
+buyplan 実績
+- best candidate: cand07
+- hits: 7 / 13
+- hit_rate: 0.5385
+- draw_hit_count: 0 / draw_pred_count 1
+
+節メモ
+- 分類上は draw 系が強いが、券面全体では当たり候補も出ている
+- prediction 側の draw 系意味づけと、buyplan 側の分散効果を分けて見る必要がある
+- 第16節-第18節を通すと、draw 系分類の件数過多は明確な論点
+
+----------------------------------------
+第19節
+----------------------------------------
+
+実結果 H/D/A
+- H: 5
+- D: 7
+- A: 1
+
+主検証対象の出現
+- j1_false_draw_watch: 6
+- j1_draw_rescue_watch: 4
+- j2_false_draw_watch: 2
+- chaos_side_watch: 1
+
+ticket_guidance 出現
+- draw_watch_split: 8
+- draw_core_keep: 3
+- draw_rescue_split: 1
+- side_with_cover: 1
+
+draw 系件数管理メモ
+- draw 系総量:
+  j1_false_draw_watch 6 + j1_draw_rescue_watch 4 + j2_false_draw_watch 2 = 12
+- draw_rescue 件数:
+  4
+- trap 出口:
+  side_with_cover 1
+- 件数管理観点:
+  件数だけ見れば多い
+  ただし実結果 D=7 で、この節は整合側
+  draw_watch と draw_rescue を分けて見る必要が高い
+
+簡易成績メモ
+- D が7試合で、実際に draw が多い節
+- j1_false_draw_watch が最も多く、draw_watch_split も多い
+- 結果分布と分類構成が比較的かみ合った節
+
+簡易成績
+- j1_false_draw_watch: 4 / 6
+- j1_draw_rescue_watch: 2 / 4
+- j2_false_draw_watch: 1 / 2
+- chaos_side_watch: 1 / 1
+
+- draw_watch_split: 5 / 8
+- draw_core_keep: 2 / 3
+- draw_rescue_split: 0 / 1
+- side_with_cover: 1 / 1
+
+buyplan 実績
+- best candidate: cand01
+- hits: 6 / 13
+- hit_rate: 0.4615
+- draw_hit_count: 4 / draw_pred_count 7
+
+節メモ
+- 第16節-第18節とは逆で、draw 系観測が実結果と整合した節
+- draw_watch 系を全否定せず、どの条件で効くかを切る必要がある
+- draw_rescue と draw_watch を同一視しない方がよい
+
+----------------------------------------
+4節まとめ
+----------------------------------------
+
+形式面
+- 第16節-第17節は旧寄り
+- 第18節は report CSV を正本にして確認
+- 第19節は snapshot ベースで確認
+- 通し比較はできるが、同一精度ではない
+
+見えている傾向
+- 第16節-第18節は draw 系分類が厚く、結果分布とズレる節が多い
+- 第19節は draw 系分類が結果分布と整合した
+- したがって、draw 系分類は「常に弱い」のではなく、「効く条件の切り分けが未整理」という見方が妥当
+- 件数管理で見ると、第16節-第18節は明確に over、ただし第19節は over でも整合した例外節
+
+直近の主論点
+- j1_draw_rescue_watch を厚く出しすぎていないか
+- j2_false_draw_watch と j2_draw_trap の線引きは妥当か
+- draw_watch と draw_rescue を同列に扱っていないか
+- draw 系の件数管理を節分布に応じて変える必要があるか
+
+次にやること
+1. 第16節-第19節を使って j1_draw_rescue_watch の採否メモを作る
+2. j2_draw_trap と j2_false_draw_watch を分離して反映判断テンプレートへ書く
+3. draw_watch / draw_rescue / draw_trap の境界を整理表に追記する

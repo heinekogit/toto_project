@@ -1,0 +1,4 @@
+﻿policy,matches,baseline_hits,filtered_hits,baseline_hit_rate,filtered_hit_rate,changed_matches,changed_to_home,changed_to_away,rescue,harm,net_rescue,change_precision
+false_draw_only,101.0,28.0,42.0,0.27722772277227725,0.4158415841584158,44.0,23.0,21.0,23.0,9.0,14.0,0.5227272727272727
+false_draw_plus_trap,101.0,28.0,50.0,0.27722772277227725,0.49504950495049505,58.0,31.0,27.0,33.0,11.0,22.0,0.5689655172413793
+topology_guard,101.0,28.0,51.0,0.27722772277227725,0.504950495049505,57.0,30.0,27.0,34.0,11.0,23.0,0.5964912280701754

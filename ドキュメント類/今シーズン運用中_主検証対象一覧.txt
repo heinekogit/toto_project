@@ -1,0 +1,99 @@
+今シーズン運用中 主検証対象一覧
+
+目的
+毎節または複数節まとめて確認する対象だけを抜き出し、
+検証工数を主対象へ集中させる。
+
+前提
+- 先シーズンは終了済み
+- 先シーズン中の全ロジックを等しく掘るのではなく、
+  現行判断に効く対象だけを主検証とする
+
+1. policy / flag
+
+- home_reversal_watch
+  区分: policy
+  見る理由: 正式運用枠として残すかを判断するため
+
+- j2_draw_trap
+  区分: policy
+  見る理由: J2 draw 系の主軸候補だから
+
+- j1_draw_rescue_watch
+  区分: flag
+  見る理由: J1 draw 救済観測の継続対象だから
+
+- j2_false_draw_watch
+  区分: flag
+  見る理由: j2_draw_trap と分離して効き方を見たいから
+
+2. purchase_type
+
+- chaos_draw_watch
+  見る理由: 現行でも残っている draw 系基底分類
+
+- chaos_side_watch
+  見る理由: 現行でも残っている side 系不安定分類
+
+- draw_trap
+  見る理由: draw_watch / draw_rescue との境界整理が必要
+
+- draw_watch
+  見る理由: 観測対象として実運用に残っている
+
+- draw_rescue
+  見る理由: rescue / harm を直接見たい対象
+
+- j2_directional_stall
+  見る理由: J2 の stall 系分類として実体がある
+
+3. ticket_guidance
+
+- draw_core_keep
+- draw_watch_split
+- draw_rescue_split
+- side_with_cover
+- side_single
+- side_single_strong
+- draw_cut_to_side
+
+見る理由
+- prediction 側の意味づけが券面へどう出ているか確認するため
+- all-same 重なりや偏り、副作用を確認するため
+
+4. 毎回見る指標
+
+- main hit rate
+- ticket hit rate
+- rescue
+- harm
+- net rescue
+- actual H/D/A
+- predicted H/D/A
+- all-same 重なり
+- J1 / J2 差
+
+5. 優先順
+
+1. j2_draw_trap
+2. j2_false_draw_watch
+3. j1_draw_rescue_watch
+4. chaos_draw_watch
+5. draw_rescue
+6. draw_watch
+7. chaos_side_watch
+8. j2_directional_stall
+9. ticket_guidance 群
+10. home_reversal_watch
+
+6. 毎節メモ欄
+
+- 対象節:
+- 主検証で効いていたもの:
+- harm が目立ったもの:
+- 保留に回すもの:
+- 次節も継続して見るもの:
+
+補足
+- 参考比較やアーカイブは、この一覧には入れない
+- 主検証対象が増えすぎたら、毎節見る対象と隔節で見る対象にさらに分ける

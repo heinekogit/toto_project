@@ -1,0 +1,14 @@
+﻿season,logical_season,toto_round,match_no,datetime,competition,source_league,home_team,away_team,stadium,source
+2026,2027,1649,1,2026-09-02 19:00:00,league,j1,東京V,神戸,味スタ,official_league_schedule
+2026,2027,1649,2,2026-09-02 19:00:00,league,j1,C大阪,柏,ハナサカ,official_league_schedule
+2026,2027,1649,3,2026-09-02 19:00:00,league,j1,広島,名古屋,Ｅピース,official_league_schedule
+2026,2027,1649,4,2026-09-02 19:00:00,league,j1,千葉,岡山,フクアリ,official_league_schedule
+2026,2027,1649,5,2026-09-02 19:00:00,league,j1,福岡,浦和,ベススタ,official_league_schedule
+2026,2027,1649,6,2026-09-02 19:00:00,league,j1,水戸,鹿島,水戸信ス,official_league_schedule
+2026,2027,1649,7,2026-09-02 19:00:00,league,j1,町田,川崎F,Ｇスタ,official_league_schedule
+2026,2027,1649,8,2026-09-02 19:00:00,league,j1,横浜FM,京都,日産ス,official_league_schedule
+2026,2027,1649,9,2026-09-02 19:00:00,league,j1,清水,FC東京,アイスタ,official_league_schedule
+2026,2027,1649,10,2026-09-02 19:00:00,league,j1,長崎,G大阪,ピースタ,official_league_schedule
+2026,2027,1649,11,2026-09-02 19:00:00,league_cup,mixed,宮崎,富山,いちご宮崎新富サッカー場,manual_special_match
+2026,2027,1649,12,2026-09-02 19:00:00,league_cup,mixed,愛媛,秋田,ニンジニアスタジアム,manual_special_match
+2026,2027,1649,13,2026-09-02 19:00:00,league_cup,mixed,鳥取,大宮,Axisバードスタジアム,manual_special_match

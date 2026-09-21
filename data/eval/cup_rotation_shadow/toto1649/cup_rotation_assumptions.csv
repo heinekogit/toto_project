@@ -1,0 +1,7 @@
+﻿snapshot_at_jst,toto_round,match_no,datetime,side,team,opponent,team_category,opponent_category,category_gap,assumed_core_usage,rotation_risk,matchday_strength_index,matchday_xg_adjustment,pre_match_fatigue_current,scaled_match_load,travel_km,travel_fatigue_unscaled,assumed_post_cup_event_load,extra_time_load,hypothesis_status
+2026-09-01T22:09:57+09:00,1649,11,2026-09-02 19:00:00,home,宮崎,富山,j2,j2,0,1.0000,standard_selection,1.0000,,3.9800,3.9800,0.0000,0.0000,3.9800,0.0000,pre_match_frozen
+2026-09-01T22:09:57+09:00,1649,11,2026-09-02 19:00:00,away,富山,宮崎,j2,j2,0,1.0000,standard_selection,1.0000,,5.4300,5.4300,728.0000,3.6400,9.0700,0.0000,pre_match_frozen
+2026-09-01T22:09:57+09:00,1649,12,2026-09-02 19:00:00,home,愛媛,秋田,j3,j2,-1,1.0000,standard_selection,1.0000,,3.6900,3.6900,0.0000,0.0000,3.6900,0.0000,pre_match_frozen
+2026-09-01T22:09:57+09:00,1649,12,2026-09-02 19:00:00,away,秋田,愛媛,j2,j3,1,0.7000,medium_rotation,0.7000,,7.3200,5.1240,925.4000,4.6270,9.7510,0.0000,pre_match_frozen
+2026-09-01T22:09:57+09:00,1649,13,2026-09-02 19:00:00,home,鳥取,大宮,j3,j2,-1,1.0000,standard_selection,1.0000,,3.0300,3.0300,0.0000,0.0000,3.0300,0.0000,pre_match_frozen
+2026-09-01T22:09:57+09:00,1649,13,2026-09-02 19:00:00,away,大宮,鳥取,j2,j3,1,0.7000,medium_rotation,0.7000,,6.4300,4.5010,491.4000,2.4570,6.9580,0.0000,pre_match_frozen

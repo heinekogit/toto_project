@@ -114,12 +114,13 @@ for LEAGUE in $LEAGUES; do
   describe_step "01_update_match_schedule.py" "今後日程CSVを更新（試合日時・対戦カード）"
   run_step_safe "01_update_match_schedule.py" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" "$PYTHON" "$ROOT_DIR/scripts/01_update_match_schedule.py"
   describe_step "06_calculate_fatigue.py" "疲労スコアCSVを作成/更新（連戦・移動の影響）"
-  run_step_safe "06_calculate_fatigue.py" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" "$PYTHON" "$ROOT_DIR/scripts/06_calculate_fatigue.py"
+  run_step_safe "06_calculate_fatigue.py" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" "$PYTHON" "$ROOT_DIR/scripts/06_calculate_fatigue.py" || exit 1
+  describe_step "11_build_fatigue_qc.py" "本番疲労CSVの距離参照・マージを検査（不備は停止）"
+  run_step_safe "11_build_fatigue_qc.py" "$PYTHON" "$ROOT_DIR/scripts/eval/11_build_fatigue_qc.py" \
+    --season "$SEASON_YEAR" --leagues "$LEAGUE" || exit 1
   describe_step "03_rankings_motivation.py" "モチベーション関連指標を更新（順位文脈の補助特徴量）"
   run_step_safe "03_rankings_motivation.py" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" "$PYTHON" "$ROOT_DIR/scripts/03_rankings_motivation.py"
 
-  describe_step "11_prediction_01.py" "予測CSVを更新（節タイプ補正は無効化）"
-  run_step_safe "11_prediction_01.py" ENABLE_ROUND_TYPE_DRAW_CONTROL="0" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" STATS_ASOF_DATE="$STATS_ASOF_DATE" "$PYTHON" "$ROOT_DIR/scripts/11_prediction_01.py"
 
   # 試合直前：天候取得（任意）
   if [[ "$RUN_WEATHER" == "1" ]]; then
@@ -129,14 +130,24 @@ for LEAGUE in $LEAGUES; do
     SNAPSHOT_OUT="$WEATHER_SNAPSHOT_DIR/weather_features_${LEAGUE}_${SEASON_YEAR}_asof_${WEATHER_ASOF_KEY}.csv"
     mkdir -p "$WEATHER_SNAPSHOT_DIR"
     describe_step "fetch_weather_features.py" "天候特徴量CSVを取得/更新（雨・風など）"
-    run_step_safe "fetch_weather_features.py" "$PYTHON" "$ROOT_DIR/fetch_weather_features.py" \
+    if run_step_safe "fetch_weather_features.py" WEATHER_ASOF_DATE="$WEATHER_ASOF_DATE" "$PYTHON" "$ROOT_DIR/fetch_weather_features.py" \
       --stadiums "$STADIUMS_FILE" \
       --matches "$MATCHES_FILE" \
-      --out "$SNAPSHOT_OUT"
-    if [[ -f "$SNAPSHOT_OUT" ]]; then
-      run_step_safe "weather_features_latest_copy" cp "$SNAPSHOT_OUT" "$OUT_FILE"
+      --lookahead-days "${WEATHER_LOOKAHEAD_DAYS:-7}" \
+      --out "$SNAPSHOT_OUT"; then
+      if [[ -f "$SNAPSHOT_OUT" ]]; then
+        run_step_safe "weather_features_latest_copy" cp "$SNAPSHOT_OUT" "$OUT_FILE"
+      else
+        echo "[ERROR] 天候取得の出力がありません。予測を停止します。"
+        exit 1
+      fi
+    else
+      echo "[ERROR] 天候取得失敗。予測を停止します。"
+      exit 1
     fi
   fi
+  describe_step "11_prediction_01.py" "予測CSVを更新（節タイプ補正は無効化）"
+  run_step_safe "11_prediction_01.py" ENABLE_ROUND_TYPE_DRAW_CONTROL="0" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" STATS_ASOF_DATE="$STATS_ASOF_DATE" "$PYTHON" "$ROOT_DIR/scripts/11_prediction_01.py" || exit 1
 done
 
 if [[ "$FAILED_STEPS" -gt 0 ]]; then

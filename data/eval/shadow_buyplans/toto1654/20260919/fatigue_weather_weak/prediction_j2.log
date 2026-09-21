@@ -1,0 +1,356 @@
+[PATH] stats snapshot(asof=20260919)を採用: /private/tmp/toto1654_shadow_buyplans_1sckceea/data/stats_snapshots/team_master_stats_j2_2026_asof_20260919.csv
+[PATH] 採用: /private/tmp/toto1654_shadow_buyplans_1sckceea/data/manual/team_management_master.csv (rows=20)
+[PATH] absence snapshot(asof=20260919)を採用: /private/tmp/toto1654_shadow_buyplans_1sckceea/data/absence_snapshots/absences_with_impact_asof_20260919.csv
+[PATH] 採用: /private/tmp/toto1654_shadow_buyplans_1sckceea/data/j2_2026_motivation.csv (rows=20)
+[PATH] weather snapshot(asof=20260919)を採用: /private/tmp/toto1654_shadow_buyplans_1sckceea/data/weather_snapshots/weather_features_j2_2026_asof_20260919.csv
+[CONFIG][WARN] DRAW_TWEAK_MODE=off のため BACKTEST_DECISION_RULE='both' は使用せず argmax固定で評価します
+[MULTINOM_SIGN_DETECT] disabled_for_constrained_model sign=1 swap_ha=0
+[MODEL_CONFIG] league=j2 class_weight=balanced alpha=unknown baseline_eps=unknown
+[CONFIG] HDA_MODEL_MODE=multinom HDA_FEATURE_PROFILE=default HDA_MODEL_EFFECTIVE=multinom HDA_MODEL_PATH=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/models/hda_multinom_calibrated_j2.joblib ENABLE_HFA=1 HFA_ELO=12.00 HFA_BASE_APPLIED=12.00 ENABLE_MATCHUP_BIAS=0 MATCHUP_BIAS_COEF=60.000 OUT=/private/tmp/toto1654_shadow_buyplans_1sckceea/j2_2026_predictions_hfa_on.csv FORCE=0 STRICT_MODE=1 ELO_DIFF_SCALE=1.150 ELO_D_VALUE=550.0 HFA_PROB_WEIGHT=0.350 MULTINOM_ELO_DIFF_SIGN=1 MULTINOM_SWAP_HA_OUTPUT=0 DRAW_DECAY_SCALE=320.0 DRAW_BLEND_WEIGHT=0.600 ELO_DRAW_MIN=0.100 ELO_DRAW_MAX=0.380 ELO_DRAW_BASE=0.330 ELO_DRAW_BUMP=0.000 ELO_DRAW_DIFF_SCALE=1.000 ENFORCE_ELO_SIGN_MONOTONIC=1 DRAW_TWEAK_MODE=off DRAW_TWEAK_ENABLED=0 DRAW_ASSIGN_BY_EXPECTATION_RAW=1 DRAW_ASSIGN_BY_EXPECTATION=0 DRAW_EXPECTATION_MULTIPLIER_RAW=1.000 DRAW_EXPECTATION_MULTIPLIER=1.000 DRAW_MARGIN=0.030 CLOSE_HA_GAP=0.060 CLOSE_HA_MIN_LEVEL=0.330 CLOSE_HA_GAP_WEIGHT=0.200 CLOSE_HA_DRAW_SCORE_MIN=-0.030 CLOSE_HA_DRAW_SCORE_MIN_GRID=-0.03,-0.02,-0.01,0.00,0.01 CLOSE_D_TOP_GAP=0.060 CLOSE_D_TOP_GAP_GRID=0.02,0.03,0.04,0.05,0.06,0.07,0.08 ABSENCE_ELO_COEF=0.1000 ABSENCE_ELO_ADJUST_CLIP=0.0300 DRAW_ASSIGN_GROUP_MODE=toto_contest BACKTEST_DECISION_RULE=both BACKTEST_COMPARE_DATASET=current BACKTEST_COMPARE_CSV=- BACKTEST_MARGIN_SCAN=0 DRAW_MARGIN_GRID=+0.05,+0.04,+0.03,+0.02,+0.01,0.00,-0.01,-0.02,-0.03
+[HFA_APPLY_PATH] active_path=compute_probabilities_and_result:elo_diff_for_prob (single source of HFA addition)
+前年データを読み込みました: /private/tmp/toto1654_shadow_buyplans_1sckceea/data/j2_2025_latest_results.csv
+[SEASON_MERGE] source=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/j2_2026_latest_results.csv added_rows=61 total_rows=319->380
+[SCORE_ENRICH] source=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/j2_2026_latest_results.csv filled_by_match_id=0 filled_by_key=0 scored_rows=61->61
+[MERGE_QC] チーム名差分: matches_only=0 CSV保存 -> /private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/merge_qc/j2_2026/team_name_diff_matches_vs_stats.csv
+[MERGE_QC] 正規化後チーム名差分: matches_only=0 CSV保存 -> /private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/merge_qc/j2_2026/team_name_diff_matches_vs_stats_after_canonical.csv
+[MERGE_QC] fatigue_future left_before: rows=319 unique_keys=319 duplicate_keys=0 keys=['datetime', 'home_team', 'away_team']
+[MERGE_QC] fatigue_future right: rows=380 unique_keys=380 duplicate_keys=0 keys=['datetime', 'home_team', 'away_team']
+[MERGE_QC] fatigue_future result: rows_before=319 rows_after=319 delta=0 validate=one_to_one indicator={'both': 319, 'left_only': 0, 'right_only': 0}
+[MERGE_QC] fatigue_future: left_only=0
+[MERGE_QC] fatigue_finished left_before: rows=61 unique_keys=61 duplicate_keys=0 keys=['datetime', 'home_team', 'away_team']
+[MERGE_QC] fatigue_finished right: rows=380 unique_keys=380 duplicate_keys=0 keys=['datetime', 'home_team', 'away_team']
+[MERGE_QC] fatigue_finished result: rows_before=61 rows_after=61 delta=0 validate=one_to_one indicator={'both': 61, 'left_only': 0, 'right_only': 0}
+[MERGE_QC] fatigue_finished: left_only=0
+[MISSING_QC] after_fatigue_future: 対象カラムなし
+[MISSING_QC] after_fatigue_finished: 対象カラムなし
+[ACL] loaded=52 path=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/manual/acl_schedule.csv effective_days=5
+[MISSING_QC] after_acl_future: 対象カラムなし
+[MISSING_QC] after_acl_finished: 対象カラムなし
+[WEATHER] union_sources=49 union_rows=357 primary=weather_features_j2_2026_asof_20260919.csv
+[MERGE_QC] weather_cache_future left_before: rows=319 unique_keys=319 duplicate_keys=0 keys=['match_id']
+[MERGE_QC] weather_cache_future right: rows=357 unique_keys=357 duplicate_keys=0 keys=['match_id']
+[MERGE_QC] weather_cache_future indicator={'left_only': 300, 'both': 19, 'right_only': 0}
+[MERGE_QC][WARN] weather_cache_future: left_only=300 -> /private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/merge_qc/j2_2026/weather_cache_future_left_only.csv
+                match_id home_team away_team
+  j2_2026_10031400_新潟_徳島        新潟        徳島
+  j2_2026_10031400_藤枝_湘南        藤枝        湘南
+  j2_2026_10031600_甲府_富山        甲府        富山
+ j2_2026_10031700_栃木C_今治       栃木Ｃ        今治
+  j2_2026_10031700_大分_山形        大分        山形
+ j2_2026_10041300_札幌_いわき        札幌       いわき
+j2_2026_10041300_八戸_横浜FC        八戸      横浜FC
+  j2_2026_10041400_秋田_鳥栖        秋田        鳥栖
+  j2_2026_10041500_仙台_磐田        仙台        磐田
+  j2_2026_10041900_宮崎_大宮        宮崎        大宮
+[WEATHER_MATCH_FALLBACK] stage=weather_cache_finished matched=61 key=league+season+date+home+away (kickoff_hhmm ignored)
+[MERGE_QC] weather_cache_finished left_before: rows=61 unique_keys=61 duplicate_keys=0 keys=['match_id']
+[MERGE_QC] weather_cache_finished right: rows=418 unique_keys=418 duplicate_keys=0 keys=['match_id']
+[MERGE_QC] weather_cache_finished indicator={'both': 61, 'left_only': 0, 'right_only': 0}
+[MERGE_QC] weather_cache_finished: left_only=0
+[MISSING_QC][INFO] after_weather_cache_future is_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_weather_cache_future is_heavy_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_weather_cache_future is_strong_wind: missing_rate=0.00%
+[MISSING_QC][INFO] after_weather_cache_future weather_missing: missing_rate=0.00%
+[MISSING_QC][INFO] after_weather_cache_finished is_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_weather_cache_finished is_heavy_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_weather_cache_finished is_strong_wind: missing_rate=0.00%
+[MISSING_QC][INFO] after_weather_cache_finished weather_missing: missing_rate=0.00%
+天候データを union ローダーで読み込みました。primary=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/weather_snapshots/weather_features_j2_2026_asof_20260919.csv
+[MERGE_QC] stats_future_home left_before: rows=319 unique_keys=20 duplicate_keys=299 keys=['_merge_home_team']
+[MERGE_QC] stats_future_home right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] stats_future_home result: rows_before=319 rows_after=319 delta=0 validate=many_to_one indicator={'both': 319, 'left_only': 0, 'right_only': 0}
+[MERGE_QC] stats_future_home: left_only=0
+[MERGE_QC] stats_future_away left_before: rows=319 unique_keys=20 duplicate_keys=299 keys=['_merge_away_team']
+[MERGE_QC] stats_future_away right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] stats_future_away result: rows_before=319 rows_after=319 delta=0 validate=many_to_one indicator={'both': 319, 'left_only': 0, 'right_only': 0}
+[MERGE_QC] stats_future_away: left_only=0
+[MERGE_QC] stats_finished_home left_before: rows=61 unique_keys=20 duplicate_keys=41 keys=['_merge_home_team']
+[MERGE_QC] stats_finished_home right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] stats_finished_home result: rows_before=61 rows_after=61 delta=0 validate=many_to_one indicator={'both': 61, 'left_only': 0, 'right_only': 0}
+[MERGE_QC] stats_finished_home: left_only=0
+[MERGE_QC] stats_finished_away left_before: rows=61 unique_keys=20 duplicate_keys=41 keys=['_merge_away_team']
+[MERGE_QC] stats_finished_away right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] stats_finished_away result: rows_before=61 rows_after=61 delta=0 validate=many_to_one indicator={'both': 61, 'left_only': 0, 'right_only': 0}
+[MERGE_QC] stats_finished_away: left_only=0
+[MISSING_QC][INFO] after_stats_future is_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_stats_future is_heavy_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_stats_future is_strong_wind: missing_rate=0.00%
+[MISSING_QC][INFO] after_stats_future weather_missing: missing_rate=0.00%
+[MISSING_QC][INFO] after_stats_future stats_ゴール期待値_home: missing_rate=0.00%
+[MISSING_QC][INFO] after_stats_future stats_ゴール期待値_away: missing_rate=0.00%
+[MISSING_QC][INFO] after_stats_finished is_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_stats_finished is_heavy_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_stats_finished is_strong_wind: missing_rate=0.00%
+[MISSING_QC][INFO] after_stats_finished weather_missing: missing_rate=0.00%
+[MISSING_QC][INFO] after_stats_finished stats_ゴール期待値_home: missing_rate=0.00%
+[MISSING_QC][INFO] after_stats_finished stats_ゴール期待値_away: missing_rate=0.00%
+[MERGE_QC][INFO] management_future: 対象リーグとのチーム一致なし (target_teams=20, external_teams=20); 対象外データとしてスキップ
+[MERGE_QC][INFO] management_finished: 対象リーグとのチーム一致なし (target_teams=20, external_teams=20); 対象外データとしてスキップ
+[MISSING_QC][INFO] after_management_future is_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_management_future is_heavy_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_management_future is_strong_wind: missing_rate=0.00%
+[MISSING_QC][INFO] after_management_future weather_missing: missing_rate=0.00%
+[MISSING_QC][INFO] after_management_future stats_ゴール期待値_home: missing_rate=0.00%
+[MISSING_QC][INFO] after_management_future stats_ゴール期待値_away: missing_rate=0.00%
+[MISSING_QC][INFO] after_management_finished is_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_management_finished is_heavy_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_management_finished is_strong_wind: missing_rate=0.00%
+[MISSING_QC][INFO] after_management_finished weather_missing: missing_rate=0.00%
+[MISSING_QC][INFO] after_management_finished stats_ゴール期待値_home: missing_rate=0.00%
+[MISSING_QC][INFO] after_management_finished stats_ゴール期待値_away: missing_rate=0.00%
+[MERGE_QC] rankmot_future_home left_before: rows=319 unique_keys=20 duplicate_keys=299 keys=['_merge_home_team']
+[MERGE_QC] rankmot_future_home right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] rankmot_future_home result: rows_before=319 rows_after=319 delta=0 validate=many_to_one indicator={'both': 319, 'left_only': 0, 'right_only': 0}
+[MERGE_QC] rankmot_future_home: left_only=0
+[MERGE_QC] rankmot_future_away left_before: rows=319 unique_keys=20 duplicate_keys=299 keys=['_merge_away_team']
+[MERGE_QC] rankmot_future_away right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] rankmot_future_away result: rows_before=319 rows_after=319 delta=0 validate=many_to_one indicator={'both': 319, 'left_only': 0, 'right_only': 0}
+[MERGE_QC] rankmot_future_away: left_only=0
+[MERGE_QC] rankmot_finished_home left_before: rows=61 unique_keys=20 duplicate_keys=41 keys=['_merge_home_team']
+[MERGE_QC] rankmot_finished_home right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] rankmot_finished_home result: rows_before=61 rows_after=61 delta=0 validate=many_to_one indicator={'both': 61, 'left_only': 0, 'right_only': 0}
+[MERGE_QC] rankmot_finished_home: left_only=0
+[MERGE_QC] rankmot_finished_away left_before: rows=61 unique_keys=20 duplicate_keys=41 keys=['_merge_away_team']
+[MERGE_QC] rankmot_finished_away right: rows=20 unique_keys=20 duplicate_keys=0 keys=['_merge_team_name']
+[MERGE_QC] rankmot_finished_away result: rows_before=61 rows_after=61 delta=0 validate=many_to_one indicator={'both': 61, 'left_only': 0, 'right_only': 0}
+[MERGE_QC] rankmot_finished_away: left_only=0
+[MISSING_QC][INFO] after_rankmot_future is_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_rankmot_future is_heavy_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_rankmot_future is_strong_wind: missing_rate=0.00%
+[MISSING_QC][INFO] after_rankmot_future weather_missing: missing_rate=0.00%
+[MISSING_QC][INFO] after_rankmot_future stats_ゴール期待値_home: missing_rate=0.00%
+[MISSING_QC][INFO] after_rankmot_future stats_ゴール期待値_away: missing_rate=0.00%
+[MISSING_QC][INFO] after_rankmot_finished is_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_rankmot_finished is_heavy_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_rankmot_finished is_strong_wind: missing_rate=0.00%
+[MISSING_QC][INFO] after_rankmot_finished weather_missing: missing_rate=0.00%
+[MISSING_QC][INFO] after_rankmot_finished stats_ゴール期待値_home: missing_rate=0.00%
+[MISSING_QC][INFO] after_rankmot_finished stats_ゴール期待値_away: missing_rate=0.00%
+[ABSENCE] 取り込み完了: mode=date src_rows=109, expanded=528, team_match_rows=304
+[MERGE_QC] absence_future_home left_before: rows=319 unique_keys=319 duplicate_keys=0 keys=['_season', '_merge_home_team', '_round_no', '_match_date']
+[MERGE_QC] absence_future_home right: rows=304 unique_keys=304 duplicate_keys=0 keys=['season', '_merge_team_name', 'round_no', 'match_date']
+[MERGE_QC] absence_future_home result: rows_before=319 rows_after=319 delta=0 validate=many_to_one indicator={'left_only': 200, 'both': 119, 'right_only': 0}
+[MERGE_QC][WARN] absence_future_home: left_only=200
+                match_id home_team away_team  _season _merge_home_team  _round_no _match_date  season _merge_team_name  round_no
+  j2_2026_09191400_札幌_大分        札幌        大分     2026               札幌          7  2026-09-19     NaN              NaN       NaN
+  j2_2026_09261700_今治_湘南        今治        湘南     2026               今治          8  2026-09-26     NaN              NaN       NaN
+  j2_2026_09261700_宮崎_札幌        宮崎        札幌     2026               宮崎          8  2026-09-26     NaN              NaN       NaN
+ j2_2026_10041300_札幌_いわき        札幌       いわき     2026               札幌          9  2026-10-04     NaN              NaN       NaN
+j2_2026_10041300_八戸_横浜FC        八戸      横浜FC     2026               八戸          9  2026-10-04     NaN              NaN       NaN
+  j2_2026_10041500_仙台_磐田        仙台        磐田     2026               仙台          9  2026-10-04     NaN              NaN       NaN
+  j2_2026_10041900_宮崎_大宮        宮崎        大宮     2026               宮崎          9  2026-10-04     NaN              NaN       NaN
+  j2_2026_10111800_湘南_新潟        湘南        新潟     2026               湘南         10  2026-10-11     NaN              NaN       NaN
+  j2_2026_10171400_札幌_秋田        札幌        秋田     2026               札幌         11  2026-10-17     NaN              NaN       NaN
+  j2_2026_10171400_仙台_徳島        仙台        徳島     2026               仙台         11  2026-10-17     NaN              NaN       NaN
+[MERGE_QC] absence_future_home: left_only CSV保存 -> /private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/merge_qc/j2_2026/absence_future_home_left_only.csv
+[MERGE_QC] absence_future_away left_before: rows=319 unique_keys=319 duplicate_keys=0 keys=['_season', '_merge_away_team', '_round_no', '_match_date']
+[MERGE_QC] absence_future_away right: rows=304 unique_keys=304 duplicate_keys=0 keys=['season', '_merge_team_name', 'round_no', 'match_date']
+[MERGE_QC] absence_future_away result: rows_before=319 rows_after=319 delta=0 validate=many_to_one indicator={'left_only': 199, 'both': 120, 'right_only': 0}
+[MERGE_QC][WARN] absence_future_away: left_only=199
+                match_id home_team away_team  _season _merge_away_team  _round_no _match_date  season _merge_team_name  round_no
+j2_2026_09191900_横浜FC_今治      横浜FC        今治     2026               今治          7  2026-09-19     NaN              NaN       NaN
+ j2_2026_09201700_栃木C_仙台       栃木Ｃ        仙台     2026               仙台          7  2026-09-20     NaN              NaN       NaN
+ j2_2026_09261700_いわき_仙台       いわき        仙台     2026               仙台          8  2026-09-26     NaN              NaN       NaN
+  j2_2026_09261700_磐田_八戸        磐田        八戸     2026               八戸          8  2026-09-26     NaN              NaN       NaN
+  j2_2026_09261700_宮崎_札幌        宮崎        札幌     2026               札幌          8  2026-09-26     NaN              NaN       NaN
+  j2_2026_10031400_藤枝_湘南        藤枝        湘南     2026               湘南          9  2026-10-03     NaN              NaN       NaN
+ j2_2026_10031700_栃木C_今治       栃木Ｃ        今治     2026               今治          9  2026-10-03     NaN              NaN       NaN
+  j2_2026_10101400_大宮_八戸        大宮        八戸     2026               八戸         10  2026-10-10     NaN              NaN       NaN
+  j2_2026_10101400_徳島_今治        徳島        今治     2026               今治         10  2026-10-10     NaN              NaN       NaN
+  j2_2026_10101800_磐田_札幌        磐田        札幌     2026               札幌         10  2026-10-10     NaN              NaN       NaN
+[MERGE_QC] absence_future_away: left_only CSV保存 -> /private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/merge_qc/j2_2026/absence_future_away_left_only.csv
+[MERGE_QC] absence_finished_home left_before: rows=61 unique_keys=61 duplicate_keys=0 keys=['_season', '_merge_home_team', '_round_no', '_match_date']
+[MERGE_QC] absence_finished_home right: rows=304 unique_keys=304 duplicate_keys=0 keys=['season', '_merge_team_name', 'round_no', 'match_date']
+[MERGE_QC] absence_finished_home result: rows_before=61 rows_after=61 delta=0 validate=many_to_one indicator={'both': 32, 'left_only': 29, 'right_only': 0}
+[MERGE_QC][WARN] absence_finished_home: left_only=29
+               match_id home_team away_team  _season _merge_home_team  _round_no _match_date  season _merge_team_name  round_no
+ j2_2026_08081450_札幌_徳島        札幌        徳島     2026               札幌          1  2026-08-08     NaN              NaN       NaN
+ j2_2026_08291833_富山_藤枝        富山        藤枝     2026               富山          4  2026-08-29     NaN              NaN       NaN
+ j2_2026_08291903_仙台_宮崎        仙台        宮崎     2026               仙台          4  2026-08-29     NaN              NaN       NaN
+ j2_2026_08291903_今治_山形        今治        山形     2026               今治          4  2026-08-29     NaN              NaN       NaN
+ j2_2026_08291903_徳島_大分        徳島        大分     2026               徳島          4  2026-08-29     NaN              NaN       NaN
+ j2_2026_08291904_大宮_湘南        大宮        湘南     2026               大宮          4  2026-08-29     NaN              NaN       NaN
+j2_2026_09051903_徳島_いわき        徳島       いわき     2026               徳島          5  2026-09-05     NaN              NaN       NaN
+j2_2026_09061303_札幌_栃木C        札幌       栃木Ｃ     2026               札幌          5  2026-09-06     NaN              NaN       NaN
+j2_2026_09121835_富山_栃木C        富山       栃木Ｃ     2026               富山          6  2026-09-12     NaN              NaN       NaN
+ j2_2026_09121835_八戸_湘南        八戸        湘南     2026               八戸          6  2026-09-12     NaN              NaN       NaN
+[MERGE_QC] absence_finished_home: left_only CSV保存 -> /private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/merge_qc/j2_2026/absence_finished_home_left_only.csv
+[MERGE_QC] absence_finished_away left_before: rows=61 unique_keys=61 duplicate_keys=0 keys=['_season', '_merge_away_team', '_round_no', '_match_date']
+[MERGE_QC] absence_finished_away right: rows=304 unique_keys=304 duplicate_keys=0 keys=['season', '_merge_team_name', 'round_no', 'match_date']
+[MERGE_QC] absence_finished_away result: rows_before=61 rows_after=61 delta=0 validate=many_to_one indicator={'both': 33, 'left_only': 28, 'right_only': 0}
+[MERGE_QC][WARN] absence_finished_away: left_only=28
+              match_id home_team away_team  _season _merge_away_team  _round_no _match_date  season _merge_team_name  round_no
+j2_2026_08081450_札幌_徳島        札幌        徳島     2026               徳島          1  2026-08-08     NaN              NaN       NaN
+j2_2026_08291903_甲府_札幌        甲府        札幌     2026               札幌          4  2026-08-29     NaN              NaN       NaN
+j2_2026_08291903_仙台_宮崎        仙台        宮崎     2026               宮崎          4  2026-08-29     NaN              NaN       NaN
+j2_2026_08291904_大宮_湘南        大宮        湘南     2026               湘南          4  2026-08-29     NaN              NaN       NaN
+j2_2026_09051833_藤枝_八戸        藤枝        八戸     2026               八戸          5  2026-09-05     NaN              NaN       NaN
+j2_2026_09051903_鳥栖_宮崎        鳥栖        宮崎     2026               宮崎          5  2026-09-05     NaN              NaN       NaN
+j2_2026_09051903_湘南_仙台        湘南        仙台     2026               仙台          5  2026-09-05     NaN              NaN       NaN
+j2_2026_09061803_秋田_大宮        秋田        大宮     2026               大宮          5  2026-09-06     NaN              NaN       NaN
+j2_2026_09121805_秋田_徳島        秋田        徳島     2026               徳島          6  2026-09-12     NaN              NaN       NaN
+j2_2026_09131806_仙台_札幌        仙台        札幌     2026               札幌          6  2026-09-13     NaN              NaN       NaN
+[MERGE_QC] absence_finished_away: left_only CSV保存 -> /private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/merge_qc/j2_2026/absence_finished_away_left_only.csv
+[MISSING_QC][INFO] after_absence_future is_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_absence_future is_heavy_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_absence_future is_strong_wind: missing_rate=0.00%
+[MISSING_QC][INFO] after_absence_future weather_missing: missing_rate=0.00%
+[MISSING_QC][INFO] after_absence_future stats_ゴール期待値_home: missing_rate=0.00%
+[MISSING_QC][INFO] after_absence_future stats_ゴール期待値_away: missing_rate=0.00%
+[MISSING_QC][INFO] after_absence_finished is_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_absence_finished is_heavy_rain: missing_rate=0.00%
+[MISSING_QC][INFO] after_absence_finished is_strong_wind: missing_rate=0.00%
+[MISSING_QC][INFO] after_absence_finished weather_missing: missing_rate=0.00%
+[MISSING_QC][INFO] after_absence_finished stats_ゴール期待値_home: missing_rate=0.00%
+[MISSING_QC][INFO] after_absence_finished stats_ゴール期待値_away: missing_rate=0.00%
+[DERBY] loaded=14 path=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/manual/ダービー一覧.csv
+移動距離データを /private/tmp/toto1654_shadow_buyplans_1sckceea/data/team_travel_distances.csv から読み込みました。
+前年最終ELOを読み込みました: /private/tmp/toto1654_shadow_buyplans_1sckceea/data/j2_2025_final_elo.csv (20チーム)
+J2許可チームを /private/tmp/toto1654_shadow_buyplans_1sckceea/data/manual/j2_allowed_teams_2026.csv から読み込みました: 20
+[DERBY] scope=PRED matched=2/319
+[DRAW_ASSIGN] disabled (DRAW_TWEAK_MODE=off, DRAW_ASSIGN_BY_EXPECTATION=0)
+[CONSISTENCY:PRED] raw_vs_final_diff_rows=0
+[FOOTBALL_LAB] league=j2 files=26 rows=454
+[FOOTBALL_LAB] scope=PRED league=j2 merged_cols=217 available_rows=319/319
+[LAB_PROB_BLEND] stage=PRED enabled=1 available=319/319 alpha_mean=0.193 draw_dampen=74
+[CONF_BLEND] stage=MAIN w_base_mean=0.750 w_lab_mean=0.180 w_main_mean=0.070
+[FINAL_ELO_SIGN_FIX] stage=PRED_POST_BLEND total=9 pos=5 neg=4
+[MATCH_TYPE_MAIN_APPLY] stage=PRED_FINAL changed=111
+[CONNECTED_OVERRIDES] stage=PRED_FINAL changed=0
+[DRAW_TWEAK_AUDIT:PRED] mode=off rows=319 base(H/D/A)=0.339237/0.336506/0.324257 final(H/D/A)=0.339144/0.336687/0.324169 delta(H/D/A)=-0.000093521314/+0.000181370364/-0.000087849050 residue_detected=0 decision_reason_ARGMAX=0/319
+[DRAW_TWEAK_AUDIT:PRED:league=j2] mode=off rows=319 base(H/D/A)=0.339237/0.336506/0.324257 final(H/D/A)=0.339144/0.336687/0.324169 delta(H/D/A)=-0.000093521314/+0.000181370364/-0.000087849050 residue_detected=0
+[DECISION_RULE] ARGMAX (DRAW_TWEAK_MODE=off; probability tweaks disabled)
+[PRED_DIST_FINAL:PRED] rows=319 H=29.8% (95) D=47.6% (152) A=22.6% (72) col=final_result
+[PRED_DIST_ARGMAX:PRED] rows=319 H=46.4% (148) D=14.1% (45) A=39.5% (126)
+[PROB_MEAN:PRED] rows=319 cols=('prob_home_win', 'prob_draw', 'prob_away_win') home=0.3264 draw=0.3609 away=0.3127
+[PH_PA_STATS:PRED] rows=319 min=-0.266794 p10=-0.144527 median=0.012941 p90=0.169496 max=0.269721 mean=0.013621
+[FORCE_DRAW_COUNT:PRED] rows=319 force_draw=0
+[PRED_DIST_FINAL:PRED:league=j2] rows=319 H=29.8% (95) D=47.6% (152) A=22.6% (72)
+[PRED_DIST_ARGMAX:PRED:league=j2] rows=319 H=46.4% (148) D=14.1% (45) A=39.5% (126)
+[PROB_MEAN:PRED:league=j2] rows=319 home=0.3264 draw=0.3609 away=0.3127
+[FORCE_DRAW_COUNT:PRED:league=j2] rows=319 force_draw=0
+[PRED_DIST:PRED] scope=all rows=319 H=29.8% (95) D=47.6% (152) A=22.6% (72)
+[PRED_DIST_EXPECT:PRED] scope=all rows=319 H=29.8% (95) D=47.6% (152) A=22.6% (72)
+[PRED_DIST_DIFF_ARGMAX_EXPECT:PRED] scope=all H=-16.6pp D=+33.5pp A=-16.9pp
+[WARN] TOTO_ROUND_IDが指定されていますが 'toto_round_id' 列がありません: toto1654
+[WARN] フィルタ未指定のため全件集計
+[PRED_DIST:PRED] scope=round:ALL rows=319 H=29.8% (95) D=47.6% (152) A=22.6% (72)
+[PRED_DIST_EXPECT:PRED] scope=round:ALL rows=319 H=29.8% (95) D=47.6% (152) A=22.6% (72)
+[PRED_DIST_DIFF_ARGMAX_EXPECT:PRED] scope=round:ALL H=-16.6pp D=+33.5pp A=-16.9pp
+[PRED_CHECK:PRED] raw_argmax_vs_cal_argmax_match_rate=65.2% pred_vs_highest_match_rate=65.2%
+[PRED_CHECK:PRED] pred_vs_postfusion_main_argmax_match_rate=100.0% mismatch_count=0
+[PRED_CHECK:PRED] draw_delta(mean/max/plus_count)=0.024392/0.072460/277
+[PRED_CHECK:PRED] predicted_result_ratio(H/D/A)=29.8%/47.6%/22.6%
+[PRED_CHECK:PRED] predicted_result_source_counts={'main_rule': 319}
+[PRED_CHECK:PRED] highest_vs_raw_argmax_mismatch=0
+[PRED_CHECK:PRED] predicted_vs_cal_argmax_mismatch=0
+[PRED_CHECK:PRED] predicted_vs_postfusion_main_argmax_mismatch=0
+[PRED_SUMMARY] rows=319 avg_prob_draw=0.361 sum_prob_draw=115.126 predicted_D_count=152 ELO_DIFF_SCALE=1.15 legacy_draw_adjustment=disabled
+[ELO_SIGN_CHECK:PRED_RAW] diff_col=diff_raw_no_hfa prob_cols=(prob_home_win_before_signfix,prob_away_win_before_signfix) neg_diff_cases=158 violated=22 rate=13.92% pos_diff_cases=161 violated=0 rate=0.00%
+[NEG_DIFF_STATS] label=PRED_RAW metric=diff_raw_no_hfa min=-114.6321 p10=-76.8397 median=-36.2973 p90=-4.0759 max=-0.1592 mean=-39.2648
+[NEG_DIFF_STATS] label=PRED_RAW metric=prob_home_minus_away min=-0.286178 p10=-0.190808 median=-0.083864 p90=0.002872 max=0.013488 mean=-0.091159
+[ELO_SIGN_VIOLATIONS:PRED_RAW] matched=22 saved=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/merge_qc/j2_2026/elo_sign_violations_pred_raw_top50.csv
+[ELO_SIGN_CHECK:PRED_POST] diff_col=diff_raw_no_hfa prob_cols=(prob_home_win_raw,prob_away_win_raw) neg_diff_cases=158 violated=17 rate=10.76% pos_diff_cases=161 violated=0 rate=0.00%
+[NEG_DIFF_STATS] label=PRED_POST metric=diff_raw_no_hfa min=-114.6321 p10=-76.8397 median=-36.2973 p90=-4.0759 max=-0.1592 mean=-39.2648
+[NEG_DIFF_STATS] label=PRED_POST metric=prob_home_minus_away min=-0.286178 p10=-0.190808 median=-0.083864 p90=0.002872 max=0.013488 mean=-0.091274
+[PROB_DRAW_DIST:PRED] rows=319 min=0.314 p05=0.326 p25=0.345 p50=0.359 p75=0.379 p95=0.390 max=0.412
+[DRAW_ARGMAX:PRED] rows=319 prob_draw_argmax_count=152 prob_draw_ge_0.23_count=319
+[ACTUAL_HDA:PRED] unavailable
+[ABSENCE_EFFECTIVE][PRED] rows=319 missing_home_count=200 missing_away_count=199 missing_any_row_count=265 effective_total_home_avg=0.0457 effective_total_home_max=0.2000 effective_total_away_avg=0.0461 effective_total_away_max=0.2000 cap_applied_home_count=0 cap_applied_away_count=0 baseline_total=0.0500 cap_total=0.2500
+[WARN] TOTO_ROUND_IDが指定されていますが 'toto_round_id' 列がありません: toto1654
+[WARN] フィルタ未指定のため全件集計
+[ROUND_SUMMARY] filter=ALL rows=319
+[PRED_RATIO] H=29.8% (95) D=47.6% (152) A=22.6% (72)
+[ACTUAL_RATIO] unavailable (scores not found or not finished)
+[ROUND_SUMMARY_CSV] saved=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/merge_qc/j2_2026/round_summary_ALL.csv
+[MISSING_QC][INFO] final_predictions_df is_rain: missing_rate=0.00%
+[MISSING_QC][INFO] final_predictions_df is_heavy_rain: missing_rate=0.00%
+[MISSING_QC][INFO] final_predictions_df is_strong_wind: missing_rate=0.00%
+[MISSING_QC][INFO] final_predictions_df weather_missing: missing_rate=0.00%
+[MISSING_QC][INFO] final_predictions_df stats_ゴール期待値_home: missing_rate=0.00%
+[MISSING_QC][INFO] final_predictions_df stats_ゴール期待値_away: missing_rate=0.00%
+[MISSING_QC][INFO] final_predictions_df stats_home_missing: missing_rate=0.00%
+[MISSING_QC][INFO] final_predictions_df stats_away_missing: missing_rate=0.00%
+[MISSING_QC][INFO] final_predictions_df management_missing: missing_rate=0.00%
+[MISSING_QC][INFO] final_predictions_df data_quality_warn: missing_rate=0.00%
+[SNAPSHOT] predictions candidate saved: /private/tmp/toto1654_shadow_buyplans_1sckceea/data/output_snapshots/j2_2026/20260919_144538_predictions_candidate_j2_2026_predictions_hfa_on.csv
+予測結果を /private/tmp/toto1654_shadow_buyplans_1sckceea/j2_2026_predictions_hfa_on.csv に出力しました。
+[BUYPLAN_CONTEXT] saved=/private/tmp/toto1654_shadow_buyplans_1sckceea/predictions_buyplan_context.csv
+[LEGACY_ALIAS] 互換出力を更新しました: /private/tmp/toto1654_shadow_buyplans_1sckceea/j2_2026_predictions.csv
+[SNAPSHOT] predictions_legacy saved: /private/tmp/toto1654_shadow_buyplans_1sckceea/data/output_snapshots/j2_2026/20260919_144538_predictions_legacy_j2_2026_predictions.csv
+[DERBY] scope=BACKTEST matched=0/61
+[BACKTEST_RULE] compare skipped (DRAW_TWEAK_MODE=off)
+[CONSISTENCY:BACKTEST] raw_vs_final_diff_rows=0
+[DRAW_TWEAK_AUDIT:BACKTEST] mode=off rows=61 base(H/D/A)=0.333365/0.335499/0.331136 final(H/D/A)=0.333365/0.335499/0.331136 delta(H/D/A)=+0.000000000000/+0.000000000000/+0.000000000000 residue_detected=0 decision_reason_ARGMAX=61/61
+[DRAW_TWEAK_AUDIT:BACKTEST:league=j2] mode=off rows=61 base(H/D/A)=0.333365/0.335499/0.331136 final(H/D/A)=0.333365/0.335499/0.331136 delta(H/D/A)=+0.000000000000/+0.000000000000/+0.000000000000 residue_detected=0
+[PRED_DIST_FINAL:BACKTEST] rows=61 H=39.3% (24) D=13.1% (8) A=47.5% (29) col=final_result
+[PRED_DIST_ARGMAX:BACKTEST] rows=61 H=39.3% (24) D=13.1% (8) A=47.5% (29)
+[PROB_MEAN:BACKTEST] rows=61 cols=('prob_home_win', 'prob_draw', 'prob_away_win') home=0.3334 draw=0.3355 away=0.3311
+[PH_PA_STATS:BACKTEST] rows=61 min=-0.265247 p10=-0.163822 median=-0.019090 p90=0.218328 max=0.327197 mean=0.002230
+[FORCE_DRAW_COUNT:BACKTEST] rows=61 force_draw=0
+[PRED_DIST_FINAL:BACKTEST:league=j2] rows=61 H=39.3% (24) D=13.1% (8) A=47.5% (29)
+[PRED_DIST_ARGMAX:BACKTEST:league=j2] rows=61 H=39.3% (24) D=13.1% (8) A=47.5% (29)
+[PROB_MEAN:BACKTEST:league=j2] rows=61 home=0.3334 draw=0.3355 away=0.3311
+[FORCE_DRAW_COUNT:BACKTEST:league=j2] rows=61 force_draw=0
+[PRED_DIST:BACKTEST] scope=all rows=61 H=39.3% (24) D=13.1% (8) A=47.5% (29)
+[PRED_DIST_EXPECT:BACKTEST] scope=all rows=61 H=39.3% (24) D=13.1% (8) A=47.5% (29)
+[PRED_DIST_DIFF_ARGMAX_EXPECT:BACKTEST] scope=all H=+0.0pp D=+0.0pp A=+0.0pp
+[PRED_CHECK:BACKTEST] raw_argmax_vs_cal_argmax_match_rate=100.0% pred_vs_highest_match_rate=100.0%
+[PRED_CHECK:BACKTEST] draw_delta(mean/max/plus_count)=0.000000/0.000000/1
+[PRED_CHECK:BACKTEST] predicted_result_ratio(H/D/A)=39.3%/13.1%/47.5%
+[PRED_CHECK:BACKTEST] highest_vs_raw_argmax_mismatch=0
+[PRED_CHECK:BACKTEST] predicted_vs_cal_argmax_mismatch=0
+[BACKTEST_SUMMARY] rows=61 avg_prob_draw=0.335 sum_prob_draw=20.465 predicted_D_count=8 ELO_DIFF_SCALE=1.15 actual_D_rate=0.213 draw_diff_pp=12.24 legacy_draw_adjustment=disabled
+[ELO_SIGN_CHECK:BACKTEST_RAW] diff_col=diff_raw_no_hfa prob_cols=(prob_home_win_before_signfix,prob_away_win_before_signfix) neg_diff_cases=35 violated=2 rate=5.71% pos_diff_cases=25 violated=0 rate=0.00%
+[NEG_DIFF_STATS] label=BACKTEST_RAW metric=diff_raw_no_hfa min=-106.1650 p10=-89.6323 median=-34.3736 p90=-10.7516 max=-1.3877 mean=-41.6974
+[NEG_DIFF_STATS] label=BACKTEST_RAW metric=prob_home_minus_away min=-0.265247 p10=-0.223643 median=-0.078707 p90=-0.015149 max=0.010115 mean=-0.097532
+[ELO_SIGN_VIOLATIONS:BACKTEST_RAW] matched=2 saved=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/merge_qc/j2_2026/elo_sign_violations_backtest_raw_top50.csv
+[ELO_SIGN_CHECK:BACKTEST_POST] diff_col=diff_raw_no_hfa prob_cols=(prob_home_win_raw,prob_away_win_raw) neg_diff_cases=35 violated=1 rate=2.86% pos_diff_cases=25 violated=0 rate=0.00%
+[NEG_DIFF_STATS] label=BACKTEST_POST metric=diff_raw_no_hfa min=-106.1650 p10=-89.6323 median=-34.3736 p90=-10.7516 max=-1.3877 mean=-41.6974
+[NEG_DIFF_STATS] label=BACKTEST_POST metric=prob_home_minus_away min=-0.265247 p10=-0.223643 median=-0.078707 p90=-0.015149 max=0.010115 mean=-0.097552
+[FEATURE_DIST:BACKTEST] col=diff_raw_no_hfa rows=61 missing=0 unique=61 min=-106.165 p05=-90.445 p25=-41.811 p50=-12.216 p75=32.533 p95=95.989 max=121.347
+[FEATURE_DIST_STD:BACKTEST] col=diff_raw_no_hfa rows=61 min=-106.165 p05=-90.445 p25=-41.811 p50=-12.216 p75=32.533 p95=95.989 max=121.347
+[PROB_DRAW_DIST:BACKTEST] rows=61 min=0.313 p05=0.322 p25=0.334 p50=0.338 p75=0.340 p95=0.341 max=0.341
+[PROB_DIST:BACKTEST] col=prob_home rows=61 min=0.206 p05=0.223 p25=0.282 p50=0.320 p75=0.382 p95=0.472 max=0.507
+[PROB_DIST:BACKTEST] col=prob_draw rows=61 min=0.313 p05=0.322 p25=0.334 p50=0.338 p75=0.340 p95=0.341 max=0.341
+[PROB_DIST:BACKTEST] col=prob_away rows=61 min=0.180 p05=0.206 p25=0.280 p50=0.339 p75=0.380 p95=0.449 max=0.471
+[MAX_PROB_DIST:BACKTEST] rows=61 min=0.341 p05=0.341 p25=0.353 p50=0.382 p75=0.415 p95=0.472 max=0.507
+[DRAW_ARGMAX:BACKTEST] rows=61 prob_draw_argmax_count=8 prob_draw_ge_0.23_count=61
+[ACTUAL_HDA:BACKTEST] rows=61 H=49.2% (30) D=21.3% (13) A=29.5% (18)
+[ABSENCE_EFFECTIVE][BACKTEST] rows=61 missing_home_count=29 missing_away_count=28 missing_any_row_count=44 effective_total_home_avg=0.0444 effective_total_home_max=0.1500 effective_total_away_avg=0.0441 effective_total_away_max=0.1500 cap_applied_home_count=0 cap_applied_away_count=0 baseline_total=0.0500 cap_total=0.2500
+[DRAW_DIAG] summary=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/draw_diagnostics_j2_2026.csv detail=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/draw_candidates_j2_2026.csv
+[DRAW_SCAN] saved=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/draw_threshold_scan_j2_2026.csv
+[FOOTBALL_LAB] scope=BACKTEST league=j2 merged_cols=217 available_rows=0/61
+[LAB_PROB_BLEND] stage=PRED enabled=1 available=61/61 alpha_mean=0.207 draw_dampen=23
+[CONF_BLEND] stage=MAIN w_base_mean=0.743 w_lab_mean=0.194 w_main_mean=0.063
+[FINAL_ELO_SIGN_FIX] stage=BACKTEST_POST_BLEND total=2 pos=0 neg=2
+[MATCH_TYPE_MAIN_APPLY] stage=BACKTEST_FINAL changed=29
+[CONNECTED_OVERRIDES] stage=BACKTEST_FINAL changed=0
+[CALIBRATION] league=j2 T_train=2.500 T_final=2.500 deploy_T=2.500 validation_ok=1 val_logloss=1.2070984648751302->1.1407771158116862 val_brier=0.7386951724155186->0.6947378241200013 val_ece=0.37986000150654026->0.35165006395588305
+[CALIBRATION][WARN] league=j2 validation_rows=1 is small; temperature may be unstable
+[CALIBRATION] report=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/calibration/calibration_report_j2_2026.json
+[CALIBRATION] thresholds=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/calibration/thresholds_j2_2026.json
+[CALIBRATION] threshold_scan=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/calibration/threshold_scan_j2_2026.csv
+[MATCH_TYPE_DIAG] summary=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/match_type_summary_j2_2026.csv basis=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/match_type_basis_summary_j2_2026.csv detail=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/match_type_detail_j2_2026.csv
+[ARGMAX_DIAG] league=J2 season=2026 matches=61 hit_rate=0.2295 top_miss=D→H(21)
+[ARGMAX_DIAG_SAVE] detail=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/j2_2026_argmax_diagnostics.csv confusion=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/j2_2026_argmax_confusion.csv miss=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/j2_2026_argmax_miss_breakdown.csv band=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/j2_2026_argmax_by_maxprob_band.csv round=/private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/metrics/j2_2026_argmax_by_round.csv
+[MISSING_QC][INFO] final_backtest_df is_rain: missing_rate=0.00%
+[MISSING_QC][INFO] final_backtest_df is_heavy_rain: missing_rate=0.00%
+[MISSING_QC][INFO] final_backtest_df is_strong_wind: missing_rate=0.00%
+[MISSING_QC][INFO] final_backtest_df weather_missing: missing_rate=0.00%
+[MISSING_QC][INFO] final_backtest_df stats_ゴール期待値_home: missing_rate=0.00%
+[MISSING_QC][INFO] final_backtest_df stats_ゴール期待値_away: missing_rate=0.00%
+[MISSING_QC][INFO] final_backtest_df stats_home_missing: missing_rate=0.00%
+[MISSING_QC][INFO] final_backtest_df stats_away_missing: missing_rate=0.00%
+[MISSING_QC][INFO] final_backtest_df management_missing: missing_rate=0.00%
+[MISSING_QC][INFO] final_backtest_df data_quality_warn: missing_rate=0.00%
+[SNAPSHOT] backtest candidate saved: /private/tmp/toto1654_shadow_buyplans_1sckceea/data/output_snapshots/j2_2026/20260919_144538_backtest_candidate_backtest_j2_2026.csv
+2025年終了済み試合のバックテスト結果を /private/tmp/toto1654_shadow_buyplans_1sckceea/backtest_j2_2026.csv に出力しました。
+[CALIBRATION] 予測結果を calibration 列付きで再出力しました: /private/tmp/toto1654_shadow_buyplans_1sckceea/j2_2026_predictions_hfa_on.csv
+[CALIBRATION][LEGACY_ALIAS] 互換出力を更新しました: /private/tmp/toto1654_shadow_buyplans_1sckceea/j2_2026_predictions.csv
+[HFA_APPLY_COUNT] applied=380 skipped=0 reason_counts={"applied": 380}
+[ELO_SIGN_FIX_COUNT] total=6 neg_to_away=6 pos_to_home=0 enabled=1
+[RUN_META] saved=/private/tmp/toto1654_shadow_buyplans_1sckceea/j2_2026_predictions_hfa_on.csv.meta.json
+Elo確率デバッグCSVを出力しました: /private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/elo_prob_debug_j2_2026.csv
+2025年シーズン現時点までの累計的中率: 22.95% (14/61)
+解析内訳レポートを出力しました: /private/tmp/toto1654_shadow_buyplans_1sckceea/data/reports/report_j2_2026.json

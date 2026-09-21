@@ -1,0 +1,144 @@
+今シーズン運用中 draw_watch / draw_rescue / draw_trap 境界整理メモ
+
+目的
+draw 系分類を同列に扱わず、
+draw_watch / draw_rescue / draw_trap の役割差を明確にする。
+
+前提
+- 先シーズンは終了済み
+- 第16節-第19節の観測では、draw 系分類が多い節と実結果 D が多い節が一致しないことがあった
+- そのため、draw 系を一括で増減するのではなく、分類ごとの意味を分けて扱う必要がある
+
+基本整理
+
+draw_watch
+- 意味:
+  draw を観測対象として残す
+- 基本姿勢:
+  draw を「採る」と決め切る前の watch
+- 運用位置:
+  observation 寄り
+- よく結びつく guidance:
+  draw_watch_split
+
+draw_rescue
+- 意味:
+  draw を切ると危ないので、券面上で救済したい
+- 基本姿勢:
+  watch より一段強く draw を残す
+- 運用位置:
+  rescue 判定の中心
+- よく結びつく guidance:
+  draw_rescue_split
+  draw_core_keep
+
+draw_trap
+- 意味:
+  draw に見えるが、その扱いを雑にすると side を落とす危険がある
+- 基本姿勢:
+  draw をそのまま厚く採るより、trap として構造を見る
+- 運用位置:
+  watch と rescue の中間ではなく、別軸
+- よく結びつく guidance:
+  side_with_cover
+  draw_cut_to_side
+  場合によっては rescue
+
+現時点の違い
+
+1. draw_watch
+- 何をしているか:
+  draw 候補として残す
+- 何をまだしていないか:
+  draw を強く救済するとは限らない
+- どういう節で使いやすいか:
+  D が一定数ありそうだが、確信までは弱い節
+
+2. draw_rescue
+- 何をしているか:
+  draw を券面上で残す方向へ寄せる
+- 何をまだしていないか:
+  draw を正式固定するわけではない
+- どういう節で使いやすいか:
+  draw を切る harm が大きそうな節
+
+3. draw_trap
+- 何をしているか:
+  draw っぽさの裏にある side リスクも見る
+- 何をまだしていないか:
+  draw 増量そのものを目的にしていない
+- どういう節で使いやすいか:
+  draw に見えるが、side 保持の方が重要な節
+
+第16節-第19節で見えたこと
+
+- 第16節-第18節
+  draw 系分類が全体に厚い
+  しかし実結果 D は多くない節があり、draw_rescue を厚くしすぎた疑いがある
+
+- 第19節
+  D が多く、draw_watch 系が実結果と整合した
+  よって draw 系を一律に弱いとみなすのは誤り
+
+現時点の仮説
+
+- draw_watch が効く条件
+  実結果 D が中程度以上ある節
+  draw を観測候補として広く残したい節
+
+- draw_rescue が効く条件
+  draw を切る harm が大きい節
+  ただし件数を増やしすぎると逆効果
+
+- draw_trap が効く条件
+  draw に見えるが side 保持を無視できない節
+  watch/rescue のまま扱うと雑になる試合
+
+当面の実務ルール
+
+draw_watch
+- まず観測
+- すぐ正式 policy に上げない
+- draw_rescue と同数で増やさない
+
+draw_rescue
+- 件数管理を強める
+- rescue/harm を必ずセットで見る
+- D が少ない節では過剰適用を警戒する
+
+draw_trap
+- draw 系の一種として数えるだけで終わらせない
+- side 保持の必要性も見て判定する
+- draw_watch / draw_rescue と同一基準で集計しない
+
+切り分けの見方
+
+draw_watch と draw_rescue の違い
+- draw_watch:
+  観測寄り
+- draw_rescue:
+  救済寄り
+
+draw_rescue と draw_trap の違い
+- draw_rescue:
+  draw を残したい
+- draw_trap:
+  draw に見えるが、残し方を誤ると危ない
+
+draw_watch と draw_trap の違い
+- draw_watch:
+  draw 候補の観測
+- draw_trap:
+  draw 見えの危険構造の観測
+
+次の節検証で見ること
+- draw_watch 件数と D 実結果比率の関係
+- draw_rescue 件数と harm の関係
+- draw_trap が side_with_cover / draw_cut_to_side にどう繋がるか
+- draw_watch / draw_rescue / draw_trap の同時多発が起きていないか
+
+現時点の結論
+- draw_watch / draw_rescue / draw_trap は統合しない
+- draw_rescue は件数管理が必要
+- draw_watch は観測枠として残す
+- draw_trap は side リスク込みで別軸管理する

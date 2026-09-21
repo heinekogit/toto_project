@@ -1,0 +1,152 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><title>toto1649 天候ルールシャドー</title>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;margin:28px;color:#172033}table{border-collapse:collapse;width:100%}th,td{border:1px solid #d7deea;padding:7px}th{background:#eaf0f8}.note{background:#f2f6fb;padding:14px;border-radius:8px}</style>
+<h1>toto1649 天候ルール修正影響</h1><div class="note">対象 20試合 / 要再計算 12試合 / 天候不明 0試合 / 修正後強風 0試合。強風閾値を8m/s相当の28.8km/hへ修正し、大雨は通常雨を包含して二重加算しません。ここでは一次的なxG・adverse差を表示し、保存済み正式予測の確率・記号・buyplanは上書きしていません。</div><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>対戦</th>
+      <th>風速</th>
+      <th>強風 現→修</th>
+      <th>xG戻し/チーム</th>
+      <th>adverse差</th>
+      <th>predicted_result</th>
+      <th>prob_home_win</th>
+      <th>prob_draw</th>
+      <th>prob_away_win</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>千葉－岡山</td>
+      <td>13.7 km/h</td>
+      <td>True → False</td>
+      <td>+0.10</td>
+      <td>-0.45</td>
+      <td>D</td>
+      <td>0.326102</td>
+      <td>0.390325</td>
+      <td>0.283574</td>
+    </tr>
+    <tr>
+      <td>東京Ｖ－神戸</td>
+      <td>13.3 km/h</td>
+      <td>True → False</td>
+      <td>+0.10</td>
+      <td>-0.45</td>
+      <td>A</td>
+      <td>0.195222</td>
+      <td>0.244682</td>
+      <td>0.560096</td>
+    </tr>
+    <tr>
+      <td>横浜FM－京都</td>
+      <td>15.6 km/h</td>
+      <td>True → False</td>
+      <td>+0.10</td>
+      <td>-0.45</td>
+      <td>D</td>
+      <td>0.284138</td>
+      <td>0.379995</td>
+      <td>0.335866</td>
+    </tr>
+    <tr>
+      <td>水戸－鹿島</td>
+      <td>9.6 km/h</td>
+      <td>True → False</td>
+      <td>+0.10</td>
+      <td>-0.45</td>
+      <td>A</td>
+      <td>0.214211</td>
+      <td>0.264105</td>
+      <td>0.521684</td>
+    </tr>
+    <tr>
+      <td>町田－川崎Ｆ</td>
+      <td>14.5 km/h</td>
+      <td>True → False</td>
+      <td>+0.10</td>
+      <td>-0.45</td>
+      <td>D</td>
+      <td>0.299683</td>
+      <td>0.415338</td>
+      <td>0.284979</td>
+    </tr>
+    <tr>
+      <td>藤枝－八戸</td>
+      <td>20.8 km/h</td>
+      <td>True → False</td>
+      <td>+0.10</td>
+      <td>-0.45</td>
+      <td>D</td>
+      <td>0.286970</td>
+      <td>0.375793</td>
+      <td>0.337237</td>
+    </tr>
+    <tr>
+      <td>湘南－仙台</td>
+      <td>15.6 km/h</td>
+      <td>True → False</td>
+      <td>+0.10</td>
+      <td>-0.45</td>
+      <td>D</td>
+      <td>0.287798</td>
+      <td>0.377404</td>
+      <td>0.334798</td>
+    </tr>
+    <tr>
+      <td>鳥栖－宮崎</td>
+      <td>9.8 km/h</td>
+      <td>True → False</td>
+      <td>+0.10</td>
+      <td>-0.45</td>
+      <td>H</td>
+      <td>0.377176</td>
+      <td>0.357549</td>
+      <td>0.265275</td>
+    </tr>
+    <tr>
+      <td>札幌－栃木Ｃ</td>
+      <td>8.9 km/h</td>
+      <td>True → False</td>
+      <td>+0.10</td>
+      <td>-0.45</td>
+      <td>D</td>
+      <td>0.296707</td>
+      <td>0.369637</td>
+      <td>0.333657</td>
+    </tr>
+    <tr>
+      <td>横浜FC－新潟</td>
+      <td>21.1 km/h</td>
+      <td>True → False</td>
+      <td>+0.10</td>
+      <td>-0.90</td>
+      <td>D</td>
+      <td>0.309783</td>
+      <td>0.371335</td>
+      <td>0.318882</td>
+    </tr>
+    <tr>
+      <td>秋田－大宮</td>
+      <td>21.2 km/h</td>
+      <td>True → False</td>
+      <td>+0.10</td>
+      <td>-0.45</td>
+      <td>A</td>
+      <td>0.229626</td>
+      <td>0.317586</td>
+      <td>0.452788</td>
+    </tr>
+    <tr>
+      <td>磐田－富山</td>
+      <td>10.9 km/h</td>
+      <td>True → False</td>
+      <td>+0.10</td>
+      <td>-0.90</td>
+      <td>H</td>
+      <td>0.453370</td>
+      <td>0.332920</td>
+      <td>0.213710</td>
+    </tr>
+  </tbody>
+</table>
+<p>詳細CSV: /Users/dev_tomo/Desktop/tt_prj_restart/data/eval/weather_rule_shadow/toto1649_weather_rule_shadow.csv</p></html>

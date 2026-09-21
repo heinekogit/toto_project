@@ -1,0 +1,88 @@
+{
+  "generated_at": "2026-09-12T10:54:59",
+  "robots_url": "https://www.jleague.jp/robots.txt",
+  "club_top_url": "https://www.jleague.jp/club/",
+  "ajax_player_url": "https://www.jleague.jp/club/ajax_player/",
+  "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+  "sleep_sec": 1.5,
+  "requested_clubs": 9,
+  "success_clubs": 9,
+  "failed_clubs": 0,
+  "rows": 334,
+  "warnings": [],
+  "results": [
+    {
+      "club_key": "oita",
+      "club_name": "oita",
+      "ok": true,
+      "row_count": 33,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "mito",
+      "club_name": "mito",
+      "ok": true,
+      "row_count": 36,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "hiroshima",
+      "club_name": "hiroshima",
+      "ok": true,
+      "row_count": 30,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "fujieda",
+      "club_name": "fujieda",
+      "ok": true,
+      "row_count": 33,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "tochigic",
+      "club_name": "tochigic",
+      "ok": true,
+      "row_count": 30,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "ftokyo",
+      "club_name": "ftokyo",
+      "ok": true,
+      "row_count": 47,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "yokohamafm",
+      "club_name": "yokohamafm",
+      "ok": true,
+      "row_count": 36,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "okayama",
+      "club_name": "okayama",
+      "ok": true,
+      "row_count": 51,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "chiba",
+      "club_name": "chiba",
+      "ok": true,
+      "row_count": 38,
+      "warning": "",
+      "error": ""
+    }
+  ],
+  "notice": "本サイトの利用規約・著作権規定に従って利用してください。無断転載等は行わないでください。"
+}

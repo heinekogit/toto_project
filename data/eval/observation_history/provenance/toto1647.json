@@ -1,0 +1,19 @@
+{
+  "round_id": "toto1647",
+  "accumulated_at": "2026-08-24T00:18:14+09:00",
+  "rows": 13,
+  "sources": {
+    "predictions": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1647/snapshot/predictions.csv",
+      "sha256": "2ec283be0bdbffdba0de27b6d301fca131ba9613027d5e326ee4ed093dff00f6"
+    },
+    "buyplan": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1647/snapshot/buyplan.csv",
+      "sha256": "39a7e2339492666c30a4629bd75b74884ce713d43c0de6f52bd76271ff6d731c"
+    },
+    "actual": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1647/actual_results.csv",
+      "sha256": "4e15bc9b2cdda107ce2ea030d2afb79e4ab6e079099a6f8cda889f0cb07f81d7"
+    }
+  }
+}

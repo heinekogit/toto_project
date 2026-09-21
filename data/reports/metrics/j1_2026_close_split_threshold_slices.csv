@@ -1,0 +1,15 @@
+﻿league,profile,slice,matches,draw_hit,draw_hit_rate,miss_to_h,miss_to_a
+j1,draw_core,draw_core_ge_070,41,15,0.3659,14,12
+j1,draw_core,draw_core_ge_075,30,11,0.3667,10,9
+j1,draw_core,swing_ge_050,6,1,0.1667,4,1
+j1,mixed_close,draw_core_ge_070,2,1,0.5,0,1
+j1,mixed_close,swing_ge_050,6,3,0.5,1,2
+j1,mixed_close,swing_ge_055,6,3,0.5,1,2
+j1,mixed_close,mixed_band,6,3,0.5,1,2
+j1,soft_draw,draw_core_ge_070,4,1,0.25,3,0
+j1,soft_draw,draw_core_ge_075,3,0,0.0,3,0
+j1,soft_draw,swing_ge_050,6,1,0.1667,4,1
+j1,soft_draw,swing_ge_055,1,0,0.0,1,0
+j1,swing_close,swing_ge_050,1,0,0.0,1,0
+j1,swing_close,swing_ge_055,1,0,0.0,1,0
+j1,swing_close,mixed_band,1,0,0.0,1,0

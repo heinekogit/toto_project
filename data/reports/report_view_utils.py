@@ -41,7 +41,9 @@ def build_description_row(columns, desc_map):
 
 def write_html_table(df, title, desc_map, output_path):
     df = df.copy()
-    columns = df.columns.tolist()
+    columns = [str(col) for col in df.columns]
+    if list(df.columns) != columns:
+        df.columns = columns
     desc_row = build_description_row(columns, desc_map)
     has_is_correct = "is_correct" in columns
 
@@ -106,10 +108,10 @@ def write_html_table(df, title, desc_map, output_path):
     for desc in desc_row:
         html.append(f"<td>{desc}</td>")
     html.append("</tr>")
-    for _, row in df.iterrows():
+    for row in df.itertuples(index=False, name=None):
         html.append("<tr>")
-        for col in columns:
-            val = row[col]
+        for idx, col in enumerate(columns):
+            val = row[idx]
             text = "" if pd.isna(val) else str(val)
             if col == "is_correct" and _to_bool_or_none(val) is True:
                 html.append(f"<td class='is-correct-true'>{text}</td>")
@@ -178,7 +180,9 @@ def write_html_table_grouped(df, title, desc_map, output_path, group_col="league
         sub = df[df[group_col].astype(str) == grp].copy()
         if sub.empty:
             continue
-        columns = sub.columns.tolist()
+        columns = [str(col) for col in sub.columns]
+        if list(sub.columns) != columns:
+            sub.columns = columns
         desc_row = build_description_row(columns, desc_map)
         has_is_correct = "is_correct" in columns
 
@@ -204,10 +208,10 @@ def write_html_table_grouped(df, title, desc_map, output_path, group_col="league
         for desc in desc_row:
             html.append(f"<td>{desc}</td>")
         html.append("</tr>")
-        for _, row in sub.iterrows():
+        for row in sub.itertuples(index=False, name=None):
             html.append("<tr>")
-            for col in columns:
-                val = row[col]
+            for idx, col in enumerate(columns):
+                val = row[idx]
                 text = "" if pd.isna(val) else str(val)
                 if col == "is_correct" and _to_bool_or_none(val) is True:
                     html.append(f"<td class='is-correct-true'>{text}</td>")

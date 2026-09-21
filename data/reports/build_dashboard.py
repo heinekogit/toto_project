@@ -4,6 +4,7 @@ from datetime import datetime
 
 
 REPORT_DIR = os.path.abspath(os.path.dirname(__file__))
+ROOT_DIR = os.path.abspath(os.path.join(REPORT_DIR, "..", ".."))
 HTML_DIR = os.path.join(REPORT_DIR, "html")
 
 
@@ -24,7 +25,7 @@ def _extract_day_num(label):
 
 def _parse_round_file_meta(filename, prefix):
     body = filename.replace(prefix, "").replace(".html", "")
-    m = re.match(r"^(j[123]|all)_(\d{4})_(.+)$", body)
+    m = re.match(r"^(j[123]|all)_(\d{4}(?:_special|_\d{4})?)_(.+)$", body)
     if m:
         raw_league = m.group(1).lower()
         league = "ALL" if raw_league == "all" else raw_league.upper()
@@ -89,7 +90,7 @@ def _collapse_pred_options_by_round(options):
     grouped = {}
     for opt in options:
         league, year, round_label, _, file_name = opt
-        key = round_label
+        key = (year, round_label)
         rank_key = (
             league_priority(league),
             -(int(year) if str(year).isdigit() else 0),
@@ -99,9 +100,9 @@ def _collapse_pred_options_by_round(options):
             grouped[key] = (rank_key, opt)
 
     collapsed = []
-    for round_label, (_, opt) in grouped.items():
+    for (_, round_label), (_, opt) in grouped.items():
         league, year, _, _, file_name = opt
-        collapsed.append((league, year, round_label, round_label, file_name))
+        collapsed.append((league, year, round_label, f"{year} {round_label}", file_name))
     collapsed.sort(key=lambda x: (_extract_round_num(x[2]), _extract_battle_num(x[2]), _extract_day_num(x[2]), x[2]))
     return collapsed
 
@@ -112,7 +113,12 @@ def _latest_option(options):
 
     def _key(opt):
         league, year, round_label, _, _ = opt
-        year_num = int(year) if str(year).isdigit() else -1
+        if str(year) == "2026_2027":
+            year_num = 2027
+        elif str(year) == "2026_special":
+            year_num = 2026
+        else:
+            year_num = int(year) if str(year).isdigit() else -1
         league_rank = 1 if league == "ALL" else 0
         return (
             year_num,
@@ -134,8 +140,40 @@ def _latest_option_prefer_all(options):
     return _latest_option(options)
 
 
+def _detect_operation_season():
+    """Return the season used by the operational commands shown on the dashboard."""
+    configured = os.environ.get("SEASON_YEAR", "").strip()
+    if re.fullmatch(r"\d{4}", configured):
+        return configured
+
+    years = []
+    try:
+        root_names = os.listdir(ROOT_DIR)
+    except OSError:
+        root_names = []
+    for name in root_names:
+        match = re.match(r"^j[12]_(\d{4})_predictions(?:_.+)?\.csv$", name, flags=re.IGNORECASE)
+        if match:
+            years.append(int(match.group(1)))
+
+    if os.path.isdir(HTML_DIR):
+        for name in os.listdir(HTML_DIR):
+            match = re.match(
+                r"^(?:predictions|backtest)_round_(?:j[123]|all)_(\d{4})(?:_special|_\d{4})?_",
+                name,
+                flags=re.IGNORECASE,
+            )
+            if match:
+                years.append(int(match.group(1)))
+
+    # 新シーズン情報がまだ無い環境でも、従来の運用年で表示できるようにする。
+    return str(max(years)) if years else str(datetime.now().year)
+
+
 def build_dashboard():
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    operation_season = _detect_operation_season()
+    operation_leagues = os.environ.get("LEAGUES", "j1 j2").strip() or "j1 j2"
     if os.path.exists(HTML_DIR):
         all_pred_links = sorted([f for f in os.listdir(HTML_DIR) if f.startswith("predictions_round_") and f.endswith(".html")])
         all_back_links = sorted([f for f in os.listdir(HTML_DIR) if f.startswith("backtest_round_") and f.endswith(".html")])
@@ -174,11 +212,12 @@ def build_dashboard():
     html.append("<div class='box'>")
     html.append("<div class='row'><span class='label'>準備</span>週次バッチ起動: <code>/scripts/run_batch_weekly.sh</code></div>")
     html.append("<div class='row'><span class='label'>準備</span>試合直前バッチ: <code>/scripts/run_batch_matchday.sh</code></div>")
-    html.append("<div class='row'><span class='label'>手動実行(ログ保存)</span><code>SEASON_YEAR=2026 LEAGUES='j1 j2' ./scripts/run_batch_weekly.sh 2>&1 | tee logs/run_batch_weekly.log</code></div>")
-    html.append("<div class='row'><span class='label'>手動実行(ログ保存)</span><code>SEASON_YEAR=2026 LEAGUES='j1 j2' ./scripts/run_batch_matchday.sh 2>&1 | tee logs/run_batch_matchday.log</code></div>")
+    html.append(f"<div class='row'><span class='label'>対象シーズン</span>{operation_season} / {operation_leagues.upper()}</div>")
+    html.append(f"<div class='row'><span class='label'>手動実行(ログ保存)</span><code>SEASON_YEAR={operation_season} LEAGUES='{operation_leagues}' ./scripts/run_batch_weekly.sh 2>&1 | tee logs/run_batch_weekly.log</code></div>")
+    html.append(f"<div class='row'><span class='label'>手動実行(ログ保存)</span><code>SEASON_YEAR={operation_season} LEAGUES='{operation_leagues}' ./scripts/run_batch_matchday.sh 2>&1 | tee logs/run_batch_matchday.log</code></div>")
     html.append("<div class='row'><span class='label'>ログ確認</span><code>tail -n 80 logs/run_batch_weekly.log</code> / <code>tail -n 80 logs/run_batch_matchday.log</code></div>")
-    html.append("<div class='row'><span class='label'>結果確認</span><code>tail -n 20 j1_2026_predictions.csv</code> / <code>tail -n 20 j2_2026_predictions.csv</code></div>")
-    html.append("<div class='row'><span class='label'>品質確認</span><code>ls data/reports/merge_qc/j1_2026</code> / <code>ls data/reports/merge_qc/j2_2026</code></div>")
+    html.append(f"<div class='row'><span class='label'>結果確認</span><code>tail -n 20 j1_{operation_season}_predictions.csv</code> / <code>tail -n 20 j2_{operation_season}_predictions.csv</code></div>")
+    html.append(f"<div class='row'><span class='label'>品質確認</span><code>ls data/reports/merge_qc/j1_{operation_season}</code> / <code>ls data/reports/merge_qc/j2_{operation_season}</code></div>")
     html.append("</div>")
 
     html.append("<div class='box'>")

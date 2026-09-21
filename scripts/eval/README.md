@@ -30,6 +30,11 @@ scripts/.venv/bin/python scripts/eval/00_snapshot_purchase.py --round round02
 scripts/.venv/bin/python scripts/eval/01_export_actual_results.py --round round02 --season 2026
 scripts/.venv/bin/python scripts/eval/02_score_buyplan.py --round round02
 scripts/.venv/bin/python scripts/eval/03_build_scored_html.py --round round02
+scripts/.venv/bin/python scripts/eval/04_accumulate_observations.py --round round02
+scripts/.venv/bin/python scripts/eval/05_build_observation_report.py
+scripts/.venv/bin/python scripts/eval/06_evaluate_d_filter_candidates.py
+scripts/.venv/bin/python scripts/eval/07_snapshot_d_filter_shadow.py --round toto1648 --logical-season 2027
+scripts/.venv/bin/python scripts/eval/08_score_d_filter_shadow.py --round toto1648 --logical-season 2027
 ```
 
 ## 生成物
@@ -39,6 +44,17 @@ scripts/.venv/bin/python scripts/eval/03_build_scored_html.py --round round02
 - `data/eval/rounds/round02/evaluation.csv`
 - `data/eval/rounds/round02/buyplan_scored.html`
 - `data/eval/candidate_history.csv`
+- `data/eval/observation_history/matches.csv`
+- `data/eval/observation_history/reports/new_season_validation.md`
+- `data/eval/observation_history/reports/d_filter/d_filter_validation.md`
+- `data/eval/d_filter_shadow/2027/{round}/{timestamp}_prematch/d_filter_prematch.csv`
+- `data/eval/d_filter_shadow/2027/{round}/{timestamp}_prematch/buyplan_d_filter_reference.csv`
+- `data/eval/d_filter_shadow/2027/{round}/{timestamp}_prematch/buyplan_d_filter_reference.html`
+
+`run_evaluate_round.sh` は採点後に観測履歴をupsertし、新シーズン横断レポートも再生成する。
+横断レポートの対象は採点済みの購入対象試合であり、J1/J2全試合ではない。
+Dフィルターは観測専用であり、prediction本体の判定は変更しない。
+試合前shadowは `07_snapshot_d_filter_shadow.py` で固定し、結果確定後は評価パイプラインが存在を検出して自動採点する。
 
 ## スクリプト機能とCSV入出力一覧
 
@@ -99,3 +115,9 @@ scripts/.venv/bin/python scripts/eval/03_build_scored_html.py --round round02
   - 任意（存在時）: `data/eval/rounds/{round}/evaluation.csv`
 - 書き出しCSV:
   - なし（`data/eval/rounds/{round}/buyplan_scored.html` を出力）
+
+
+8/26に上記の機能・運用を作ってもらった。
+predictions.csvの運用上は、変更なし。
+
+

@@ -46,8 +46,8 @@ def parse_args():
 def main():
     args = parse_args()
     setup_logger(os.path.join("logs", "weather_fetch.log"))
-    # 天候取得成功率の最小閾値（未指定時 0.7）
-    min_success_ratio = float(os.environ.get("WEATHER_MIN_SUCCESS_RATIO", "0.7"))
+    # A normal run requires complete coverage; relaxed operation must be explicit.
+    min_success_ratio = float(os.environ.get("WEATHER_MIN_SUCCESS_RATIO", "1.0"))
 
     stadiums = load_stadiums(args.stadiums, sheet=args.stadiums_sheet)
     matches = load_matches(args.matches, sheet=args.matches_sheet)
@@ -60,7 +60,7 @@ def main():
         horizon = asof + timedelta(days=args.lookahead_days)
         kickoff_ts = pd.to_datetime(merged.get("kickoff_jst"), errors="coerce")
         before_count = len(merged)
-        merged = merged[(kickoff_ts >= asof) & (kickoff_ts <= horizon)].copy()
+        merged = merged[(kickoff_ts >= asof) & (kickoff_ts < horizon + timedelta(days=1))].copy()
         logging.info(
             "WEATHER_TARGET_FILTER: asof=%s lookahead_days=%s before=%s after=%s",
             asof.date(),
@@ -74,7 +74,7 @@ def main():
         if col not in merged.columns:
             raise ValueError(f"必要な列が見つかりません: {col}")
 
-    client = OpenMeteoClient(cache_dir=args.cache_dir)
+    client = OpenMeteoClient(cache_dir=args.cache_dir, cache_max_age_hours=float(os.environ.get("WEATHER_CACHE_MAX_AGE_HOURS", "6")))
 
     records = []
     total = 0
@@ -113,7 +113,7 @@ def main():
             hourly_df = pd.concat([hourly_json_to_df(d) for d in datasets], ignore_index=True)
             features = build_features_for_match(row, hourly_df)
             base_record.update(features)
-            fetch_ok = all((k in features) and pd.notna(features.get(k)) for k in required_feature_keys)
+            fetch_ok = features.get("weather_quality_status") == "complete" and all((k in features) and pd.notna(features.get(k)) for k in required_feature_keys)
             if fetch_ok:
                 base_record["weather_fetch_ok"] = 1
                 success += 1
@@ -129,7 +129,7 @@ def main():
     if eligible_total == 0:
         raise RuntimeError("WEATHER_FETCH: eligible_total=0（lat/lon+kickoff が揃った対象が0件）")
 
-    success_ratio = success / eligible_total
+    success_ratio = success / total
     overall_missing_ratio = (total - success) / total
     logging.info(
         "WEATHER_FETCH: success=%s eligible_total=%s total=%s success_ratio=%.3f overall_missing_ratio=%.3f threshold=%.3f",

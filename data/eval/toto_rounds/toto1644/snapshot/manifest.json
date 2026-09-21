@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-09T22:54:07+09:00",
+  "round_id": "toto1644",
+  "logical_season": "2027",
+  "prediction_season": "2026",
+  "j1_source": "",
+  "j2_source": "",
+  "football_lab_snapshot": "",
+  "files": {
+    "predictions.csv": {
+      "size": 127742,
+      "sha256": "cd654e811cf91240e64eb87f4936c18f244c7e90ce9ec9433207cd6a4f3b3ff6"
+    },
+    "buyplan.csv": {
+      "size": 25509,
+      "sha256": "f8c19c7d3bdee42eb389cd22d7725280848cfc00c2ce6ef7100f912480f58833"
+    },
+    "buyplan.html": {
+      "size": 26782,
+      "sha256": "3e060c2071bc617d3a27eeabb0ecf06023dc661486d8ac613b5125f4c7b2fd7d"
+    },
+    "predictions_buyplan_context.csv": {
+      "size": 34313,
+      "sha256": "78db91fb736e2e6377c5b653c0d3ab4de6d0bbfb0eb54d6b0c57c013d78cb462"
+    }
+  }
+}

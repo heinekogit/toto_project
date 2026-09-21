@@ -1,0 +1,14 @@
+﻿match_no,home_team,away_team,audit_basis,old_travel_status,new_travel_status,distance_proxy_km,weather_fetched_at_saved,old_home_rest_score,new_home_rest_hours,new_home_rest_score,old_away_rest_score,new_away_rest_hours,new_away_rest_score
+1,福岡,水戸,retrospective_current_results_not_prematch_backtest,team_not_found,hit,956.8,,1.0,72.0,0.5,1.0,72.0,0.5
+2,鹿島,浦和,retrospective_current_results_not_prematch_backtest,team_not_found,hit,89.9,,0.5,95.0,0.0208,0.5,95.0,0.0208
+3,千葉,Ｇ大阪,retrospective_current_results_not_prematch_backtest,team_not_found,hit,425.4,,0.5,95.0,0.0208,0.5,95.0,0.0208
+4,名古屋,町田,retrospective_current_results_not_prematch_backtest,team_not_found,hit,235.1,,0.5,95.0,0.0208,0.5,95.0,0.0208
+5,神戸,長崎,retrospective_current_results_not_prematch_backtest,team_not_found,hit,534.1,,0.5,96.0,0.0,0.5,96.0,0.0
+6,柏,横浜FM,retrospective_current_results_not_prematch_backtest,team_not_found,hit,50.9,,0.5,96.0,0.0,0.5,96.0,0.0
+7,岡山,広島,retrospective_current_results_not_prematch_backtest,team_not_found,hit,139.2,,0.5,95.0,0.0208,0.5,95.0,0.0208
+8,川崎Ｆ,清水,retrospective_current_results_not_prematch_backtest,team_not_found,hit,131.1,,0.5,96.0,0.0,0.5,96.0,0.0
+9,Ｃ大阪,東京Ｖ,retrospective_current_results_not_prematch_backtest,team_not_found,hit,382.8,,0.5,96.0,0.0,0.5,96.0,0.0
+10,FC東京,京都,retrospective_current_results_not_prematch_backtest,team_not_found,hit,350.8,,0.0,96.5,0.0,0.0,96.5,0.0
+11,徳島,いわき,retrospective_current_results_not_prematch_backtest,team_not_found,hit,647.4,,0.0,168.0,0.0,0.0,169.0,0.0
+12,山形,甲府,retrospective_current_results_not_prematch_backtest,team_not_found,hit,341.0,,0.0,168.0,0.0,0.0,168.0,0.0
+13,札幌,栃木Ｃ,retrospective_current_results_not_prematch_backtest,team_not_found,hit,757.6,,0.0,186.0,0.0,0.0,187.0,0.0

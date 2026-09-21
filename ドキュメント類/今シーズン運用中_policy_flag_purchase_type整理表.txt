@@ -1,0 +1,139 @@
+今シーズン運用中 policy / flag / purchase_type 整理表
+
+目的
+分類の役割を固定し、feature 追加がそのまま運用 policy へ流れ込むのを防ぐ。
+
+前提
+- 先シーズンは終了済み
+- 本整理表は、先シーズン終了後に残った構想を、今シーズン運用中の分類整理へ接続するためのもの
+
+基本原則
+
+policy
+- 運用上、正式に採用するもの
+- 節をまたいで安定運用するもの
+- rescue/harm と重複副作用を確認済みのもの
+
+flag
+- 観測用の印
+- まだ正式採用しない
+- 効果測定のために出力へ残すもの
+
+purchase_type
+- prediction 側で定義する試合類型
+- buyplan の入力になる意味づけ
+- if 条件の寄せ集めではなく、将来は分布クラスタとして整理する対象
+
+ticket_guidance
+- buyplan 側の券面配置指示
+- prediction の意味づけを受けて、重複回避や分散を実行する層
+
+現時点の運用整理
+
+1. 正式 policy 枠
+- home_reversal_watch
+  位置づけ: 正式 policy
+  役割: home 反転系の運用判断
+  状態: 継続運用候補
+
+- j2_draw_trap
+  位置づけ: 正式 policy
+  役割: J2 の draw 偏位試合の正式運用枠
+  状態: 継続検証しつつ主軸候補。第16節-第19節時点でも分離維持が妥当
+
+2. observation flag 候補
+- j1_draw_rescue_watch
+  位置づけ: flag
+  役割: J1 の draw 救済観測
+  状態: 当面 1 型維持で観測。第16節-第19節時点では保留
+
+- j2_false_draw_watch
+  位置づけ: flag
+  役割: J2 の偽 draw 監視
+  状態: j2_draw_trap と分離維持。flag のまま継続観測
+
+- all-same 重なり関連
+  位置づけ: flag
+  役割: 券面偏りの副作用監視
+  状態: 毎節確認
+
+3. purchase_type の扱い
+- draw_trap 系
+  役割: draw に見えるが side 保持も要注意の試合型
+  注意: draw_watch / draw_rescue と混線しやすい
+
+- draw_watch 系
+  役割: draw を観測対象として残す試合型
+  注意: 正式 policy に直結させない。draw_rescue 系と同一視しない
+
+- draw_rescue 系
+  役割: draw を券面上で救済したい試合型
+  注意: rescue と harm をセットで判定。件数過多なら抑制候補
+
+- chaos_draw_watch 系
+  役割: 高 entropy / 高 draw_tension の不安定試合型
+  注意: 範囲が広すぎるなら分割候補
+
+- chaos_side_watch 系
+  役割: side 優勢だが不安定要素が強い試合型
+  注意: draw 系との境界整理が必要
+
+- directional_stall 系
+  役割: stall 優勢だが side 方向が残る試合型
+  注意: 将来の hold/stall/flip で再定義しやすい形にしたい
+
+責務分離
+
+prediction 側
+- feature
+- team_state
+- matchup
+- hold/stall/flip 的な状態解釈
+- purchase_type / flag の決定
+
+buyplan 側
+- duplicate 回避
+- ticket 距離
+- portfolio 分散
+- hedge 配置
+- all-same 回避
+
+禁止事項
+- 新 feature を即 policy 接続しない
+- buyplan 側で試合の意味づけを持ちすぎない
+- 似た分類を増やすだけで定義を放置しない
+
+運用中に整理すべき論点
+- draw_trap / draw_watch / draw_rescue の境界
+- J1 と J2 で共有する分類と分ける分類
+- chaos 系の粒度
+- purchase_type と ticket_guidance の一対一固定を避けるかどうか
+- 将来の mixture model 導入時に残す列の確定
+- 今シーズンの実測上、正式 policy と観測 flag の線引きをどこに置くか
+- j1_draw_rescue_watch をどの条件で絞るか
+- j2_draw_trap と j2_false_draw_watch の分離基準をどう明文化するか
+
+直近判断の反映
+- j1_draw_rescue_watch:
+  保留。残すが正式 policy には上げない
+
+- j2_draw_trap:
+  主軸候補維持。現時点では正式 policy 枠として扱い続ける
+
+- j2_false_draw_watch:
+  flag 継続。j2_draw_trap とは統合しない
+
+- draw_watch / draw_rescue / draw_trap:
+  境界整理が必要。次の節検証でも最優先論点
+
+将来モデルへの橋渡し
+- hold_weight
+- stall_weight
+- flip_weight
+- volatility
+- entropy
+- compactness
+- path_score
+- attack/defense interaction
+
+上記は、即 policy 化の材料ではなく、まず観測列として固定して蓄積する。

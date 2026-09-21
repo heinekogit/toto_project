@@ -1,0 +1,9 @@
+{
+  "shadow_only": true,
+  "multiplier": 1.1,
+  "workspace": "/private/tmp/toto1650_weather_110_1x54zfm6",
+  "base_replay": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/simulations/toto1650_latest",
+  "weather_thresholds_changed": false,
+  "predictor_sha256": "25a90178d4c4c7ad9a898de8be5df02fb314f8966e3cfd1acda9e5e8b7b35824",
+  "weather_rules_sha256": "19d4fce134824869927bda07acd23a3034ded384b2865346fc20d6dd81224537"
+}

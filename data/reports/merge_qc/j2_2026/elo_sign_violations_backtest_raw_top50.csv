@@ -1,2 +1,3 @@
 ﻿league,節,match_id,datetime,home_team,away_team,home_elo_at_prediction,away_elo_at_prediction,elo_diff_before_hfa,hfa_added_to_diff,elo_diff_after_hfa,diff_raw_no_hfa,prob_home_win_before_signfix,prob_draw_raw,prob_away_win_before_signfix,argmax_result,final_result,predicted_result,decision_reason,sign_gap
-j2,第５節第２日,j2_2026_03081303_八戸_横浜FC,2026-03-08 13:03:00,八戸,横浜FC,1492,1492,-0.6146,4.2,3.5854,-0.6146,0.3357526140718585,0.3407061361702235,0.323541249757918,D,D,D,NARROW_DRAW_OVERRIDE,0.012211364313940543
+j2,第４節第１日,j2_2026_08291833_富山_藤枝,2026-08-29 18:33:00,富山,藤枝,1455,1460,-5.0053,4.2,-0.8053,-5.0053,0.3298016304659434,0.3407446425801608,0.3294537269538958,D,D,D,ARGMAX,0.0003479035120476093
+j2,第３節第１日,j2_2026_08221903_山形_横浜FC,2026-08-22 19:03:00,山形,横浜FC,1520,1521,-1.3877,4.2,2.8123,-1.3877,0.3346984124078366,0.340718232107336,0.3245833554848274,D,D,D,ARGMAX,0.01011505692300918

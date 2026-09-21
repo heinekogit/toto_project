@@ -10,7 +10,7 @@ body{font-family:system-ui,-apple-system,sans-serif;margin:20px;line-height:1.45
 .sub{font-size:12px;color:#444;display:flex;flex-wrap:wrap;gap:10px 18px;margin-bottom:6px;}
 .note{font-size:12px;color:#555;}
 .table-wrap{overflow-x:auto;border:1px solid #ddd;}
-table{border-collapse:collapse;width:100%;font-size:12px;min-width:1300px;}
+table{border-collapse:collapse;width:100%;font-size:12px;min-width:1500px;}
 th,td{border:1px solid #ddd;padding:6px;text-align:center;}
 th{background:#f5f5f5;position:sticky;top:0;z-index:1;}
 tbody tr:nth-child(even){background:#fcfcfc;}
@@ -29,80 +29,110 @@ tbody tr:nth-child(even){background:#fcfcfc;}
 <div class='sub'>
 <span>toto_round_id: <b>UNKNOWN</b></span>
 <span>scenario: <b>候補ごとに固定割当</b></span>
-<span>scenario一覧: <b>候補01:System 01（予想指定） / 候補02:System 02（予想指定） / 候補03:System 03（予想指定） / 候補04:Prob 01（確率忠実） / 候補05:Prob 02（確率忠実） / 候補06:Prob 03（確率忠実） / 候補07:Prob 04（確率忠実） / 候補08:Prob 05（確率忠実） / 候補09:Exp 01（実験） / 候補10:Exp 02（実験）</b></span>
-<span>生成日時: <b>2026-04-22 00:05:31</b></span>
-<span>入力: <b>/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions.csv</b></span>
+<span>scenario一覧: <b>scenario01:Main（本線） / scenario02:Draw Compression（draw compression） / scenario03:Volatility Swing（volatility swing） / scenario04:Hold Guard（hold guard） / scenario05:Draw Pressure（draw pressure） / scenario06:J2 Draw Pressure（J2 draw pressure） / scenario07:Away Swing（away swing） / scenario08:Close Draw（close draw） / scenario09:Low Tempo Cover（low-tempo cover） / scenario10:Blend Wide（blend wide）</b></span>
+<span>生成日時: <b>2026-05-23 11:37:04</b></span>
+<span>入力: <b>/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/rounds/round11/snapshot/predictions.csv</b></span>
 <span>出力先: <b>/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/backtest/round11</b></span>
 </div>
 <div class='note'>記号: 1=ホーム勝ち / 0=引分 / 2=アウェイ勝ち</div>
 <div class='note'>10口はユニーク生成（重複なし）</div>
-<div class='note'>unique_ticket_count=10 / duplicate_count=0</div>
+<div class='note'>unique_ticket_count=9 / duplicate_count=1</div>
 </div>
-<div class='note'>候補別D本数: 候補01=D2本 / 候補02=D3本 / 候補03=D4本 / 候補04=D3本 / 候補05=D3本 / 候補06=D2本 / 候補07=D3本 / 候補08=D2本 / 候補09=D5本 / 候補10=D1本</div>
-<div class='note'>節内D気配=11試合 / 候補優先度: 候補01=通常 / 候補02=通常 / 候補03=通常 / 候補04=通常 / 候補05=通常 / 候補06=通常 / 候補07=通常 / 候補08=通常 / 候補09=通常 / 候補10=注意</div>
+<div class='note'>候補別D本数: 候補01=D6本 / 候補02=D5本 / 候補03=D5本 / 候補04=D7本 / 候補05=D5本 / 候補06=D6本 / 候補07=D4本 / 候補08=D5本 / 候補09=D6本 / 候補10=D5本</div>
+<div class='note'>節内D気配=13試合 / 候補優先度: 候補01=通常 / 候補02=通常 / 候補03=通常 / 候補04=通常 / 候補05=通常 / 候補06=通常 / 候補07=通常 / 候補08=通常 / 候補09=通常 / 候補10=通常</div>
+<div class='note'>候補別クラスタ採用: 候補01=draw=0 overlap=0 swing=0 neutral=0 hold=0 / 候補02=draw=0 overlap=0 swing=0 neutral=0 hold=0 / 候補03=draw=0 overlap=0 swing=0 neutral=0 hold=0 / 候補04=draw=0 overlap=0 swing=0 neutral=0 hold=2 / 候補05=draw=0 overlap=0 swing=0 neutral=0 hold=0 / 候補06=draw=0 overlap=0 swing=0 neutral=0 hold=0 / 候補07=draw=0 overlap=0 swing=0 neutral=0 hold=0 / 候補08=draw=0 overlap=0 swing=0 neutral=0 hold=0 / 候補09=draw=0 overlap=0 swing=0 neutral=0 hold=0 / 候補10=draw=0 overlap=0 swing=0 neutral=0 hold=0</div>
+<div class='note'>候補別basis_hint採用: 候補01=side=0 drawcmp=0 trap=0 split=0 balanced=0 / 候補02=side=0 drawcmp=0 trap=0 split=0 balanced=0 / 候補03=side=0 drawcmp=0 trap=0 split=0 balanced=0 / 候補04=side=0 drawcmp=0 trap=0 split=0 balanced=2 / 候補05=side=0 drawcmp=0 trap=0 split=0 balanced=0 / 候補06=side=0 drawcmp=0 trap=0 split=0 balanced=0 / 候補07=side=0 drawcmp=0 trap=0 split=0 balanced=0 / 候補08=side=0 drawcmp=0 trap=0 split=0 balanced=0 / 候補09=side=0 drawcmp=0 trap=0 split=0 balanced=0 / 候補10=side=0 drawcmp=0 trap=0 split=0 balanced=0</div>
+<div class='note'>候補06 role観測: mode=skip / unique_only=0 / 06~02:same=0,diff=1 / 06~05:same=0,diff=0 / 06~08:same=0,diff=0 / 06~09:same=0,diff=0</div>
 <div class='info'><b>警告ログ</b><ul>
-<li>基準票ソース: predicted_result採用=13, best_symbolフォールバック=0</li>
-<li>LOCK遵守: tickets=3, 0採用件数=9, 平均margin=0.078, 総flip数=9</li>
-<li>確率忠実: tickets=5, 0採用件数=13, 平均margin=0.110, 総flip数=13</li>
-<li>実験: tickets=2, 0採用件数=6, 平均margin=0.037, 総flip数=7</li>
-<li>探索ログ: second_pickが0の試合数(全OK)=9, second_pickが0の試合数(探索対象)=9, 探索枠でsecond=0を採用した件数=0</li>
-<li>system fixed tickets: ticket01=predicted_result_main, ticket02=predicted_result_type_a, ticket03=predicted_result_type_b</li>
-<li>全体比率: 0総出現回数=28, 1/0/2比率=0.500/0.215/0.285</li>
-<li>draw_distribution: adjust_count=0</li>
-<li>[BUYPLAN_EXTREME_MARGIN_RELEASE] count=0 matches=</li>
-<li>draw候補ゲート: candidate_matches=5 rate=0.385</li>
-<li>[BUYPLAN_WEAK_DRAW_CAND] matches= selected_for_exp= selected_for_distribution=</li>
-<li>[BUYPLAN_DRAW_POLICY] strong_draw_count=5 weak_draw_count=0 final_zero_count=28</li>
-<li>[BUYPLAN_TARGET_DRAW] scenario=Lock target_draw_count_range=2..3</li>
-<li>[BUYPLAN_TARGET_DRAW] scenario=Prob target_draw_count_range=3..4</li>
-<li>[BUYPLAN_TARGET_DRAW] scenario=Exp target_draw_count_range=4..5</li>
-<li>[BUYPLAN_MIN_DRAW_INSERT] count=1 logs=ticket=10 min_draw_insert:M13:2->0(score=0.456,reason=shape_close_3way)</li>
-<li>重複/偏り調整: draw_distribution_adjust_count=0 unique_repair_count=0 same_symbol_cap_adjust_count=0 unique_ticket_count=10 duplicate_count=0</li>
-<li>ticket01-03 are immutable system prediction tickets</li>
-<li>ticket02-03 are system prediction variants (desc=system_fixed:predicted_result_type_a:primary=13,fallback=0 / system_fixed:predicted_result_type_b:primary=13,fallback=0; system_variant_separate:M10:2->0)</li>
+<li>shape_draw_compression上位: M01:横浜FM-川崎Ｆ:0.733 / M06:鹿島-浦和:0.704 / M03:水戸-柏:0.684 / M05:名古屋-福岡:0.662 / M07:東京Ｖ-千葉:0.649</li>
+<li>shape_draw_compression_tension上位: M01:横浜FM-川崎Ｆ:0.733 / M06:鹿島-浦和:0.704 / M03:水戸-柏:0.684 / M05:名古屋-福岡:0.662 / M07:東京Ｖ-千葉:0.649</li>
+<li>shape_swing_instability上位: M04:Ｇ大阪-岡山:0.421 / M03:水戸-柏:0.322 / M10:甲府-藤枝:0.321 / M07:東京Ｖ-千葉:0.315 / M13:大宮-磐田:0.315</li>
+<li>shape_swing_instability_volatility上位: M04:Ｇ大阪-岡山:0.421 / M03:水戸-柏:0.322 / M10:甲府-藤枝:0.321 / M07:東京Ｖ-千葉:0.315 / M13:大宮-磐田:0.315</li>
+<li>shape_swing_instability_dynamic上位: M04:Ｇ大阪-岡山:0.421 / M03:水戸-柏:0.322 / M10:甲府-藤枝:0.321 / M07:東京Ｖ-千葉:0.315 / M13:大宮-磐田:0.315</li>
+<li>round_topology=balanced draw_cluster=13 swing_cluster=13 hold_cluster=13</li>
+<li>round_clusters=draw_core=1 low_tempo_draw=1 overlap=3 swing_core=0 hold_core=8 neutral=0</li>
+<li>round_j2_context=matches=6 draw_ready=0 mode06=skip</li>
+<li>portfolio_target=02=D1:F0 / 03=D0:F5 / 04=D0:F2 / 05=D3:F1 / 06=D1:F0 / 07=D0:F1 / 08=D0:F0 / 09=D0:F0 / 10=D0:F1</li>
+<li>portfolio_target_clusters=02=neutral / 05=draw_core / 06=draw_core,neutral</li>
+<li>portfolio_objective_weights=cluster_penalty=-0.22 / correlated_penalty=-0.26 / coverage_gain=0.32 / diversification_avg=0.18 / diversification_min=0.55 / overlap_bonus=0.15 / rescue_uniqueness=0.18 / saturation_penalty=-0.32 / ticket_budget_penalty=-0.28 / topology_fit=1.00</li>
+<li>portfolio_objective_cluster_targets=draw_core:draw=2 / hold_core:draw=1 / low_tempo_draw:draw=1 / neutral:draw=1 / overlap:draw=1,swing=2</li>
+<li>round_overlap_subtypes=counterflow=1 low_tempo_draw=0 general=2</li>
+<li>round_swing_context=swing_ready=0 overlap_guarded=0</li>
+<li>portfolio_target_effective=06=skip:D0 / 06C= / 02C=neutral / 05C=draw_core / 08=D0 / 09=D0 / 03=F4 / 07=F1 / 10=F1</li>
+<li>admission_escape_distribution=ticket=02 M03 2->0 score=0.713; ticket=07 M07 0->1 score=0.382; ticket=10 M13 0->1 score=0.382; ticket=10 M13 1->2 score=0.283</li>
+<li>portfolio_final_escape_fix=ticket=07 M09 0->1 tag=final_home_escape reason=topology=hold_core|entropy=1.086|swing=0.271|overlap=non_overlap|diversification=minΔ+1/avgΔ+1.00|cluster_coverage=1|correlated_fail=0|role=swing|coverage_gain=0/0|role_sat=1/1|ticket_budget=2/1|topology_fit=-0.10|rescue_unique=+0.18|score=+0.31</li>
+<li>portfolio_force_unique=ticket=06 M03 2->1 score=+2.21</li>
+<li>context_minimum=ticket=05 M06 2->0 target=1 adjusted=+2.08 context=side_with_cover reason=topology=hold_core|entropy=1.094|swing=0.300|overlap=non_overlap|diversification=minΔ+1/avgΔ+1.00|cluster_coverage=0|correlated_fail=0|role=draw|coverage_gain=1/1|role_sat=1/1|ticket_budget=2/4|topology_fit=+0.10|rescue_unique=+0.18|score=+1.33</li>
+<li>purchase_type_policy=purchase_type=j2_draw_trap policy_action=suppress_draw base_symbol=0 new_symbol=1 affected_tickets=02,05,08 change_cap=9 reason=false_draw_suppression rescue_count=0 harm_count=0 net_rescue=0</li>
+<li>[BUYPLAN_SCENARIO_TICKET_FINAL] ticket=02 name=Draw Compression shape_changes=3 draw_count=5 diff_count=3 changes=M01:0->2; M03:2->0; M11:0->1</li>
+<li>[BUYPLAN_SCENARIO_TICKET_FINAL] ticket=03 name=Volatility Swing shape_changes=1 draw_count=5 diff_count=1 changes=M01:0->2</li>
+<li>[BUYPLAN_SCENARIO_TICKET_FINAL] ticket=05 name=Draw Pressure shape_changes=3 draw_count=5 diff_count=3 changes=M01:0->1; M06:2->0; M11:0->1</li>
+<li>[BUYPLAN_SCENARIO_TICKET_FINAL] ticket=06 name=J2 Draw Pressure shape_changes=1 draw_count=6 diff_count=1 changes=M03:2->1</li>
+<li>[BUYPLAN_SCENARIO_TICKET_FINAL] ticket=07 name=Away Swing shape_changes=2 draw_count=4 diff_count=2 changes=M07:0->1; M09:0->1</li>
+<li>[BUYPLAN_SCENARIO_TICKET_FINAL] ticket=08 name=Close Draw shape_changes=1 draw_count=5 diff_count=1 changes=M11:0->1</li>
+<li>[BUYPLAN_SCENARIO_TICKET_FINAL] ticket=10 name=Blend Wide shape_changes=1 draw_count=5 diff_count=1 changes=M13:0->2</li>
+<li>ticket01: D本数=6 差分件数=0</li>
+<li>ticket02: D本数=5 差分件数=3</li>
+<li>ticket03: D本数=5 差分件数=1</li>
+<li>ticket04: D本数=7 差分件数=2</li>
+<li>ticket05: D本数=5 差分件数=3</li>
+<li>ticket06: D本数=6 差分件数=1</li>
+<li>ticket07: D本数=4 差分件数=2</li>
+<li>ticket08: D本数=5 差分件数=1</li>
+<li>ticket09: D本数=6 差分件数=0</li>
+<li>ticket10: D本数=5 差分件数=1</li>
+<li>ticket06_role=unique_only=0 / 06~02:same=0,diff=1 / 06~05:same=0,diff=0 / 06~08:same=0,diff=0 / 06~09:same=0,diff=0</li>
+<li>buyplan mode: scenario_weights_direct</li>
+<li>unique_ticket_count=9 duplicate_count=1</li>
+<li>ticket_distance min=0 avg=2.556</li>
+<li>0総出現回数=54 1/0/2比率=0.208/0.415/0.377</li>
 </ul></div>
 <div class='table-wrap'><table>
-<thead><tr><th class='match'>match_no</th><th class='left'>league</th><th class='left'>home_team</th><th class='left'>away_team</th><th class='left'>best/second</th>
-<th class='cand-head'>候補01(基準)<br><small>System 01（予想指定） / D2 / 通常</small></th>
-<th class='cand-head'>候補02<br><small>System 02（予想指定） / D3 / 通常</small></th>
-<th class='cand-head'>候補03<br><small>System 03（予想指定） / D4 / 通常</small></th>
-<th class='cand-head'>候補04<br><small>Prob 01（確率忠実） / D3 / 通常</small></th>
-<th class='cand-head'>候補05<br><small>Prob 02（確率忠実） / D3 / 通常</small></th>
-<th class='cand-head'>候補06<br><small>Prob 03（確率忠実） / D2 / 通常</small></th>
-<th class='cand-head'>候補07<br><small>Prob 04（確率忠実） / D3 / 通常</small></th>
-<th class='cand-head'>候補08<br><small>Prob 05（確率忠実） / D2 / 通常</small></th>
-<th class='cand-head'>候補09<br><small>Exp 01（実験） / D5 / 通常</small></th>
-<th class='cand-head'>候補10<br><small>Exp 02（実験） / D1 / 注意</small></th>
+<thead><tr><th class='match'>match_no</th><th class='left'>league</th><th class='left'>home_team</th><th class='left'>away_team</th><th class='left'>context</th><th class='left'>profile/basis</th><th class='left'>best/second</th>
+<th class='cand-head'>候補01(基準)<br><small>Main（本線） / D6 / 通常</small></th>
+<th class='cand-head'>候補02<br><small>Draw Compression（draw compression） / D5 / 通常</small></th>
+<th class='cand-head'>候補03<br><small>Volatility Swing（volatility swing） / D5 / 通常</small></th>
+<th class='cand-head'>候補04<br><small>Hold Guard（hold guard） / D7 / 通常</small></th>
+<th class='cand-head'>候補05<br><small>Draw Pressure（draw pressure） / D5 / 通常</small></th>
+<th class='cand-head'>候補06<br><small>J2 Draw Pressure（J2 draw pressure） / D6 / 通常</small></th>
+<th class='cand-head'>候補07<br><small>Away Swing（away swing） / D4 / 通常</small></th>
+<th class='cand-head'>候補08<br><small>Close Draw（close draw） / D5 / 通常</small></th>
+<th class='cand-head'>候補09<br><small>Low Tempo Cover（low-tempo cover） / D6 / 通常</small></th>
+<th class='cand-head'>候補10<br><small>Blend Wide（blend wide） / D5 / 通常</small></th>
 </tr></thead><tbody>
 <tr>
 <td class='match'>1</td>
 <td class='left'>J1</td>
 <td class='left'>横浜FM</td>
 <td class='left'>川崎Ｆ</td>
-<td class='left'>best=2 second=0 third=1 (base=2) margin=0.033 entropy=1.083 draw_cand=0</td>
-<td class='pick'>2</td>
-<td class='pick'>2</td>
-<td class='pick'>2</td>
-<td class='pick'>2</td>
-<td class='pick'>2</td>
-<td class='pick'>2</td>
+<td class='left'>本命=0 / 次点=2 / type=chaos_draw_watch / sub=draw_live / conf=high / tier=core / draw_core=1 / risk=low / guide=draw_core_keep / draw core keep: pd=0.421 gap=-0.097 top_gap=0.097</td>
+<td class='left'>profile=low_tempo_draw / basis=draw_compressed</td>
+<td class='left'>best=0 second=2 third=1 (base=0) margin=0.126 entropy=1.070 draw_cand=0</td>
 <td class='pick'>0</td>
 <td class='pick'>2</td>
 <td class='pick'>2</td>
-<td class='pick'>2</td>
+<td class='pick'>0</td>
+<td class='pick'>1</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
 </tr>
 <tr>
 <td class='match'>2</td>
 <td class='left'>J1</td>
 <td class='left'>Ｃ大阪</td>
 <td class='left'>京都</td>
-<td class='left'>best=2 second=0 third=1 (base=2) margin=0.051 entropy=1.087 draw_cand=0</td>
-<td class='pick'>0</td>
-<td class='pick'>0</td>
-<td class='pick'>0</td>
+<td class='left'>本命=2 / 次点=2 / type=draw_trap / sub=weak_draw_side_bias / conf=medium / tier=side / risk=medium / guide=side_with_cover / side A: top_gap=0.011 max_prob=0.356</td>
+<td class='left'>profile=balanced / basis=basis_balanced</td>
+<td class='left'>best=2 second=0 third=1 (base=2) margin=0.051 entropy=1.092 draw_cand=1</td>
 <td class='pick'>2</td>
 <td class='pick'>2</td>
-<td class='pick'>0</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
 <td class='pick'>2</td>
 <td class='pick'>2</td>
 <td class='pick'>2</td>
@@ -113,16 +143,18 @@ tbody tr:nth-child(even){background:#fcfcfc;}
 <td class='left'>J1</td>
 <td class='left'>水戸</td>
 <td class='left'>柏</td>
-<td class='left'>best=0 second=1 third=2 (base=0) margin=0.052 entropy=1.088 draw_cand=0</td>
+<td class='left'>本命=2 / 次点=2 / type=draw_trap / sub=weak_draw_side_bias / conf=high / tier=side / risk=medium / guide=side_with_cover / side A: top_gap=0.011 max_prob=0.378</td>
+<td class='left'>profile=stall_shape / basis=basis_balanced</td>
+<td class='left'>best=2 second=0 third=1 (base=2) margin=0.054 entropy=1.078 draw_cand=0</td>
+<td class='pick'>2</td>
 <td class='pick'>0</td>
-<td class='pick'>0</td>
-<td class='pick'>0</td>
-<td class='pick'>0</td>
-<td class='pick'>0</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
 <td class='pick'>1</td>
-<td class='pick'>0</td>
-<td class='pick'>0</td>
-<td class='pick'>0</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
 <td class='pick'>2</td>
 </tr>
 <tr>
@@ -130,26 +162,28 @@ tbody tr:nth-child(even){background:#fcfcfc;}
 <td class='left'>J1</td>
 <td class='left'>Ｇ大阪</td>
 <td class='left'>岡山</td>
-<td class='left'>best=1 second=2 third=0 (base=1) margin=0.165 entropy=1.060 draw_cand=0</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
+<td class='left'>本命=2 / type=chaos_draw_watch / sub=draw_live / conf=medium / tier=side / risk=medium / guide=side_single / side A: top_gap=0.092 max_prob=0.407</td>
+<td class='left'>profile=j1_pressure_draw_watch / basis=basis_balanced</td>
+<td class='left'>best=2 second=0 third=1 (base=2) margin=0.120 entropy=1.079 draw_cand=0</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
 <td class='pick'>2</td>
 <td class='pick'>1</td>
-<td class='pick'>1</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
 </tr>
 <tr>
 <td class='match'>5</td>
 <td class='left'>J1</td>
 <td class='left'>名古屋</td>
 <td class='left'>福岡</td>
-<td class='left'>best=1 second=0 third=2 (base=1) margin=0.086 entropy=1.090 draw_cand=1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
+<td class='left'>本命=1 / 次点=1 / type=chaos_draw_watch / sub=draw_live / conf=medium / tier=side / risk=medium / guide=side_single / side H: top_gap=0.056 max_prob=0.387</td>
+<td class='left'>profile=stall_shape / basis=basis_balanced</td>
+<td class='left'>best=1 second=0 third=2 (base=1) margin=0.084 entropy=1.085 draw_cand=0</td>
 <td class='pick'>1</td>
 <td class='pick'>1</td>
 <td class='pick'>1</td>
@@ -157,55 +191,63 @@ tbody tr:nth-child(even){background:#fcfcfc;}
 <td class='pick'>1</td>
 <td class='pick'>1</td>
 <td class='pick'>1</td>
-<td class='pick'>2</td>
+<td class='pick'>1</td>
+<td class='pick'>1</td>
+<td class='pick'>1</td>
 </tr>
 <tr>
 <td class='match'>6</td>
 <td class='left'>J1</td>
 <td class='left'>鹿島</td>
 <td class='left'>浦和</td>
-<td class='left'>best=1 second=2 third=0 (base=1) margin=0.392 entropy=0.899 draw_cand=0</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
+<td class='left'>本命=2 / 次点=0 / type=chaos_side_watch / sub=away_watch / conf=low / tier=side / risk=medium / guide=side_with_cover / side A: top_gap=0.018 max_prob=0.359</td>
+<td class='left'>profile=stall_shape / basis=draw_compressed</td>
+<td class='left'>best=2 second=0 third=1 (base=2) margin=0.022 entropy=1.094 draw_cand=1</td>
 <td class='pick'>2</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>0</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
 </tr>
 <tr>
 <td class='match'>7</td>
 <td class='left'>J1</td>
 <td class='left'>東京Ｖ</td>
 <td class='left'>千葉</td>
-<td class='left'>best=1 second=0 third=2 (base=1) margin=0.273 entropy=0.995 draw_cand=0</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
+<td class='left'>本命=1 / type=chaos_draw_watch / sub=draw_live / conf=medium / tier=side / risk=medium / guide=side_single / side H: top_gap=0.096 max_prob=0.398</td>
+<td class='left'>profile=stall_shape / basis=basis_balanced</td>
+<td class='left'>best=0 second=2 third=1 (base=0) margin=0.124 entropy=1.084 draw_cand=0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
 <td class='pick'>0</td>
 <td class='pick'>1</td>
-<td class='pick'>1</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
 </tr>
 <tr>
 <td class='match'>8</td>
 <td class='left'>J2</td>
 <td class='left'>仙台</td>
 <td class='left'>栃木Ｃ</td>
-<td class='left'>best=1 second=0 third=2 (base=1) margin=0.136 entropy=1.037 draw_cand=0</td>
+<td class='left'>本命=1 / type=chaos_side_watch / sub=home_watch / conf=medium / tier=side / risk=medium / guide=side_single / side H: top_gap=0.111 max_prob=0.446</td>
+<td class='left'>profile=stall_side_preserve / basis=basis_balanced</td>
+<td class='left'>best=1 second=0 third=2 (base=1) margin=0.082 entropy=1.060 draw_cand=0</td>
 <td class='pick'>1</td>
 <td class='pick'>1</td>
 <td class='pick'>1</td>
 <td class='pick'>1</td>
 <td class='pick'>1</td>
 <td class='pick'>1</td>
-<td class='pick'>0</td>
+<td class='pick'>1</td>
 <td class='pick'>1</td>
 <td class='pick'>1</td>
 <td class='pick'>1</td>
@@ -215,65 +257,73 @@ tbody tr:nth-child(even){background:#fcfcfc;}
 <td class='left'>J2</td>
 <td class='left'>新潟</td>
 <td class='left'>今治</td>
-<td class='left'>best=1 second=0 third=2 (base=1) margin=0.033 entropy=1.095 draw_cand=1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
+<td class='left'>本命=1 / type=chaos_draw_watch / sub=draw_live / conf=medium / tier=side / risk=medium / guide=side_single / side H: top_gap=0.081 max_prob=0.390</td>
+<td class='left'>profile=j2_low_dyn_home_stall_preserve / basis=draw_compressed</td>
+<td class='left'>best=0 second=2 third=1 (base=0) margin=0.109 entropy=1.086 draw_cand=0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
 <td class='pick'>0</td>
 <td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
 <td class='pick'>0</td>
-<td class='pick'>1</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
 </tr>
 <tr>
 <td class='match'>10</td>
 <td class='left'>J2</td>
 <td class='left'>甲府</td>
 <td class='left'>藤枝</td>
-<td class='left'>best=2 second=0 third=1 (base=2) margin=0.003 entropy=1.093 draw_cand=1</td>
-<td class='pick'>2</td>
-<td class='pick'>2</td>
+<td class='left'>本命=0 / 次点=2 / type=chaos_draw_watch / sub=draw_live / conf=medium / tier=core / draw_core=1 / risk=low / guide=draw_core_keep / draw core keep: pd=0.399 gap=-0.085 top_gap=0.085</td>
+<td class='left'>profile=mid_stall_side_preserve / basis=draw_compressed</td>
+<td class='left'>best=0 second=2 third=1 (base=0) margin=0.113 entropy=1.083 draw_cand=0</td>
 <td class='pick'>0</td>
-<td class='pick'>2</td>
 <td class='pick'>0</td>
-<td class='pick'>2</td>
-<td class='pick'>2</td>
-<td class='pick'>2</td>
 <td class='pick'>0</td>
-<td class='pick'>2</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
 </tr>
 <tr>
 <td class='match'>11</td>
 <td class='left'>J2</td>
 <td class='left'>秋田</td>
 <td class='left'>横浜FC</td>
-<td class='left'>best=1 second=0 third=2 (base=1) margin=0.009 entropy=1.092 draw_cand=1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
+<td class='left'>本命=0 / 次点=1 / type=j2_draw_trap / sub=stall_draw_bias / conf=medium / tier=core / draw_core=1 / risk=low / guide=draw_core_keep / draw core keep: pd=0.376 gap=-0.003 top_gap=0.003</td>
+<td class='left'>profile=stall_shape / basis=draw_compressed</td>
+<td class='left'>best=0 second=1 third=2 (base=0) margin=0.046 entropy=1.076 draw_cand=0</td>
 <td class='pick'>0</td>
 <td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
+<td class='pick'>0</td>
 <td class='pick'>0</td>
 <td class='pick'>1</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>1</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
 </tr>
 <tr>
 <td class='match'>12</td>
 <td class='left'>J2</td>
 <td class='left'>山形</td>
 <td class='left'>八戸</td>
-<td class='left'>best=2 second=1 third=0 (base=2) margin=0.158 entropy=1.079 draw_cand=0</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
-<td class='pick'>1</td>
+<td class='left'>本命=2 / 次点=1 / type=j2_draw_trap / sub=stall_draw_bias / conf=medium / tier=side / risk=medium / guide=side_single / side A: top_gap=0.044 max_prob=0.383</td>
+<td class='left'>profile=j2_flat_draw_trap / basis=draw_compressed</td>
+<td class='left'>best=2 second=1 third=0 (base=2) margin=0.060 entropy=1.085 draw_cand=0</td>
 <td class='pick'>2</td>
 <td class='pick'>2</td>
 <td class='pick'>2</td>
-<td class='pick'>1</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
+<td class='pick'>2</td>
 <td class='pick'>2</td>
 <td class='pick'>2</td>
 <td class='pick'>2</td>
@@ -283,32 +333,34 @@ tbody tr:nth-child(even){background:#fcfcfc;}
 <td class='left'>J2</td>
 <td class='left'>大宮</td>
 <td class='left'>磐田</td>
-<td class='left'>best=2 second=0 third=1 (base=2) margin=0.038 entropy=1.096 draw_cand=1</td>
-<td class='pick'>2</td>
+<td class='left'>本命=0 / 次点=1 / type=chaos_draw_watch / sub=draw_live / conf=low / tier=core / draw_core=1 / risk=low / guide=draw_core_keep / draw core keep: pd=0.375 gap=-0.047 top_gap=0.047</td>
+<td class='left'>profile=balanced / basis=basis_balanced</td>
+<td class='left'>best=0 second=1 third=2 (base=0) margin=0.075 entropy=1.090 draw_cand=1</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
+<td class='pick'>0</td>
 <td class='pick'>0</td>
 <td class='pick'>0</td>
 <td class='pick'>0</td>
 <td class='pick'>2</td>
-<td class='pick'>2</td>
-<td class='pick'>2</td>
-<td class='pick'>2</td>
-<td class='pick'>0</td>
-<td class='pick'>0</td>
 </tr>
 </tbody></table></div>
-<h3>候補の変更点（flip_desc）</h3>
+<h3>Scenario Changes</h3>
 <table>
-<thead><tr><th>ticket</th><th class='left'>scenario_name</th><th class='left'>description</th></tr></thead><tbody>
-<tr><td>候補01</td><td class='left'>System 01（予想指定）</td><td class='left'>system_fixed:predicted_result_main:primary=13,fallback=0</td></tr>
-<tr><td>候補02</td><td class='left'>System 02（予想指定）</td><td class='left'>system_fixed:predicted_result_type_a:primary=13,fallback=0</td></tr>
-<tr><td>候補03</td><td class='left'>System 03（予想指定）</td><td class='left'>system_fixed:predicted_result_type_b:primary=13,fallback=0; system_variant_separate:M10:2->0</td></tr>
-<tr><td>候補04</td><td class='left'>Prob 01（確率忠実）</td><td class='left'>gradual_sway_04</td></tr>
-<tr><td>候補05</td><td class='left'>Prob 02（確率忠実）</td><td class='left'>gradual_sway_05</td></tr>
-<tr><td>候補06</td><td class='left'>Prob 03（確率忠実）</td><td class='left'>gradual_sway_06</td></tr>
-<tr><td>候補07</td><td class='left'>Prob 04（確率忠実）</td><td class='left'>gradual_sway_07</td></tr>
-<tr><td>候補08</td><td class='left'>Prob 05（確率忠実）</td><td class='left'>draw_hypothesis_08</td></tr>
-<tr><td>候補09</td><td class='left'>Exp 01（実験）</td><td class='left'>close_reversal_09</td></tr>
-<tr><td>候補10</td><td class='left'>Exp 02（実験）</td><td class='left'>strong_break_10; min_draw_insert:M13:2->0(score=0.456,reason=shape_close_3way)</td></tr>
+<thead><tr><th>scenario</th><th class='left'>scenario_name</th><th class='left'>description</th></tr></thead><tbody>
+<tr><td>scenario01</td><td class='left'>Main（本線）</td><td class='left'>main_base</td></tr>
+<tr><td>scenario02</td><td class='left'>Draw Compression（draw compression）</td><td class='left'>base; escape_draw_a:M03:2->0; spread:M01:0->2; policy_j2_draw_trap:M11:0->1</td></tr>
+<tr><td>scenario03</td><td class='left'>Volatility Swing（volatility swing）</td><td class='left'>base; dedupe:M01:0->2</td></tr>
+<tr><td>scenario04</td><td class='left'>Hold Guard（hold guard）</td><td class='left'>M04:2->1; M05:1->0</td></tr>
+<tr><td>scenario05</td><td class='left'>Draw Pressure（draw pressure）</td><td class='left'>base; dedupe:M01:0->1; context_minimum:M06:2->0; policy_j2_draw_trap:M11:0->1</td></tr>
+<tr><td>scenario06</td><td class='left'>J2 Draw Pressure（J2 draw pressure）</td><td class='left'>base; force_unique_objective:M03:2->1</td></tr>
+<tr><td>scenario07</td><td class='left'>Away Swing（away swing）</td><td class='left'>base; escape_home:M07:0->1; final_home_escape:M09:0->1</td></tr>
+<tr><td>scenario08</td><td class='left'>Close Draw（close draw）</td><td class='left'>base; policy_j2_draw_trap:M11:0->1</td></tr>
+<tr><td>scenario09</td><td class='left'>Low Tempo Cover（low-tempo cover）</td><td class='left'>base</td></tr>
+<tr><td>scenario10</td><td class='left'>Blend Wide（blend wide）</td><td class='left'>base; escape_home:M13:0->1; escape_away:M13:1->2</td></tr>
 </tbody></table>
-<div class='footer'>warnings=19 / duplicate_skips=0 / generated_variants=0 / unique_ticket_count=10 / duplicate_count=0</div>
+<div class='footer'>warnings=42 / duplicate_skips=0 / generated_variants=0 / unique_ticket_count=9 / duplicate_count=1</div>
 </body></html>

@@ -1,0 +1,2 @@
+﻿matches,actual_h,actual_d,actual_a,actual_draw_rate,mean_p_draw,prediction_hits,prediction_hit_rate,predicted_draws,draw_prediction_hits,draw_precision,draw_recall,portfolio_covered,portfolio_rescue_matches,rescue_ticket_count,harm_ticket_count,net_rescue_tickets,all_same_matches
+101.0,49.0,19.0,33.0,0.18811881188118812,0.3654991198273111,28.0,0.27722772277227725,61.0,11.0,0.18032786885245902,0.5789473684210527,90.0,62.0,177.0,157.0,20.0,2.0

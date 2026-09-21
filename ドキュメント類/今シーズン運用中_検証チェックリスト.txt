@@ -1,0 +1,123 @@
+今シーズン運用中 検証チェックリスト
+
+目的
+今シーズンの運用期間中に、反映候補の有効性と副作用を確認する。
+特に D 過多対策、draw 系分類、buyplan への影響を点検する。
+
+運用前提
+- 先シーズンは終了済み
+- 本メモは、先シーズン終了後に残した引き継ぎメモを踏まえて、今シーズン運用中の検証整理として使う
+- 対象は「今後の数節」または「直近でまとめて見直す対象節」
+
+前提整理
+- 当面の正式 policy は home_reversal_watch と j2_draw_trap を中心とする
+- それ以外は observation flag として観測し、即時の正式採用はしない
+- buyplan は補正器ではなく券面配置器として扱う
+
+毎節の確認対象
+- actual H/D/A
+- predicted main H/D/A
+- main hit rate
+- ticket hit rate
+- rescue
+- harm
+- net rescue
+- all-same との重なり
+- J1/J2 別の傾向
+- draw 系総量
+- draw_rescue 件数
+- draw_watch 件数
+- draw_trap 件数
+
+毎節の検証手順
+1. 節の predictions / predictions_buyplan_context / buyplan を保存する
+2. main prediction の H/D/A 分布を確認する
+3. 実結果の H/D/A 分布と比較する
+4. draw 系分類の件数を数える
+5. purchase_type 別に hit / rescue / harm を集計する
+6. ticket_guidance 別に hit / rescue / harm を集計する
+7. all-same との重なり件数を確認する
+8. draw 系総量と分類別件数が上限感を超えていないか確認する
+9. draw_trap が side_with_cover / draw_cut_to_side に逃がせているか確認する
+10. 前節までの累積と比べて悪化・改善を判定する
+
+対象節の記入欄
+- 対象期間:
+- 対象節:
+- 集計作成日:
+
+重点観測対象
+
+1. D 過多の確認
+- D 予測件数が節内で過剰になっていないか
+- D を増やした結果、side の取り逃しが増えていないか
+- J1 と J2 で D の出方が偏っていないか
+
+2. draw 系分類の確認
+- j1_draw_rescue_watch
+- j2_false_draw_watch
+- j2_draw_trap
+- draw_watch 系
+- draw_rescue 系
+- draw_trap 系
+
+見るポイント
+- 件数
+- 的中率
+- rescue
+- harm
+- side 落としの有無
+- 同じような試合に同じ分類が再現しているか
+- draw 系総量の中でどの分類が膨らんでいるか
+
+3. buyplan 影響の確認
+- draw 系分類が増えても券面が all-same 化していないか
+- rank1/rank2/rank3 の並びに偏りが出ていないか
+- draw_core_keep / side_with_cover / draw_watch_split などの guidance が偏在していないか
+- 重複回避と分散が維持されているか
+- draw_rescue_split が増えすぎていないか
+- draw_cut_to_side / side_with_cover が trap の出口として機能しているか
+
+集計の切り口
+- 全体
+- J1 / J2
+- purchase_type 別
+- admission_policy 別
+- ticket_guidance 別
+- risk_level 別
+- D 予測試合のみ
+- draw 系総量 6件以下 / 7件以上
+- draw_rescue 3件以下 / 4件以上
+
+毎節メモ欄
+- 節:
+- 主な改善:
+- 主な悪化:
+- D 過多感:
+- draw 系の救済:
+- draw 系総量:
+- draw_watch 件数:
+- draw_rescue 件数:
+- draw_trap 件数:
+- trap 出口:
+- draw_rescue 抑制要否:
+- all-same 重なり:
+- 次節へ持ち越す論点:
+
+節まとめメモ欄
+- 今回まとめて見る対象節:
+- この期間で見えた傾向:
+- 反映候補:
+- 継続観測候補:
+- 見送り候補:
+- 件数管理の見直し要否:
+
+反映候補の基本判定
+- 継続観測: 効果はあるがサンプル不足
+- 保留: rescue はあるが harm または重複副作用が気になる
+- 反映候補: net rescue が安定して正で、再現性もある
+- 不採用候補: 一時的な当たりで再現しない、または harm が重い
+
+注意
+feature を追加しても、即 policy 接続はしない。
+必ず feature -> purchase_type / flag -> 観測 -> rescue/harm -> overlap確認 -> 再現確認 の順で扱う。

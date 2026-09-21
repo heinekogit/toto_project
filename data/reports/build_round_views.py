@@ -21,25 +21,25 @@ PRED_DESC_MAP = {
     "stadium": "スタジアム",
     "home_team": "ホーム",
     "away_team": "アウェイ",
-    "predicted_result": "最終表示予想: 画面・buyplanで使う採用票（後段override反映後の最終値）",
-    "predicted_result_main": "予想01: 本線票。勝敗確率のargmaxで決める基準予想",
+    "predicted_result": "採用予測: 画面・buyplanで使う最終採用票（後段override反映後の最終値）",
+    "predicted_result_main": "本線予測: 勝敗確率のargmaxで決める基準予測",
     "predicted_result_type_a": "予想02旧互換列: 旧type_aの保持用",
-    "predicted_result_type_b": "予想02: LAB展開票。hold/stall/flip を反映した別勝敗予想",
-    "predicted_result_type_c": "予想03: 予想02準拠のDグラデーション票。予想02で落とした弱いD揺れを補う",
-    "predicted_result_main_symbol": "予想01 toto記号（生確率argmax。predicted_result_main は後段補正後の最終本線）",
+    "predicted_result_type_b": "legacy: 旧派生予測B",
+    "predicted_result_type_c": "legacy: 旧派生予測C",
+    "predicted_result_main_symbol": "本線記号（生確率argmax。predicted_result_main は後段補正後の最終本線）",
     "predicted_result_type_a_symbol": "予想02旧互換 toto記号",
-    "predicted_result_type_b_symbol": "予想02 toto記号",
-    "predicted_result_type_c_symbol": "予想03 toto記号",
-    "match_type": "試合タイプ",
-    "match_type_primary": "主試合タイプ",
-    "match_type_flags": "試合タイプフラグ",
+    "predicted_result_type_b_symbol": "legacy: 旧派生予測B記号",
+    "predicted_result_type_c_symbol": "legacy: 旧派生予測C記号",
+    "match_type": "試合類型",
+    "match_type_primary": "主類型",
+    "match_type_flags": "類型フラグ",
     "match_type_reason": "試合タイプ判定理由",
     "draw_risk_flag": "引分リスク",
     "draw_gap": "最大勝敗確率-引分確率",
     "type_adjust_note": "試合タイプ診断メモ",
     "type_adjust_note_a": "予想02旧互換補正メモ",
-    "type_adjust_note_b": "予想02補正メモ",
-    "type_adjust_note_c": "予想03補正メモ",
+    "type_adjust_note_b": "legacy: 旧派生予測Bメモ",
+    "type_adjust_note_c": "legacy: 旧派生予測Cメモ",
     "adjusted_prob_home_a": "予想02補正後H確率",
     "adjusted_prob_draw_a": "予想02補正後D確率",
     "adjusted_prob_away_a": "予想02補正後A確率",
@@ -113,38 +113,16 @@ def reorder_prediction_columns(df):
         ],
         copy=False,
     )
-    # Reporting view should show the effective candidate values, not raw sparse branch outputs.
-    if "predicted_result_main" in out.columns and "predicted_result_type_b" in out.columns:
-        b_raw = out["predicted_result_type_b"].fillna("").astype(str).str.upper()
-        main_raw = out["predicted_result_main"].fillna("").astype(str).str.upper()
-        b_final = b_raw.where(b_raw.ne(""), main_raw)
-        out["predicted_result_type_b"] = b_final
-        if "predicted_result_type_b_symbol" in out.columns:
-            out["predicted_result_type_b_symbol"] = b_final.map({"H": "1", "D": "0", "A": "2"}).fillna("")
-    if "predicted_result_main" in out.columns and "predicted_result_type_c" in out.columns:
-        c_raw = out["predicted_result_type_c"].fillna("").astype(str).str.upper()
-        b_base = out.get("predicted_result_type_b", pd.Series(index=out.index, dtype="object")).fillna("").astype(str).str.upper()
-        main_raw = out["predicted_result_main"].fillna("").astype(str).str.upper()
-        c_final = c_raw.where(c_raw.ne(""), b_base.where(b_base.ne(""), main_raw))
-        out["predicted_result_type_c"] = c_final
-        if "predicted_result_type_c_symbol" in out.columns:
-            out["predicted_result_type_c_symbol"] = c_final.map({"H": "1", "D": "0", "A": "2"}).fillna("")
     front = ["league", "節", "match_id", "datetime", "stadium", "home_team", "away_team"]
     focus = [
         "predicted_result",
         "predicted_result_main",
-        "predicted_result_type_b",
-        "predicted_result_type_c",
         "predicted_result_main_symbol",
-        "predicted_result_type_b_symbol",
-        "predicted_result_type_c_symbol",
         "match_type",
         "match_type_primary",
         "match_type_flags",
         "draw_risk_flag",
         "draw_gap",
-        "type_adjust_note_b",
-        "type_adjust_note_c",
         "prob_home_win",
         "prob_draw",
         "prob_away_win",
@@ -158,9 +136,18 @@ def reorder_prediction_columns(df):
         "flab_trial_score",
         "flab_trial_reason",
     ]
+    legacy_cols = [
+        "predicted_result_type_b",
+        "predicted_result_type_c",
+        "predicted_result_type_b_symbol",
+        "predicted_result_type_c_symbol",
+        "type_adjust_note_b",
+        "type_adjust_note_c",
+    ]
     ordered = [c for c in front if c in out.columns]
     ordered += [c for c in focus if c in out.columns and c not in ordered]
-    ordered += [c for c in out.columns if c not in ordered]
+    ordered += [c for c in out.columns if c not in ordered and c not in legacy_cols]
+    ordered += [c for c in legacy_cols if c in out.columns and c not in ordered]
     return out.loc[:, ordered].copy()
 
 
@@ -279,6 +266,31 @@ def _dedupe_prediction_rows(df):
     # 予測ビューでは「同一カード重複」を最優先で排除する。
     # 同節内で match_id が異なる重複（延期/補完データ混入）でも1行に統一する。
     out = x.drop_duplicates(subset=["__pair_key"], keep="first")
+    drop_cols = [c for c in out.columns if c.startswith("__")]
+    return out.drop(columns=drop_cols, errors="ignore")
+
+
+def _merge_prediction_candidates(candidates):
+    parts = []
+    for src_rank, src_mtime, src_name, df in candidates:
+        x = _with_prediction_key(df)
+        x["__src_rank"] = int(src_rank)
+        x["__src_mtime"] = float(src_mtime)
+        x["__src_name"] = src_name
+        base_cols = [c for c in x.columns if not c.startswith("__")]
+        x["__filled_n"] = x[base_cols].notna().sum(axis=1)
+        parts.append(x)
+    merged = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame()
+    if merged.empty:
+        return merged
+    merged = _consolidate_frame(merged)
+    merged = merged.sort_values(
+        ["__src_rank", "__pred_quality", "__filled_n", "__src_mtime", "__dt"],
+        # ルートの正式予測CSV(rank=1)を、過去snapshot(rank=0)より優先する。
+        ascending=[False, False, False, False, False],
+        na_position="last",
+    )
+    out = merged.drop_duplicates(subset=["__pair_key"], keep="first")
     drop_cols = [c for c in out.columns if c.startswith("__")]
     return out.drop(columns=drop_cols, errors="ignore")
 
@@ -456,11 +468,107 @@ def round_label_from_section(section_value):
     return text
 
 
+def report_season_label_for_row(row, source_year):
+    """Separate the two competitions that share calendar year 2026."""
+    year = str(source_year)
+    if year != "2026":
+        return year
+    competition_values = []
+    for col in ("rankmot_competition_key_home", "rankmot_competition_key_away", "competition_key"):
+        value = str(row.get(col, "") or "").strip().lower()
+        if value and value not in {"nan", "none", "<na>"}:
+            competition_values.append(value)
+    if any("2026_27" in value or "2026-27" in value for value in competition_values):
+        return "2026_2027"
+    dt = pd.to_datetime(row.get("datetime"), errors="coerce")
+    if pd.notna(dt) and dt >= pd.Timestamp("2026-07-01"):
+        return "2026_2027"
+    return "2026_special"
+
+
+def split_report_seasons(df, source_year):
+    if df is None or df.empty:
+        return []
+    work = df.copy()
+    work["__report_season"] = work.apply(
+        lambda row: report_season_label_for_row(row, source_year), axis=1
+    )
+    return [
+        (str(label), block.drop(columns=["__report_season"], errors="ignore").copy())
+        for label, block in work.groupby("__report_season", sort=True)
+    ]
+
+
+def logical_toto_season(report_season):
+    return "2027" if str(report_season) == "2026_2027" else "2026" if str(report_season) == "2026_special" else str(report_season)
+
+
 def parse_league_year_from_predictions_filename(fname):
     m = re.match(r"^(j[123])_(\d{4})_predictions\.csv$", fname)
     if m:
         return m.group(1), m.group(2)
     return "na", "na"
+
+
+def parse_league_year_from_prediction_source(path_or_name):
+    base = os.path.basename(path_or_name)
+    league, year = parse_league_year_from_predictions_filename(base)
+    if league != "na":
+        return league, year
+    m = re.search(r"(j[123])_(\d{4})_predictions", base, flags=re.IGNORECASE)
+    if m:
+        return m.group(1).lower(), m.group(2)
+    return "na", "na"
+
+
+def _prediction_competition_key(df):
+    """Return the single competition key carried by a prediction frame, if any."""
+    values = set()
+    for col in ("rankmot_competition_key_home", "rankmot_competition_key_away", "competition_key"):
+        if col not in df.columns:
+            continue
+        values.update(
+            value
+            for value in df[col].dropna().astype(str).str.strip().tolist()
+            if value
+        )
+    return next(iter(values)) if len(values) == 1 else None
+
+
+def _filter_prediction_competition(df, active_key, *, allow_unkeyed):
+    if not active_key:
+        return df
+    key_columns = [
+        col
+        for col in ("rankmot_competition_key_home", "rankmot_competition_key_away", "competition_key")
+        if col in df.columns
+    ]
+    if not key_columns:
+        return df if allow_unkeyed else df.iloc[0:0].copy()
+    mask = pd.Series(False, index=df.index)
+    for col in key_columns:
+        mask |= df[col].fillna("").astype(str).str.strip().eq(active_key)
+    return df.loc[mask].copy()
+
+
+PREDICTION_SCOPE_COLUMNS = {
+    "home_team",
+    "away_team",
+    "rankmot_competition_key_home",
+    "rankmot_competition_key_away",
+    "competition_key",
+}
+
+
+def _prediction_source_has_competition_key(path):
+    try:
+        columns = pd.read_csv(path, nrows=0).columns
+    except Exception:
+        return False
+    return any(
+        col in columns
+        for col in ("rankmot_competition_key_home", "rankmot_competition_key_away", "competition_key")
+    )
 
 
 def parse_league_year_from_backtest_filename(fname):
@@ -975,7 +1083,29 @@ def build_round_views():
     cleaned_backtest_all_years = set()
     toto_round_map = load_toto_round_map()
     toto_target_history = load_toto_target_history()
-    pred_files = [f for f in os.listdir(ROOT_DIR) if f.endswith("_predictions.csv")]
+    pred_sources = []
+    for f in os.listdir(ROOT_DIR):
+        if f.endswith("_predictions.csv"):
+            path = os.path.join(ROOT_DIR, f)
+            pred_sources.append((f, 1, os.path.getmtime(path)))
+    for p in glob.glob(os.path.join(ROOT_DIR, "data", "output_snapshots", "*", "*predictions_candidate*.csv")):
+        rel = os.path.relpath(p, ROOT_DIR)
+        pred_sources.append((rel, 0, os.path.getmtime(p)))
+    active_competition_keys = {}
+    for relpath, src_rank, _src_mtime in pred_sources:
+        # ルートの正式な予測CSVを、現在運用中の大会を決める基準にする。
+        if src_rank != 1:
+            continue
+        league, year = parse_league_year_from_prediction_source(relpath)
+        if league == "na" or year == "na":
+            continue
+        try:
+            source_df = pd.read_csv(os.path.join(ROOT_DIR, relpath))
+        except Exception:
+            continue
+        competition_key = _prediction_competition_key(source_df)
+        if competition_key:
+            active_competition_keys[(league, year)] = competition_key
     include_rounds_backtest = os.environ.get("INCLUDE_ROUNDS_BACKTEST", "1") == "1"
     backtest_files = [
         f
@@ -994,17 +1124,25 @@ def build_round_views():
     results_round_supplement = {}
     trial_flag_supplement = {}
     league_team_pool = {}
+    league_year_pairs = set()
+    prediction_round_candidates = {}
 
     # 予測CSVからリーグごとのチーム集合を作る（結果CSV補完時の混入防止）
-    for fname in pred_files:
-        league, year = parse_league_year_from_predictions_filename(fname)
+    for relpath, _src_rank, _src_mtime in pred_sources:
+        league, year = parse_league_year_from_prediction_source(relpath)
         if league == "na" or year == "na":
             continue
-        path = os.path.join(ROOT_DIR, fname)
+        league_year_pairs.add((league, year))
+        path = os.path.join(ROOT_DIR, relpath)
         try:
-            pdf = pd.read_csv(path, usecols=lambda c: c in {"home_team", "away_team"})
+            pdf = pd.read_csv(path, usecols=lambda c: c in PREDICTION_SCOPE_COLUMNS)
         except Exception:
             continue
+        pdf = _filter_prediction_competition(
+            pdf,
+            active_competition_keys.get((league, year)),
+            allow_unkeyed=(_src_rank == 1),
+        )
         teams = set()
         if "home_team" in pdf.columns:
             teams.update(pdf["home_team"].dropna().astype(str).str.strip().tolist())
@@ -1045,8 +1183,7 @@ def build_round_views():
                 backtest_round_supplement[key] = payload
 
     # さらに、結果CSVから同節の試合を補完候補として読み込む（予測未保持の試合を埋める）。
-    for fname in pred_files:
-        league, year = parse_league_year_from_predictions_filename(fname)
+    for league, year in sorted(league_year_pairs):
         if league == "na" or year == "na":
             continue
         result_path = os.path.join(ROOT_DIR, "data", f"{league}_{year}_latest_results.csv")
@@ -1115,13 +1252,25 @@ def build_round_views():
                     else:
                         trial_flag_supplement[key] = payload
 
-    for fname in pred_files:
-        path = os.path.join(ROOT_DIR, fname)
+    for relpath, src_rank, src_mtime in pred_sources:
+        path = os.path.join(ROOT_DIR, relpath)
+        league, year = parse_league_year_from_prediction_source(relpath)
+        active_key = active_competition_keys.get((league, year))
+        # 現行大会キーが分かっている場合、キーを持たない旧スナップショットは
+        # 幅広いCSV本体を読む前に除外する。
+        if src_rank != 1 and active_key and not _prediction_source_has_competition_key(path):
+            continue
         try:
             df = pd.read_csv(path)
         except Exception:
             continue
-        league, year = parse_league_year_from_predictions_filename(fname)
+        df = _filter_prediction_competition(
+            df,
+            active_key,
+            allow_unkeyed=(src_rank == 1),
+        )
+        if df.empty:
+            continue
         round_col = "節" if "節" in df.columns else ("section" if "section" in df.columns else None)
         if not round_col:
             continue
@@ -1129,53 +1278,57 @@ def build_round_views():
         df["_round_label"] = df[round_col].apply(round_label_from_section)
         for rnd, sub in df.groupby("_round_label"):
             out_df = _without_columns(sub, ["_round_label"])
-            supp_key = (league, year, rnd)
-            supp_df = backtest_round_supplement.get(supp_key)
-            if supp_df is not None and not supp_df.empty:
-                if "match_id" in out_df.columns and "match_id" in supp_df.columns:
-                    missing = supp_df[~supp_df["match_id"].isin(out_df["match_id"])]
-                    if not missing.empty:
-                        out_df = pd.concat([out_df, missing], ignore_index=True)
-                else:
-                    out_df = pd.concat([out_df, supp_df], ignore_index=True).drop_duplicates()
-            res_df = results_round_supplement.get(supp_key)
-            if res_df is not None and not res_df.empty and "match_id" in out_df.columns and "match_id" in res_df.columns:
-                missing_res = res_df[~res_df["match_id"].isin(out_df["match_id"])]
-                if not missing_res.empty:
-                    aligned = missing_res.reindex(columns=out_df.columns, fill_value=pd.NA)
-                    # 共通列のみ結果CSVの値で埋める
-                    common_cols = [c for c in out_df.columns if c in missing_res.columns]
-                    for c in common_cols:
-                        aligned[c] = missing_res[c].values
-                    out_df = pd.concat([out_df, aligned], ignore_index=True)
-            trial_df = trial_flag_supplement.get(supp_key)
-            if trial_df is not None and not trial_df.empty:
-                out_df = _merge_prediction_supplement(out_df, trial_df)
-            out_df = _dedupe_prediction_rows(out_df)
-            out_df = reorder_prediction_columns(out_df)
-            pair_key = (league, year)
+            prediction_round_candidates.setdefault((league, year, rnd), []).append((src_rank, src_mtime, relpath, out_df))
+
+    for (league, year, rnd), candidates in prediction_round_candidates.items():
+        out_df = _merge_prediction_candidates(candidates)
+        out_df = ensure_league_column(out_df, league)
+        supp_key = (league, year, rnd)
+        supp_df = backtest_round_supplement.get(supp_key)
+        if supp_df is not None and not supp_df.empty:
+            if "match_id" in out_df.columns and "match_id" in supp_df.columns:
+                missing = supp_df[~supp_df["match_id"].isin(out_df["match_id"])]
+                if not missing.empty:
+                    out_df = pd.concat([out_df, missing], ignore_index=True)
+            else:
+                out_df = pd.concat([out_df, supp_df], ignore_index=True).drop_duplicates()
+        res_df = results_round_supplement.get(supp_key)
+        if res_df is not None and not res_df.empty and "match_id" in out_df.columns and "match_id" in res_df.columns:
+            missing_res = res_df[~res_df["match_id"].isin(out_df["match_id"])]
+            if not missing_res.empty:
+                aligned = missing_res.reindex(columns=out_df.columns, fill_value=pd.NA)
+                common_cols = [c for c in out_df.columns if c in missing_res.columns]
+                for c in common_cols:
+                    aligned[c] = missing_res[c].values
+                out_df = pd.concat([out_df, aligned], ignore_index=True)
+        trial_df = trial_flag_supplement.get(supp_key)
+        if trial_df is not None and not trial_df.empty:
+            out_df = _merge_prediction_supplement(out_df, trial_df)
+        out_df = _dedupe_prediction_rows(out_df)
+        out_df = reorder_prediction_columns(out_df)
+        for report_season, season_df in split_report_seasons(out_df, year):
+            pair_key = (league, report_season)
             if pair_key not in cleaned_prediction_pairs:
                 if os.path.exists(HTML_DIR):
                     for old_name in os.listdir(HTML_DIR):
-                        if old_name.startswith(f"predictions_round_{league}_{year}_") and old_name.endswith(".html"):
+                        if old_name.startswith(f"predictions_round_{league}_{report_season}_") and old_name.endswith(".html"):
                             os.remove(os.path.join(HTML_DIR, old_name))
                 if os.path.exists(CSV_DIR):
                     for old_name in os.listdir(CSV_DIR):
-                        if old_name.startswith(f"predictions_round_{league}_{year}_") and old_name.endswith(".csv"):
+                        if old_name.startswith(f"predictions_round_{league}_{report_season}_") and old_name.endswith(".csv"):
                             os.remove(os.path.join(CSV_DIR, old_name))
                 cleaned_prediction_pairs.add(pair_key)
             os.makedirs(HTML_DIR, exist_ok=True)
-            out_name = f"predictions_round_{league}_{year}_{sanitize_round(rnd)}.html"
+            out_name = f"predictions_round_{league}_{report_season}_{sanitize_round(rnd)}.html"
             out_path = os.path.join(HTML_DIR, out_name)
-            title = f"Predictions {league.upper()} {year} {rnd}: {fname}"
-            write_html_table(out_df, title, PRED_DESC_MAP, out_path)
+            title = f"Predictions {league.upper()} {report_season} {rnd}"
+            write_html_table(season_df, title, PRED_DESC_MAP, out_path)
             os.makedirs(CSV_DIR, exist_ok=True)
-            csv_name = f"predictions_round_{league}_{year}_{sanitize_round(rnd)}.csv"
+            csv_name = f"predictions_round_{league}_{report_season}_{sanitize_round(rnd)}.csv"
             csv_path = os.path.join(CSV_DIR, csv_name)
-            out_df.to_csv(csv_path, index=False, encoding="utf-8-sig")
-            merged_key = (year, rnd)
-            merged_part = ensure_league_column(out_df, league)
-            merged_part = reorder_prediction_columns(merged_part)
+            season_df.to_csv(csv_path, index=False, encoding="utf-8-sig")
+            merged_key = (report_season, rnd)
+            merged_part = reorder_prediction_columns(season_df)
             merged_pred_by_round.setdefault(merged_key, []).append(merged_part)
 
     for (year, rnd), parts in merged_pred_by_round.items():
@@ -1287,20 +1440,21 @@ def build_round_views():
         out_df = _keep_finished_backtest_rows(out_df)
         out_df = ensure_league_column(out_df, league)
         out_df = reorder_backtest_columns(out_df)
-        pair_key = (league, year)
-        if pair_key not in cleaned_backtest_pairs and os.path.exists(HTML_DIR):
-            for old_name in os.listdir(HTML_DIR):
-                if old_name.startswith(f"backtest_round_{league}_{year}_") and old_name.endswith(".html"):
-                    os.remove(os.path.join(HTML_DIR, old_name))
-            cleaned_backtest_pairs.add(pair_key)
-        os.makedirs(HTML_DIR, exist_ok=True)
-        out_name = f"backtest_round_{league}_{year}_{sanitize_round(rnd)}.html"
-        out_path = os.path.join(HTML_DIR, out_name)
-        title = f"Backtest {league.upper()} {year} {rnd}"
-        write_html_table(out_df, title, BACKTEST_DESC_MAP, out_path)
-        merged_key = (year, rnd)
-        merged_part = ensure_league_column(out_df, league)
-        merged_backtest_by_round.setdefault(merged_key, []).append(merged_part)
+        for report_season, season_df in split_report_seasons(out_df, year):
+            pair_key = (league, report_season)
+            if pair_key not in cleaned_backtest_pairs and os.path.exists(HTML_DIR):
+                for old_name in os.listdir(HTML_DIR):
+                    if old_name.startswith(f"backtest_round_{league}_{report_season}_") and old_name.endswith(".html"):
+                        os.remove(os.path.join(HTML_DIR, old_name))
+                cleaned_backtest_pairs.add(pair_key)
+            os.makedirs(HTML_DIR, exist_ok=True)
+            out_name = f"backtest_round_{league}_{report_season}_{sanitize_round(rnd)}.html"
+            out_path = os.path.join(HTML_DIR, out_name)
+            title = f"Backtest {league.upper()} {report_season} {rnd}"
+            write_html_table(season_df, title, BACKTEST_DESC_MAP, out_path)
+            merged_key = (report_season, rnd)
+            merged_part = ensure_league_column(season_df, league)
+            merged_backtest_by_round.setdefault(merged_key, []).append(merged_part)
 
     for (year, rnd), parts in merged_backtest_by_round.items():
         if len({str(part["league"].iloc[0]).strip().lower() for part in parts if not part.empty and "league" in part.columns}) < 2:
@@ -1329,9 +1483,10 @@ def build_round_views():
         write_html_table(merged_df, title, desc_map, out_path)
 
         round_no = extract_round_number(rnd)
-        toto_round = toto_round_map.get((str(year), int(round_no))) if round_no is not None else None
+        toto_season = logical_toto_season(year)
+        toto_round = toto_round_map.get((toto_season, int(round_no))) if round_no is not None else None
         if toto_round:
-            toto_df = build_toto_target_backtest_view(merged_df, year, toto_round, toto_target_history)
+            toto_df = build_toto_target_backtest_view(merged_df, toto_season, toto_round, toto_target_history)
             if toto_df.empty:
                 toto_df = merged_df.copy()
             toto_html_name = f"backtest_toto_all_{year}_toto{toto_round}.html"

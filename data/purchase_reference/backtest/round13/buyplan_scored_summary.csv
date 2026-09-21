@@ -1,0 +1,11 @@
+ticket,hits,total,hit_rate,draw_count,sway_count,cluster_changes,basis_changes,role_family,role_unique_only,role_same_family,role_diff_family,role_mode,topology_mode,topology_draw_cluster_count,topology_swing_cluster_count,topology_hold_cluster_count
+ticket01,4,13,0.3076923076923077,8.0,0.0,draw=0 overlap=0 swing=0 neutral=0 hold=0,side=0 drawcmp=0 trap=0 split=0 balanced=0,none,0.0,0.0,0.0,none,balanced,13.0,13.0,13.0
+ticket02,6,13,0.46153846153846156,8.0,2.0,draw=0 overlap=0 swing=0 neutral=0 hold=0,side=0 drawcmp=0 trap=0 split=0 balanced=0,draw,1.0,0.0,1.0,none,balanced,13.0,13.0,13.0
+ticket03,5,13,0.38461538461538464,7.0,1.0,draw=0 overlap=0 swing=0 neutral=0 hold=0,side=0 drawcmp=0 trap=0 split=0 balanced=0,swing,1.0,0.0,0.0,none,balanced,13.0,13.0,13.0
+ticket04,5,13,0.38461538461538464,10.0,2.0,draw=0 overlap=0 swing=0 neutral=0 hold=2,side=0 drawcmp=1 trap=0 split=0 balanced=1,none,0.0,0.0,0.0,none,balanced,13.0,13.0,13.0
+ticket05,3,13,0.23076923076923078,8.0,2.0,draw=0 overlap=0 swing=0 neutral=0 hold=0,side=0 drawcmp=0 trap=0 split=0 balanced=0,draw,1.0,1.0,0.0,none,balanced,13.0,13.0,13.0
+ticket06,3,13,0.23076923076923078,7.0,1.0,draw=0 overlap=0 swing=0 neutral=0 hold=0,side=0 drawcmp=0 trap=0 split=0 balanced=0,draw,1.0,0.0,0.0,skip,balanced,13.0,13.0,13.0
+ticket07,6,13,0.46153846153846156,7.0,3.0,draw=0 overlap=1 swing=0 neutral=0 hold=0,side=0 drawcmp=0 trap=0 split=0 balanced=1,swing,3.0,0.0,0.0,none,balanced,13.0,13.0,13.0
+ticket08,4,13,0.3076923076923077,7.0,1.0,draw=0 overlap=0 swing=0 neutral=0 hold=0,side=0 drawcmp=0 trap=0 split=0 balanced=0,draw,0.0,1.0,0.0,none,balanced,13.0,13.0,13.0
+ticket09,4,13,0.3076923076923077,8.0,0.0,draw=0 overlap=0 swing=0 neutral=0 hold=0,side=0 drawcmp=0 trap=0 split=0 balanced=0,draw,0.0,0.0,0.0,none,balanced,13.0,13.0,13.0
+ticket10,3,13,0.23076923076923078,7.0,1.0,draw=0 overlap=0 swing=0 neutral=0 hold=0,side=0 drawcmp=0 trap=0 split=0 balanced=0,swing,1.0,0.0,0.0,none,balanced,13.0,13.0,13.0

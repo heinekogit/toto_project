@@ -53,6 +53,11 @@ ABSENCE_HEADER_MAP = {
     "availability": "availability",
     "note": "note",
     "detail": "note",
+    "origin_competition_key": "origin_competition_key",
+    "applies_across_competitions": "applies_across_competitions",
+    "start_date": "start_date",
+    "expected_weeks": "expected_weeks",
+    "expected_return_date": "expected_return_date",
 }
 
 TEAM_ALIAS_RAW = {
@@ -156,6 +161,11 @@ def _norm_key(v: object) -> str:
     return s.upper()
 
 
+def _player_key(v: object) -> str:
+    # 同一選手の異体字表記を統一。所属・シーズンの照合条件は維持する。
+    return _norm_key(v).replace("﨑", "崎")
+
+
 def canonical_team_name(v: object) -> str:
     s = _norm_text(v)
     s = TEAM_ALIAS_MAP.get(s, s)
@@ -166,6 +176,16 @@ def to_num(series: pd.Series) -> pd.Series:
     return pd.to_numeric(series, errors="coerce")
 
 
+def parse_date_series(series: pd.Series) -> pd.Series:
+    """Accept the operational YY/MM/DD format and ISO dates without ambiguity."""
+    values = series.fillna("").astype(str).str.strip()
+    parsed = pd.to_datetime(values, format="%y/%m/%d", errors="coerce")
+    missing = parsed.isna() & values.ne("")
+    if missing.any():
+        parsed.loc[missing] = pd.to_datetime(values.loc[missing], format="%Y-%m-%d", errors="coerce")
+    return parsed
+
+
 def load_absences(path: Path) -> pd.DataFrame:
     raw = path.read_text(encoding="utf-8-sig", errors="ignore")
     lines = raw.splitlines()
@@ -173,7 +193,9 @@ def load_absences(path: Path) -> pd.DataFrame:
     header_idx = None
     for i, line in enumerate(lines):
         ls = line.strip().lstrip("\ufeff")
-        if ls.startswith("season,") and "round_start" in ls and "player_name" in ls:
+        if ls.startswith("season,") and "player_name" in ls and (
+            "round_start" in ls or "start_date" in ls
+        ):
             header_idx = i
             break
     if header_idx is None:
@@ -197,16 +219,26 @@ def load_absences(path: Path) -> pd.DataFrame:
         rows.append(normalized)
 
     df = pd.DataFrame(rows)
-    for col in ["season", "round_start", "expected_rounds"]:
+    for col in ["season", "round_start", "expected_rounds", "expected_weeks"]:
         if col not in df.columns:
             df[col] = pd.NA
-    for col in ["absence_type", "availability", "note"]:
+    for col in [
+        "absence_type", "availability", "note", "origin_competition_key",
+        "applies_across_competitions", "start_date", "expected_return_date",
+    ]:
         if col not in df.columns:
             df[col] = ""
 
     df["season"] = to_num(df["season"]).astype("Int64")
     df["round_start"] = to_num(df["round_start"]).astype("Int64")
     df["expected_rounds"] = to_num(df["expected_rounds"]).astype("Int64")
+    df["expected_weeks"] = to_num(df["expected_weeks"]).astype("Float64")
+    df["start_date"] = parse_date_series(df["start_date"])
+    df["expected_return_date"] = parse_date_series(df["expected_return_date"])
+    calculated_days = df["expected_weeks"].fillna(0).astype("float64") * 7.0
+    calculated_return = df["start_date"] + pd.to_timedelta(calculated_days, unit="D")
+    calculated_return = calculated_return.where(df["expected_weeks"].notna())
+    df["expected_return_date"] = df["expected_return_date"].fillna(calculated_return)
     df["team"] = df["team"].map(canonical_team_name)
     df["player_name"] = df["player_name"].map(_norm_text)
 
@@ -289,7 +321,7 @@ def load_players(path: Path, default_season: Optional[int]) -> pd.DataFrame:
     out["conceded_on_pitch"] = to_num(df[conceded_col]).fillna(0.0) if conceded_col else pd.NA
 
     out["team_key"] = out["team"].map(_norm_key)
-    out["player_key"] = out["player_name"].map(_norm_key)
+    out["player_key"] = out["player_name"].map(_player_key)
     return out
 
 
@@ -301,7 +333,7 @@ def match_player(
     if players_team.empty:
         return None, "not_found", "team not found"
 
-    key = _norm_key(player_name)
+    key = _player_key(player_name)
     exact = players_team[players_team["player_key"] == key]
     if len(exact) >= 1:
         return exact.iloc[0], "matched", ""
@@ -362,7 +394,7 @@ def build_impacts(absences: pd.DataFrame, players: pd.DataFrame) -> pd.DataFrame
         if reason:
             debug.append(reason)
 
-        key = f"{season_num}|{team_key}|{_norm_key(player_name)}"
+        key = f"{season_num}|{team_key}|{_player_key(player_name)}"
         wt_m = 0.0
         wt_a = 0.0
         wt_d = 0.0
@@ -424,6 +456,11 @@ def build_impacts(absences: pd.DataFrame, players: pd.DataFrame) -> pd.DataFrame
                 "season": season_num,
                 "round_start": a.get("round_start"),
                 "expected_rounds": expected_rounds,
+                "origin_competition_key": a.get("origin_competition_key", ""),
+                "applies_across_competitions": a.get("applies_across_competitions", ""),
+                "start_date": a.get("start_date"),
+                "expected_weeks": a.get("expected_weeks"),
+                "expected_return_date": a.get("expected_return_date"),
                 "team": team,
                 "player_name": player_name,
                 "absence_type": a.get("absence_type", ""),
@@ -511,6 +548,12 @@ def main() -> None:
 
     print(f"[OK] absences_with_impact: {out_abs} rows={len(impacts)}")
     print(f"[OK] team_shares: {out_team} rows={len(summary)}")
+    unmatched = impacts.loc[impacts["match_status"].eq("not_found")]
+    unmatched_path = out_dir / "absence_unmatched_players.csv"
+    unmatched.to_csv(unmatched_path, index=False, encoding="utf-8-sig")
+    if not unmatched.empty:
+        print(f"[ABSENCE][WARN] 選手マスタ未照合: rows={len(unmatched)} impact=0（影響なしを意味しません） -> {unmatched_path}")
+
     print(f"[INFO] matched={int((impacts['match_status']=='matched').sum())}, "
           f"fuzzy={int((impacts['match_status']=='fuzzy_matched').sum())}, "
           f"not_found={int((impacts['match_status']=='not_found').sum())}")

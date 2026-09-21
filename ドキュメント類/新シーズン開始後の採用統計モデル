@@ -1,0 +1,353 @@
+05/24の運用
+
+j1_draw_rescue_watch は当面1型のまま
+j2_false_draw_watch と j2_draw_trap は分離維持
+J1 の細分化は新シーズンのサンプル蓄積後に再判定
+次に監視する指標
+actual H/D/A
+main hit rate
+rescue / harm / net rescue
+all-same との重なり
+これで、しばらくはこのフィルター運用を基準に進められます
+
+
+新シーズンの経過を見て、下記へ以降の目論見
+↓
+現在、predictionはDが多い。
+buyplanの券面機能アップデートでD調整を入れ、対応中。
+（各種確率の結果hdaの各確率をそのまま各試合の券数に変換・配分する方法。
+　各候補にその配分の具合で名前が付く）
+（codex訂正）
+    各試合の H/D/A 確率を出発点に、rank1/2/3 と解釈フィルターを通し、
+    world ごとの役割に応じて10候補へ配分する方式に移行中。
+↓
+新シーズンの数節を検証し、Dの分類を増やす。
+それを経て、数式・統計モデルを導入、buyplan負担範疇を軽減
+↓
+
+distribution topology system 今後の統計モデル導入メモ
+
+現在地
+
+現状は：
+
+feature
+↓
+team_state
+↓
+matchup
+↓
+purchase_type / flag
+↓
+buyplan(policy + 配券)
+
+という構造へ移行中。
+
+buyplan は「予想補正器」ではなく、
+「券面配置器」へ戻す方向。
+
+正式policyは当面：
+
+* home_reversal_watch
+* j2_draw_trap
+
+のみ。
+
+他は観測flagとして扱う。
+
+⸻
+
+今後導入する統計モデルの方向
+
+目的
+
+現在の：
+
+* if条件
+* threshold
+* D/A補正
+* 手作り mix
+
+中心の構造を、
+
+「状態分布」
+↓
+「試合型」
+↓
+「購買型」
+
+へ置き換える。
+
+⸻
+
+Phase C（将来）
+
+1. Mixture Model（混合分布）
+
+現在：
+
+lab_mix_home
+lab_mix_draw
+lab_mix_away
+
+は手作り合成。
+
+将来は：
+
+P(result)
+
+w_hold * P(result | hold)
++
+w_stall * P(result | stall)
++
+w_flip * P(result | flip)
+
+へ置換する。
+
+使用する主成分
+
+* hold_weight
+* stall_weight
+* flip_weight
+* volatility
+* entropy
+* compactness
+* path_score
+* attack/defense interaction
+
+目的
+
+「この試合はD」
+ではなく、
+
+* hold優勢
+* stall優勢
+* flip優勢
+
+の混合状態として扱う。
+
+⸻
+
+2. Latent Class / Match Type
+
+混合分布から：
+
+* stable_side
+* home_reversal_watch
+* draw_trap
+* j2_draw_trap
+* chaos_side_watch
+* directional_stall
+
+などの「型」を抽出する。
+
+現在の purchase_type を、
+if条件群ではなく、
+分布クラスタとして整理する。
+
+⸻
+
+3. Bayesian Update（将来候補）
+
+新情報：
+
+* 欠場
+* ACL
+* derby
+* weather
+* style conflict
+
+などを、
+
+事前分布
+↓
+事後分布
+
+として更新する。
+
+ただしこれは後段。
+
+まずは mixture + latent class を優先。
+
+⸻
+
+buyplan の役割（完成形）
+
+buyplan は：
+
+* duplicate回避
+* ticket距離
+* portfolio分散
+* hedge配置
+* all-same回避
+
+だけを担当。
+
+「この試合はD」
+「この試合はA固定回避」
+
+などの意味づけは prediction 側で完結する。
+
+⸻
+
+重要な原則
+
+feature追加は積極的にやる。
+
+しかし：
+
+新feature
+↓
+即policy接続
+
+は禁止。
+
+必ず：
+
+feature
+↓
+purchase_type / flag
+↓
+観測
+↓
+rescue/harm
+↓
+current overlap
+↓
+再現確認
+↓
+正式policy
+
+を通す。
+
+⸻
+
+現時点で未着手・保留
+
+以下はまだ観測段階：
+
+* away_overread_draw_cover
+* anchor_candidate
+* draw_core_candidate
+* chaos系
+
+現時点では buyplan policy へ接続しない。
+
+⸻
+
+導入タイミング
+
+統計モデル本格導入は：
+
+「観測型がある程度安定してから」
+
+具体的には：
+
+* 新シーズン数節
+* rescue/harm蓄積
+* league別差
+* current overlap
+* all-same overlap
+
+が確認できてから。
+
+まだ型が揺れている段階で
+Mixture Model を固定しない。
+
+⸻
+
+最終目標
+
+現在：
+「条件分岐でD/Aを調整」
+
+将来：
+「試合分布を生成し、
+そこから portfolio を構成」
+
+distribution topology system の本体は、
+この「分布生成器」にある。
+
+
+===============================================================================
+2026/8/23  再確認。
+予想システムのDの内容・種類分け、フィルター化をして、予想自体の精度上げ、と聞いていたが、その認識は共有されてる？
+↓
+その認識で共有されています。
+端的に言えば、目標は次です。
+Dを一律の「引き分け予想」として扱わず、Dになった理由・状態・信頼性を分類し、偽DをH/Aへ戻すことで予想自体の精度を上げる。
+
+想定する流れは、
+基礎H/D/A確率
+→ Dの発生理由を分類
+→ 本物のD／偽D／不確実なDを判別
+→ 必要ならHまたはAへ補正
+→ 最終的な試合分布を生成
+→ その分布から10候補のportfolioを構成
+
+Dの種類として想定しているのは、例えば以下です。
+- 守備・低テンポによる本物のD
+- H/Aが拮抗した結果としてのD
+- モデルの不確実性をDへ逃がした偽D
+- 本当はホーム寄りだがDになった試合
+- 本当はアウェイ寄りだがDになった試合
+- 波乱性が高く、D固定すべきでない試合
+- hold / stall / flipが混在するD
+したがって、目的は単にBuyPlan上のD本数を減らすことではありません。
+- prediction段階でDの意味を解釈する
+- Dの種類に応じたフィルターを作る
+- 偽DをH/Aへ戻す
+- 真のDを残す
+- 最終H/D/A確率そのものを改善する
+- 改善済み分布をBuyPlanへ渡す
+ここまでが予想システムの仕事です。
+BuyPlanは、その改善済み分布を受けて、
+- 候補間の分散
+- ヘッジ
+- 重複回避
+- all-same回避
+を行うだけ、という完成形を目指しています。
+
+共有認識は明確です。
+distribution topology systemの本体はBuyPlanではなく、Dの内容を分類してH/D/Aの最終分布を改善するprediction側の分布生成器である。
+
+次節第4節に向けて、は？  --------------------------------------------------------------------
+
+Dフィルターの観測運用を実装しました。prediction本体にはまだ接続していません。
+3種類を毎節並走評価します。
+- false_draw_only：false draw判定だけH/Aへ変更
+- false_draw_plus_trap：false draw＋draw trapを変更
+- topology_guard：強いD根拠だけ残し、弱いDをH/Aへ変更
+今後は run_evaluate_round.sh の採点後に、このDフィルター評価も自動更新されます。単体テスト4件、構文検査、差分検査も通過しています。
+
+第4節では「参考表示・候補比較」として使います。公式predictionのH/D/Aはまだ変更しません。
+具体的には第4節の予想時点で、各試合に対して以下を併記します。
+
+公式予想：D
+false_draw_only：H
+false_draw_plus_trap：H
+topology_guard：D
+
+用途は次の3つです。
+- Dフィルター3案の事前判定を固定保存する
+- BuyPlanの10候補と照合する
+- 結果確定後にrescue / harmを採点する
+重要なのは、結果を見た後からフィルター判定を作らないことです。第4節の試合前に判定を保存し、結果後はその固定版を採点します。
+第4節での扱いは、
+- 公式prediction：現行のまま
+- BuyPlan：現行のまま
+- Dフィルター：観測レイヤーとして併記
+- 購入判断：必要なら注意情報として参照
+- 自動的なH/A変更：まだ行わない
+です。
+ただし、現状のスクリプトは過去の確定結果に対する評価器までです。第4節の「試合前Dフィルター判定を固定保存する処理」はまだ追加していません。第4節で使うには、次にこれを実装する必要があります。
+
+第4節prediction
+→ Dフィルター3案を適用
+→ pre-match CSVとして固定
+→ 購入案に参考列を表示
+→ 結果後に自動採点
+
+したがって、現時点では「使う方針だが、試合前固定処理は未実装」です。
+
+

@@ -19,48 +19,36 @@ def eval_base_dir(round_id: str) -> str:
 
 
 SCENARIO_JA_BY_ID = {
-    "01": "全P1",
-    "02": "低1→P2",
-    "03": "低1-2→P2",
-    "04": "低1→P2",
-    "05": "低1-2→P2",
-    "06": "低1-3→P2",
-    "07": "低1→P3/低2→P2",
-    "08": "低1-2→P3/低3→P2",
-    "09": "低1-2+中1→P3/低3→P2",
-    "10": "低1-2+中2→P3/低3→P2",
+    "01": "本線",
+    "02": "draw compression",
+    "03": "volatility swing",
+    "04": "hold guard",
+    "05": "draw pressure",
+    "06": "J2 draw pressure",
+    "07": "away swing",
+    "08": "close draw",
+    "09": "low-tempo cover",
+    "10": "blend wide",
 }
 SCENARIO_JA_BY_NAME = {
-    "pattern 01": "全P1",
-    "pattern 02": "低1→P2",
-    "pattern 03": "低1-2→P2",
-    "pattern 04": "低1→P2",
-    "pattern 05": "低1-2→P2",
-    "pattern 06": "低1-3→P2",
-    "pattern 07": "低1→P3/低2→P2",
-    "pattern 08": "低1-2→P3/低3→P2",
-    "pattern 09": "低1-2+中1→P3/低3→P2",
-    "pattern 10": "低1-2+中2→P3/低3→P2",
-    "unique 01": "基準票",
-    "unique 02": "ユニーク列挙",
-    "unique 03": "ユニーク列挙",
-    "unique 04": "ユニーク列挙",
-    "unique 05": "ユニーク列挙",
-    "unique 06": "ユニーク列挙",
-    "unique 07": "ユニーク列挙",
-    "unique 08": "ユニーク列挙",
-    "unique 09": "ユニーク列挙",
-    "unique 10": "ユニーク列挙",
-    "base": "基準",
-    "slight upset": "軽い波乱",
-    "strong upset": "強い波乱",
-    "draw bias": "引分寄せ",
-    "home bias": "ホーム寄せ",
-    "away bias": "アウェイ寄せ",
-    "tight match": "拮抗波乱",
-    "chaos": "カオス",
-    "conservative": "保守",
-    "balanced": "均衡",
+    "main": "本線",
+    "draw compression": "draw compression",
+    "draw compression a": "draw compression",
+    "draw compression b": "draw compression",
+    "volatility swing": "volatility swing",
+    "volatility swing a": "volatility swing",
+    "volatility swing b": "volatility swing",
+    "hold guard": "hold guard",
+    "draw pressure": "draw pressure",
+    "draw pressure cover": "draw pressure",
+    "j2 draw pressure": "J2 draw pressure",
+    "away swing": "away swing",
+    "away swing cover": "away swing",
+    "close draw": "close draw",
+    "low tempo cover": "low-tempo cover",
+    "volatility swing cover": "volatility swing",
+    "volatility cluster": "volatility swing",
+    "blend wide": "blend wide",
 }
 
 
@@ -106,9 +94,9 @@ def build_scenario_meta(df_buy, cand_cols):
             sid = ""
         sja = SCENARIO_JA_BY_NAME.get(sname.lower(), SCENARIO_JA_BY_ID.get(sid, "未定義"))
         if sname:
-            parts.append(f"候補{idx:02d}:{sname}（{sja}）")
+            parts.append(f"scenario{idx:02d}:{sname}（{sja}）")
         else:
-            parts.append(f"候補{idx:02d}:（{sja}）")
+            parts.append(f"scenario{idx:02d}:（{sja}）")
     return " / ".join(parts)
 
 

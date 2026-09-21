@@ -1,0 +1,6 @@
+match_no,league,home_team,away_team,primary,secondary,cluster,basis_hint,actual,H_count,D_count,A_count,dominant_symbol,dominant_share,side_total,home_side_share,away_side_share
+1,J1,水戸,東京Ｖ,D,A,low_tempo_draw,draw_compressed,A,0,7,3,D,0.7,3,0.0,1.0
+7,J1,岡山,清水,D,A,low_tempo_draw,flat_draw_trap,H,2,6,2,D,0.6,4,0.5,0.5
+8,J1,Ｃ大阪,名古屋,D,A,draw_core,draw_compressed,H,3,0,7,A,0.7,10,0.3,0.7
+11,J2,富山,徳島,D,A,draw_core,draw_compressed,D,0,2,8,A,0.8,8,0.0,1.0
+13,J2,磐田,藤枝,D,H,hold_core,basis_balanced,A,1,8,1,D,0.8,2,0.5,0.5

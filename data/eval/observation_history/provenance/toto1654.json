@@ -1,0 +1,19 @@
+{
+  "round_id": "toto1654",
+  "accumulated_at": "2026-09-21T10:38:32+09:00",
+  "rows": 13,
+  "sources": {
+    "predictions": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1654/snapshot/predictions.csv",
+      "sha256": "b10b42d461040cce3985f883dcdb424d424c897e5fd2ac02958745d13cc01f89"
+    },
+    "buyplan": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1654/snapshot/buyplan.csv",
+      "sha256": "f3b2b7afe50a798638fa7283f1e9f901cfa3840d707a734ca41799539bfae418"
+    },
+    "actual": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1654/actual_results.csv",
+      "sha256": "b117f00b443dcc3882a22454dfc312e44756a410db02d933c287acd2faffb667"
+    }
+  }
+}

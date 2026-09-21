@@ -5,9 +5,9 @@
 - prev_final_elo_csv: None
 - csv_season: /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2025_upcoming.csv
 - team_master_stats_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/team_master_stats_j2_2025.csv
-- stats_asof: 2026-04-26
-- absence_impact_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/absence_snapshots/absences_with_impact_asof_20260425.csv
-- absence_asof: 20260425
+- stats_asof: 2026-08-08
+- absence_impact_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/absence_snapshots/absences_with_impact_asof_20260808.csv
+- absence_asof: 20260808
 - team_management_master_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/manual/team_management_master.csv
 - team_motivation_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2025_motivation.csv
 - team_travel_distances_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/team_travel_distances.csv
@@ -51,14 +51,14 @@
 ## サマリ
 - league: j2
 - season_year: 2025
-- generated_at: 2026-04-26T23:48:42
+- generated_at: 2026-08-08T01:38:45
 - all_teams: 20
 - results_rows: 380
 - future_matches: 0
 - finished_matches: 380
-- accuracy: 44.21% (168/380)
+- accuracy: 41.32% (157/380)
 
 ## 出力
-- predictions: /tmp/j2_2025_finalcheck.csv
-- backtest: /tmp/backtest_j2_2025_finalcheck.csv
+- predictions: /tmp/j2_default_fixed_pred.csv
+- backtest: /tmp/j2_default_fixed_bt.csv
 - report_json: /Users/dev_tomo/Desktop/tt_prj_restart/data/reports/report_j2_2025.json

@@ -9,6 +9,7 @@ if [[ ! -x "$PYTHON" ]]; then
 fi
 
 SEASON_YEAR="${SEASON_YEAR:-2026}"
+PREDICTION_SEASON_YEAR="${PREDICTION_SEASON_YEAR:-2026}"
 ROUND="${ROUND:-round02}"
 PURCHASE_DIR="${PURCHASE_DIR:-$ROOT_DIR/data/purchase_reference}"
 EVAL_ROOT="${EVAL_ROOT:-$ROOT_DIR/data/eval}"
@@ -23,10 +24,13 @@ ACTUAL_CSV="$ROUND_DIR/actual_results_caution.csv"
 EVALUATION_CSV="$ROUND_DIR/evaluation_caution.csv"
 SCORED_HTML="$ROUND_DIR/buyplan_caution_scored.html"
 
-expected_round_no="${ROUND#round}"
-expected_round_no="${expected_round_no##0}"
-if [[ -z "$expected_round_no" ]]; then
-  expected_round_no="0"
+expected_round_no=""
+if [[ "$ROUND" == round* ]]; then
+  expected_round_no="${ROUND#round}"
+  expected_round_no="${expected_round_no##0}"
+  if [[ -z "$expected_round_no" ]]; then
+    expected_round_no="0"
+  fi
 fi
 
 validate_snapshot_round() {
@@ -38,7 +42,8 @@ import sys
 import unicodedata
 
 pred_csv = sys.argv[1]
-expected = int(sys.argv[2])
+expected_arg = sys.argv[2].strip()
+expected = int(expected_arg) if expected_arg else None
 
 def normalize_league(value):
     text = unicodedata.normalize("NFKC", str(value or "")).strip().lower()
@@ -81,6 +86,9 @@ if bad_leagues:
 
 if len(rounds) == 1:
     actual = next(iter(rounds))
+    if expected is None:
+        print(f"[OK] snapshot節番号チェック: 保存ID=toto / snapshot=第{actual}節")
+        sys.exit(0)
     if actual != expected:
         print(
             "ERROR: ROUNDとsnapshotの節番号が一致しません: "
@@ -100,7 +108,7 @@ else:
 
 print(
     "[OK] snapshot mixed節チェック: "
-    f"{detail} / ROUND={expected:02d} は保存用IDとして扱います"
+    f"{detail} / ROUND={expected if expected is not None else 'toto'} は保存用IDとして扱います"
 )
 PY
 }
@@ -126,6 +134,7 @@ echo "==> export actual results"
 "$PYTHON" "$ROOT_DIR/scripts/eval/01_export_actual_results.py" \
   --round "$ROUND" \
   --season "$SEASON_YEAR" \
+  --result-season "$PREDICTION_SEASON_YEAR" \
   --snapshot-dir "$SNAPSHOT_DIR" \
   --out "$ACTUAL_CSV" \
   --python "$PYTHON"

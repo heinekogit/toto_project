@@ -1,0 +1,29 @@
+﻿season,origin_competition_key,applies_across_competitions,team,player_name,absence_type,start_date,start_date_basis,expected_return_date_min,expected_return_date_max,actual_return_date,availability,verification_status,last_checked_date,candidate_judgement,candidate_reason,note,legacy_round_start,legacy_expected_rounds,source_pickup_day
+2026,special_2026,1,いわき,柴田壮介,injury,2026-04-08,pickup_day（登録日を暫定使用）,2026-10-07,2026-10-07,,out,needs_official_check,2026-08-01,継続濃厚,診断文の最短見込みでも2026-08-01以降,公式 右膝前十字靱帯損傷、右膝外側半月板損傷で全治6ヶ月程度を要する見込み,10,24,4/8
+2026,special_2026,1,ロアッソ熊本,武者大夢,injury,2026-03-26,pickup_day（登録日を暫定使用）,2026-12-24,2026-12-24,,out,needs_official_check,2026-08-01,継続濃厚,診断文の最短見込みでも2026-08-01以降,左膝前十字靭帯損傷、左膝外側半月板損傷で加療期間は手術日より約9ヶ月,8,36,3/26
+2026,special_2026,1,京都,マルコトゥーリオ,injury,2026-05-14,pickup_day（登録日を暫定使用）,2026-08-13,2026-08-13,,out,needs_official_check,2026-08-01,継続濃厚,診断文の最短見込みでも2026-08-01以降,公式 左長内転筋腱断裂で全治約3ヶ月,17,12,5/14
+2026,special_2026,1,山口,沼田航征,injury,2026-03-03,pickup_day（登録日を暫定使用）,2026-09-01,2026-09-01,,out,needs_official_check,2026-08-01,継続濃厚,診断文の最短見込みでも2026-08-01以降,右肩腱板断裂、右肩反復性肩関節脱臼の手術を行い、術後6ヶ月程度の加療予定,5,24,3/3
+2026,special_2026,1,新潟,小野裕二,injury,2026-04-26,pickup_day（登録日を暫定使用）,2026-08-25,2026-08-25,,out,needs_official_check,2026-08-01,継続濃厚,診断文の最短見込みでも2026-08-01以降,公式 左内側半月板損傷で全治約4ヶ月の見込み,13,16,4/26
+2026,special_2026,1,新潟,落合陸,injury,2026-05-23,pickup_day（登録日を暫定使用）,2026-08-22,2026-08-22,,out,needs_official_check,2026-08-01,継続濃厚,診断文の最短見込みでも2026-08-01以降,公式 左膝外側半月板損傷で全治約3か月の見込み,19,12,5/23
+2026,special_2026,1,栃木SC,櫻庭立樹,injury,2026-05-27,pickup_day（登録日を暫定使用）,2026-09-25,2026-11-25,,out,needs_official_check,2026-08-01,継続濃厚,診断文の最短見込みでも2026-08-01以降,公式 右膝外側半月板損傷で復帰まで約4〜6ヶ月を要する見込み,19,24,5/27
+2026,special_2026,1,横浜FM,遠野大弥,injury,2026-03-26,pickup_day（登録日を暫定使用）,2026-09-24,2026-09-24,,out,needs_official_check,2026-08-01,継続濃厚,診断文の最短見込みでも2026-08-01以降,右アキレス腱断裂で全治6ヶ月の見込み,9,24,3/26
+2026,special_2026,1,福岡,福島和毅,injury,2026-05-28,pickup_day（登録日を暫定使用）,2026-11-26,2026-11-26,,out,needs_official_check,2026-08-01,継続濃厚,診断文の最短見込みでも2026-08-01以降,公式 右膝外側半月板損傷で全治6か月,19,24,5/28
+2026,special_2026,1,鳥栖,水巻時飛,injury,2026-05-19,pickup_day（登録日を暫定使用）,2027-01-17,2027-01-17,,out,needs_official_check,2026-08-01,継続濃厚,診断文の最短見込みでも2026-08-01以降,公式 左足前十字靭帯損傷で全治8ヶ月,18,36,5/19
+2026,special_2026,1,鳥栖,鈴木大馳,injury,2026-05-19,pickup_day（登録日を暫定使用）,2026-08-18,2026-08-18,,out,needs_official_check,2026-08-01,継続濃厚,診断文の最短見込みでも2026-08-01以降,公式 左足第5中足骨骨折で全治3ヶ月,18,12,5/19
+2026,special_2026,1,C大阪,イェンギクシニ,injury,2026-03-12,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,左大腿直筋腱断裂,6,20,3/12
+2026,special_2026,1,G大阪,半田陸,injury,2026-04-20,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,公式 左膝前十字靱帯損傷、外側半月板損傷,12,12,4/20
+2026,special_2026,1,G大阪,横井佑弥,injury,2026-02-20,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,右前十字靭帯損傷、外側半月板損傷,4,12,2/20
+2026,special_2026,1,川崎F,山市秀翔,病気,2026-03-09,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,右鎖骨下静脈血栓症、右胸郭出口症候群,6,20,3/9
+2026,special_2026,1,徳島,三井大輝,injury,2026-04-10,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,公式 右膝外側半月板断裂,10,12,4/10
+2026,special_2026,1,札幌,中村桐耶,injury,2026-02-28,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,左膝後十字靭帯不全、外側半月板損傷,5,12,2/28
+2026,special_2026,1,東京V,吉田泰授,injury,2026-05-04,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,公式 左膝複合靭帯損傷、半月板損傷,15,20,5/4
+2026,special_2026,1,東京V,山見大登,injury,2026-05-04,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,公式 左膝前十字靭帯損傷,15,28,5/4
+2026,special_2026,1,松本,安永玲央,injury,2026-05-18,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,公式 左第5中足骨疲労骨折,18,12,5/18
+2026,special_2026,1,水戸,島谷義進,injury,2026-03-19,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,第5腰椎分離症,7,16,3/19
+2026,special_2026,1,甲府,林田 滉也,injury,2026-02-12,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,右膝前十字靱帯不全損傷、右膝内側側副靱帯損傷、右母趾基節骨骨折で全治未定,2,18,2/12
+2026,special_2026,1,神戸,扇原貴宏,injury,2026-04-30,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,公式 右膝関節軟骨損傷,14,24,4/30
+2026,special_2026,1,秋田,畑橋拓輝,injury,2026-05-18,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,公式 左アキレス腱断裂,18,25,5/18
+2026,special_2026,1,秋田,藤山智史,injury,2026-03-14,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,右膝前十字靭帯損傷、内側側副靭帯損傷、外側半月板損傷、大腿骨外顆骨挫傷,6,14,3/14
+2026,special_2026,1,高知,岡澤韻生,injury,2026-05-09,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,公式 左膝前十字靱帯損傷、外側半月板損傷,17,28,5/9
+2026,special_2026,1,鳥取,吉田伊吹,injury,2026-03-25,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,右アキレス腱断裂,8,25,3/25
+2026,special_2026,1,鳥取,温井駿斗,injury,2026-04-28,pickup_day（登録日を暫定使用）,,,,unconfirmed,needs_official_check,2026-08-01,要確認（期間記載なし）,長期化しやすい傷病名かつ想定12節以上,公式 右アキレス腱断裂,14,25,4/28

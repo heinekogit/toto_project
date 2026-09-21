@@ -1,0 +1,96 @@
+﻿season,round_start,expected_rounds,origin_competition_key,applies_across_competitions,start_date,expected_weeks,expected_return_date,team,player_name,absence_type,availability,note,match_player_key,match_status,weight_minutes,weight_attack,weight_defense,impact_attack,impact_defense,impact_total,impact_total_per_round,regular_flag,debug_reason
+2026,,,special_2026,1,2026-04-08,,2026-10-07,いわき,柴田壮介,injury,out,,2026|いわき|柴田壮介,matched,0.0625,0.25,0.0625,0.25,0.0625,0.1,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-26,,2026-12-24,ロアッソ熊本,武者大夢,injury,out,,2026|ロアッソ熊本|武者大夢,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-14,,2026-08-13,京都,マルコトゥーリオ,injury,out,,2026|京都|マルコトゥーリオ,matched,0.0625,0.5,0.0625,0.5,0.0625,0.15,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-03,,2026-09-01,山口,沼田航征,injury,out,,2026|山口|沼田航征,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-04-26,,2026-08-25,新潟,小野裕二,injury,out,,2026|新潟|小野裕二,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-23,,2026-08-22,新潟,落合陸,injury,out,,2026|新潟|落合陸,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-27,,2026-09-25,栃木SC,櫻庭立樹,injury,out,,2026|栃木SC|櫻庭立樹,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-26,,2026-09-24,横浜FM,遠野大弥,injury,out,,2026|横浜FM|遠野大弥,matched,0.0625,0.5,0.0625,0.5,0.0625,0.15,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-28,,2026-11-26,福岡,福島和毅,injury,out,,2026|福岡|福島和毅,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-19,,2027-01-17,鳥栖,水巻時飛,injury,out,,2026|鳥栖|水巻時飛,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-19,,2026-08-18,鳥栖,鈴木大馳,injury,out,,2026|鳥栖|鈴木大馳,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-12,,2026-07-30,C大阪,イェンギクシニ,injury,out,,2026|C大阪|イェンギクシニ,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-04-20,,2026-07-13,G大阪,半田陸,injury,out,,2026|G大阪|半田陸,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share; team_goals_total=0
+2026,,,special_2026,1,2026-02-20,,2026-05-15,G大阪,横井佑弥,injury,out,,2026|G大阪|横井佑弥,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share; team_goals_total=0
+2026,,,special_2026,1,2026-03-09,,2026-07-27,川崎F,山市秀翔,病気,out,,2026|川崎F|山市秀翔,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-04-10,,2026-07-03,徳島,三井大輝,injury,out,,2026|徳島|三井大輝,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-02-28,,2026-05-23,札幌,中村桐耶,injury,out,,2026|札幌|中村桐耶,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-04,,2026-09-21,東京V,吉田泰授,injury,out,,2026|東京V|吉田泰授,matched,0.041667,0.166667,0.041667,0.166667,0.041667,0.066667,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-04,,2026-11-16,東京V,山見大登,injury,out,,2026|東京V|山見大登,matched,0.041667,0.166667,0.041667,0.166667,0.041667,0.066667,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-18,,2026-08-10,松本,安永玲央,injury,out,,2026|松本|安永玲央,matched,0.066667,0.0,0.066667,0.0,0.066667,0.053333,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-19,,2026-07-09,水戸,島谷義進,injury,out,,2026|水戸|島谷義進,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-02-12,,2026-06-18,甲府,林田 滉也,injury,out,,2026|甲府|林田滉也,matched,0.020833,0.0,0.020833,0.0,0.020833,0.016667,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-04-30,,2026-10-15,神戸,扇原貴宏,injury,out,,2026|神戸|扇原貴宏,matched,0.022222,0.0,0.022222,0.0,0.022222,0.017778,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-18,,2026-11-09,秋田,畑橋拓輝,injury,out,,2026|秋田|畑橋拓輝,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-14,,2026-06-20,秋田,藤山智史,injury,out,,2026|秋田|藤山智史,matched,0.022222,0.0,0.022222,0.0,0.022222,0.017778,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-09,,2026-11-21,高知,岡澤韻生,injury,out,,2026|高知|岡澤韻生,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-25,,2026-09-16,鳥取,吉田伊吹,injury,out,,2026|鳥取|吉田伊吹,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-04-28,,2026-10-20,鳥取,温井駿斗,injury,out,,2026|鳥取|温井駿斗,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-07-12,8.0,2026-09-06,大分,川島康暉,injury,out,,2026|大分|川島康暉,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-07-12,12.0,2026-10-04,水戸,岩崎博,injury,out,,2026|水戸|岩崎博,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-07-21,28.0,2027-02-02,鹿島,安西幸輝,injury,out,,2026|鹿島|安西幸輝,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-07-21,8.0,2026-09-15,鹿島,樋口雄太,injury,out,,2026|鹿島|樋口雄太,matched,0.06383,0.0,0.06383,0.0,0.06383,0.051064,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-07-23,8.0,2026-09-17,東京V,田邉秀斗,injury,out,,2026|東京V|田邉秀斗,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-07-23,8.0,2026-09-17,東京V,森田晃樹,injury,out,,2026|東京V|森田晃樹,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-07-26,6.0,2026-09-06,広島,浅野拓磨,injury,out,,2026|広島|浅野拓磨,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-08-03,24.0,2027-01-18,C大阪,柴山昌也,injury,out,,2026|C大阪|柴山昌也,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-06,12.0,2026-10-29,磐田,甲斐佑蒼,injury,out,,2026|磐田|甲斐佑蒼,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-07,24.0,2027-01-22,岡山,小倉幸成,injury,out,,2026|岡山|小倉幸成,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-08,20.0,2026-12-26,栃木C,田中パウロ淳一,injury,out,,2026|栃木C|田中パウロ淳一,matched,0.0625,1.0,0.0625,1.0,0.0625,0.25,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-08,6.0,2026-09-19,G大阪,奥抜侃志,injury,out,,2026|G大阪|奥抜侃志,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,,False,def_proxy=minutes_share; team_goals_total=0
+2026,,,regular_2026_27,1,2026-08-08,24.0,2027-01-23,G大阪,三浦弦太,injury,out,,2026|G大阪|三浦弦太,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share; team_goals_total=0
+2026,,,regular_2026_27,1,2026-08-09,8.0,2026-10-04,FC東京,尾谷ディヴァインチネドゥ,injury,out,,2026|FC東京|尾谷ディヴァインチネドゥ,matched,0.021277,0.0,0.021277,0.0,0.021277,0.017021,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-10,12.0,2026-11-02,藤枝,行友祐翔,injury,out,,2026|藤枝|行友祐翔,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-08-11,32.0,2027-03-23,新潟,藤原優大,injury,out,,2026|新潟|藤原優大,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-11,1.0,2026-08-18,浦和,マテウスサヴィオ,card,out,,2026|浦和|マテウスサヴィオ,matched,0.06383,0.0,0.06383,0.0,0.06383,0.051064,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-11,2.0,2026-08-25,FC東京,橋本健人,card,out,,2026|FC東京|橋本健人,matched,0.042553,0.0,0.042553,0.0,0.042553,0.034043,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-11,1.0,2026-08-18,清水,オセフン,card,out,,2026|清水|オセフン,matched,0.066667,1.0,0.066667,1.0,0.066667,0.253333,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-11,2.0,2026-08-25,栃木C,シモンズエイデン,card,out,,2026|栃木C|シモンズエイデン,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-08-11,1.0,2026-08-18,宮崎,松本雄真,card,out,,2026|宮崎|松本雄真,matched,0.065217,0.0,0.065217,0.0,0.065217,0.052174,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-12,12.0,2026-11-04,FC東京,ニコライヴァリス,injury,out,,2026|FC東京|ニコライヴァリス,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-08-16,12.0,2026-11-08,鳥栖,堺屋佳介,injury,out,,2026|鳥栖|堺屋佳介,matched,0.020833,0.0,0.020833,0.0,0.020833,0.016667,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-16,10.0,2026-10-25,鳥栖,坂本亘基,injury,out,,2026|鳥栖|坂本亘基,matched,0.041667,0.0,0.041667,0.0,0.041667,0.033333,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-16,12.0,2026-11-08,鳥栖,水巻時飛,injury,out,,2026|鳥栖|水巻時飛,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-18,6.0,2026-09-29,山形,熊本雄太,injury,out,,2026|山形|熊本雄太,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-19,24.0,2027-02-03,甲府,三平和司,injury,out,,2026|甲府|三平和司,matched,0.041667,0.142857,0.041667,0.142857,0.041667,0.061905,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-20,10.0,2026-10-29,磐田,植村洋斗,injury,out,,2026|磐田|植村洋斗,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-18,2.0,2026-09-01,FC東京,橋本健人,card,out,,2026|FC東京|橋本健人,matched,0.042553,0.0,0.042553,0.0,0.042553,0.034043,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-18,1.0,2026-08-25,秋田,飯泉涼矢,card,out,,2026|秋田|飯泉涼矢,matched,0.044444,0.0,0.044444,0.0,0.044444,0.035556,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-18,2.0,2026-09-01,栃木C,シモンズエイデン,card,out,,2026|栃木C|シモンズエイデン,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-08-18,1.0,2026-08-25,横浜FC,岩武克弥,card,out,,2026|横浜FC|岩武克弥,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-23,8.0,2026-10-18,大分,山口卓己,injury,out,,2026|大分|山口卓己,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-23,12.0,2026-11-15,G大阪,ウェルトン,injury,out,,2026|G大阪|ウェルトン,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share; team_goals_total=0
+2026,,,regular_2026_27,1,2026-08-24,3.0,2026-09-14,いわき,中野陽斗,injury,out,,2026|いわき|中野陽斗,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-24,22.0,2027-01-25,川崎F,宮城天,injury,out,,2026|川崎F|宮城天,matched,0.020833,0.0,0.020833,0.0,0.020833,0.016667,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-24,20.0,2027-01-11,甲府,河田晃兵,injury,out,,2026|甲府|河田晃兵,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-08-27,1.0,2026-09-01,G大阪,安部柊斗,card,out,,2026|G大阪|安部柊斗,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share; team_goals_total=0
+2026,,,regular_2026_27,1,2026-09-01,1.0,2026-09-03,G大阪,岸本武流,card,out,,2026|G大阪|岸本武流,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,,False,def_proxy=minutes_share; team_goals_total=0
+2026,,,regular_2026_27,1,2026-09-01,2.0,2026-09-13,湘南,小野瀬康介,card,out,,2026|湘南|小野瀬康介,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-01,1.0,2026-09-07,今治,伊藤元太,card,out,,2026|今治|伊藤元太,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share; team_goals_total=0
+2026,,,regular_2026_27,1,2026-09-03,12.0,2026-11-26,横浜FC,駒沢直哉,injury,out,,2026|横浜FC|駒沢直哉,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-03,40.0,2027-06-10,横浜FC,前田勘太朗,injury,out,,2026|横浜FC|前田勘太朗,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-03,2.0,2026-09-13,湘南,小野瀬康介,card,out,,2026|湘南|小野瀬康介,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-03,1.0,2026-09-07,今治,伊藤元太,card,out,,2026|今治|伊藤元太,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share; team_goals_total=0
+2026,,,regular_2026_27,1,2026-09-04,4.0,2026-10-02,横浜FM,ルベンブランコ,injury,out,,2026|横浜FM|ルベンブランコ,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-09-04,32.0,2027-04-16,いわき,加藤有輝,injury,out,,2026|いわき|加藤有輝,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-06,6.0,2026-10-18,藤枝,杉田真彦,injury,out,,2026|藤枝|杉田真彦,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-06,6.0,2026-10-18,藤枝,中村優斗,injury,out,,2026|藤枝|中村優斗,matched,0.06383,0.333333,0.06383,0.333333,0.06383,0.11773,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-06,8.0,2026-11-01,藤枝,三木仁太,injury,out,,2026|藤枝|三木仁太,matched,0.021277,0.0,0.021277,0.0,0.021277,0.017021,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-06,12.0,2026-11-29,いわき,大氏凜州,injury,out,,2026|いわき|大氏凜州,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-07,6.0,2026-10-19,川崎F,ラザルロマニッチ,injury,out,,2026|川崎F|ラザルロマニッチ,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-07,40.0,2027-06-14,京都,齊藤未月,injury,out,,2026|京都|齊藤未月,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-07,12.0,2026-11-30,G大阪,植中朝日,injury,out,,2026|G大阪|植中朝日,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share; team_goals_total=0
+2026,,,regular_2026_27,1,2026-09-08,4.0,2026-10-06,名古屋,マルクスヴィニシウス,injury,out,,2026|名古屋|マルクスヴィニシウス,matched,0.06383,0.0,0.06383,0.0,0.06383,0.051064,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-08,1.0,2026-09-15,清水,住吉ジェラニレショーン,card,out,,2026|清水|住吉ジェラニレショーン,matched,0.066667,0.0,0.066667,0.0,0.066667,0.053333,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-08,1.0,2026-09-15,岡山,オベルダン,card,out,,2026|岡山|オベルダン,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-09-24,1.0,2026-10-01,栃木C,乾貴哉,card,out,,2026|栃木C|乾貴哉,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-08,1.0,2026-09-15,秋田,土井紅貴,card,out,,2026|秋田|土井紅貴,matched,0.066667,0.2,0.066667,0.2,0.066667,0.093333,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-08,1.0,2026-09-15,栃木C,照山颯人,card,out,,2026|栃木C|照山颯人,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-09-08,2.0,2026-09-22,湘南,小野瀬康介,card,out,,2026|湘南|小野瀬康介,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-09,37.0,2027-05-26,清水,石川慧,injury,out,,2026|清水|石川慧,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-10,10.0,2026-11-19,東京V,寺沼星文,injury,out,,2026|東京V|寺沼星文,matched,0.020833,0.0,0.020833,0.0,0.020833,0.016667,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-10,40.0,2027-06-17,東京V,宮原和也,injury,out,,2026|東京V|宮原和也,matched,0.041667,0.0,0.041667,0.0,0.041667,0.033333,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-10,40.0,2027-06-17,東京V,森田晃樹,injury,out,,2026|東京V|森田晃樹,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-09-10,8.0,2026-11-05,千葉,喜田陽,injury,out,,2026|千葉|喜田陽,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-09-10,40.0,2027-06-17,広島,山崎大地,injury,out,,2026|広島|山崎大地,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found

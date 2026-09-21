@@ -1,0 +1,12 @@
+﻿match_purchase_type,policy,matches,baseline_hits,filtered_hits,baseline_hit_rate,filtered_hit_rate,changed_matches,changed_to_home,changed_to_away,rescue,harm,net_rescue,change_precision
+chaos_flat,topology_guard,2.0,0.0,2.0,0.0,1.0,2.0,1.0,1.0,2.0,0.0,2.0,1.0
+draw_trap,false_draw_plus_trap,7.0,1.0,4.0,0.14285714285714285,0.5714285714285714,7.0,3.0,4.0,4.0,1.0,3.0,0.5714285714285714
+draw_trap,topology_guard,7.0,1.0,4.0,0.14285714285714285,0.5714285714285714,7.0,3.0,4.0,4.0,1.0,3.0,0.5714285714285714
+j1_false_draw_watch,false_draw_only,38.0,9.0,19.0,0.23684210526315788,0.5,38.0,20.0,18.0,19.0,9.0,10.0,0.5
+j1_false_draw_watch,false_draw_plus_trap,38.0,9.0,19.0,0.23684210526315788,0.5,38.0,20.0,18.0,19.0,9.0,10.0,0.5
+j1_false_draw_watch,topology_guard,35.0,9.0,18.0,0.2571428571428571,0.5142857142857142,35.0,18.0,17.0,18.0,9.0,9.0,0.5142857142857142
+j2_draw_trap,false_draw_plus_trap,7.0,1.0,6.0,0.14285714285714285,0.8571428571428571,7.0,5.0,2.0,6.0,1.0,5.0,0.8571428571428571
+j2_draw_trap,topology_guard,7.0,1.0,6.0,0.14285714285714285,0.8571428571428571,7.0,5.0,2.0,6.0,1.0,5.0,0.8571428571428571
+j2_false_draw_watch,false_draw_only,6.0,0.0,4.0,0.0,0.6666666666666666,6.0,3.0,3.0,4.0,0.0,4.0,0.6666666666666666
+j2_false_draw_watch,false_draw_plus_trap,6.0,0.0,4.0,0.0,0.6666666666666666,6.0,3.0,3.0,4.0,0.0,4.0,0.6666666666666666
+j2_false_draw_watch,topology_guard,6.0,0.0,4.0,0.0,0.6666666666666666,6.0,3.0,3.0,4.0,0.0,4.0,0.6666666666666666

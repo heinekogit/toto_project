@@ -1,0 +1,26 @@
+{
+  "isolated_workspace": "/private/tmp/toto1650_replay_1cfo1q8k",
+  "cutoff": "2026-09-05T13:05:42+09:00",
+  "mode": "current_code_current_local_inputs_with_results_cutoff",
+  "description": "Current code and currently available local inputs; scores at or after purchase cutoff cleared in isolated schedule/results. Stats/weather asof requested 2026-09-05. Not a pure fatigue ablation or an exact historical backtest. No fresh weather API fetch.",
+  "env": {
+    "SEASON_YEAR": "2026",
+    "STATS_ASOF_DATE": "2026-09-05",
+    "WEATHER_ASOF_DATE": "2026-09-05",
+    "ENABLE_ROUND_TYPE_DRAW_CONTROL": "0",
+    "SKIP_HFA_SELF_CHECK": "1"
+  },
+  "code_sha256": {
+    "scripts/11_prediction_01.py": "d313f1da73db7b8f3d06df7703a88c38d093e435e7229416b10a25b63d5a6b3c",
+    "buyplan.py": "125a758834c610fc35f9c2e788ae38bb6ba982505e3cfd54dfc84b8f2bd9056e",
+    "scripts/fatigue_merge.py": "14bfbcd3a0c1f52ff825a88df083d0d931a9c7f6312d27b041e975dac6a2cb6a",
+    "weather_rules.py": "9208b03e33ca08d46334a52242f68dbbb6a7aa346b027acff5f1dd61b20f19b5"
+  },
+  "actual_sha256": "8a7b8850544867c359f9c9b16a4e98e6d11ff4b6d14b3a7c897fe106c8f64a6a",
+  "prediction_sha256": "40a20cd421c955cd4a32609e446d28b37eb464fb545853e0b70880e7280df754",
+  "buyplan_sha256": "13fa3291fdb52f1290578d32e659d6eb2e47725bdf0fa3481a56dd26b147f535",
+  "masked_results_sha256": {
+    "j1": "99cad1acf9ccd81e427216176d9783e7f843aa20c6c04c7e3ed3941593b72b29",
+    "j2": "b3cc0f44482cb188499535d56ad6a924fb6d352ce6e2f20107063778c7a29c29"
+  }
+}

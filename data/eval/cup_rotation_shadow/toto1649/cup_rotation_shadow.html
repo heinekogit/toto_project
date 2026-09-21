@@ -1,0 +1,91 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><title>toto1649 カップ戦ローテーション仮説</title>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans',sans-serif;margin:28px;color:#172033}table{border-collapse:collapse;width:100%;font-size:13px}th,td{border:1px solid #d7deea;padding:7px;text-align:right}th:nth-child(3),td:nth-child(3){text-align:left}th{background:#eaf0f8}.note{background:#f2f6fb;padding:14px;border-radius:8px;margin:14px 0}code{background:#eef1f5;padding:2px 4px}</style>
+<h1>toto1649 カップ戦ローテーション仮説</h1>
+<p>試合前固定日時: 2026-09-01T22:09:57+09:00</p>
+<div class="note"><b>正式版には未接続。</b> カテゴリ差により、同格・格上=1.0、1カテゴリ下=0.7、2カテゴリ下=0.4と仮定。<br>
+当日戦力は投入指数のみ固定し、未検証のxG換算は行いません。次節への暫定持越しは <code>直前疲労×投入係数＋移動km×0.005</code>。移動負荷には投入係数を掛けません。延長負荷は試合後に別加算します。</div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>No.</th>
+      <th>側</th>
+      <th>対戦</th>
+      <th>想定主力投入</th>
+      <th>ローテーション</th>
+      <th>直前疲労</th>
+      <th>移動km</th>
+      <th>移動負荷</th>
+      <th>持越し負荷（仮）</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>11</td>
+      <td>home</td>
+      <td>宮崎（J2）→ 富山（J2）</td>
+      <td>1.0</td>
+      <td>標準想定</td>
+      <td>3.98</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>3.98</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>away</td>
+      <td>富山（J2）→ 宮崎（J2）</td>
+      <td>1.0</td>
+      <td>標準想定</td>
+      <td>5.43</td>
+      <td>728.0</td>
+      <td>3.64</td>
+      <td>9.07</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>home</td>
+      <td>愛媛（J3）→ 秋田（J2）</td>
+      <td>1.0</td>
+      <td>標準想定</td>
+      <td>3.69</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>3.69</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>away</td>
+      <td>秋田（J2）→ 愛媛（J3）</td>
+      <td>0.7</td>
+      <td>中程度</td>
+      <td>7.32</td>
+      <td>925.4</td>
+      <td>4.63</td>
+      <td>9.75</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>home</td>
+      <td>鳥取（J3）→ 大宮（J2）</td>
+      <td>1.0</td>
+      <td>標準想定</td>
+      <td>3.03</td>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>3.03</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>away</td>
+      <td>大宮（J2）→ 鳥取（J3）</td>
+      <td>0.7</td>
+      <td>中程度</td>
+      <td>6.43</td>
+      <td>491.4</td>
+      <td>2.46</td>
+      <td>6.96</td>
+    </tr>
+  </tbody>
+</table>
+<p>assumptions SHA-256: <code>b34a550d66534462f9846fd40650a93b78ac5a9b9b003602ee5d678833137fe3</code></p>
+<p>実績記入用: /Users/dev_tomo/Desktop/tt_prj_restart/data/eval/cup_rotation_shadow/toto1649/cup_rotation_actuals_template.csv</p></html>

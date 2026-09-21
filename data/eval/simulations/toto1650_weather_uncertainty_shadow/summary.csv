@@ -1,0 +1,5 @@
+﻿variant,max_shift,style_tilt,side_favourite_only,mean_hits,max_hits,mean_hit_rate,max_probability_delta,mean_entropy_delta,affected_matches
+baseline,0.0,0.0,False,4.5,6,0.34615384615384615,0.0,0.0,0
+rank1_mild_style,0.04,0.15,False,4.5,5,0.34615384615384615,0.005822113843982624,0.0005869450834424104,8
+side_favourite_mild_style,0.04,0.15,True,4.5,6,0.34615384615384615,0.003054218109623974,5.0259675092125784e-05,2
+rank1_moderate_style,0.06,0.15,False,4.7,6,0.36153846153846153,0.008733170765973852,0.0008678868316947339,8

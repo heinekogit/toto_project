@@ -1,0 +1,100 @@
+今シーズン運用中 j2_draw_trap / j2_false_draw_watch 比較メモ
+
+前提
+- 先シーズンは終了済み
+- j2_draw_trap と j2_false_draw_watch は、同じ J2 draw 系でも役割を分けて扱う前提がある
+- 本メモは、その分離を維持するかどうかを確認するための比較メモ
+
+対象
+- 分類名: j2_draw_trap / j2_false_draw_watch
+- 区分: policy 候補 / flag
+- 対象リーグ: J2
+- 評価期間: 第16節 〜 第19節
+- 判定日: 2026-07-05
+
+1. 現時点の位置づけ
+- j2_draw_trap
+  位置づけ: 正式 policy 枠の主軸候補
+  役割: J2 の draw 偏位試合を正式に扱う枠
+
+- j2_false_draw_watch
+  位置づけ: observation flag
+  役割: draw に見えるが、そのまま採用すると危ない J2 試合の監視
+
+2. 第16節-第19節で見えたこと
+
+- 第16節
+  j2_draw_trap: 2件
+  j2_false_draw_watch: 1件
+  メモ: J1 の draw 救済観測が主で、J2 件数は少ない
+
+- 第17節
+  j2_draw_trap: 1件
+  j2_false_draw_watch: 2件
+  j2_directional_stall: 1件
+  メモ: 依然として件数は少なく、強い結論は出しづらい
+
+- 第18節
+  j2_draw_trap: 3件
+  j2_false_draw_watch: 2件
+  メモ: draw 系寄りの構成が目立つが、節全体の D 実結果は 1試合で逆風
+
+- 第19節
+  j2_false_draw_watch: 2件中 1件ヒット
+  j2_draw_trap: この記録系では明示確認なし
+  メモ: D が多い節では false_draw_watch 側にも一定の観測価値がある
+
+3. 比較整理
+
+j2_draw_trap
+- 強み:
+  正式運用枠として位置づけやすい
+  draw に寄った J2 の試合を policy として整理しやすい
+- 弱み:
+  D が少ない節では過剰適用の危険がある
+  draw_rescue 系 guidance と結びつくと券面が偏りやすい
+
+j2_false_draw_watch
+- 強み:
+  いきなり正式化せず、危険信号として残せる
+  D が多い節では観測価値がある
+- 弱み:
+  watch のままだと運用判断に落とし込みづらい
+  j2_draw_trap との境界が曖昧だと、二重カウント的になる
+
+4. 現時点の判断
+- j2_draw_trap:
+  継続観測しつつ、J2 正式 policy 枠の主軸候補として維持
+
+- j2_false_draw_watch:
+  flag のまま継続観測
+
+- 分離方針:
+  維持
+
+5. 分離維持の理由
+- 役割が違う
+  j2_draw_trap は正式運用候補
+  j2_false_draw_watch は危険信号の観測枠
+
+- 件数がまだ少ない
+  第16節-第19節だけでは統合判断に必要な材料が不足している
+
+- 統合すると判断が粗くなる
+  draw を採るべき試合と、draw に見えるが警戒すべき試合を同列に扱ってしまう
+
+6. 次に見るべき点
+- j2_draw_trap が出た節での rescue / harm
+- j2_false_draw_watch が side 取り逃し防止に効いているか
+- J2 の実結果 D 比率と、両分類の件数の関係
+- draw_rescue_split / draw_watch_split への接続の違い
+
+7. 実務結論
+- j2_draw_trap は主軸候補のまま残す
+- j2_false_draw_watch は flag のまま残す
+- 今は統合しない
+- まずは件数と rescue/harm の蓄積を優先する
+
+補足
+- この2つは「どちらを消すか」でなく、「どう分けて使うか」が論点
+- 次の節検証では、J2 だけ切って両者の件数と hit を並べるのがよい

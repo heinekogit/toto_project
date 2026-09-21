@@ -1,0 +1,13 @@
+{
+  "round_id": "toto1644",
+  "matches": 13,
+  "market_favorite_hits": 8,
+  "market_favorite_hit_rate": 0.6153846153846154,
+  "mean_actual_market_share": 0.4662,
+  "geometric_mean_actual_market_share": 0.4083419867168026,
+  "market_log_loss": 0.8956502529364492,
+  "strong_favorite_60_count": 4,
+  "strong_favorite_60_misses": 0,
+  "source_pdf": "2027_2027_toto1644.pdf",
+  "source_pdf_sha256": "0fb56aa5be023aa3e23ccd2f3d54ccb031797c45bfe8d9bd63d972128af3bc6e"
+}

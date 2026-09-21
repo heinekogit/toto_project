@@ -5,10 +5,12 @@
 #   j1_2025_predictions.csv（出力：）
 #       → 未開催試合に予測勝敗と確率を付与し、結果をCSV出力。
 #
-#   ■予測ロジック（シンプルElo風）
-#   各チームの基本強さは、対象シーズンの終了試合からElo風スコアを構築。
-#   直前シーズンのデータがある場合は学習素材として追加で使用。
-#   ホーム補正あり。
+#   ■予測ロジック（Elo基盤 + HDA確率 + lab対戦補正）
+#   各チームの基本強さは、前季最終Eloを初期値に当季終了試合で更新して構築。
+#   HDA確率はElo差を主軸に multinom / legacy Poisson で推定。
+#   Football Lab 比較値とチーム状態ベクトルから matchup 補正を計算し、
+#   `lab_mix_*` を確率へ弱くブレンドしたうえで最終ラベルを決定。
+#   その後、draw / incentive / away-restore 系 override を後段で適用。
 #   未開催の試合のみ予測対象。
 #   =================================================
 
@@ -17,9 +19,15 @@
 import os
 import sys
 import math
+from acl_schedule import normalize_acl_schedule
 from bisect import bisect_left
 import pandas as pd
 import numpy as np
+from fatigue_merge import add_fatigue_time_aliases, validate_prediction_fatigue
+_PROJECT_ROOT_FOR_IMPORTS = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if _PROJECT_ROOT_FOR_IMPORTS not in sys.path:
+    sys.path.insert(0, _PROJECT_ROOT_FOR_IMPORTS)
+from weather_rules import STRONG_WIND_THRESHOLD_KMH, WIND_SPEED_UNIT, adverse_weather_penalty
 from scipy.stats import poisson
 import json
 import re
@@ -306,7 +314,7 @@ def _resolve_football_lab_compare_paths(league):
         path = os.path.join(EXTERNAL_METRICS_DIR, fn)
         if os.path.isfile(path):
             paths.append(path)
-    return sorted(paths)
+    return sorted(paths, key=lambda p: (os.path.getmtime(p), os.path.basename(p)))
 
 
 def _load_football_lab_compare_bundle(league):
@@ -327,6 +335,9 @@ def _load_football_lab_compare_bundle(league):
             continue
         keep_cols = ["match_id"] + [c for c in df.columns if c.startswith("flab_")]
         part = df[keep_cols].copy()
+        flab_cols = [c for c in part.columns if c.startswith("flab_")]
+        part["__flab_nonnull"] = part[flab_cols].notna().sum(axis=1) if flab_cols else 0
+        part["__flab_mtime"] = float(os.path.getmtime(path))
         part["__flab_priority"] = int(priority)
         part["__flab_source"] = os.path.basename(path)
         frames.append(part)
@@ -337,7 +348,9 @@ def _load_football_lab_compare_bundle(league):
         return bundle.copy()
 
     merged = pd.concat(frames, ignore_index=True, sort=False)
-    merged = merged.sort_values(["match_id", "__flab_priority"])
+    merged = merged.sort_values(
+        ["match_id", "__flab_nonnull", "__flab_mtime", "__flab_priority"]
+    )
     merged = merged.drop_duplicates(subset=["match_id"], keep="last")
     _FOOTBALL_LAB_COMPARE_CACHE[league_key] = merged.copy()
     print(
@@ -678,14 +691,21 @@ def resolve_absence_impact_csv():
             return chosen[1], chosen[0]
 
     # 3) 従来フォールバック
-    fallback = pick_non_empty_csv_path(
-        [
-            os.path.join(MANUAL_DIR, "absences_with_impact.csv"),
-            os.path.join(DATA_DIR, "absences_with_impact.csv"),
-        ],
-        required_cols=["team", "round_start", "impact_total"],
-    )
-    return fallback, ""
+    for candidate in [
+        os.path.join(MANUAL_DIR, "absences_with_impact.csv"),
+        os.path.join(DATA_DIR, "absences_with_impact.csv"),
+    ]:
+        if not os.path.exists(candidate):
+            continue
+        try:
+            header = set(pd.read_csv(candidate, nrows=0).columns)
+        except Exception:
+            continue
+        legacy_ok = {"team", "round_start", "impact_total"}.issubset(header)
+        dated_ok = {"team", "start_date", "expected_return_date", "impact_total"}.issubset(header)
+        if legacy_ok or dated_ok:
+            return candidate, ""
+    return None, ""
 
 
 # 追加するパス（非空ファイルを優先）
@@ -712,6 +732,7 @@ team_motivation_csv = pick_non_empty_csv_path(
     ],
     required_cols=["team_name"],
 )
+derby_master_csv = os.environ.get("DERBY_MASTER_CSV", os.path.join(MANUAL_DIR, "ダービー一覧.csv"))
 team_travel_distances_csv = os.path.join(MANUAL_DIR, "team_travel_distances.csv")
 if not os.path.exists(team_travel_distances_csv):
     team_travel_distances_csv = os.path.join(DATA_DIR, "team_travel_distances.csv")
@@ -726,6 +747,16 @@ ACL_DEBUG = _env_flag("ACL_DEBUG", 0)
 ACL_FATIGUE_MULTIPLIER = float(os.environ.get("ACL_FATIGUE_MULTIPLIER", "1.45"))
 ACL_FATIGUE_SHORT_REST_BONUS = float(os.environ.get("ACL_FATIGUE_SHORT_REST_BONUS", "0.25"))
 ACL_FATIGUE_TRAVEL_AWAY_BONUS = float(os.environ.get("ACL_FATIGUE_TRAVEL_AWAY_BONUS", "0.20"))
+ACL_AWAY_TRAVEL_TYPES = {
+    "away",
+    "international_away",
+    "overseas",
+    "short",
+    "medium",
+    "long_away",
+    "long",
+    "long_haul",
+}
 ACL_SECOND_WINDOW_DAYS = _get_env_int("ACL_SECOND_WINDOW_DAYS", 14)
 ACL_SECOND_WINDOW_DECAY = float(os.environ.get("ACL_SECOND_WINDOW_DECAY", "0.85"))
 ACL_DRAW_MIN_FATIGUE = float(os.environ.get("ACL_DRAW_MIN_FATIGUE", "5.0"))
@@ -834,44 +865,389 @@ CLOSE_D_TOP_GAP = float(os.environ.get("CLOSE_D_TOP_GAP", "0.06"))
 CLOSE_D_TOP_GAP_GRID = os.environ.get("CLOSE_D_TOP_GAP_GRID", "0.02,0.03,0.04,0.05,0.06,0.07,0.08")
 DRAW_CANDIDATE_PROB_MIN = float(os.environ.get("DRAW_CANDIDATE_PROB_MIN", "0.33"))
 DRAW_CANDIDATE_GAP_MAX = float(os.environ.get("DRAW_CANDIDATE_GAP_MAX", "0.02"))
-ENABLE_NARROW_DRAW_OVERRIDE = _env_flag("ENABLE_NARROW_DRAW_OVERRIDE", 1)
+ENABLE_NARROW_DRAW_OVERRIDE = _env_flag("ENABLE_NARROW_DRAW_OVERRIDE", 0)
 J1_NARROW_DRAW_PROB_MIN = float(os.environ.get("J1_NARROW_DRAW_PROB_MIN", "0.335"))
 J1_NARROW_DRAW_GAP_MAX = float(os.environ.get("J1_NARROW_DRAW_GAP_MAX", "0.010"))
+J1_NARROW_DRAW_STRONG_PROB_MIN = float(os.environ.get("J1_NARROW_DRAW_STRONG_PROB_MIN", "0.345"))
+J1_NARROW_DRAW_STRONG_GAP_MAX = float(os.environ.get("J1_NARROW_DRAW_STRONG_GAP_MAX", "0.000"))
+J1_NARROW_DRAW_NEUTRAL_BALANCED_PROB_MIN = float(os.environ.get("J1_NARROW_DRAW_NEUTRAL_BALANCED_PROB_MIN", "0.430"))
+J1_NARROW_DRAW_NEUTRAL_BALANCED_GAP_MAX = float(os.environ.get("J1_NARROW_DRAW_NEUTRAL_BALANCED_GAP_MAX", "-0.130"))
+J1_NARROW_DRAW_NEUTRAL_BALANCED_SUPPORT_MIN = float(os.environ.get("J1_NARROW_DRAW_NEUTRAL_BALANCED_SUPPORT_MIN", "0.560"))
 J2_NARROW_DRAW_PROB_MIN = float(os.environ.get("J2_NARROW_DRAW_PROB_MIN", "0.338"))
 J2_NARROW_DRAW_GAP_MAX = float(os.environ.get("J2_NARROW_DRAW_GAP_MAX", "0.005"))
-ENABLE_MAIN_NARROW_DRAW_OVERRIDE = _env_flag("ENABLE_MAIN_NARROW_DRAW_OVERRIDE", 1)
+ENABLE_J2_NARROW_DRAW_SIDE_RESTORE = _env_flag("ENABLE_J2_NARROW_DRAW_SIDE_RESTORE", 1)
+J2_NARROW_DRAW_AWAY_PREF_A_PROB_MIN = float(
+    os.environ.get("J2_NARROW_DRAW_AWAY_PREF_A_PROB_MIN", "0.375")
+)
+J2_NARROW_DRAW_HOME_PREF_H_PROB_MIN = float(
+    os.environ.get("J2_NARROW_DRAW_HOME_PREF_H_PROB_MIN", "0.345")
+)
+ENABLE_J2_NARROW_DRAW_NEUTRAL_DRAW_COMPRESSED_RESTORE = _env_flag(
+    "ENABLE_J2_NARROW_DRAW_NEUTRAL_DRAW_COMPRESSED_RESTORE", 1
+)
+J2_NARROW_DRAW_NEUTRAL_HOME_RANK_GAP_MAX = float(
+    os.environ.get("J2_NARROW_DRAW_NEUTRAL_HOME_RANK_GAP_MAX", "-1.0")
+)
+J2_NARROW_DRAW_NEUTRAL_AWAY_RANK_GAP_MIN = float(
+    os.environ.get("J2_NARROW_DRAW_NEUTRAL_AWAY_RANK_GAP_MIN", "1.0")
+)
+J2_NARROW_DRAW_NEUTRAL_FATIGUE_EDGE_MIN = float(
+    os.environ.get("J2_NARROW_DRAW_NEUTRAL_FATIGUE_EDGE_MIN", "2.0")
+)
+ENABLE_J2_NEUTRAL_DRAW_AWAY_RESTORE = _env_flag("ENABLE_J2_NEUTRAL_DRAW_AWAY_RESTORE", 0)
+J2_NEUTRAL_DRAW_AWAY_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_NEUTRAL_DRAW_AWAY_RESTORE_DRAW_GAP_MAX", "0.080")
+)
+J2_NEUTRAL_DRAW_AWAY_RESTORE_FATIGUE_EDGE_MIN = float(
+    os.environ.get("J2_NEUTRAL_DRAW_AWAY_RESTORE_FATIGUE_EDGE_MIN", "2.0")
+)
+J2_NEUTRAL_DRAW_AWAY_RESTORE_RANK_GAP_MIN = float(
+    os.environ.get("J2_NEUTRAL_DRAW_AWAY_RESTORE_RANK_GAP_MIN", "1.0")
+)
+ENABLE_J2_NEUTRAL_DRAW_HOME_RESTORE_V2 = _env_flag("ENABLE_J2_NEUTRAL_DRAW_HOME_RESTORE_V2", 0)
+J2_NEUTRAL_DRAW_HOME_RESTORE_V2_DRAW_GAP_MAX = float(
+    os.environ.get("J2_NEUTRAL_DRAW_HOME_RESTORE_V2_DRAW_GAP_MAX", "0.110")
+)
+J2_NEUTRAL_DRAW_HOME_RESTORE_V2_FATIGUE_EDGE_MIN = float(
+    os.environ.get("J2_NEUTRAL_DRAW_HOME_RESTORE_V2_FATIGUE_EDGE_MIN", "2.0")
+)
+J2_NEUTRAL_DRAW_HOME_RESTORE_V2_RANK_GAP_MAX = float(
+    os.environ.get("J2_NEUTRAL_DRAW_HOME_RESTORE_V2_RANK_GAP_MAX", "-1.0")
+)
+ENABLE_MAIN_NARROW_DRAW_OVERRIDE = _env_flag("ENABLE_MAIN_NARROW_DRAW_OVERRIDE", 0)
 J1_MAIN_NARROW_DRAW_PROB_MIN = float(os.environ.get("J1_MAIN_NARROW_DRAW_PROB_MIN", "0.330"))
 J1_MAIN_NARROW_DRAW_GAP_MAX = float(os.environ.get("J1_MAIN_NARROW_DRAW_GAP_MAX", "0.025"))
 J2_MAIN_NARROW_DRAW_PROB_MIN = float(os.environ.get("J2_MAIN_NARROW_DRAW_PROB_MIN", "0.338"))
 J2_MAIN_NARROW_DRAW_GAP_MAX = float(os.environ.get("J2_MAIN_NARROW_DRAW_GAP_MAX", "0.005"))
+ENABLE_J2_MAIN_SIGNAL_CONFLICT_BALANCED_AWAY_RESTORE = _env_flag(
+    "ENABLE_J2_MAIN_SIGNAL_CONFLICT_BALANCED_AWAY_RESTORE", 0
+)
+ENABLE_J2_MAIN_NEUTRAL_DRAW_COMPRESSED_AWAY_RESTORE = _env_flag(
+    "ENABLE_J2_MAIN_NEUTRAL_DRAW_COMPRESSED_AWAY_RESTORE", 0
+)
+ENABLE_J1_MAIN_NEUTRAL_SPLIT_SIDE_AWAY_RESTORE = _env_flag(
+    "ENABLE_J1_MAIN_NEUTRAL_SPLIT_SIDE_AWAY_RESTORE", 0
+)
+ENABLE_J1_MAIN_HOME_STRONG_DRAW_COMPRESSED_POSTFUSION_SYNC = _env_flag(
+    "ENABLE_J1_MAIN_HOME_STRONG_DRAW_COMPRESSED_POSTFUSION_SYNC", 0
+)
+J1_MAIN_NEUTRAL_SPLIT_SIDE_AWAY_GAP_MAX = float(
+    os.environ.get("J1_MAIN_NEUTRAL_SPLIT_SIDE_AWAY_GAP_MAX", "0.020")
+)
+J1_MAIN_NEUTRAL_SPLIT_SIDE_LAB_EDGE_MAX = float(
+    os.environ.get("J1_MAIN_NEUTRAL_SPLIT_SIDE_LAB_EDGE_MAX", "-3.000")
+)
+J1_MAIN_HOME_STRONG_DRAW_COMPRESSED_POSTFUSION_DRAW_MIN = float(
+    os.environ.get("J1_MAIN_HOME_STRONG_DRAW_COMPRESSED_POSTFUSION_DRAW_MIN", "0.360")
+)
+J1_MAIN_HOME_STRONG_DRAW_COMPRESSED_POSTFUSION_GAP_MIN = float(
+    os.environ.get("J1_MAIN_HOME_STRONG_DRAW_COMPRESSED_POSTFUSION_GAP_MIN", "0.020")
+)
+BASE_CONFIDENCE_WEIGHT = float(os.environ.get("BASE_CONFIDENCE_WEIGHT", "1.00"))
+LAB_CONFIDENCE_WEIGHT = float(os.environ.get("LAB_CONFIDENCE_WEIGHT", "1.00"))
+MAIN_CONFIDENCE_WEIGHT = float(os.environ.get("MAIN_CONFIDENCE_WEIGHT", "0.12"))
+J1_NEUTRAL_BALANCED_DRAW_MIN = float(os.environ.get("J1_NEUTRAL_BALANCED_DRAW_MIN", "0.390"))
+J1_NEUTRAL_BALANCED_DRAW_MAX = float(os.environ.get("J1_NEUTRAL_BALANCED_DRAW_MAX", "0.445"))
+J1_NEUTRAL_BALANCED_HOME_READY_DRAW_MIN = float(os.environ.get("J1_NEUTRAL_BALANCED_HOME_READY_DRAW_MIN", "0.350"))
+J1_NEUTRAL_BALANCED_HA_GAP_MAX = float(os.environ.get("J1_NEUTRAL_BALANCED_HA_GAP_MAX", "0.050"))
+J1_NEUTRAL_BALANCED_DRAW_SHIFT_MAX = float(os.environ.get("J1_NEUTRAL_BALANCED_DRAW_SHIFT_MAX", "0.045"))
+J1_HOME_READY_FATIGUE_EDGE = float(os.environ.get("J1_HOME_READY_FATIGUE_EDGE", "1.50"))
+J1_HOME_READY_MOTIVATION_EDGE = float(os.environ.get("J1_HOME_READY_MOTIVATION_EDGE", "0.25"))
+J1_HOME_READY_LAB_EDGE_MAX = float(os.environ.get("J1_HOME_READY_LAB_EDGE_MAX", "0.015"))
 TITLE_RACE_RANK_MAX = int(os.environ.get("TITLE_RACE_RANK_MAX", "3"))
 J1_RELEGATION_RISK_BOTTOM_N = int(os.environ.get("J1_RELEGATION_RISK_BOTTOM_N", "4"))
 J2_RELEGATION_RISK_BOTTOM_N = int(os.environ.get("J2_RELEGATION_RISK_BOTTOM_N", "4"))
-INCENTIVE_DRAW_SHIFT_ENABLE = _env_flag("INCENTIVE_DRAW_SHIFT_ENABLE", 1)
+J1_TITLE_PUSH_RANK_MAX = int(os.environ.get("J1_TITLE_PUSH_RANK_MAX", "2"))
+J1_ACL_LINE_RANK = int(os.environ.get("J1_ACL_LINE_RANK", "3"))
+J1_ACL_RACE_RANK_MAX = int(os.environ.get("J1_ACL_RACE_RANK_MAX", "5"))
+J2_PROMOTION_LINE_RANK = int(os.environ.get("J2_PROMOTION_LINE_RANK", "2"))
+J2_PROMOTION_RACE_RANK_MAX = int(os.environ.get("J2_PROMOTION_RACE_RANK_MAX", "4"))
+J2_PO_LINE_RANK = int(os.environ.get("J2_PO_LINE_RANK", "6"))
+J2_PO_RACE_RANK_MAX = int(os.environ.get("J2_PO_RACE_RANK_MAX", "8"))
+PRESSURE_DIRECT_POINTS_GAP_MAX = float(os.environ.get("PRESSURE_DIRECT_POINTS_GAP_MAX", "6.0"))
+PRESSURE_BORDER_MOTIVATION_MIN = float(os.environ.get("PRESSURE_BORDER_MOTIVATION_MIN", "0.35"))
+INCENTIVE_DRAW_SHIFT_ENABLE = _env_flag("INCENTIVE_DRAW_SHIFT_ENABLE", 0)
 J1_INCENTIVE_DRAW_PROB_MIN = float(os.environ.get("J1_INCENTIVE_DRAW_PROB_MIN", "0.305"))
 J1_INCENTIVE_DRAW_GAP_MAX = float(os.environ.get("J1_INCENTIVE_DRAW_GAP_MAX", "0.050"))
 J2_INCENTIVE_DRAW_PROB_MIN = float(os.environ.get("J2_INCENTIVE_DRAW_PROB_MIN", "0.330"))
 J2_INCENTIVE_DRAW_GAP_MAX = float(os.environ.get("J2_INCENTIVE_DRAW_GAP_MAX", "0.040"))
 INCENTIVE_TITLE_EDGE_MAX = float(os.environ.get("INCENTIVE_TITLE_EDGE_MAX", "0.020"))
-ENABLE_J1_AWAY_RESTORE_OVERRIDE = _env_flag("ENABLE_J1_AWAY_RESTORE_OVERRIDE", 1)
+ENABLE_J1_AWAY_RESTORE_OVERRIDE = _env_flag("ENABLE_J1_AWAY_RESTORE_OVERRIDE", 0)
 J1_AWAY_RESTORE_HOME_GAP_MAX = float(os.environ.get("J1_AWAY_RESTORE_HOME_GAP_MAX", "0.030"))
 J1_AWAY_RESTORE_DRAW_GAP_MAX = float(os.environ.get("J1_AWAY_RESTORE_DRAW_GAP_MAX", "0.090"))
 J1_AWAY_RESTORE_DRAW_MIN = float(os.environ.get("J1_AWAY_RESTORE_DRAW_MIN", "0.350"))
-ENABLE_J1_SIGNAL_CONFLICT_AWAY_RESTORE = _env_flag("ENABLE_J1_SIGNAL_CONFLICT_AWAY_RESTORE", 1)
+ENABLE_J1_HOME_RESTORE_OVERRIDE = _env_flag("ENABLE_J1_HOME_RESTORE_OVERRIDE", 0)
+J1_HOME_RESTORE_AWAY_GAP_MAX = float(os.environ.get("J1_HOME_RESTORE_AWAY_GAP_MAX", "0.030"))
+J1_HOME_RESTORE_DRAW_GAP_MAX = float(os.environ.get("J1_HOME_RESTORE_DRAW_GAP_MAX", "0.090"))
+J1_HOME_RESTORE_DRAW_MIN = float(os.environ.get("J1_HOME_RESTORE_DRAW_MIN", "0.345"))
+J1_HOME_RESTORE_DRAW_MAX = float(os.environ.get("J1_HOME_RESTORE_DRAW_MAX", "0.372"))
+J1_HOME_RESTORE_DRAW_SUPPORT_MAX = float(os.environ.get("J1_HOME_RESTORE_DRAW_SUPPORT_MAX", "0.545"))
+J1_HOME_RESTORE_COMPRESSED_DRAW_MAX = float(os.environ.get("J1_HOME_RESTORE_COMPRESSED_DRAW_MAX", "0.455"))
+J1_HOME_RESTORE_COMPRESSED_FATIGUE_EDGE = float(os.environ.get("J1_HOME_RESTORE_COMPRESSED_FATIGUE_EDGE", "3.0"))
+J1_HOME_RESTORE_COMPRESSED_MOTIVATION_EDGE = float(os.environ.get("J1_HOME_RESTORE_COMPRESSED_MOTIVATION_EDGE", "0.2"))
+J1_HOME_RESTORE_COMPRESSED_HOME_GAP_MAX = float(os.environ.get("J1_HOME_RESTORE_COMPRESSED_HOME_GAP_MAX", "0.005"))
+ENABLE_J1_SIGNAL_CONFLICT_HOME_RESTORE = _env_flag("ENABLE_J1_SIGNAL_CONFLICT_HOME_RESTORE", 0)
+J1_SIGNAL_CONFLICT_HOME_RESTORE_HOME_GAP_MAX = float(
+    os.environ.get("J1_SIGNAL_CONFLICT_HOME_RESTORE_HOME_GAP_MAX", "0.020")
+)
+J1_SIGNAL_CONFLICT_HOME_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J1_SIGNAL_CONFLICT_HOME_RESTORE_FATIGUE_EDGE", "3.0")
+)
+J1_SIGNAL_CONFLICT_HOME_RESTORE_RANK_GAP_MAX = float(
+    os.environ.get("J1_SIGNAL_CONFLICT_HOME_RESTORE_RANK_GAP_MAX", "-3.0")
+)
+ENABLE_J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE = _env_flag(
+    "ENABLE_J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE", 0
+)
+J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_FATIGUE_EDGE", "2.5")
+)
+J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_MOTIVATION_EDGE = float(
+    os.environ.get("J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_MOTIVATION_EDGE", "0.0")
+)
+J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_HOME_GAP_MIN = float(
+    os.environ.get("J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_HOME_GAP_MIN", "-0.030")
+)
+J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_HOME_GAP_MAX = float(
+    os.environ.get("J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_HOME_GAP_MAX", "0.000")
+)
+ENABLE_J1_SIGNAL_CONFLICT_AWAY_RESTORE = _env_flag("ENABLE_J1_SIGNAL_CONFLICT_AWAY_RESTORE", 0)
 J1_SIGNAL_CONFLICT_AWAY_RESTORE_HOME_GAP_MAX = float(
     os.environ.get("J1_SIGNAL_CONFLICT_AWAY_RESTORE_HOME_GAP_MAX", "0.010")
 )
-ENABLE_J2_AWAY_STRONG_AWAY_RESTORE = _env_flag("ENABLE_J2_AWAY_STRONG_AWAY_RESTORE", 1)
-ENABLE_J2_SIGNAL_CONFLICT_AWAY_RESTORE = _env_flag("ENABLE_J2_SIGNAL_CONFLICT_AWAY_RESTORE", 1)
+J1_SIGNAL_CONFLICT_AWAY_RESTORE_HOME_FATIGUE_EDGE_MAX = float(
+    os.environ.get("J1_SIGNAL_CONFLICT_AWAY_RESTORE_HOME_FATIGUE_EDGE_MAX", "2.5")
+)
+J1_SIGNAL_CONFLICT_AWAY_RESTORE_HOME_RANK_GAP_MIN = float(
+    os.environ.get("J1_SIGNAL_CONFLICT_AWAY_RESTORE_HOME_RANK_GAP_MIN", "-3.0")
+)
+ENABLE_J2_AWAY_STRONG_AWAY_RESTORE = _env_flag("ENABLE_J2_AWAY_STRONG_AWAY_RESTORE", 0)
+ENABLE_J2_SIGNAL_CONFLICT_AWAY_RESTORE = _env_flag("ENABLE_J2_SIGNAL_CONFLICT_AWAY_RESTORE", 0)
 ENABLE_J2_NEG_HOME_ADV_AWAY_RESTORE = _env_flag("ENABLE_J2_NEG_HOME_ADV_AWAY_RESTORE", 0)
+ENABLE_J2_HOME_RESTORE_OVERRIDE = _env_flag("ENABLE_J2_HOME_RESTORE_OVERRIDE", 0)
+J2_HOME_RESTORE_DRAW_GAP_MAX = float(os.environ.get("J2_HOME_RESTORE_DRAW_GAP_MAX", "0.050"))
+J2_HOME_RESTORE_FATIGUE_EDGE = float(os.environ.get("J2_HOME_RESTORE_FATIGUE_EDGE", "2.5"))
+J2_HOME_RESTORE_MOTIVATION_EDGE = float(os.environ.get("J2_HOME_RESTORE_MOTIVATION_EDGE", "0.5"))
+J2_HOME_RESTORE_RANK_GAP_MAX = float(os.environ.get("J2_HOME_RESTORE_RANK_GAP_MAX", "-2.0"))
+ENABLE_J2_NEUTRAL_HOME_RESTORE = _env_flag("ENABLE_J2_NEUTRAL_HOME_RESTORE", 0)
+J2_NEUTRAL_HOME_RESTORE_DRAW_GAP_MAX = float(os.environ.get("J2_NEUTRAL_HOME_RESTORE_DRAW_GAP_MAX", "0.050"))
+J2_NEUTRAL_HOME_RESTORE_FATIGUE_EDGE = float(os.environ.get("J2_NEUTRAL_HOME_RESTORE_FATIGUE_EDGE", "2.5"))
+J2_NEUTRAL_HOME_RESTORE_MOTIVATION_EDGE = float(os.environ.get("J2_NEUTRAL_HOME_RESTORE_MOTIVATION_EDGE", "0.5"))
+J2_NEUTRAL_HOME_RESTORE_HOME_GAP_MAX = float(os.environ.get("J2_NEUTRAL_HOME_RESTORE_HOME_GAP_MAX", "0.090"))
+ENABLE_J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE = _env_flag("ENABLE_J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE", 0)
+J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE_DRAW_GAP_MAX", "0.030")
+)
+J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE_FATIGUE_EDGE", "2.0")
+)
+J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE_MOTIVATION_EDGE = float(
+    os.environ.get("J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE_MOTIVATION_EDGE", "2.0")
+)
+J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE_RANK_GAP_MAX = float(
+    os.environ.get("J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE_RANK_GAP_MAX", "-5.0")
+)
+ENABLE_J2_HOME_STRONG_BALANCED_RESTORE = _env_flag("ENABLE_J2_HOME_STRONG_BALANCED_RESTORE", 0)
+J2_HOME_STRONG_BALANCED_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_HOME_STRONG_BALANCED_RESTORE_DRAW_GAP_MAX", "0.070")
+)
+J2_HOME_STRONG_BALANCED_RESTORE_HOME_GAP_MAX = float(
+    os.environ.get("J2_HOME_STRONG_BALANCED_RESTORE_HOME_GAP_MAX", "0.030")
+)
+J2_HOME_STRONG_BALANCED_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_HOME_STRONG_BALANCED_RESTORE_FATIGUE_EDGE", "3.0")
+)
+J2_HOME_STRONG_BALANCED_RESTORE_MOTIVATION_EDGE = float(
+    os.environ.get("J2_HOME_STRONG_BALANCED_RESTORE_MOTIVATION_EDGE", "1.0")
+)
+J2_HOME_STRONG_BALANCED_RESTORE_RANK_GAP_MAX = float(
+    os.environ.get("J2_HOME_STRONG_BALANCED_RESTORE_RANK_GAP_MAX", "-4.0")
+)
+ENABLE_J2_SIGNAL_CONFLICT_HOME_RESTORE = _env_flag("ENABLE_J2_SIGNAL_CONFLICT_HOME_RESTORE", 0)
+J2_SIGNAL_CONFLICT_HOME_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_SIGNAL_CONFLICT_HOME_RESTORE_DRAW_GAP_MAX", "0.050")
+)
+J2_SIGNAL_CONFLICT_HOME_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_SIGNAL_CONFLICT_HOME_RESTORE_FATIGUE_EDGE", "5.0")
+)
+J2_SIGNAL_CONFLICT_HOME_RESTORE_MOTIVATION_EDGE = float(
+    os.environ.get("J2_SIGNAL_CONFLICT_HOME_RESTORE_MOTIVATION_EDGE", "2.0")
+)
+J2_SIGNAL_CONFLICT_HOME_RESTORE_RANK_GAP_MAX = float(
+    os.environ.get("J2_SIGNAL_CONFLICT_HOME_RESTORE_RANK_GAP_MAX", "-3.0")
+)
+ENABLE_J2_AWAY_STRONG_FLAT_HOME_RESTORE = _env_flag("ENABLE_J2_AWAY_STRONG_FLAT_HOME_RESTORE", 0)
+J2_AWAY_STRONG_FLAT_HOME_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_AWAY_STRONG_FLAT_HOME_RESTORE_FATIGUE_EDGE", "4.0")
+)
+J2_AWAY_STRONG_FLAT_HOME_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_AWAY_STRONG_FLAT_HOME_RESTORE_DRAW_GAP_MAX", "0.145")
+)
+ENABLE_J2_CLOSE_FLAT_HOME_RESTORE = _env_flag("ENABLE_J2_CLOSE_FLAT_HOME_RESTORE", 0)
+J2_CLOSE_FLAT_HOME_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_CLOSE_FLAT_HOME_RESTORE_FATIGUE_EDGE", "4.0")
+)
+J2_CLOSE_FLAT_HOME_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_CLOSE_FLAT_HOME_RESTORE_DRAW_GAP_MAX", "0.125")
+)
+ENABLE_J2_HOME_STRONG_FLAT_HOME_RESTORE = _env_flag("ENABLE_J2_HOME_STRONG_FLAT_HOME_RESTORE", 0)
+J2_HOME_STRONG_FLAT_HOME_RESTORE_MOTIVATION_EDGE = float(
+    os.environ.get("J2_HOME_STRONG_FLAT_HOME_RESTORE_MOTIVATION_EDGE", "2.0")
+)
+J2_HOME_STRONG_FLAT_HOME_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_HOME_STRONG_FLAT_HOME_RESTORE_DRAW_GAP_MAX", "0.010")
+)
+ENABLE_J2_HOME_STRONG_DEEP_HOME_RESTORE = _env_flag("ENABLE_J2_HOME_STRONG_DEEP_HOME_RESTORE", 0)
+J2_HOME_STRONG_DEEP_HOME_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_HOME_STRONG_DEEP_HOME_RESTORE_DRAW_GAP_MAX", "0.030")
+)
+J2_HOME_STRONG_DEEP_HOME_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_HOME_STRONG_DEEP_HOME_RESTORE_FATIGUE_EDGE", "3.5")
+)
+J2_HOME_STRONG_DEEP_HOME_RESTORE_RANK_GAP_MAX = float(
+    os.environ.get("J2_HOME_STRONG_DEEP_HOME_RESTORE_RANK_GAP_MAX", "-5.0")
+)
+ENABLE_J2_HOME_STRONG_ELITE_HOME_RESTORE = _env_flag("ENABLE_J2_HOME_STRONG_ELITE_HOME_RESTORE", 0)
+J2_HOME_STRONG_ELITE_HOME_RESTORE_HOME_MIN = float(
+    os.environ.get("J2_HOME_STRONG_ELITE_HOME_RESTORE_HOME_MIN", "0.380")
+)
+J2_HOME_STRONG_ELITE_HOME_RESTORE_ELO_MIN = float(
+    os.environ.get("J2_HOME_STRONG_ELITE_HOME_RESTORE_ELO_MIN", "50.0")
+)
+ENABLE_J2_NEUTRAL_POS_ELO_HOME_RESTORE = _env_flag("ENABLE_J2_NEUTRAL_POS_ELO_HOME_RESTORE", 0)
+J2_NEUTRAL_POS_ELO_HOME_RESTORE_HOME_MIN = float(
+    os.environ.get("J2_NEUTRAL_POS_ELO_HOME_RESTORE_HOME_MIN", "0.360")
+)
+J2_NEUTRAL_POS_ELO_HOME_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_NEUTRAL_POS_ELO_HOME_RESTORE_DRAW_GAP_MAX", "0.035")
+)
+J2_NEUTRAL_POS_ELO_HOME_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_NEUTRAL_POS_ELO_HOME_RESTORE_FATIGUE_EDGE", "4.0")
+)
+J2_NEUTRAL_POS_ELO_HOME_RESTORE_ELO_MIN = float(
+    os.environ.get("J2_NEUTRAL_POS_ELO_HOME_RESTORE_ELO_MIN", "50.0")
+)
+ENABLE_J2_NEUTRAL_NEG_ELO_HOME_RESTORE = _env_flag("ENABLE_J2_NEUTRAL_NEG_ELO_HOME_RESTORE", 0)
+J2_NEUTRAL_NEG_ELO_HOME_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_NEUTRAL_NEG_ELO_HOME_RESTORE_DRAW_GAP_MAX", "0.125")
+)
+J2_NEUTRAL_NEG_ELO_HOME_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_NEUTRAL_NEG_ELO_HOME_RESTORE_FATIGUE_EDGE", "4.3")
+)
+J2_NEUTRAL_NEG_ELO_HOME_RESTORE_MOTIVATION_EDGE = float(
+    os.environ.get("J2_NEUTRAL_NEG_ELO_HOME_RESTORE_MOTIVATION_EDGE", "1.0")
+)
+J2_NEUTRAL_NEG_ELO_HOME_RESTORE_RANK_GAP_MIN = float(
+    os.environ.get("J2_NEUTRAL_NEG_ELO_HOME_RESTORE_RANK_GAP_MIN", "2.0")
+)
+J2_NEUTRAL_NEG_ELO_HOME_RESTORE_ELO_MAX = float(
+    os.environ.get("J2_NEUTRAL_NEG_ELO_HOME_RESTORE_ELO_MAX", "-20.0")
+)
+ENABLE_J2_HOME_STRONG_TIGHT_BALANCED_RESTORE = _env_flag("ENABLE_J2_HOME_STRONG_TIGHT_BALANCED_RESTORE", 0)
+J2_HOME_STRONG_TIGHT_BALANCED_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_HOME_STRONG_TIGHT_BALANCED_RESTORE_DRAW_GAP_MAX", "0.001")
+)
+J2_HOME_STRONG_TIGHT_BALANCED_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_HOME_STRONG_TIGHT_BALANCED_RESTORE_FATIGUE_EDGE", "4.0")
+)
+J2_HOME_STRONG_TIGHT_BALANCED_RESTORE_RANK_GAP_MAX = float(
+    os.environ.get("J2_HOME_STRONG_TIGHT_BALANCED_RESTORE_RANK_GAP_MAX", "-3.0")
+)
+ENABLE_J2_NEUTRAL_TIGHT_BALANCED_RESTORE = _env_flag("ENABLE_J2_NEUTRAL_TIGHT_BALANCED_RESTORE", 0)
+J2_NEUTRAL_TIGHT_BALANCED_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_NEUTRAL_TIGHT_BALANCED_RESTORE_DRAW_GAP_MAX", "0.020")
+)
+J2_NEUTRAL_TIGHT_BALANCED_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_NEUTRAL_TIGHT_BALANCED_RESTORE_FATIGUE_EDGE", "2.4")
+)
+J2_NEUTRAL_TIGHT_BALANCED_RESTORE_ELO_MIN = float(
+    os.environ.get("J2_NEUTRAL_TIGHT_BALANCED_RESTORE_ELO_MIN", "20.0")
+)
+ENABLE_J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE = _env_flag("ENABLE_J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE", 0)
+J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE_DRAW_GAP_MAX", "0.105")
+)
+J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE_FATIGUE_EDGE", "2.5")
+)
+J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE_RANK_GAP_MAX = float(
+    os.environ.get("J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE_RANK_GAP_MAX", "-2.0")
+)
+J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE_ELO_MAX = float(
+    os.environ.get("J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE_ELO_MAX", "-15.0")
+)
+ENABLE_J2_NEUTRAL_POS_PRESS_HOME_RESTORE = _env_flag("ENABLE_J2_NEUTRAL_POS_PRESS_HOME_RESTORE", 0)
+J2_NEUTRAL_POS_PRESS_HOME_RESTORE_HOME_MIN = float(
+    os.environ.get("J2_NEUTRAL_POS_PRESS_HOME_RESTORE_HOME_MIN", "0.340")
+)
+J2_NEUTRAL_POS_PRESS_HOME_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_NEUTRAL_POS_PRESS_HOME_RESTORE_DRAW_GAP_MAX", "0.060")
+)
+J2_NEUTRAL_POS_PRESS_HOME_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_NEUTRAL_POS_PRESS_HOME_RESTORE_FATIGUE_EDGE", "4.0")
+)
+J2_NEUTRAL_POS_PRESS_HOME_RESTORE_ELO_MIN = float(
+    os.environ.get("J2_NEUTRAL_POS_PRESS_HOME_RESTORE_ELO_MIN", "30.0")
+)
+J2_NEUTRAL_POS_PRESS_HOME_RESTORE_MOTIVATION_MAX = float(
+    os.environ.get("J2_NEUTRAL_POS_PRESS_HOME_RESTORE_MOTIVATION_MAX", "-4.0")
+)
+ENABLE_J2_CLOSE_DRAW_HOME_RESTORE = _env_flag("ENABLE_J2_CLOSE_DRAW_HOME_RESTORE", 0)
+J2_CLOSE_DRAW_HOME_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_CLOSE_DRAW_HOME_RESTORE_DRAW_GAP_MAX", "0.105")
+)
+J2_CLOSE_DRAW_HOME_RESTORE_HOME_MAX = float(
+    os.environ.get("J2_CLOSE_DRAW_HOME_RESTORE_HOME_MAX", "0.295")
+)
+J2_CLOSE_DRAW_HOME_RESTORE_ELO_MAX = float(
+    os.environ.get("J2_CLOSE_DRAW_HOME_RESTORE_ELO_MAX", "-10.0")
+)
+J2_CLOSE_DRAW_HOME_RESTORE_MOTIVATION_MIN = float(
+    os.environ.get("J2_CLOSE_DRAW_HOME_RESTORE_MOTIVATION_MIN", "3.0")
+)
+ENABLE_J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE = _env_flag("ENABLE_J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE", 0)
+J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE_HOME_MIN = float(
+    os.environ.get("J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE_HOME_MIN", "0.350")
+)
+J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE_DRAW_GAP_MAX = float(
+    os.environ.get("J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE_DRAW_GAP_MAX", "0.042")
+)
+J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE_FATIGUE_EDGE = float(
+    os.environ.get("J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE_FATIGUE_EDGE", "5.4")
+)
+J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE_ELO_MIN = float(
+    os.environ.get("J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE_ELO_MIN", "38.0")
+)
+ENABLE_J2_AWAY_STRONG_DRAW_HOME_RESTORE = _env_flag("ENABLE_J2_AWAY_STRONG_DRAW_HOME_RESTORE", 0)
+J2_AWAY_STRONG_DRAW_HOME_RESTORE_HOME_MAX = float(
+    os.environ.get("J2_AWAY_STRONG_DRAW_HOME_RESTORE_HOME_MAX", "0.250")
+)
+J2_AWAY_STRONG_DRAW_HOME_RESTORE_DRAW_GAP_MIN = float(
+    os.environ.get("J2_AWAY_STRONG_DRAW_HOME_RESTORE_DRAW_GAP_MIN", "0.130")
+)
+J2_AWAY_STRONG_DRAW_HOME_RESTORE_FATIGUE_EDGE_MAX = float(
+    os.environ.get("J2_AWAY_STRONG_DRAW_HOME_RESTORE_FATIGUE_EDGE_MAX", "1.0")
+)
+J2_AWAY_STRONG_DRAW_HOME_RESTORE_MOTIVATION_MIN = float(
+    os.environ.get("J2_AWAY_STRONG_DRAW_HOME_RESTORE_MOTIVATION_MIN", "4.5")
+)
+J2_AWAY_STRONG_DRAW_HOME_RESTORE_ELO_MAX = float(
+    os.environ.get("J2_AWAY_STRONG_DRAW_HOME_RESTORE_ELO_MAX", "-45.0")
+)
 J2_NEG_HOME_ADV_AWAY_RESTORE_DRAW_MIN = float(os.environ.get("J2_NEG_HOME_ADV_AWAY_RESTORE_DRAW_MIN", "0.335"))
 J2_NEG_HOME_ADV_AWAY_RESTORE_REQUIRE_DRAWRISK = _env_flag("J2_NEG_HOME_ADV_AWAY_RESTORE_REQUIRE_DRAWRISK", 1)
-ENABLE_J2_AWAY_DRAW_RESTORE = _env_flag("ENABLE_J2_AWAY_DRAW_RESTORE", 1)
+ENABLE_J2_AWAY_DRAW_RESTORE = _env_flag("ENABLE_J2_AWAY_DRAW_RESTORE", 0)
 J2_AWAY_DRAW_RESTORE_DRAW_MIN = float(os.environ.get("J2_AWAY_DRAW_RESTORE_DRAW_MIN", "0.336"))
 J2_AWAY_DRAW_RESTORE_AWAY_GAP_MAX = float(os.environ.get("J2_AWAY_DRAW_RESTORE_AWAY_GAP_MAX", "0.008"))
 J2_AWAY_DRAW_RESTORE_REQUIRE_DRAWRISK = _env_flag("J2_AWAY_DRAW_RESTORE_REQUIRE_DRAWRISK", 1)
 J2_AWAY_DRAW_RESTORE_REQUIRE_LAB = _env_flag("J2_AWAY_DRAW_RESTORE_REQUIRE_LAB", 1)
 J2_AWAY_DRAW_RESTORE_LAB_EDGE_MAX = float(os.environ.get("J2_AWAY_DRAW_RESTORE_LAB_EDGE_MAX", "4.0"))
+ENABLE_LAB_PROB_BLEND = _env_flag("ENABLE_LAB_PROB_BLEND", 1)
+ENABLE_CONFIDENCE_PROB_FUSION = _env_flag("ENABLE_CONFIDENCE_PROB_FUSION", 1)
+LAB_PROB_BLEND_ALPHA_BASE = float(os.environ.get("LAB_PROB_BLEND_ALPHA_BASE", "0.10"))
+LAB_PROB_BLEND_ALPHA_GAIN = float(os.environ.get("LAB_PROB_BLEND_ALPHA_GAIN", "0.20"))
+LAB_PROB_BLEND_ALPHA_MIN = float(os.environ.get("LAB_PROB_BLEND_ALPHA_MIN", "0.05"))
+LAB_PROB_BLEND_ALPHA_MAX = float(os.environ.get("LAB_PROB_BLEND_ALPHA_MAX", "0.35"))
 J1_TARGET_D_RANGE_RAW = os.environ.get("J1_TARGET_D_RANGE", "2,4")
 J2_TARGET_D_RANGE_RAW = os.environ.get("J2_TARGET_D_RANGE", "1,3")
 # Poisson格子の打ち切り誤差を抑えるための設定
@@ -884,7 +1260,7 @@ DEBUG_MATCH_ID = os.environ.get("DEBUG_MATCH_ID", "").strip()
 J1_WIN_PROB_CAP = float(os.environ.get("J1_WIN_PROB_CAP", "0.68"))
 PROB_FALLBACK = (0.397, 0.251, 0.353)
 HFA_APPLY_COUNTER = {"applied": 0, "skipped": 0, "reason_counts": {}}
-ENFORCE_ELO_SIGN_MONOTONIC = _env_flag("ENFORCE_ELO_SIGN_MONOTONIC", 0)
+ENFORCE_ELO_SIGN_MONOTONIC = _env_flag("ENFORCE_ELO_SIGN_MONOTONIC", 1)
 ELO_SIGN_FIX_COUNTER = {"total": 0, "neg_to_away": 0, "pos_to_home": 0}
 MULTINOM_ELO_DIFF_SIGN = 1
 MULTINOM_SWAP_HA_OUTPUT = False
@@ -1196,6 +1572,1193 @@ def _extend_multinom_feat_values(feat_values, row, home_advantage_diff, absence_
         ext["goal_concede_diff_abs"] = abs(goal_concede_diff)
         ext["goal_concede_diff"] = goal_concede_diff
     return ext
+
+
+def _bounded_unit(value, lower, upper, default=0.5):
+    x = pd.to_numeric(value, errors="coerce")
+    if pd.isna(x):
+        return float(default)
+    if upper <= lower:
+        return float(default)
+    return float(np.clip((float(x) - float(lower)) / (float(upper) - float(lower)), 0.0, 1.0))
+
+
+def _avg_scores(values, default=0.5):
+    cleaned = [float(v) for v in values if v is not None and math.isfinite(float(v))]
+    if not cleaned:
+        return float(default)
+    return float(sum(cleaned) / len(cleaned))
+
+
+def build_team_state_vector(row, side, team_elo, absence_effective=None, fatigue_score=None):
+    suffix = str(side).strip().lower()
+    if suffix not in {"home", "away"}:
+        raise ValueError(f"invalid side for team state: {side}")
+
+    xg = _safe_float_value(row.get(f"stats_ゴール期待値_{suffix}"), np.nan)
+    xga = _safe_float_value(row.get(f"stats_被ゴール期待値_{suffix}"), np.nan)
+    goals = _safe_float_value(row.get(f"stats_1試合平均得点数_{suffix}"), np.nan)
+    conceded = _safe_float_value(row.get(f"stats_1試合平均失点数_{suffix}"), np.nan)
+    shots = _safe_float_value(row.get(f"stats_1試合平均シュート数_{suffix}"), np.nan)
+    allowed_shots = _safe_float_value(row.get(f"stats_1試合平均被シュート数_{suffix}"), np.nan)
+    on_target = _safe_float_value(row.get(f"stats_1試合平均枠内シュート数_{suffix}"), np.nan)
+    possession = _safe_float_value(row.get(f"stats_平均ボール支配率_{suffix}"), np.nan)
+    sprint = _safe_float_value(row.get(f"stats_1試合平均スプリント回数_{suffix}"), np.nan)
+    rank_latest = _safe_float_value(row.get(f"rankmot_rank_latest_{suffix}"), np.nan)
+    points_latest = _safe_float_value(row.get(f"rankmot_points_latest_{suffix}"), np.nan)
+    rank_change_3w = _safe_float_value(row.get(f"rankmot_rank_change_3w_{suffix}"), np.nan)
+    points_change_3w = _safe_float_value(row.get(f"rankmot_points_change_3w_{suffix}"), np.nan)
+    rank_change_5w = _safe_float_value(row.get(f"rankmot_rank_change_5w_{suffix}"), np.nan)
+    points_change_5w = _safe_float_value(row.get(f"rankmot_points_change_5w_{suffix}"), np.nan)
+    motivation_3w = _safe_float_value(row.get(f"rankmot_motivation_score_3w_{suffix}"), np.nan)
+    motivation_5w = _safe_float_value(row.get(f"rankmot_motivation_score_5w_{suffix}"), np.nan)
+    management_motivation = _safe_float_value(row.get(f"management_motivation_score_{suffix}"), np.nan)
+    stats_missing_ratio = _safe_float_value(row.get(f"stats_stats_missing_ratio_{suffix}"), np.nan)
+    weather_tolerance_raw = _safe_float_value(row.get("weather_influence_score"), np.nan)
+    dribble = _safe_float_value(row.get(f"stats_1試合平均ドリブル数_{suffix}"), np.nan)
+    through_pass = _safe_float_value(row.get(f"stats_1試合平均スルーパス数_{suffix}"), np.nan)
+    passes = _safe_float_value(row.get(f"stats_1試合平均パス数_{suffix}"), np.nan)
+    clean_sheet = _safe_float_value(row.get(f"stats_クリーンシート総数_{suffix}"), np.nan)
+    acl_fatigue = _safe_float_value(row.get(f"{suffix}_acl_fatigue"), np.nan)
+    acl_days_since = _safe_float_value(row.get(f"{suffix}_acl_days_since"), np.nan)
+
+    if absence_effective is None:
+        absence_effective = compute_effective_absence_impacts(row)
+    absence_total = _safe_float_value(absence_effective.get(f"absence_effective_total_{suffix}"), 0.0)
+    absence_defense = _safe_float_value(absence_effective.get(f"absence_effective_defense_{suffix}"), 0.0)
+    absence_attack = _safe_float_value(absence_effective.get(f"absence_effective_attack_{suffix}"), 0.0)
+    fatigue_value = _safe_float_value(fatigue_score if fatigue_score is not None else row.get(f"{suffix}_total_fatigue_score"), np.nan)
+    points_per_game_3w = points_change_3w / 3.0 if math.isfinite(points_change_3w) else np.nan
+    points_per_game_5w = points_change_5w / 5.0 if math.isfinite(points_change_5w) else np.nan
+    rank_per_game_3w = rank_change_3w / 3.0 if math.isfinite(rank_change_3w) else np.nan
+    rank_per_game_5w = rank_change_5w / 5.0 if math.isfinite(rank_change_5w) else np.nan
+    momentum_delta = (
+        points_per_game_3w - points_per_game_5w
+        if math.isfinite(points_per_game_3w) and math.isfinite(points_per_game_5w)
+        else np.nan
+    )
+    rank_momentum_delta = (
+        (-rank_per_game_3w) - (-rank_per_game_5w)
+        if math.isfinite(rank_per_game_3w) and math.isfinite(rank_per_game_5w)
+        else np.nan
+    )
+    motivation_trend_delta = (
+        motivation_3w - motivation_5w
+        if math.isfinite(motivation_3w) and math.isfinite(motivation_5w)
+        else np.nan
+    )
+
+    strength_base = _avg_scores(
+        [
+            _bounded_unit(team_elo, 1300.0, 1700.0),
+            _bounded_unit(points_latest, 8.0, 45.0),
+            1.0 - _bounded_unit(rank_latest, 1.0, 20.0),
+        ]
+    )
+    attack_level = _avg_scores(
+        [
+            _bounded_unit(xg, 0.6, 2.2),
+            _bounded_unit(goals, 0.4, 2.2),
+            _bounded_unit(shots, 6.0, 16.0),
+            _bounded_unit(on_target, 2.0, 6.5),
+            _bounded_unit(possession, 38.0, 62.0),
+        ]
+    )
+    defense_level = _avg_scores(
+        [
+            1.0 - _bounded_unit(xga, 0.6, 2.1),
+            1.0 - _bounded_unit(conceded, 0.4, 2.0),
+            1.0 - _bounded_unit(allowed_shots, 6.0, 16.0),
+        ]
+    )
+    form_level = _avg_scores(
+        [
+            _bounded_unit(points_change_3w, -6.0, 9.0),
+            _bounded_unit(points_change_5w, -9.0, 15.0),
+            _bounded_unit(-rank_change_3w, -5.0, 5.0),
+            _bounded_unit(-rank_change_5w, -7.0, 7.0),
+        ]
+    )
+    availability_level = 1.0 - _bounded_unit(absence_total, 0.0, 0.25)
+    fatigue_level = 1.0 - _bounded_unit(fatigue_value, 0.0, 8.0)
+    motivation_level = _avg_scores(
+        [
+            _bounded_unit(motivation_3w, -0.5, 1.5),
+            _bounded_unit(motivation_5w, -0.5, 1.5),
+            _bounded_unit(management_motivation, 0.0, 1.0),
+        ]
+    )
+    stability_level = _avg_scores(
+        [
+            1.0 - _bounded_unit(abs(points_change_3w), 0.0, 9.0),
+            1.0 - _bounded_unit(abs(points_change_5w), 0.0, 15.0),
+            1.0 - _bounded_unit(abs(rank_change_3w), 0.0, 6.0),
+            1.0 - _bounded_unit(abs(rank_change_5w), 0.0, 8.0),
+            1.0 - _bounded_unit(stats_missing_ratio, 0.0, 0.45),
+        ]
+    )
+    weather_tolerance = 1.0 - _bounded_unit(weather_tolerance_raw, 0.0, 1.0)
+    tempo_level = _avg_scores(
+        [
+            _bounded_unit(shots, 6.0, 16.0),
+            _bounded_unit(sprint, 110.0, 185.0),
+            _bounded_unit(possession, 38.0, 62.0),
+        ]
+    )
+    control_level = _avg_scores(
+        [
+            _bounded_unit(possession, 38.0, 62.0),
+            _bounded_unit(passes, 250.0, 700.0),
+            _bounded_unit(through_pass, 2.0, 12.0),
+        ]
+    )
+    transition_level = _avg_scores(
+        [
+            _bounded_unit(sprint, 110.0, 185.0),
+            _bounded_unit(dribble, 4.0, 18.0),
+            _bounded_unit(through_pass, 2.0, 12.0),
+        ]
+    )
+    momentum_level = _avg_scores(
+        [
+            _bounded_unit(momentum_delta, -1.8, 1.8),
+            _bounded_unit(rank_momentum_delta, -1.2, 1.2),
+            _bounded_unit(motivation_trend_delta, -0.6, 0.6),
+        ]
+    )
+    attack_trend = _avg_scores(
+        [
+            _bounded_unit(points_per_game_3w, -1.0, 2.5),
+            _bounded_unit(momentum_delta, -1.8, 1.8),
+            _bounded_unit(motivation_trend_delta, -0.6, 0.6),
+            attack_level,
+        ]
+    )
+    defense_trend = _avg_scores(
+        [
+            1.0 - _bounded_unit(conceded, 0.4, 2.0),
+            1.0 - _bounded_unit(xga, 0.6, 2.1),
+            _bounded_unit(clean_sheet, 0.0, 12.0),
+            1.0 - _bounded_unit(absence_defense, 0.0, 0.18),
+        ]
+    )
+    fatigue_pressure = _avg_scores(
+        [
+            _bounded_unit(fatigue_value, 0.0, 8.0, default=0.0),
+            _bounded_unit(acl_fatigue, 0.0, 5.0, default=0.0),
+            1.0 - _bounded_unit(acl_days_since, 0.0, 10.0, default=1.0),
+        ],
+        default=0.0,
+    )
+    instability_level = _avg_scores(
+        [
+            1.0 - stability_level,
+            _bounded_unit(abs(momentum_delta), 0.0, 1.5, default=0.0),
+            _bounded_unit(abs(rank_momentum_delta), 0.0, 1.0, default=0.0),
+            fatigue_pressure,
+            _bounded_unit(absence_total + absence_attack + absence_defense, 0.0, 0.45, default=0.0),
+        ],
+        default=0.0,
+    )
+    trend_persistence = _avg_scores(
+        [
+            _bounded_unit(momentum_delta * motivation_trend_delta, -0.45, 0.45, default=0.5),
+            _bounded_unit(momentum_delta * (-rank_momentum_delta), -1.2, 1.2, default=0.5),
+            _bounded_unit(points_per_game_3w - points_per_game_5w, -1.2, 1.2, default=0.5),
+            1.0 - _bounded_unit(abs(momentum_delta - motivation_trend_delta), 0.0, 1.2, default=0.5),
+        ]
+    )
+    regression_pressure = _avg_scores(
+        [
+            _bounded_unit(abs(goals - xg), 0.0, 0.9, default=0.0),
+            _bounded_unit(abs(conceded - xga), 0.0, 0.9, default=0.0),
+            _bounded_unit(abs(on_target - (goals * 2.6 if math.isfinite(goals) else np.nan)), 0.0, 2.8, default=0.0),
+            instability_level,
+            _bounded_unit(stats_missing_ratio, 0.0, 0.45, default=0.0),
+        ],
+        default=0.0,
+    )
+    recovery_level = _avg_scores(
+        [
+            availability_level,
+            1.0 - fatigue_pressure,
+            defense_trend,
+            1.0 - _bounded_unit(absence_defense, 0.0, 0.18, default=0.0),
+            1.0 - _bounded_unit(acl_fatigue, 0.0, 5.0, default=0.0),
+        ]
+    )
+    ceiling_level = _avg_scores(
+        [
+            strength_base,
+            attack_level,
+            attack_trend,
+            motivation_level,
+            control_level,
+        ]
+    )
+    floor_level = _avg_scores(
+        [
+            defense_level,
+            defense_trend,
+            stability_level,
+            recovery_level,
+            1.0 - regression_pressure,
+        ]
+    )
+    confidence_level = _avg_scores(
+        [
+            stability_level,
+            trend_persistence,
+            floor_level,
+            1.0 - regression_pressure,
+            1.0 - _bounded_unit(stats_missing_ratio, 0.0, 0.45, default=0.0),
+        ]
+    )
+
+    return {
+        "strength_base": strength_base,
+        "attack_level": attack_level,
+        "defense_level": defense_level,
+        "form_level": form_level,
+        "availability_level": availability_level,
+        "fatigue_level": fatigue_level,
+        "motivation_level": motivation_level,
+        "stability_level": stability_level,
+        "weather_tolerance": weather_tolerance,
+        "tempo_level": tempo_level,
+        "control_level": control_level,
+        "transition_level": transition_level,
+        "momentum_level": momentum_level,
+        "attack_trend": attack_trend,
+        "defense_trend": defense_trend,
+        "fatigue_pressure": fatigue_pressure,
+        "instability_level": instability_level,
+        "trend_persistence": trend_persistence,
+        "regression_pressure": regression_pressure,
+        "recovery_level": recovery_level,
+        "ceiling_level": ceiling_level,
+        "floor_level": floor_level,
+        "confidence_level": confidence_level,
+    }
+
+
+def simulate_lab_matchup(home_state, away_state, row):
+    strength_delta = float(home_state["strength_base"] - away_state["strength_base"])
+    attack_home_edge = float(home_state["attack_level"] - away_state["defense_level"])
+    attack_away_edge = float(away_state["attack_level"] - home_state["defense_level"])
+    form_delta = float(home_state["form_level"] - away_state["form_level"])
+    availability_delta = float(home_state["availability_level"] - away_state["availability_level"])
+    fatigue_delta = float(home_state["fatigue_level"] - away_state["fatigue_level"])
+    motivation_delta = float(home_state["motivation_level"] - away_state["motivation_level"])
+    momentum_delta = float(home_state["momentum_level"] - away_state["momentum_level"])
+    control_interaction = float(home_state["control_level"] - away_state["control_level"])
+    transition_interaction = float(home_state["transition_level"] - away_state["transition_level"])
+    attack_trend_interaction = float(home_state["attack_trend"] - away_state["defense_trend"])
+    away_attack_trend_interaction = float(away_state["attack_trend"] - home_state["defense_trend"])
+    instability_delta = float(home_state["instability_level"] - away_state["instability_level"])
+    fatigue_pressure_delta = float(home_state["fatigue_pressure"] - away_state["fatigue_pressure"])
+    confidence_delta = float(home_state["confidence_level"] - away_state["confidence_level"])
+    floor_delta = float(home_state["floor_level"] - away_state["floor_level"])
+    ceiling_delta = float(home_state["ceiling_level"] - away_state["ceiling_level"])
+    recovery_delta = float(home_state["recovery_level"] - away_state["recovery_level"])
+    regression_delta = float(home_state["regression_pressure"] - away_state["regression_pressure"])
+    persistence_delta = float(home_state["trend_persistence"] - away_state["trend_persistence"])
+    control_delta = float(
+        0.45 * strength_delta
+        + 0.20 * form_delta
+        + 0.15 * motivation_delta
+        + 0.10 * availability_delta
+        + 0.10 * fatigue_delta
+    )
+    pressure_delta = float(
+        0.45 * (attack_home_edge - attack_away_edge)
+        + 0.20 * (attack_trend_interaction - away_attack_trend_interaction)
+        + 0.20 * transition_interaction
+        + 0.15 * momentum_delta
+    )
+
+    flab_attack = _safe_float_value(row.get("flab_chance_shot_conversion_diff"), 0.0)
+    flab_allow = _safe_float_value(row.get("flab_chance_allowed_shot_conversion_diff"), 0.0)
+    flab_xgf = _safe_float_value(row.get("flab_expected_for_xg_diff"), 0.0)
+    flab_xga = _safe_float_value(row.get("flab_expected_against_xg_diff"), 0.0)
+    flab_build = _safe_float_value(row.get("flab_chance_build_rate_diff"), 0.0)
+    flab_allow_build = _safe_float_value(row.get("flab_chance_allowed_build_rate_diff"), 0.0)
+    flab_poss = _safe_float_value(row.get("flab_possession_rate_diff"), 0.0)
+    flab_cbp = _safe_float_value(row.get("flab_possession_attack_cbp_diff"), 0.0)
+    flab_style_short = _safe_float_value(row.get("flab_style_short_counter_index_diff"), 0.0)
+    flab_style_long = _safe_float_value(row.get("flab_style_long_counter_index_diff"), 0.0)
+    flab_style_enemy_poss = _safe_float_value(row.get("flab_style_enemy_possession_index_diff"), 0.0)
+    flab_style_own_poss = _safe_float_value(row.get("flab_style_own_possession_index_diff"), 0.0)
+    flab_style_left = _safe_float_value(row.get("flab_style_left_attack_index_diff"), 0.0)
+    flab_style_center = _safe_float_value(row.get("flab_style_center_attack_index_diff"), 0.0)
+    flab_style_right = _safe_float_value(row.get("flab_style_right_attack_index_diff"), 0.0)
+    flab_style_short_sr = _safe_float_value(row.get("flab_style_short_counter_shot_rate_diff"), 0.0)
+    flab_style_long_sr = _safe_float_value(row.get("flab_style_long_counter_shot_rate_diff"), 0.0)
+    flab_style_enemy_sr = _safe_float_value(row.get("flab_style_enemy_possession_shot_rate_diff"), 0.0)
+    flab_style_own_sr = _safe_float_value(row.get("flab_style_own_possession_shot_rate_diff"), 0.0)
+    flab_style_left_sr = _safe_float_value(row.get("flab_style_left_attack_shot_rate_diff"), 0.0)
+    flab_style_center_sr = _safe_float_value(row.get("flab_style_center_attack_shot_rate_diff"), 0.0)
+    flab_style_right_sr = _safe_float_value(row.get("flab_style_right_attack_shot_rate_diff"), 0.0)
+    flab_cbp_attack_pg = _safe_float_value(row.get("flab_cbp_attack_per_game_diff"), 0.0)
+    flab_cbp_pass_pg = _safe_float_value(row.get("flab_cbp_pass_per_game_diff"), 0.0)
+    flab_cbp_cross_pg = _safe_float_value(row.get("flab_cbp_cross_per_game_diff"), 0.0)
+    flab_cbp_dribble_pg = _safe_float_value(row.get("flab_cbp_dribble_per_game_diff"), 0.0)
+    flab_cbp_shot_pg = _safe_float_value(row.get("flab_cbp_shot_per_game_diff"), 0.0)
+    flab_cbp_goal_pg = _safe_float_value(row.get("flab_cbp_goal_per_game_diff"), 0.0)
+    flab_cbp_gain_pg = _safe_float_value(row.get("flab_cbp_gain_per_game_diff"), 0.0)
+    flab_cbp_defense_pg = _safe_float_value(row.get("flab_cbp_defense_per_game_diff"), 0.0)
+    flab_cbp_save_pg = _safe_float_value(row.get("flab_cbp_save_per_game_diff"), 0.0)
+    flab_agi = _safe_float_value(row.get("flab_agi_score_diff"), 0.0)
+    flab_kagi = _safe_float_value(row.get("flab_kagi_score_diff"), 0.0)
+
+    style_direct_delta = float(
+        0.40 * flab_style_short
+        + 0.30 * flab_style_long
+        + 0.30 * flab_style_enemy_poss
+    )
+    style_control_lab_delta = float(
+        0.45 * flab_style_own_poss
+        + 0.35 * flab_style_center
+        + 0.20 * flab_cbp_pass_pg
+    )
+    style_width_delta = float(0.5 * flab_style_left + 0.5 * flab_style_right)
+    style_finish_delta = float(
+        (
+            flab_style_short_sr
+            + flab_style_long_sr
+            + flab_style_enemy_sr
+            + flab_style_own_sr
+            + flab_style_left_sr
+            + flab_style_center_sr
+            + flab_style_right_sr
+        )
+        / 7.0
+    )
+    cbp_front_delta = float(
+        0.35 * flab_cbp_attack_pg
+        + 0.25 * flab_cbp_shot_pg
+        + 0.25 * flab_cbp_goal_pg
+        + 0.15 * flab_cbp_dribble_pg
+    )
+    cbp_supply_delta = float(
+        0.45 * flab_cbp_pass_pg
+        + 0.30 * flab_cbp_cross_pg
+        + 0.25 * flab_cbp_gain_pg
+    )
+    cbp_resist_delta = float(
+        0.70 * flab_cbp_defense_pg
+        + 0.30 * flab_cbp_save_pg
+    )
+    agi_kagi_edge = float(0.55 * flab_agi + 0.45 * flab_kagi)
+
+    matchup_edge_score = _clip01(
+        _avg_scores(
+            [
+                _bounded_unit(abs(attack_home_edge - attack_away_edge), 0.0, 0.75, default=0.0),
+                _bounded_unit(abs(control_interaction), 0.0, 0.40, default=0.0),
+                _bounded_unit(abs(transition_interaction), 0.0, 0.45, default=0.0),
+                _bounded_unit(abs(attack_trend_interaction) + abs(away_attack_trend_interaction), 0.0, 0.9, default=0.0),
+                _bounded_unit(abs(flab_xgf) + abs(flab_xga), 0.0, 0.8, default=0.0),
+                _bounded_unit(abs(style_direct_delta) + abs(style_control_lab_delta), 0.0, 35.0, default=0.0),
+                _bounded_unit(abs(cbp_front_delta) + abs(cbp_supply_delta) + abs(cbp_resist_delta), 0.0, 8.0, default=0.0),
+                _bounded_unit(abs(agi_kagi_edge), 0.0, 12.0, default=0.0),
+            ],
+            default=0.0,
+        )
+    )
+    style_conflict_score = _clip01(
+        _avg_scores(
+            [
+                (1.0 if flab_attack * flab_allow < 0.0 else 0.0),
+                (1.0 if flab_xgf * flab_xga < 0.0 else 0.0),
+                _bounded_unit(abs(flab_cbp), 0.0, 8.0, default=0.0),
+                _bounded_unit(abs(transition_interaction - control_interaction), 0.0, 0.55, default=0.0),
+                (1.0 if style_direct_delta * style_control_lab_delta < 0.0 else 0.0),
+                _bounded_unit(abs(style_width_delta - style_control_lab_delta), 0.0, 20.0, default=0.0),
+                _bounded_unit(abs(cbp_front_delta - cbp_resist_delta), 0.0, 4.0, default=0.0),
+            ],
+            default=0.0,
+        )
+    )
+    low_event_score = _clip01(
+        _avg_scores(
+            [
+                1.0 - _bounded_unit(abs(flab_build), 0.0, 8.0, default=0.5),
+                1.0 - _bounded_unit(abs(flab_allow_build), 0.0, 8.0, default=0.5),
+                1.0 - _bounded_unit(abs(flab_poss), 0.0, 10.0, default=0.5),
+                1.0 - _bounded_unit(abs(attack_home_edge) + abs(attack_away_edge), 0.0, 0.9, default=0.5),
+                1.0 - _bounded_unit(abs(transition_interaction), 0.0, 0.5, default=0.5),
+                1.0 - _bounded_unit(abs(cbp_front_delta), 0.0, 4.0, default=0.5),
+                1.0 - _bounded_unit(abs(style_finish_delta), 0.0, 10.0, default=0.5),
+                1.0 - _bounded_unit(abs(agi_kagi_edge), 0.0, 10.0, default=0.5),
+            ]
+        )
+    )
+    balance_score = _clip01(
+        _avg_scores(
+            [
+                1.0 - min(abs(strength_delta) / 0.45, 1.0),
+                1.0 - min(abs(control_delta) / 0.40, 1.0),
+                1.0 - min(abs(pressure_delta) / 0.50, 1.0),
+                1.0 - min(abs(momentum_delta) / 0.40, 1.0),
+            ]
+        )
+    )
+    volatility_score = _clip01(
+        _avg_scores(
+            [
+                style_conflict_score,
+                _bounded_unit(abs(form_delta), 0.0, 0.45, default=0.0),
+                _bounded_unit(abs(momentum_delta), 0.0, 0.45, default=0.0),
+                _bounded_unit(abs(fatigue_pressure_delta), 0.0, 0.45, default=0.0),
+                _bounded_unit(abs(instability_delta), 0.0, 0.45, default=0.0),
+                home_state["instability_level"],
+                away_state["instability_level"],
+            ]
+        )
+    )
+    draw_tension_score = _clip01(
+        _avg_scores(
+            [
+                balance_score,
+                low_event_score,
+                1.0 - min(abs(attack_home_edge - attack_away_edge) / 0.45, 1.0),
+                1.0 - min(abs(control_delta) / 0.35, 1.0),
+                1.0 - min(abs(momentum_delta) / 0.35, 1.0),
+            ]
+        )
+    )
+    dynamic_swing_score = _clip01(
+        _avg_scores(
+            [
+                _bounded_unit(abs(momentum_delta), 0.0, 0.40, default=0.0),
+                _bounded_unit(abs(fatigue_pressure_delta), 0.0, 0.40, default=0.0),
+                _bounded_unit(abs(attack_trend_interaction - away_attack_trend_interaction), 0.0, 0.70, default=0.0),
+                volatility_score,
+            ],
+            default=0.0,
+        )
+    )
+    hold_foundation_score = _clip01(
+        _avg_scores(
+            [
+                _bounded_unit(max(abs(strength_delta), abs(control_delta)), 0.0, 0.55, default=0.0),
+                matchup_edge_score,
+                max(home_state["stability_level"], away_state["stability_level"]),
+                max(home_state["defense_trend"], away_state["defense_trend"]),
+                1.0 - low_event_score,
+                1.0 - style_conflict_score,
+                _bounded_unit(abs(style_direct_delta) + abs(cbp_front_delta), 0.0, 20.0, default=0.0),
+                _bounded_unit(abs(agi_kagi_edge), 0.0, 12.0, default=0.0),
+            ],
+            default=0.0,
+        )
+    )
+    stall_compactness_score = _clip01(
+        _avg_scores(
+            [
+                low_event_score,
+                draw_tension_score,
+                balance_score,
+                min(home_state["defense_level"], away_state["defense_level"]),
+                min(home_state["defense_trend"], away_state["defense_trend"]),
+                1.0 - _bounded_unit(abs(style_finish_delta), 0.0, 10.0, default=0.5),
+                1.0 - _bounded_unit(abs(cbp_front_delta), 0.0, 4.0, default=0.5),
+            ],
+            default=0.0,
+        )
+    )
+    flip_dislocation_score = _clip01(
+        _avg_scores(
+            [
+                style_conflict_score,
+                volatility_score,
+                balance_score,
+                _bounded_unit(abs(flab_attack) + abs(flab_allow), 0.0, 10.0, default=0.0),
+                dynamic_swing_score,
+                _bounded_unit(abs(style_direct_delta - style_control_lab_delta), 0.0, 20.0, default=0.0),
+                _bounded_unit(abs(flab_agi - flab_kagi), 0.0, 12.0, default=0.0),
+            ],
+            default=0.0,
+        )
+    )
+    home_path_score = _clip01(
+        _avg_scores(
+            [
+                _bounded_unit(control_delta, -0.35, 0.35, default=0.5),
+                _bounded_unit(pressure_delta, -0.45, 0.45, default=0.5),
+                _bounded_unit(attack_home_edge - attack_away_edge, -0.60, 0.60, default=0.5),
+                _bounded_unit(ceiling_delta, -0.35, 0.35, default=0.5),
+                _bounded_unit(confidence_delta, -0.30, 0.30, default=0.5),
+                _bounded_unit(style_direct_delta + 0.60 * style_control_lab_delta, -25.0, 25.0, default=0.5),
+                _bounded_unit(cbp_front_delta + 0.55 * cbp_supply_delta + 0.35 * agi_kagi_edge, -6.0, 6.0, default=0.5),
+            ],
+            default=0.5,
+        )
+    )
+    away_path_score = _clip01(
+        _avg_scores(
+            [
+                1.0 - _bounded_unit(control_delta, -0.35, 0.35, default=0.5),
+                1.0 - _bounded_unit(pressure_delta, -0.45, 0.45, default=0.5),
+                1.0 - _bounded_unit(attack_home_edge - attack_away_edge, -0.60, 0.60, default=0.5),
+                1.0 - _bounded_unit(ceiling_delta, -0.35, 0.35, default=0.5),
+                1.0 - _bounded_unit(confidence_delta, -0.30, 0.30, default=0.5),
+                1.0 - _bounded_unit(style_direct_delta + 0.60 * style_control_lab_delta, -25.0, 25.0, default=0.5),
+                1.0 - _bounded_unit(cbp_front_delta + 0.55 * cbp_supply_delta + 0.35 * agi_kagi_edge, -6.0, 6.0, default=0.5),
+            ],
+            default=0.5,
+        )
+    )
+    hold_raw = max(
+        0.0,
+        (
+            0.45 * max(abs(strength_delta), abs(control_delta))
+            + 0.20 * matchup_edge_score
+            + 0.15 * max(home_state["stability_level"], away_state["stability_level"])
+            + 0.10 * (1.0 - low_event_score)
+            + 0.10 * (1.0 - style_conflict_score)
+            + 0.10 * max(home_state["defense_trend"], away_state["defense_trend"])
+            - 0.10 * dynamic_swing_score
+        ),
+    )
+    stall_raw = max(
+        0.0,
+        (
+            0.40 * low_event_score
+            + 0.35 * draw_tension_score
+            + 0.15 * balance_score
+            + 0.10 * min(home_state["defense_level"], away_state["defense_level"])
+            + 0.10 * min(home_state["defense_trend"], away_state["defense_trend"])
+        ),
+    )
+    flip_raw = max(
+        0.0,
+        (
+            0.40 * style_conflict_score
+            + 0.30 * volatility_score
+            + 0.20 * balance_score
+            + 0.10 * _bounded_unit(abs(flab_attack) + abs(flab_allow), 0.0, 10.0, default=0.0)
+            + 0.15 * dynamic_swing_score
+        ),
+    )
+    scenario_entropy_score = _clip01(1.0 - max(hold_raw, stall_raw, flip_raw) / max(hold_raw + stall_raw + flip_raw, 1e-9))
+    raw_sum = hold_raw + stall_raw + flip_raw
+    if raw_sum <= 1e-9:
+        hold_weight = stall_weight = flip_weight = 1.0 / 3.0
+    else:
+        hold_weight = hold_raw / raw_sum
+        stall_weight = stall_raw / raw_sum
+        flip_weight = flip_raw / raw_sum
+    draw_path_score = _clip01(
+        _avg_scores(
+            [
+                stall_compactness_score,
+                draw_tension_score,
+                scenario_entropy_score,
+                1.0 - abs(home_path_score - away_path_score),
+            ],
+            default=0.5,
+        )
+    )
+    # Keep the distribution builder compact: use three bases only.
+    # 1) side path: which side has the cleaner route
+    # 2) draw support: how naturally the match compresses toward D
+    # 3) dispersion: how much the scenario is dislocated / split
+    side_path_home = _clip01(
+        _avg_scores(
+            [
+                home_path_score,
+                0.55 * hold_foundation_score + 0.45 * max(home_path_score - away_path_score, 0.0),
+                1.0 - 0.60 * draw_path_score,
+            ],
+            default=0.5,
+        )
+    )
+    side_path_away = _clip01(
+        _avg_scores(
+            [
+                away_path_score,
+                0.55 * hold_foundation_score + 0.45 * max(away_path_score - home_path_score, 0.0),
+                1.0 - 0.60 * draw_path_score,
+            ],
+            default=0.5,
+        )
+    )
+    draw_support_score = _clip01(
+        _avg_scores(
+            [
+                draw_path_score,
+                stall_compactness_score,
+                scenario_entropy_score,
+            ],
+            default=0.5,
+        )
+    )
+    side_gap_score = _clip01(abs(side_path_home - side_path_away))
+    home_side_edge = _clip01(0.5 + 0.5 * (side_path_home - side_path_away))
+    away_side_edge = _clip01(0.5 + 0.5 * (side_path_away - side_path_home))
+    dispersion_score = _clip01(
+        _avg_scores(
+            [
+                flip_dislocation_score,
+                scenario_entropy_score,
+            ],
+            default=0.5,
+        )
+    )
+
+    league_upper = str(row.get("league", "")).upper()
+    if league_upper == "J2":
+        dispersion_score = _clip01(
+            _avg_scores(
+                [
+                    dispersion_score,
+                    dynamic_swing_score,
+                    _bounded_unit(abs(control_delta - pressure_delta), 0.0, 0.65, default=0.0),
+                ],
+                default=dispersion_score,
+            )
+        )
+    if league_upper == "J2":
+        mix_home_raw = max(
+            1e-9,
+            0.62 * hold_weight * side_path_home
+            + 0.24 * flip_weight * side_path_home
+            + 0.08 * side_gap_score * home_side_edge
+            + 0.14 * (1.0 - draw_support_score)
+        )
+        mix_draw_raw = max(
+            1e-9,
+            0.68 * stall_weight * draw_support_score
+            + 0.12 * scenario_entropy_score
+            + 0.06 * (1.0 - side_gap_score)
+            + 0.08 * dispersion_score
+        )
+        mix_away_raw = max(
+            1e-9,
+            0.62 * hold_weight * side_path_away
+            + 0.24 * flip_weight * side_path_away
+            + 0.08 * side_gap_score * away_side_edge
+            + 0.14 * (1.0 - draw_support_score)
+        )
+    else:
+        mix_home_raw = max(
+            1e-9,
+            0.58 * hold_weight * side_path_home
+            + 0.18 * flip_weight * side_path_home
+            + 0.10 * side_gap_score * home_side_edge
+            + 0.10 * (1.0 - dispersion_score)
+        )
+        mix_draw_raw = max(
+            1e-9,
+            0.74 * stall_weight * draw_support_score
+            + 0.12 * scenario_entropy_score
+            + 0.06 * (1.0 - side_gap_score)
+            + 0.08 * dispersion_score
+        )
+        mix_away_raw = max(
+            1e-9,
+            0.58 * hold_weight * side_path_away
+            + 0.18 * flip_weight * side_path_away
+            + 0.10 * side_gap_score * away_side_edge
+            + 0.10 * (1.0 - dispersion_score)
+        )
+    mix_sum = mix_home_raw + mix_draw_raw + mix_away_raw
+    mix_home = float(mix_home_raw / mix_sum)
+    mix_draw = float(mix_draw_raw / mix_sum)
+    mix_away = float(mix_away_raw / mix_sum)
+
+    side_path_score = float(max(side_path_home, side_path_away))
+    if (
+        draw_support_score >= 0.60
+        and dispersion_score <= 0.34
+        and max(mix_home, mix_away) <= 0.28
+    ):
+        basis_hint = "flat_draw_trap"
+    elif side_path_score >= 0.68 and draw_support_score <= 0.48 and dispersion_score <= 0.42:
+        basis_hint = "side_strong"
+    elif draw_support_score >= 0.56 and dispersion_score <= 0.40 and side_path_score <= 0.58:
+        basis_hint = "draw_compressed"
+    elif dispersion_score >= 0.42 and abs(side_path_home - side_path_away) <= 0.10:
+        basis_hint = "split_side"
+    else:
+        basis_hint = "basis_balanced"
+
+    avg_tempo = (float(home_state["tempo_level"]) + float(away_state["tempo_level"])) / 2.0
+    if avg_tempo <= 0.42:
+        tempo_band = "low"
+    elif avg_tempo >= 0.62:
+        tempo_band = "high"
+    else:
+        tempo_band = "mid"
+    if control_delta >= 0.10:
+        control_band = "home"
+    elif control_delta <= -0.10:
+        control_band = "away"
+    else:
+        control_band = "neutral"
+    if pressure_delta >= 0.10:
+        pressure_band = "home"
+    elif pressure_delta <= -0.10:
+        pressure_band = "away"
+    else:
+        pressure_band = "neutral"
+
+    matchup_profile = "balanced"
+    if (
+        tempo_band == "low"
+        and draw_tension_score >= 0.74
+        and low_event_score >= 0.66
+        and abs(control_delta) <= 0.08
+        and abs(pressure_delta) <= 0.12
+        and volatility_score <= 0.34
+        and flip_weight <= 0.30
+    ):
+        matchup_profile = "low_tempo_draw"
+    elif (
+        flip_weight >= 0.38
+        and volatility_score >= 0.40
+        and dynamic_swing_score >= 0.34
+        and (
+            (control_band == "home" and pressure_band == "away")
+            or (control_band == "away" and pressure_band == "home")
+        )
+    ):
+        matchup_profile = "counterflow"
+    elif hold_weight >= max(stall_weight, flip_weight) and hold_weight >= 0.42:
+        matchup_profile = "hold_shape"
+    elif (
+        stall_weight >= max(hold_weight, flip_weight)
+        and str(row.get("league", "")).upper() == "J2"
+        and mix_draw >= 0.53
+        and flip_weight <= 0.22
+        and dispersion_score <= 0.38
+        and draw_tension_score >= 0.82
+        and max(mix_home, mix_away) <= 0.26
+    ):
+        matchup_profile = "j2_flat_draw_trap"
+    elif (
+        stall_weight >= max(hold_weight, flip_weight)
+        and str(row.get("league", "")).upper() == "J2"
+        and _safe_float_value(row.get("prob_draw"), 0.0)
+        >= max(
+            _safe_float_value(row.get("prob_home_win"), 0.0),
+            _safe_float_value(row.get("prob_away_win"), 0.0),
+        )
+        and draw_tension_score >= 0.78
+        and flip_weight <= 0.24
+        and dynamic_swing_score <= 0.32
+        and pressure_band == "neutral"
+        and control_band != "away"
+    ):
+        matchup_profile = "j2_draw_stall_anchor"
+    elif (
+        stall_weight >= max(hold_weight, flip_weight)
+        and str(row.get("league", "")).upper() == "J2"
+        and _safe_float_value(row.get("prob_home_win"), 0.0)
+        > max(
+            _safe_float_value(row.get("prob_draw"), 0.0),
+            _safe_float_value(row.get("prob_away_win"), 0.0),
+        )
+        and _safe_float_value(row.get("prob_home_win"), 0.0) >= 0.39
+        and (
+            _safe_float_value(row.get("prob_home_win"), 0.0)
+            - _safe_float_value(row.get("prob_draw"), 0.0)
+        ) >= 0.04
+        and draw_tension_score >= 0.78
+        and flip_weight <= 0.22
+        and pressure_band == "neutral"
+    ):
+        matchup_profile = "j2_home_stall_preserve"
+    elif (
+        stall_weight >= max(hold_weight, flip_weight)
+        and str(row.get("league", "")).upper() == "J2"
+        and tempo_band == "mid"
+        and control_band == "home"
+        and pressure_band == "away"
+        and _safe_float_value(row.get("prob_home_win"), 0.0) >= 0.35
+        and (
+            _safe_float_value(row.get("prob_home_win"), 0.0)
+            - _safe_float_value(row.get("prob_draw"), 0.0)
+        ) >= -0.01
+        and flip_weight <= 0.22
+        and draw_tension_score >= 0.60
+    ):
+        matchup_profile = "j2_home_pressure_stall_preserve"
+    elif (
+        stall_weight >= max(hold_weight, flip_weight)
+        and str(row.get("league", "")).upper() == "J2"
+        and tempo_band == "mid"
+        and control_band == "home"
+        and pressure_band == "neutral"
+        and dynamic_swing_score <= 0.35
+        and draw_tension_score >= 0.68
+        and flip_weight <= 0.30
+    ):
+        matchup_profile = "j2_low_dyn_home_stall_preserve"
+    elif (
+        stall_weight >= max(hold_weight, flip_weight)
+        and str(row.get("league", "")).upper() == "J2"
+        and tempo_band == "mid"
+        and control_band == "neutral"
+        and pressure_band == "neutral"
+        and flip_weight >= 0.36
+        and dynamic_swing_score <= 0.22
+        and draw_tension_score >= 0.84
+    ):
+        matchup_profile = "j2_neutral_flip_draw_watch"
+    elif (
+        stall_weight >= max(hold_weight, flip_weight)
+        and _safe_float_value(row.get("prob_draw"), 0.0)
+        >= max(
+            _safe_float_value(row.get("prob_home_win"), 0.0),
+            _safe_float_value(row.get("prob_away_win"), 0.0),
+        )
+        and draw_tension_score >= 0.64
+        and (
+            (
+                tempo_band == "low"
+                and low_event_score >= 0.78
+                and abs(control_delta) <= 0.10
+                and abs(pressure_delta) <= 0.10
+            )
+            or (
+                low_event_score >= 0.68
+                and
+                style_conflict_score >= 0.50
+                and flip_weight >= 0.34
+            )
+        )
+    ):
+        matchup_profile = "draw_anchor"
+    elif (
+        stall_weight >= max(hold_weight, flip_weight)
+        and tempo_band == "mid"
+        and max(
+            _safe_float_value(row.get("prob_home_win"), 0.0),
+            _safe_float_value(row.get("prob_away_win"), 0.0),
+        )
+        > _safe_float_value(row.get("prob_draw"), 0.0)
+        and (
+            max(
+                _safe_float_value(row.get("prob_home_win"), 0.0),
+                _safe_float_value(row.get("prob_away_win"), 0.0),
+            )
+            - _safe_float_value(row.get("prob_draw"), 0.0)
+        ) <= 0.05
+        and low_event_score >= 0.68
+        and draw_tension_score >= 0.63
+        and flip_weight <= 0.24
+        and volatility_score <= 0.30
+    ):
+        matchup_profile = "mid_stall_side_preserve"
+    elif (
+        stall_weight >= max(hold_weight, flip_weight)
+        and max(
+            _safe_float_value(row.get("prob_home_win"), 0.0),
+            _safe_float_value(row.get("prob_away_win"), 0.0),
+        )
+        > _safe_float_value(row.get("prob_draw"), 0.0)
+        and (
+            (
+                tempo_band == "low"
+                and max(
+                    _safe_float_value(row.get("prob_home_win"), 0.0),
+                    _safe_float_value(row.get("prob_away_win"), 0.0),
+                ) >= 0.39
+                and (
+                    max(
+                        _safe_float_value(row.get("prob_home_win"), 0.0),
+                        _safe_float_value(row.get("prob_away_win"), 0.0),
+                    )
+                    - _safe_float_value(row.get("prob_draw"), 0.0)
+                ) >= 0.02
+            )
+            or (
+                control_band == "neutral"
+                and pressure_band == "neutral"
+                and style_conflict_score <= 0.05
+                and volatility_score <= 0.18
+                and max(
+                    _safe_float_value(row.get("prob_home_win"), 0.0),
+                    _safe_float_value(row.get("prob_away_win"), 0.0),
+                ) >= 0.38
+                and (
+                    max(
+                        _safe_float_value(row.get("prob_home_win"), 0.0),
+                        _safe_float_value(row.get("prob_away_win"), 0.0),
+                    )
+                    - _safe_float_value(row.get("prob_draw"), 0.0)
+                ) >= 0.02
+            )
+            or (
+                max(
+                    _safe_float_value(row.get("prob_home_win"), 0.0),
+                    _safe_float_value(row.get("prob_away_win"), 0.0),
+                ) >= 0.50
+            )
+        )
+    ):
+        matchup_profile = "stall_side_preserve"
+    elif (
+        stall_weight >= max(hold_weight, flip_weight)
+        and max(
+            _safe_float_value(row.get("prob_home_win"), 0.0),
+            _safe_float_value(row.get("prob_away_win"), 0.0),
+        ) >= 0.66
+        and volatility_score <= 0.16
+        and style_conflict_score <= 0.10
+    ):
+        matchup_profile = "directional_stall"
+    elif (
+        stall_weight >= max(hold_weight, flip_weight)
+        and max(
+            _safe_float_value(row.get("prob_home_win"), 0.0),
+            _safe_float_value(row.get("prob_away_win"), 0.0),
+        ) >= 0.40
+        and max(
+            _safe_float_value(row.get("prob_home_win"), 0.0),
+            _safe_float_value(row.get("prob_away_win"), 0.0),
+        ) > _safe_float_value(row.get("prob_draw"), 0.0)
+        and (
+            max(
+                _safe_float_value(row.get("prob_home_win"), 0.0),
+                _safe_float_value(row.get("prob_away_win"), 0.0),
+            )
+            - _safe_float_value(row.get("prob_draw"), 0.0)
+        ) >= 0.06
+        and low_event_score >= 0.74
+        and volatility_score <= 0.22
+        and draw_tension_score <= 0.66
+    ):
+        matchup_profile = "stall_side_preserve"
+    elif (
+        str(row.get("league", "")).upper() == "J1"
+        and stall_weight >= max(hold_weight, flip_weight)
+        and draw_tension_score >= 0.54
+        and draw_tension_score <= 0.62
+        and floor_delta >= 0.12
+        and recovery_delta >= 0.16
+        and persistence_delta <= -0.10
+        and dynamic_swing_score >= 0.40
+    ):
+        matchup_profile = "j1_floor_recovery_watch"
+    elif (
+        control_band == "home"
+        and pressure_band == "home"
+        and max(
+            _safe_float_value(row.get("prob_home_win"), 0.0),
+            _safe_float_value(row.get("prob_away_win"), 0.0),
+        ) >= 0.33
+        and max(
+            _safe_float_value(row.get("prob_home_win"), 0.0),
+            _safe_float_value(row.get("prob_away_win"), 0.0),
+        )
+        > _safe_float_value(row.get("prob_draw"), 0.0)
+        and flip_weight >= 0.20
+        and dynamic_swing_score >= 0.40
+        and draw_tension_score <= 0.50
+    ):
+        matchup_profile = "home_control_watch"
+    elif (
+        flip_weight >= 0.32
+        and dynamic_swing_score >= 0.30
+        and volatility_score <= 0.30
+        and (
+            control_band == "neutral"
+            or pressure_band == "neutral"
+        )
+    ):
+        matchup_profile = "swing_watch"
+    elif (
+        str(row.get("league", "")).upper() == "J1"
+        and stall_weight >= max(hold_weight, flip_weight)
+        and _safe_float_value(row.get("prob_draw"), 0.0)
+        >= max(
+            _safe_float_value(row.get("prob_home_win"), 0.0),
+            _safe_float_value(row.get("prob_away_win"), 0.0),
+        )
+        and dynamic_swing_score >= 0.46
+        and pressure_band == "home"
+        and tempo_band == "mid"
+    ):
+        matchup_profile = "j1_pressure_draw_watch"
+    elif (
+        str(row.get("league", "")).upper() == "J2"
+        and flip_weight >= max(hold_weight, stall_weight)
+        and flip_weight >= 0.36
+        and control_band == "home"
+        and pressure_band == "away"
+        and _safe_float_value(row.get("prob_home_win"), 0.0)
+        > _safe_float_value(row.get("prob_draw"), 0.0)
+        and dynamic_swing_score >= 0.26
+    ):
+        matchup_profile = "j2_flip_conflict_watch"
+    elif (
+        str(row.get("league", "")).upper() == "J2"
+        and stall_weight >= max(hold_weight, flip_weight)
+        and draw_tension_score >= 0.82
+        and flip_weight <= 0.22
+        and volatility_score <= 0.18
+        and dynamic_swing_score >= 0.26
+        and pressure_band == "neutral"
+    ):
+        matchup_profile = "j2_tense_stall_watch"
+    elif stall_weight >= max(hold_weight, flip_weight) and draw_tension_score >= 0.62:
+        matchup_profile = "stall_shape"
+
+    notes = []
+    notes.append(f"profile={matchup_profile}")
+    if stall_weight >= max(hold_weight, flip_weight):
+        notes.append("stall")
+    if flip_weight >= 0.34:
+        notes.append("flip")
+    if hold_weight >= 0.42:
+        notes.append("hold")
+    if draw_tension_score >= 0.62:
+        notes.append("draw_tension_high")
+    if volatility_score >= 0.62:
+        notes.append("volatility_high")
+    if abs(style_direct_delta) >= 10.0:
+        notes.append("style_direct_edge")
+    if abs(cbp_front_delta) >= 1.0:
+        notes.append("cbp_front_edge")
+    if abs(agi_kagi_edge) >= 3.0:
+        notes.append("agi_kagi_edge")
+    if control_band != "neutral":
+        notes.append(f"{control_band}_control")
+    if dynamic_swing_score >= 0.60:
+        notes.append("dynamic_swing")
+    if basis_hint != "basis_balanced":
+        notes.append(f"basis={basis_hint}")
+
+    return {
+        "lab_version": "state_lab_v1",
+        "hold_weight": float(hold_weight),
+        "stall_weight": float(stall_weight),
+        "flip_weight": float(flip_weight),
+        "volatility_score": float(volatility_score),
+        "draw_tension_score": float(draw_tension_score),
+        "tempo_band": tempo_band,
+        "control_band": control_band,
+        "pressure_band": pressure_band,
+        "matchup_profile": matchup_profile,
+        "matchup_edge_score": float(matchup_edge_score),
+        "style_conflict_score": float(style_conflict_score),
+        "low_event_score": float(low_event_score),
+        "dynamic_swing_score": float(dynamic_swing_score),
+        "hold_foundation_score": float(hold_foundation_score),
+        "stall_compactness_score": float(stall_compactness_score),
+        "flip_dislocation_score": float(flip_dislocation_score),
+        "side_path_home_score": float(side_path_home),
+        "side_path_away_score": float(side_path_away),
+        "draw_support_score": float(draw_support_score),
+        "dispersion_score": float(dispersion_score),
+        "basis_hint": basis_hint,
+        "style_direct_delta": float(style_direct_delta),
+        "style_control_delta": float(style_control_lab_delta),
+        "style_width_delta": float(style_width_delta),
+        "cbp_front_delta": float(cbp_front_delta),
+        "cbp_supply_delta": float(cbp_supply_delta),
+        "cbp_resist_delta": float(cbp_resist_delta),
+        "agi_kagi_edge": float(agi_kagi_edge),
+        "home_path_score": float(home_path_score),
+        "away_path_score": float(away_path_score),
+        "scenario_entropy_score": float(scenario_entropy_score),
+        "draw_path_score": float(draw_path_score),
+        "mix_home": float(mix_home),
+        "mix_draw": float(mix_draw),
+        "mix_away": float(mix_away),
+        "confidence_delta": float(confidence_delta),
+        "floor_delta": float(floor_delta),
+        "ceiling_delta": float(ceiling_delta),
+        "recovery_delta": float(recovery_delta),
+        "regression_delta": float(regression_delta),
+        "persistence_delta": float(persistence_delta),
+        "notes": ",".join(notes) if notes else "balanced",
+    }
+
+
+def add_team_state_and_lab_context(df):
+    if df is None or df.empty:
+        return df
+    rows = []
+    for _, row in df.iterrows():
+        absence_effective = compute_effective_absence_impacts(row)
+        home_state = build_team_state_vector(
+            row,
+            "home",
+            team_elo=_safe_float_value(row.get("home_elo"), 1500.0),
+            absence_effective=absence_effective,
+            fatigue_score=row.get("home_total_fatigue_score", row.get("home_fatigue_score")),
+        )
+        away_state = build_team_state_vector(
+            row,
+            "away",
+            team_elo=_safe_float_value(row.get("away_elo"), 1500.0),
+            absence_effective=absence_effective,
+            fatigue_score=row.get("away_total_fatigue_score", row.get("away_fatigue_score")),
+        )
+        matchup = simulate_lab_matchup(home_state, away_state, row)
+        payload = {}
+        for key, value in home_state.items():
+            payload[f"state_{key}_home"] = value
+        for key, value in away_state.items():
+            payload[f"state_{key}_away"] = value
+        payload.update(
+            {
+                "lab_model_version": matchup["lab_version"],
+                "lab_hold_weight": matchup["hold_weight"],
+                "lab_stall_weight": matchup["stall_weight"],
+                "lab_flip_weight": matchup["flip_weight"],
+                "lab_volatility_score": matchup["volatility_score"],
+                "lab_draw_tension_score": matchup["draw_tension_score"],
+                "lab_tempo_band": matchup["tempo_band"],
+                "lab_control_band": matchup["control_band"],
+                "lab_pressure_band": matchup["pressure_band"],
+                "lab_matchup_profile": matchup["matchup_profile"],
+                "lab_matchup_edge_score": matchup["matchup_edge_score"],
+                "lab_style_conflict_score": matchup["style_conflict_score"],
+                "lab_low_event_score": matchup["low_event_score"],
+                "lab_dynamic_swing_score": matchup["dynamic_swing_score"],
+                "lab_hold_foundation_score": matchup["hold_foundation_score"],
+                "lab_stall_compactness_score": matchup["stall_compactness_score"],
+                "lab_flip_dislocation_score": matchup["flip_dislocation_score"],
+                "lab_side_path_home_score": matchup["side_path_home_score"],
+                "lab_side_path_away_score": matchup["side_path_away_score"],
+                "lab_draw_support_score": matchup["draw_support_score"],
+                "lab_dispersion_score": matchup["dispersion_score"],
+                "lab_basis_hint": matchup["basis_hint"],
+                "lab_style_direct_delta": matchup["style_direct_delta"],
+                "lab_style_control_delta": matchup["style_control_delta"],
+                "lab_style_width_delta": matchup["style_width_delta"],
+                "lab_cbp_front_delta": matchup["cbp_front_delta"],
+                "lab_cbp_supply_delta": matchup["cbp_supply_delta"],
+                "lab_cbp_resist_delta": matchup["cbp_resist_delta"],
+                "lab_agi_kagi_edge": matchup["agi_kagi_edge"],
+                "lab_home_path_score": matchup["home_path_score"],
+                "lab_away_path_score": matchup["away_path_score"],
+                "lab_scenario_entropy_score": matchup["scenario_entropy_score"],
+                "lab_draw_path_score": matchup["draw_path_score"],
+                "lab_mix_home": matchup["mix_home"],
+                "lab_mix_draw": matchup["mix_draw"],
+                "lab_mix_away": matchup["mix_away"],
+                "lab_confidence_delta": matchup["confidence_delta"],
+                "lab_floor_delta": matchup["floor_delta"],
+                "lab_ceiling_delta": matchup["ceiling_delta"],
+                "lab_recovery_delta": matchup["recovery_delta"],
+                "lab_regression_delta": matchup["regression_delta"],
+                "lab_persistence_delta": matchup["persistence_delta"],
+                "lab_state_notes": matchup["notes"],
+            }
+        )
+        rows.append(payload)
+    payload_df = pd.DataFrame(rows, index=df.index)
+    out = df.copy()
+    for col in payload_df.columns:
+        out[col] = payload_df[col]
+    return out
 
 
 def _sha1_file(path):
@@ -2355,6 +3918,30 @@ def apply_match_type_flags(df):
     if df is None or df.empty:
         return df
     out = df.copy()
+    pressure_cols_bool = [
+        "match_context_title_race_home",
+        "match_context_title_race_away",
+        "match_context_acl_race_home",
+        "match_context_acl_race_away",
+        "match_context_acl_border_home",
+        "match_context_acl_border_away",
+        "match_context_promotion_race_home",
+        "match_context_promotion_race_away",
+        "match_context_po_race_home",
+        "match_context_po_race_away",
+        "match_context_survival_race_home",
+        "match_context_survival_race_away",
+        "match_context_relegation_escape_home",
+        "match_context_relegation_escape_away",
+        "match_context_top_direct_duel",
+        "match_context_bottom_direct_duel",
+    ]
+    pressure_cols_misc = [
+        "match_context_zone_home",
+        "match_context_zone_away",
+        "match_context_pressure_score_home",
+        "match_context_pressure_score_away",
+    ]
     required = {
         "elo_diff_for_prob",
         "stats_ゴール期待値_home",
@@ -2375,6 +3962,12 @@ def apply_match_type_flags(df):
         out["match_type_sig_home_elo"] = False
         out["match_type_sig_home_xg"] = False
         out["match_type_sig_home_rank"] = False
+        for c in pressure_cols_bool:
+            out[c] = False
+        out["match_context_zone_home"] = ""
+        out["match_context_zone_away"] = ""
+        out["match_context_pressure_score_home"] = 0.0
+        out["match_context_pressure_score_away"] = 0.0
         return out
 
     elo = pd.to_numeric(out["elo_diff_for_prob"], errors="coerce")
@@ -2433,6 +4026,113 @@ def apply_match_type_flags(df):
     out["match_type_relegation_risk_away"] = away_rank.ge(relegation_threshold).fillna(False)
     out["match_type_midtable_home"] = (~out["match_type_title_race_home"] & ~out["match_type_relegation_risk_home"]).fillna(False)
     out["match_type_midtable_away"] = (~out["match_type_title_race_away"] & ~out["match_type_relegation_risk_away"]).fillna(False)
+
+    home_points = pd.to_numeric(out.get("rankmot_points_latest_home", pd.Series(np.nan, index=out.index)), errors="coerce")
+    away_points = pd.to_numeric(out.get("rankmot_points_latest_away", pd.Series(np.nan, index=out.index)), errors="coerce")
+    home_motivation = pd.to_numeric(out.get("rankmot_motivation_score_5w_home", pd.Series(np.nan, index=out.index)), errors="coerce").fillna(0.0)
+    away_motivation = pd.to_numeric(out.get("rankmot_motivation_score_5w_away", pd.Series(np.nan, index=out.index)), errors="coerce").fillna(0.0)
+    points_gap_abs = (home_points - away_points).abs()
+
+    if league_key == "j1":
+        title_home = home_rank.le(J1_TITLE_PUSH_RANK_MAX).fillna(False)
+        title_away = away_rank.le(J1_TITLE_PUSH_RANK_MAX).fillna(False)
+        acl_race_home = home_rank.le(J1_ACL_RACE_RANK_MAX).fillna(False) & ~title_home
+        acl_race_away = away_rank.le(J1_ACL_RACE_RANK_MAX).fillna(False) & ~title_away
+        acl_border_home = home_rank.sub(J1_ACL_LINE_RANK).abs().le(1.0).fillna(False) & home_motivation.ge(PRESSURE_BORDER_MOTIVATION_MIN)
+        acl_border_away = away_rank.sub(J1_ACL_LINE_RANK).abs().le(1.0).fillna(False) & away_motivation.ge(PRESSURE_BORDER_MOTIVATION_MIN)
+        promotion_home = pd.Series(False, index=out.index)
+        promotion_away = pd.Series(False, index=out.index)
+        po_home = pd.Series(False, index=out.index)
+        po_away = pd.Series(False, index=out.index)
+    else:
+        title_home = pd.Series(False, index=out.index)
+        title_away = pd.Series(False, index=out.index)
+        acl_race_home = pd.Series(False, index=out.index)
+        acl_race_away = pd.Series(False, index=out.index)
+        acl_border_home = pd.Series(False, index=out.index)
+        acl_border_away = pd.Series(False, index=out.index)
+        promotion_home = home_rank.le(J2_PROMOTION_RACE_RANK_MAX).fillna(False)
+        promotion_away = away_rank.le(J2_PROMOTION_RACE_RANK_MAX).fillna(False)
+        po_home = home_rank.ge(J2_PROMOTION_LINE_RANK + 1).fillna(False) & home_rank.le(J2_PO_RACE_RANK_MAX).fillna(False)
+        po_away = away_rank.ge(J2_PROMOTION_LINE_RANK + 1).fillna(False) & away_rank.le(J2_PO_RACE_RANK_MAX).fillna(False)
+
+    survival_home = home_rank.ge(max(1, relegation_threshold - 1)).fillna(False)
+    survival_away = away_rank.ge(max(1, relegation_threshold - 1)).fillna(False)
+    relegation_escape_home = home_rank.sub(relegation_threshold).abs().le(1.0).fillna(False) & home_motivation.ge(PRESSURE_BORDER_MOTIVATION_MIN)
+    relegation_escape_away = away_rank.sub(relegation_threshold).abs().le(1.0).fillna(False) & away_motivation.ge(PRESSURE_BORDER_MOTIVATION_MIN)
+    top_direct_duel = (
+        (
+            (title_home & title_away)
+            | (acl_race_home & acl_race_away)
+            | (promotion_home & promotion_away)
+            | (po_home & po_away)
+        )
+        & rank_gap.abs().le(3.0)
+        & points_gap_abs.le(PRESSURE_DIRECT_POINTS_GAP_MAX)
+    ).fillna(False)
+    bottom_direct_duel = (
+        survival_home
+        & survival_away
+        & rank_gap.abs().le(3.0)
+        & points_gap_abs.le(PRESSURE_DIRECT_POINTS_GAP_MAX)
+    ).fillna(False)
+
+    out["match_context_title_race_home"] = title_home
+    out["match_context_title_race_away"] = title_away
+    out["match_context_acl_race_home"] = acl_race_home
+    out["match_context_acl_race_away"] = acl_race_away
+    out["match_context_acl_border_home"] = acl_border_home
+    out["match_context_acl_border_away"] = acl_border_away
+    out["match_context_promotion_race_home"] = promotion_home
+    out["match_context_promotion_race_away"] = promotion_away
+    out["match_context_po_race_home"] = po_home
+    out["match_context_po_race_away"] = po_away
+    out["match_context_survival_race_home"] = survival_home
+    out["match_context_survival_race_away"] = survival_away
+    out["match_context_relegation_escape_home"] = relegation_escape_home
+    out["match_context_relegation_escape_away"] = relegation_escape_away
+    out["match_context_top_direct_duel"] = top_direct_duel
+    out["match_context_bottom_direct_duel"] = bottom_direct_duel
+
+    def _pressure_zone(rank_s: pd.Series, title_s: pd.Series, acl_s: pd.Series, acl_border_s: pd.Series,
+                       promo_s: pd.Series, po_s: pd.Series, survival_s: pd.Series, rel_escape_s: pd.Series) -> pd.Series:
+        zone = pd.Series("midtable", index=out.index, dtype="object")
+        zone.loc[survival_s.fillna(False)] = "survival_race"
+        zone.loc[rel_escape_s.fillna(False)] = "relegation_escape"
+        zone.loc[po_s.fillna(False)] = "po_race"
+        zone.loc[promo_s.fillna(False)] = "promotion_race"
+        zone.loc[acl_s.fillna(False)] = "acl_race"
+        zone.loc[acl_border_s.fillna(False)] = "acl_border"
+        zone.loc[title_s.fillna(False)] = "title_race"
+        return zone
+
+    out["match_context_zone_home"] = _pressure_zone(home_rank, title_home, acl_race_home, acl_border_home, promotion_home, po_home, survival_home, relegation_escape_home)
+    out["match_context_zone_away"] = _pressure_zone(away_rank, title_away, acl_race_away, acl_border_away, promotion_away, po_away, survival_away, relegation_escape_away)
+
+    out["match_context_pressure_score_home"] = (
+        title_home.astype(float) * 1.00
+        + acl_race_home.astype(float) * 0.80
+        + acl_border_home.astype(float) * 0.70
+        + promotion_home.astype(float) * 0.90
+        + po_home.astype(float) * 0.65
+        + survival_home.astype(float) * 0.75
+        + relegation_escape_home.astype(float) * 0.85
+        + top_direct_duel.astype(float) * 0.20
+        + bottom_direct_duel.astype(float) * 0.20
+        + home_motivation.clip(lower=0.0) * 0.15
+    ).clip(0.0, 2.0)
+    out["match_context_pressure_score_away"] = (
+        title_away.astype(float) * 1.00
+        + acl_race_away.astype(float) * 0.80
+        + acl_border_away.astype(float) * 0.70
+        + promotion_away.astype(float) * 0.90
+        + po_away.astype(float) * 0.65
+        + survival_away.astype(float) * 0.75
+        + relegation_escape_away.astype(float) * 0.85
+        + top_direct_duel.astype(float) * 0.20
+        + bottom_direct_duel.astype(float) * 0.20
+        + away_motivation.clip(lower=0.0) * 0.15
+    ).clip(0.0, 2.0)
 
     flab_attack = pd.to_numeric(out.get("flab_chance_shot_conversion_diff"), errors="coerce")
     flab_allow = pd.to_numeric(out.get("flab_chance_allowed_shot_conversion_diff"), errors="coerce")
@@ -2527,97 +4227,7 @@ def _calc_predicted_result_main(row):
     ph = float(pd.to_numeric(row.get("prob_home_win"), errors="coerce"))
     pdw = float(pd.to_numeric(row.get("prob_draw"), errors="coerce"))
     pa = float(pd.to_numeric(row.get("prob_away_win"), errors="coerce"))
-    prob_shape = _compute_prob_shape(ph, pdw, pa)
-    league = str(row.get("league", "")).strip().lower()
-    flags = {x for x in str(row.get("match_type_flags", "")).split(",") if x}
-    draw_risk = str(row.get("draw_risk_flag", "")).strip().lower() in {"true", "1"}
-    draw_gap = float(pd.to_numeric(row.get("draw_gap"), errors="coerce"))
-    metrics = _compute_match_type_pressures(row)
-    home_acl_fatigue = float(pd.to_numeric(row.get("home_acl_fatigue"), errors="coerce"))
-    away_acl_fatigue = float(pd.to_numeric(row.get("away_acl_fatigue"), errors="coerce"))
-    home_acl_days_since = float(pd.to_numeric(row.get("home_acl_days_since"), errors="coerce"))
-    away_acl_days_since = float(pd.to_numeric(row.get("away_acl_days_since"), errors="coerce"))
-    weather_penalty_acl = metrics["weather_penalty"]
-    if ENABLE_MAIN_NARROW_DRAW_OVERRIDE and draw_risk:
-        pure_draw_warning = ("signal_conflict" not in flags) and ("lab_style_conflict" not in flags)
-        if league == "j1":
-            if (
-                pure_draw_warning
-                and
-                pdw >= max(J1_MAIN_NARROW_DRAW_PROB_MIN, 0.345)
-                and draw_gap <= min(J1_MAIN_NARROW_DRAW_GAP_MAX, 0.015)
-                and abs(ph - pa) <= 0.055
-                and prob_shape["top_gap"] <= 0.015
-            ):
-                return "D"
-        elif league == "j2":
-            if (
-                pure_draw_warning
-                and pdw >= J2_MAIN_NARROW_DRAW_PROB_MIN
-                and draw_gap <= J2_MAIN_NARROW_DRAW_GAP_MAX
-            ):
-                return "D"
-    def _acl_edge(acl_fatigue, acl_days_since):
-        if (not math.isfinite(acl_fatigue)) or acl_fatigue < ACL_DRAW_MIN_FATIGUE:
-            return 0.0
-        edge = min(ACL_DRAW_EDGE_BASE + (acl_fatigue * ACL_DRAW_EDGE_PER_FATIGUE), ACL_DRAW_EDGE_CAP)
-        if math.isfinite(acl_days_since) and ACL_EFFECTIVE_DAYS < acl_days_since <= ACL_SECOND_WINDOW_DAYS:
-            edge = min(edge + ACL_DRAW_SECOND_WINDOW_BONUS, ACL_DRAW_EDGE_CAP)
-        edge += ACL_DRAW_DRAWRISK_BONUS if draw_risk else 0.0
-        edge += weather_penalty_acl * ACL_DRAW_WEATHER_BONUS_SCALE
-        return edge
-
-    home_acl_edge = _acl_edge(home_acl_fatigue, home_acl_days_since)
-    away_acl_edge = _acl_edge(away_acl_fatigue, away_acl_days_since)
-    acl_decisiveness_drag = max(home_acl_edge, away_acl_edge)
-    base = _argmax_hda_label(ph, pdw, pa)
-    if acl_decisiveness_drag > 0.0 and base in {"H", "A"}:
-        if base == "H":
-            shift = min(acl_decisiveness_drag, max(ph - 1e-6, 0.0))
-            ph = max(ph - shift, 0.0)
-            pdw = min(pdw + shift, 1.0)
-        else:
-            shift = min(acl_decisiveness_drag, max(pa - 1e-6, 0.0))
-            pa = max(pa - shift, 0.0)
-            pdw = min(pdw + shift, 1.0)
-        ph, pdw, pa = _normalize_probs(ph, pdw, pa)
-        base = _argmax_hda_label(ph, pdw, pa)
-    if INCENTIVE_DRAW_SHIFT_ENABLE:
-        home_relegation = bool(row.get("match_type_relegation_risk_home", False))
-        away_relegation = bool(row.get("match_type_relegation_risk_away", False))
-        home_title = bool(row.get("match_type_title_race_home", False))
-        away_title = bool(row.get("match_type_title_race_away", False))
-        home_adverse = metrics["home_adverse_score"]
-        away_adverse = metrics["away_adverse_score"]
-        weather_penalty = metrics["weather_penalty"]
-        fatigue_gap = abs(metrics["home_fatigue"] - metrics["away_fatigue"])
-        if league == "j1":
-            draw_prob_min = J1_INCENTIVE_DRAW_PROB_MIN
-            draw_gap_max = J1_INCENTIVE_DRAW_GAP_MAX
-        else:
-            draw_prob_min = J2_INCENTIVE_DRAW_PROB_MIN
-            draw_gap_max = J2_INCENTIVE_DRAW_GAP_MAX
-        if draw_risk and pdw >= draw_prob_min and draw_gap <= draw_gap_max:
-            if base == "A" and home_relegation and not away_title and pa <= ph + 0.060 and home_adverse >= 1.20:
-                return "D"
-            if base == "H" and away_relegation and not home_title and ph <= pa + 0.060 and away_adverse >= 1.20:
-                return "D"
-            if base == "D" and home_title and not away_title and ph >= pdw - INCENTIVE_TITLE_EDGE_MAX and away_adverse >= 1.20:
-                return "H"
-            if base == "D" and away_title and not home_title and pa >= pdw - INCENTIVE_TITLE_EDGE_MAX and home_adverse >= 1.20:
-                return "A"
-            if (
-                base in {"H", "A"}
-                and weather_penalty >= 0.45
-                and fatigue_gap >= 3.0
-                and abs(ph - pa) <= 0.100
-                and pdw >= (0.295 if league == "j1" else 0.330)
-            ):
-                if base == "H" and metrics["home_fatigue"] >= metrics["away_fatigue"] + 3.0:
-                    return "D"
-                if base == "A" and metrics["away_fatigue"] >= metrics["home_fatigue"] + 3.0:
-                    return "D"
-    return base
+    return _argmax_hda_label(ph, pdw, pa)
 
 
 def _symbol_result_argmax(prob_home, prob_draw, prob_away):
@@ -2668,6 +4278,12 @@ def _build_match_type_meta(row):
         flags.append("home_adverse")
     if metrics["away_adverse_score"] >= 1.20:
         flags.append("away_adverse")
+    if metrics["match_intensity_score"] >= 0.60:
+        flags.append("high_intensity")
+    if metrics["focus_stability_score"] >= 0.62:
+        flags.append("stable_focus")
+    if bool(metrics["derby_match"]):
+        flags.append("derby")
     primary = match_type
     if draw_risk and primary not in {"signal_conflict", "away_strong", "home_strong"}:
         primary = "draw_risk"
@@ -2686,6 +4302,7 @@ def _build_match_type_meta(row):
         f"prob_draw={pdw:.3f}; draw_gap={draw_gap:.3f}; "
         f"lab_edge={'' if pd.isna(lab_edge) else f'{float(lab_edge):.3f}'}; "
         f"adv_home={metrics['home_adverse_score']:.2f}; adv_away={metrics['away_adverse_score']:.2f}; "
+        f"intensity={metrics['match_intensity_score']:.2f}; focus={metrics['focus_stability_score']:.2f}; "
         f"home_ctx={'title' if bool(row.get('match_type_title_race_home', False)) else ('relegation' if bool(row.get('match_type_relegation_risk_home', False)) else 'mid')}; "
         f"away_ctx={'title' if bool(row.get('match_type_title_race_away', False)) else ('relegation' if bool(row.get('match_type_relegation_risk_away', False)) else 'mid')}"
     )
@@ -2695,6 +4312,8 @@ def _build_match_type_meta(row):
         "match_type_reason": reason,
         "draw_risk_flag": draw_risk,
         "draw_gap": draw_gap,
+        "match_intensity_score": metrics["match_intensity_score"],
+        "focus_stability_score": metrics["focus_stability_score"],
     }
 
 
@@ -2713,10 +4332,24 @@ def _compute_match_type_pressures(row):
     away_acl_days_since = float(pd.to_numeric(row.get("away_acl_days_since"), errors="coerce"))
     home_absence = float(pd.to_numeric(row.get("absence_effective_total_home"), errors="coerce"))
     away_absence = float(pd.to_numeric(row.get("absence_effective_total_away"), errors="coerce"))
+    derby_match = bool(row.get("derby_match", False))
+    derby_intensity = float(pd.to_numeric(row.get("derby_intensity"), errors="coerce"))
+    derby_stall_bias = float(pd.to_numeric(row.get("derby_stall_bias"), errors="coerce"))
+    derby_entropy_bias = float(pd.to_numeric(row.get("derby_entropy_bias"), errors="coerce"))
+    home_rankmot = float(pd.to_numeric(row.get("rankmot_motivation_score_3w_home"), errors="coerce"))
+    away_rankmot = float(pd.to_numeric(row.get("rankmot_motivation_score_3w_away"), errors="coerce"))
+    home_mgmt_mot = float(pd.to_numeric(row.get("management_motivation_score_home"), errors="coerce"))
+    away_mgmt_mot = float(pd.to_numeric(row.get("management_motivation_score_away"), errors="coerce"))
     is_rain = bool(row.get("is_rain")) if pd.notna(row.get("is_rain")) else False
     is_heavy_rain = bool(row.get("is_heavy_rain")) if pd.notna(row.get("is_heavy_rain")) else False
     is_strong_wind = bool(row.get("is_strong_wind")) if pd.notna(row.get("is_strong_wind")) else False
-    weather_penalty = (0.8 if is_heavy_rain else 0.0) + (0.45 if is_rain else 0.0) + (0.45 if is_strong_wind else 0.0)
+    weather_penalty = adverse_weather_penalty(is_rain, is_heavy_rain, is_strong_wind)
+
+    def _safe_mean(values, default=np.nan):
+        vals = [float(v) for v in values if math.isfinite(v)]
+        if not vals:
+            return float(default)
+        return float(sum(vals) / len(vals))
 
     home_strength = (
         max(elo, 0.0) / 40.0
@@ -2747,6 +4380,40 @@ def _compute_match_type_pressures(row):
         )
         if math.isfinite(away_acl_days_since) and int(effective_days := ACL_EFFECTIVE_DAYS) < away_acl_days_since <= int(ACL_SECOND_WINDOW_DAYS):
             away_acl_draw_pressure = min(away_acl_draw_pressure + ACL_DRAW_SECOND_WINDOW_BONUS, ACL_DRAW_EDGE_CAP)
+    title_pressure = (
+        (0.18 if bool(row.get("match_type_title_race_home", False)) else 0.0)
+        + (0.18 if bool(row.get("match_type_title_race_away", False)) else 0.0)
+    )
+    relegation_pressure = (
+        (0.16 if bool(row.get("match_type_relegation_risk_home", False)) else 0.0)
+        + (0.16 if bool(row.get("match_type_relegation_risk_away", False)) else 0.0)
+    )
+    rank_closeness = _score_small_abs(rank_gap, 4.0)
+    motivation_level = _safe_mean(
+        [home_rankmot, away_rankmot, home_mgmt_mot, away_mgmt_mot],
+        default=0.35,
+    )
+    motivation_score = _clip01((motivation_level + 0.20) / 1.20)
+    derby_score = _clip01(derby_intensity) if derby_match and math.isfinite(derby_intensity) else 0.0
+    match_intensity_score = _clip01(
+        (0.42 * derby_score)
+        + (0.20 * title_pressure)
+        + (0.18 * relegation_pressure)
+        + (0.10 * rank_closeness)
+        + (0.10 * motivation_score)
+    )
+    fatigue_load = _safe_mean([home_fatigue, away_fatigue], default=4.0)
+    acl_load = _safe_mean([home_acl_fatigue, away_acl_fatigue], default=0.0)
+    absence_load = _safe_mean([home_absence, away_absence], default=0.05)
+    focus_stability_score = _clip01(
+        1.0
+        - (
+            0.35 * _clip01(fatigue_load / 10.0)
+            + 0.20 * _clip01(acl_load / 8.0)
+            + 0.25 * _clip01(absence_load / 0.18)
+            + 0.20 * _clip01(weather_penalty / 1.70)
+        )
+    )
     return {
         "elo": elo,
         "xg_diff": xg_diff,
@@ -2775,6 +4442,15 @@ def _compute_match_type_pressures(row):
         "home_acl_draw_pressure": home_acl_draw_pressure,
         "away_acl_draw_pressure": away_acl_draw_pressure,
         "weather_penalty": weather_penalty,
+        "derby_match": derby_match,
+        "derby_intensity": derby_intensity,
+        "derby_stall_bias": derby_stall_bias,
+        "derby_entropy_bias": derby_entropy_bias,
+        "motivation_level": motivation_level,
+        "motivation_score": motivation_score,
+        "rank_closeness": rank_closeness,
+        "match_intensity_score": match_intensity_score,
+        "focus_stability_score": focus_stability_score,
     }
 
 
@@ -2796,6 +4472,137 @@ def _compute_prob_shape(ph: float, pdw: float, pa: float):
 
 def _clip01(v: float) -> float:
     return max(0.0, min(1.0, float(v)))
+
+
+def _normalize_hda_triplet(prob_home, prob_draw, prob_away, fallback=(1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0)):
+    vals = np.array([prob_home, prob_draw, prob_away], dtype=float)
+    vals = np.where(np.isfinite(vals), vals, 0.0)
+    vals = np.clip(vals, 0.0, None)
+    total = float(vals.sum())
+    if total <= 1e-12:
+        return tuple(float(x) for x in fallback)
+    vals = vals / total
+    return float(vals[0]), float(vals[1]), float(vals[2])
+
+
+def apply_lab_probability_blend(df, stage_label="PRED"):
+    if df is None or df.empty:
+        return df
+    out = df.copy()
+    required = {"prob_home_win", "prob_draw", "prob_away_win", "lab_mix_home", "lab_mix_draw", "lab_mix_away"}
+    if not required.issubset(out.columns):
+        return out
+
+    for src, dst in [
+        ("prob_home_win", "prob_elo_home"),
+        ("prob_draw", "prob_elo_draw"),
+        ("prob_away_win", "prob_elo_away"),
+        ("lab_mix_home", "prob_lab_home"),
+        ("lab_mix_draw", "prob_lab_draw"),
+        ("lab_mix_away", "prob_lab_away"),
+    ]:
+        out[dst] = pd.to_numeric(out[src], errors="coerce")
+
+    base_sum = out[["prob_elo_home", "prob_elo_draw", "prob_elo_away"]].sum(axis=1)
+    lab_sum = out[["prob_lab_home", "prob_lab_draw", "prob_lab_away"]].sum(axis=1)
+    lab_available = out[["prob_lab_home", "prob_lab_draw", "prob_lab_away"]].notna().all(axis=1) & lab_sum.gt(0.0)
+    if not ENABLE_LAB_PROB_BLEND:
+        lab_available = pd.Series(False, index=out.index)
+    out["lab_prob_blend_enabled"] = bool(ENABLE_LAB_PROB_BLEND)
+    out["lab_prob_blend_available"] = lab_available.fillna(False)
+
+    if not bool(np.any(lab_available.to_numpy())):
+        out["lab_prob_blend_alpha"] = 0.0
+        out["confidence_lab"] = 0.0
+        for src, dst in [
+            ("prob_elo_home", "prob_final_home"),
+            ("prob_elo_draw", "prob_final_draw"),
+            ("prob_elo_away", "prob_final_away"),
+        ]:
+            out[dst] = out[src]
+        out["prob_blend_home"] = out["prob_final_home"]
+        out["prob_blend_draw"] = out["prob_final_draw"]
+        out["prob_blend_away"] = out["prob_final_away"]
+        return out
+
+    lab_vals = out[["prob_lab_home", "prob_lab_draw", "prob_lab_away"]].fillna(0.0).to_numpy(dtype=float)
+    base_vals = out[["prob_elo_home", "prob_elo_draw", "prob_elo_away"]].fillna(0.0).to_numpy(dtype=float)
+    lab_vals = np.clip(lab_vals, 0.0, None)
+    base_vals = np.clip(base_vals, 0.0, None)
+
+    lab_ranked = np.sort(lab_vals, axis=1)
+    lab_top_gap = lab_ranked[:, 2] - lab_ranked[:, 1]
+    lab_clarity = np.clip(lab_top_gap / 0.20, 0.0, 1.0)
+    scenario_entropy = pd.to_numeric(
+        out.get("lab_scenario_entropy_score", pd.Series(0.5, index=out.index)),
+        errors="coerce",
+    ).fillna(0.5).to_numpy(dtype=float)
+    matchup_edge = pd.to_numeric(
+        out.get("lab_matchup_edge_score", pd.Series(0.0, index=out.index)),
+        errors="coerce",
+    ).fillna(0.0).to_numpy(dtype=float)
+    draw_support = pd.to_numeric(
+        out.get("lab_draw_support_score", pd.Series(0.0, index=out.index)),
+        errors="coerce",
+    ).fillna(0.0).to_numpy(dtype=float)
+    draw_tension_score = pd.to_numeric(
+        out.get("lab_draw_tension_score", pd.Series(0.0, index=out.index)),
+        errors="coerce",
+    ).fillna(0.0).to_numpy(dtype=float)
+    compactness_score = pd.to_numeric(
+        out.get("lab_stall_compactness_score", pd.Series(0.0, index=out.index)),
+        errors="coerce",
+    ).fillna(0.0).to_numpy(dtype=float)
+    lab_mix_draw = pd.to_numeric(
+        out.get("lab_mix_draw", pd.Series(0.0, index=out.index)),
+        errors="coerce",
+    ).fillna(0.0).to_numpy(dtype=float)
+    matchup_profile = out.get("lab_matchup_profile", pd.Series("", index=out.index)).fillna("").astype(str)
+    structural_support = np.maximum(matchup_edge, draw_support)
+    confidence = np.clip(
+        (0.45 * lab_clarity) + (0.35 * (1.0 - np.clip(scenario_entropy, 0.0, 1.0))) + (0.20 * np.clip(structural_support, 0.0, 1.0)),
+        0.0,
+        1.0,
+    )
+    alpha = LAB_PROB_BLEND_ALPHA_BASE + (LAB_PROB_BLEND_ALPHA_GAIN * confidence)
+    alpha = np.clip(alpha, LAB_PROB_BLEND_ALPHA_MIN, LAB_PROB_BLEND_ALPHA_MAX)
+    alpha = np.where(lab_available.to_numpy(dtype=bool), alpha, 0.0)
+    lab_best_idx = np.argmax(lab_vals, axis=1)
+    lab_draw_argmax = lab_best_idx == 1
+    drawish_profile = matchup_profile.isin(["stall_shape", "low_tempo_draw", "balanced"]).to_numpy(dtype=bool)
+    drawish_mask = (
+        lab_available.to_numpy(dtype=bool)
+        & lab_draw_argmax
+        & drawish_profile
+        & (lab_mix_draw >= 0.50)
+        & (draw_tension_score >= 0.58)
+        & (compactness_score >= 0.54)
+    )
+    alpha = np.where(drawish_mask, np.maximum(alpha * 0.55, LAB_PROB_BLEND_ALPHA_MIN), alpha)
+    out["lab_prob_blend_alpha"] = alpha
+    out["lab_prob_blend_draw_dampen"] = drawish_mask
+    out["confidence_lab"] = confidence
+
+    base_den = np.where(base_sum.to_numpy(dtype=float) > 1e-12, base_sum.to_numpy(dtype=float), 1.0)
+    lab_den = np.where(lab_sum.to_numpy(dtype=float) > 1e-12, lab_sum.to_numpy(dtype=float), 1.0)
+    base_vals = base_vals / base_den[:, None]
+    lab_vals = lab_vals / lab_den[:, None]
+    final_vals = ((1.0 - alpha)[:, None] * base_vals) + (alpha[:, None] * lab_vals)
+    final_den = np.where(final_vals.sum(axis=1) > 1e-12, final_vals.sum(axis=1), 1.0)
+    final_vals = final_vals / final_den[:, None]
+
+    out["prob_blend_home"] = final_vals[:, 0]
+    out["prob_blend_draw"] = final_vals[:, 1]
+    out["prob_blend_away"] = final_vals[:, 2]
+    out["prob_final_home"] = out["prob_blend_home"]
+    out["prob_final_draw"] = out["prob_blend_draw"]
+    out["prob_final_away"] = out["prob_blend_away"]
+    print(
+        f"[LAB_PROB_BLEND] stage={stage_label} enabled={int(ENABLE_LAB_PROB_BLEND)} "
+        f"available={int(lab_available.sum())}/{len(out)} alpha_mean={float(np.mean(alpha)):.3f} "
+        f"draw_dampen={int(drawish_mask.sum())}"
+    )
+    return out
 
 
 def _score_small_gap(gap: float, limit: float) -> float:
@@ -2859,9 +4666,14 @@ def _compute_d_scores(row):
     lab_edge = float(pd.to_numeric(row.get("match_type_lab_matchup_edge"), errors="coerce"))
     flab_trial_score_raw = pd.to_numeric(row.get("flab_trial_score"), errors="coerce")
     flab_trial_score = 0.0 if pd.isna(flab_trial_score_raw) else float(flab_trial_score_raw)
+    match_intensity_score = float(pd.to_numeric(row.get("match_intensity_score"), errors="coerce"))
+    focus_stability_score = float(pd.to_numeric(row.get("focus_stability_score"), errors="coerce"))
+    derby_stall_bias = float(pd.to_numeric(row.get("derby_stall_bias"), errors="coerce"))
+    derby_entropy_bias = float(pd.to_numeric(row.get("derby_entropy_bias"), errors="coerce"))
     prob_draw_score = _clip01((pdw - 0.24) / 0.12)
     lab_edge_score = _score_small_abs(lab_edge, 8.0)
     flab_score = _clip01((flab_trial_score + 8.0) / 16.0)
+    intensity_draw_score = _clip01(match_intensity_score * focus_stability_score)
 
     d_score_stall = _clip01(
         (0.30 if style_conflict else 0.0)
@@ -2869,6 +4681,9 @@ def _compute_d_scores(row):
         + (0.25 * lab_edge_score)
         + (0.10 * flab_score)
         + (0.10 * prob_draw_score)
+        + (0.08 * intensity_draw_score)
+        + (0.07 * _clip01(derby_stall_bias))
+        + (0.05 * (_clip01(derby_entropy_bias) * entropy_score))
     )
 
     d_score_total = _clip01((0.60 * d_score_close) + (0.40 * d_score_stall))
@@ -2937,601 +4752,1079 @@ def _compute_d_scores(row):
     }
 
 
-def simulate_lab_flow(row):
+def _compute_close_split_scores(row):
     ph = float(pd.to_numeric(row.get("prob_home_win"), errors="coerce"))
     pdw = float(pd.to_numeric(row.get("prob_draw"), errors="coerce"))
     pa = float(pd.to_numeric(row.get("prob_away_win"), errors="coerce"))
-    league = str(row.get("league", "")).strip().lower()
     if not (math.isfinite(ph) and math.isfinite(pdw) and math.isfinite(pa)):
         return {
-            "lab_sim_stall_score": 0.0,
-            "lab_sim_flip_score": 0.0,
-            "lab_sim_hold_score": 0.0,
-            "lab_sim_scenario": "none",
-            "lab_sim_reason": "invalid_probs",
-            "lab_sim_j1_stall_candidate": False,
-            "lab_sim_j1_flip_candidate": False,
-            "lab_sim_j1_hold_candidate": False,
+            "draw_core_score": 0.0,
+            "swing_close_score": 0.0,
+            "close_split_profile": "",
         }
 
-    flags = {x for x in str(row.get("match_type_flags", "")).split(",") if x}
+    prob_shape = _compute_prob_shape(ph, pdw, pa)
+    draw_gap = float(max(ph, pa) - pdw)
+    top_gap = float(prob_shape["top_gap"])
+    entropy_norm = float(prob_shape["entropy_norm"])
+    ha_gap_abs = abs(ph - pa)
+    side_max = max(ph, pa)
+
+    lab_draw_support = float(pd.to_numeric(row.get("lab_draw_support_score"), errors="coerce"))
+    lab_mix_draw = float(pd.to_numeric(row.get("lab_mix_draw"), errors="coerce"))
+    lab_mix_home = float(pd.to_numeric(row.get("lab_mix_home"), errors="coerce"))
+    lab_mix_away = float(pd.to_numeric(row.get("lab_mix_away"), errors="coerce"))
+    xg_diff = float(pd.to_numeric(row.get("match_type_xg_diff"), errors="coerce"))
+    rank_gap = float(pd.to_numeric(row.get("match_type_rank_gap"), errors="coerce"))
+    home_fatigue = float(pd.to_numeric(row.get("home_total_fatigue_score"), errors="coerce"))
+    away_fatigue = float(pd.to_numeric(row.get("away_total_fatigue_score"), errors="coerce"))
+    home_motivation = float(pd.to_numeric(row.get("rankmot_motivation_score_5w_home"), errors="coerce"))
+    away_motivation = float(pd.to_numeric(row.get("rankmot_motivation_score_5w_away"), errors="coerce"))
+    home_sig_ct = float(pd.to_numeric(row.get("match_type_home_signal_count"), errors="coerce"))
+    away_sig_ct = float(pd.to_numeric(row.get("match_type_away_signal_count"), errors="coerce"))
+
+    fatigue_edge = away_fatigue - home_fatigue if math.isfinite(home_fatigue) and math.isfinite(away_fatigue) else 0.0
+    motivation_edge = home_motivation - away_motivation if math.isfinite(home_motivation) and math.isfinite(away_motivation) else 0.0
+    signal_edge = home_sig_ct - away_sig_ct if math.isfinite(home_sig_ct) and math.isfinite(away_sig_ct) else 0.0
+    side_lab_max = max(
+        lab_mix_home if math.isfinite(lab_mix_home) else 0.0,
+        lab_mix_away if math.isfinite(lab_mix_away) else 0.0,
+    )
+
+    draw_core_score = _clip01(
+        (0.28 * _clip01((pdw - 0.28) / 0.18))
+        + (0.18 * _clip01((lab_draw_support - 0.42) / 0.32))
+        + (0.16 * _clip01((lab_mix_draw - 0.34) / 0.20))
+        + (0.12 * _score_small_abs(ha_gap_abs, 0.10))
+        + (0.10 * _score_small_gap(max(draw_gap, 0.0), 0.09))
+        + (0.08 * _score_small_gap(top_gap, 0.10))
+        + (0.08 * _clip01((entropy_norm - 0.88) / 0.12))
+        + (0.10 * _score_small_abs(signal_edge, 2.0))
+    )
+
+    swing_close_score = _clip01(
+        (0.16 * _score_small_abs(ha_gap_abs, 0.14))
+        + (0.14 * _score_small_gap(top_gap, 0.14))
+        + (0.18 * _clip01((side_max - 0.28) / 0.12))
+        + (0.14 * _clip01(abs(xg_diff) / 1.8))
+        + (0.12 * _clip01(abs(rank_gap) / 6.0))
+        + (0.10 * _clip01(abs(fatigue_edge) / 5.0))
+        + (0.08 * _clip01(abs(motivation_edge) / 3.5))
+        + (0.08 * _clip01((side_lab_max - 0.31) / 0.18))
+    )
+
+    if draw_core_score >= 0.62 and swing_close_score < 0.52:
+        profile = "draw_core"
+    elif swing_close_score >= 0.60 and draw_core_score < 0.58:
+        profile = "swing_close"
+    elif draw_core_score >= 0.56 and swing_close_score >= 0.56:
+        profile = "mixed_close"
+    elif draw_core_score >= 0.48:
+        profile = "soft_draw"
+    elif swing_close_score >= 0.48:
+        profile = "soft_swing"
+    else:
+        profile = "undiff_close"
+
+    return {
+        "draw_core_score": draw_core_score,
+        "swing_close_score": swing_close_score,
+        "close_split_profile": profile,
+    }
+
+
+def _build_buyplan_purchase_context(row):
+    ph = float(pd.to_numeric(row.get("prob_home_win"), errors="coerce"))
+    pdw = float(pd.to_numeric(row.get("prob_draw"), errors="coerce"))
+    pa = float(pd.to_numeric(row.get("prob_away_win"), errors="coerce"))
+    if not (math.isfinite(ph) and math.isfinite(pdw) and math.isfinite(pa)):
+        return {
+            "match_purchase_type": "",
+            "match_purchase_subtype": "",
+            "purchase_type_confidence": "",
+            "purchase_type_reason": "",
+            "admission_policy": "",
+            "rank1_symbol": "",
+            "rank2_symbol": "",
+            "rank3_symbol": "",
+            "rank1_prob": 0.0,
+            "rank2_prob": 0.0,
+            "rank3_prob": 0.0,
+            "anchor_candidate_flag": False,
+            "anchor_candidate_score": 0.0,
+            "anchor_candidate_reason": "",
+            "draw_core_candidate_flag": False,
+            "draw_core_candidate_score": 0.0,
+            "draw_core_candidate_reason": "",
+            "away_overread_draw_cover_flag": False,
+            "away_overread_draw_cover_score": 0.0,
+            "away_overread_draw_cover_reason": "",
+            "draw_core_flag": False,
+            "draw_purchase_tier": "",
+            "primary_pick_symbol": "",
+            "secondary_pick_symbol": "",
+            "risk_level": "",
+            "ticket_guidance": "",
+            "decision_summary": "",
+        }
+
+    pred = str(row.get("predicted_result", "")).strip().upper()
+    ranked = sorted([("1", ph), ("0", pdw), ("2", pa)], key=lambda kv: (-kv[1], kv[0]))
+    rank1_symbol = str(ranked[0][0])
+    rank2_symbol = str(ranked[1][0])
+    rank3_symbol = str(ranked[2][0])
+    rank1_prob = float(ranked[0][1])
+    rank2_prob = float(ranked[1][1])
+    rank3_prob = float(ranked[2][1])
     prob_shape = _compute_prob_shape(ph, pdw, pa)
     top_gap = float(prob_shape["top_gap"])
-    ha_gap_abs = abs(ph - pa)
+    draw_gap = float(max(ph, pa) - pdw)
     best_label = str(prob_shape["best_label"])
+    second_label = str(prob_shape["second_label"])
+    draw_core_score = float(pd.to_numeric(row.get("draw_core_score"), errors="coerce"))
+    swing_close_score = float(pd.to_numeric(row.get("swing_close_score"), errors="coerce"))
+    profile = str(row.get("close_split_profile", "")).strip().lower()
 
-    draw_risk = "draw_risk" in flags
-    signal_conflict = "signal_conflict" in flags
-    style_conflict = "lab_style_conflict" in flags
-    low_event = "lab_low_event" in flags
-    lab_home = "lab_home_matchup" in flags
-    lab_away = "lab_away_matchup" in flags
-    lab_edge = float(pd.to_numeric(row.get("match_type_lab_matchup_edge"), errors="coerce"))
+    def _sym(label: str) -> str:
+        if label == "H":
+            return "1"
+        if label == "D":
+            return "0"
+        if label == "A":
+            return "2"
+        return ""
 
-    close_score = _score_small_gap(top_gap, 0.060)
-    balance_score = _score_small_abs(ph - pa, 0.100)
-    draw_prob_score = _clip01((pdw - 0.28) / 0.10)
-    hold_gap_score = _clip01(max(ph, pa) - pdw)
-    hold_side_score = _clip01(abs(ph - pa) / 0.18)
-
-    stall_score = _clip01(
-        (0.28 if draw_risk else 0.0)
-        + (0.24 if low_event else 0.0)
-        + (0.18 if style_conflict else 0.0)
-        + (0.15 * close_score)
-        + (0.15 * draw_prob_score)
-    )
-
-    reverse_matchup = bool(
-        (best_label == "H" and lab_away and math.isfinite(lab_edge) and lab_edge <= -2.5)
-        or (best_label == "A" and lab_home and math.isfinite(lab_edge) and lab_edge >= 2.5)
-    )
-    flip_score = _clip01(
-        (0.30 if signal_conflict else 0.0)
-        + (0.30 if reverse_matchup else 0.0)
-        + (0.20 * close_score)
-        + (0.20 * balance_score)
-    )
-
-    stable_lab_support = bool(
-        (best_label == "H" and lab_home and math.isfinite(lab_edge) and lab_edge >= 2.5)
-        or (best_label == "A" and lab_away and math.isfinite(lab_edge) and lab_edge <= -2.5)
-    )
-    hold_score = _clip01(
-        (0.35 * hold_gap_score)
-        + (0.25 * hold_side_score)
-        + (0.20 if stable_lab_support else 0.0)
-        + (0.10 if not draw_risk else 0.0)
-        + (0.10 if not signal_conflict else 0.0)
-        - (0.12 if low_event else 0.0)
-        - (0.08 if style_conflict else 0.0)
-    )
-
-    scores = {
-        "stall": stall_score,
-        "flip": flip_score,
-        "hold": hold_score,
+    best_side_label = "H" if ph >= pa else "A"
+    best_side_symbol = _sym(best_side_label)
+    pred_symbol = _sym(pred)
+    pred_main_symbol = _sym(str(row.get("predicted_result_main", "")).strip().upper())
+    second_symbol = _sym(second_label)
+    hold_weight = float(pd.to_numeric(row.get("lab_hold_weight"), errors="coerce"))
+    stall_weight = float(pd.to_numeric(row.get("lab_stall_weight"), errors="coerce"))
+    flip_weight = float(pd.to_numeric(row.get("lab_flip_weight"), errors="coerce"))
+    mix_home = float(pd.to_numeric(row.get("lab_mix_home"), errors="coerce"))
+    mix_draw = float(pd.to_numeric(row.get("lab_mix_draw"), errors="coerce"))
+    mix_away = float(pd.to_numeric(row.get("lab_mix_away"), errors="coerce"))
+    entropy_score = float(pd.to_numeric(row.get("lab_scenario_entropy_score"), errors="coerce"))
+    volatility_score = float(pd.to_numeric(row.get("lab_volatility_score"), errors="coerce"))
+    draw_tension_score = float(pd.to_numeric(row.get("lab_draw_tension_score"), errors="coerce"))
+    compactness_score = float(pd.to_numeric(row.get("lab_stall_compactness_score"), errors="coerce"))
+    flip_dislocation_score = float(pd.to_numeric(row.get("lab_flip_dislocation_score"), errors="coerce"))
+    home_path_score = float(pd.to_numeric(row.get("lab_home_path_score"), errors="coerce"))
+    away_path_score = float(pd.to_numeric(row.get("lab_away_path_score"), errors="coerce"))
+    side_gap = abs(ph - pa)
+    path_gap = abs(home_path_score - away_path_score) if math.isfinite(home_path_score) and math.isfinite(away_path_score) else 0.0
+    league = str(row.get("league", "")).strip().upper()
+    top_prob = max(ph, pdw, pa)
+    direction_mix = max(mix_home if math.isfinite(mix_home) else 0.0, mix_away if math.isfinite(mix_away) else 0.0)
+    mix_map = {
+        "H": mix_home if math.isfinite(mix_home) else 0.0,
+        "D": mix_draw if math.isfinite(mix_draw) else 0.0,
+        "A": mix_away if math.isfinite(mix_away) else 0.0,
     }
-    scenario = max(scores, key=scores.get)
-    reason_parts = []
-    if scenario == "stall":
-        if draw_risk:
-            reason_parts.append("draw_risk")
-        if low_event:
-            reason_parts.append("lab_low_event")
-        if style_conflict:
-            reason_parts.append("lab_style_conflict")
-        if close_score >= 0.70:
-            reason_parts.append("close_top_gap")
-    elif scenario == "flip":
-        if signal_conflict:
-            reason_parts.append("signal_conflict")
-        if reverse_matchup:
-            reason_parts.append("reverse_matchup")
-        if balance_score >= 0.70:
-            reason_parts.append("balanced_ha")
-    else:
-        if stable_lab_support:
-            reason_parts.append("stable_lab_support")
-        if hold_gap_score >= 0.45:
-            reason_parts.append("gap_support")
-        if not draw_risk:
-            reason_parts.append("no_draw_risk")
-    if not reason_parts:
-        reason_parts.append("mixed")
+    mix_best_label = max(mix_map.items(), key=lambda kv: (kv[1], kv[0]))[0]
+    pred_mix = mix_draw if pred == "D" else (mix_home if pred == "H" else mix_away if pred == "A" else 0.0)
 
-    j1_stall_candidate = bool(
-        league == "j1"
-        and scenario == "stall"
-        and stall_score >= 0.45
-    )
-    j1_flip_candidate = bool(
-        league == "j1"
-        and scenario == "flip"
-        and flip_score >= 0.45
-    )
-    j1_hold_candidate = bool(
-        league == "j1"
-        and scenario == "hold"
-        and hold_score >= 0.45
+    def _clip01(value: float) -> float:
+        if not math.isfinite(value):
+            return 0.0
+        return max(0.0, min(1.0, float(value)))
+
+    def _confidence_label(score: float) -> str:
+        if score >= 0.67:
+            return "high"
+        if score >= 0.52:
+            return "medium"
+        return "low"
+
+    purchase_type = "chaos_flat"
+    purchase_subtype = "flat_watch"
+    purchase_conf = 0.38
+    purchase_reason = (
+        f"fallback top_prob={top_prob:.3f} top_gap={top_gap:.3f} "
+        f"entropy={entropy_score:.3f} vol={volatility_score:.3f}"
     )
 
-    return {
-        "lab_sim_stall_score": stall_score,
-        "lab_sim_flip_score": flip_score,
-        "lab_sim_hold_score": hold_score,
-        "lab_sim_scenario": scenario,
-        "lab_sim_reason": ",".join(reason_parts),
-        "lab_sim_j1_stall_candidate": j1_stall_candidate,
-        "lab_sim_j1_flip_candidate": j1_flip_candidate,
-        "lab_sim_j1_hold_candidate": j1_hold_candidate,
-    }
+    draw_core_candidate_score = (
+        (0.22 * _clip01((mix_draw - 0.46) / 0.12))
+        + (0.20 * _clip01((pdw - 0.38) / 0.08))
+        + (0.18 * _clip01((draw_tension_score - 0.62) / 0.18))
+        + (0.14 * _clip01((compactness_score - 0.58) / 0.16))
+        + (0.14 * _clip01((0.06 - path_gap) / 0.06))
+        + (0.06 * _clip01((0.58 - entropy_score) / 0.20))
+        + (0.06 * _clip01((0.06 - side_gap) / 0.06))
+    )
+    draw_core_candidate_flag = bool(
+        league == "J1"
+        and best_label == "D"
+        and pred == "D"
+        and mix_draw >= 0.46
+        and pdw >= 0.38
+        and draw_tension_score >= 0.62
+        and compactness_score >= 0.58
+        and path_gap <= 0.06
+        and entropy_score <= 0.58
+        and side_gap <= 0.06
+        and top_gap <= 0.035
+    )
+    draw_core_candidate_reason = (
+        f"j1_draw_core_candidate pd={pdw:.3f} mix_draw={mix_draw:.3f} "
+        f"draw_tension={draw_tension_score:.3f} compact={compactness_score:.3f} "
+        f"path_gap={path_gap:.3f} entropy={entropy_score:.3f}"
+    )
+    anchor_candidate_score = (
+        (0.22 * _clip01((top_prob - 0.36) / 0.12))
+        + (0.18 * _clip01((top_gap - 0.025) / 0.08))
+        + (0.20 * _clip01((hold_weight - 0.22) / 0.18))
+        + (0.16 * _clip01((0.66 - entropy_score) / 0.24))
+        + (0.12 * _clip01((0.32 - volatility_score) / 0.18))
+        + (0.12 * _clip01((0.48 - draw_tension_score) / 0.18))
+    )
+    anchor_candidate_flag = bool(
+        best_label in {"H", "A"}
+        and pred == best_label
+        and mix_best_label == best_label
+        and top_prob >= 0.36
+        and top_gap >= 0.025
+        and hold_weight >= 0.22
+        and entropy_score <= 0.66
+        and volatility_score <= 0.32
+        and draw_tension_score <= 0.48
+    )
+    anchor_candidate_reason = (
+        f"anchor_candidate best={best_label} top_prob={top_prob:.3f} top_gap={top_gap:.3f} "
+        f"hold={hold_weight:.3f} entropy={entropy_score:.3f} vol={volatility_score:.3f}"
+    )
+    away_overread_draw_cover_score = (
+        (0.16 * _clip01((pdw - 0.34) / 0.08))
+        + (0.12 * _clip01((0.43 - pa) / 0.10))
+        + (0.14 * _clip01((abs(ph - pa) - 0.14) / 0.14))
+        + (0.14 * _clip01((top_gap - 0.05) / 0.12))
+        + (0.16 * _clip01((flip_dislocation_score - 0.24) / 0.24))
+        + (0.14 * _clip01((entropy_score - 0.50) / 0.18))
+        + (0.14 * _clip01((away_path_score - 0.56) / 0.18))
+    )
+    away_overread_draw_cover_reason = (
+        f"away_draw_cover pd={pdw:.3f} pa={pa:.3f} diff_ha={abs(ph-pa):.3f} "
+        f"top_gap={top_gap:.3f} flip={flip_dislocation_score:.3f} "
+        f"entropy={entropy_score:.3f} away_path={away_path_score:.3f}"
+    )
 
-
-def _build_type_b_prob_adjustment(row):
-    ph = float(pd.to_numeric(row.get("prob_home_win"), errors="coerce"))
-    pdw = float(pd.to_numeric(row.get("prob_draw"), errors="coerce"))
-    pa = float(pd.to_numeric(row.get("prob_away_win"), errors="coerce"))
-    league = str(row.get("league", "")).strip().lower()
-    if not (math.isfinite(ph) and math.isfinite(pdw) and math.isfinite(pa)):
-        return {
-            "adjusted_prob_home_b": ph,
-            "adjusted_prob_draw_b": pdw,
-            "adjusted_prob_away_b": pa,
-            "type_b_signal_strength": 0.0,
-            "type_b_delta_home": 0.0,
-            "type_b_delta_draw": 0.0,
-            "type_b_delta_away": 0.0,
-            "type_b_lab_weight": 0.0,
-        }
-
-    flags = {x for x in str(row.get("match_type_flags", "")).split(",") if x}
-    draw_gap = float(pd.to_numeric(row.get("draw_gap"), errors="coerce"))
-    d_score_total = float(pd.to_numeric(row.get("d_score_total"), errors="coerce"))
-    lab_edge = float(pd.to_numeric(row.get("match_type_lab_matchup_edge"), errors="coerce"))
-    prob_shape = _compute_prob_shape(ph, pdw, pa)
-    lab_home = "lab_home_matchup" in flags
-    lab_away = "lab_away_matchup" in flags
-    draw_risk = "draw_risk" in flags
-    signal_conflict = "signal_conflict" in flags
-    style_conflict = "lab_style_conflict" in flags
-
-    lab_sim_scenario = str(row.get("lab_sim_scenario", "")).strip().lower()
-    lab_sim_stall_score = float(pd.to_numeric(row.get("lab_sim_stall_score"), errors="coerce"))
-    lab_sim_flip_score = float(pd.to_numeric(row.get("lab_sim_flip_score"), errors="coerce"))
-    lab_sim_hold_score = float(pd.to_numeric(row.get("lab_sim_hold_score"), errors="coerce"))
     if (
-        not lab_sim_scenario
-        or not math.isfinite(lab_sim_stall_score)
-        or not math.isfinite(lab_sim_flip_score)
-        or not math.isfinite(lab_sim_hold_score)
+        league == "J2"
+        and mix_draw >= 0.42
+        and pdw >= 0.34
+        and draw_tension_score >= 0.56
+        and compactness_score >= 0.54
+        and top_gap <= 0.05
     ):
-        lab_sim = simulate_lab_flow(row)
-        lab_sim_scenario = str(lab_sim.get("lab_sim_scenario", "")).strip().lower()
-        lab_sim_stall_score = float(lab_sim.get("lab_sim_stall_score", 0.0))
-        lab_sim_flip_score = float(lab_sim.get("lab_sim_flip_score", 0.0))
-        lab_sim_hold_score = float(lab_sim.get("lab_sim_hold_score", 0.0))
-
-    base_best_side = "H" if ph >= pa else "A"
-    alpha = 0.34 if league == "j1" else 0.38
-    if draw_risk:
-        alpha += 0.02
-    if style_conflict or signal_conflict:
-        alpha += 0.02
-    if lab_sim_scenario == "stall":
-        alpha += 0.02
-    elif lab_sim_scenario == "flip":
-        alpha += 0.04
-    elif lab_sim_scenario == "hold":
-        alpha += 0.01
-    alpha = min(alpha, 0.44 if league == "j1" else 0.48)
-
-    lab_home_bias = 0.0
-    lab_away_bias = 0.0
-    if math.isfinite(lab_edge):
-        edge_unit = _clip01(abs(lab_edge) / (9.0 if league == "j1" else 8.0))
-        if lab_home and lab_edge > 0:
-            lab_home_bias += 0.85 * edge_unit
-        if lab_home and lab_edge < 0:
-            lab_away_bias += 0.55 * edge_unit
-        if lab_away and lab_edge < 0:
-            lab_away_bias += 0.85 * edge_unit
-        if lab_away and lab_edge > 0:
-            lab_home_bias += 0.55 * edge_unit
-
-    lab_best_side = "H" if lab_home_bias > lab_away_bias else ("A" if lab_away_bias > lab_home_bias else "")
-    preferred_side = lab_best_side or base_best_side
-    close_score = _score_small_gap(prob_shape["top_gap"], 0.080 if league == "j1" else 0.065)
-    draw_score = _clip01(0.55 * lab_sim_stall_score + 0.25 * _clip01(d_score_total) + 0.20 * close_score)
-    side_edge = _clip01(max(lab_home_bias, lab_away_bias))
-
-    if lab_sim_scenario == "stall":
-        draw_mass = _clip01(0.38 + 0.34 * draw_score + (0.05 if draw_risk else 0.0))
-        side_share = max(1.0 - draw_mass, 0.0)
-        side_skew = 0.5 + 0.22 * (lab_home_bias - lab_away_bias)
-        side_skew = min(max(side_skew, 0.20), 0.80)
-        lab_home_prob = side_share * side_skew
-        lab_away_prob = side_share * (1.0 - side_skew)
-        lab_draw_prob = draw_mass
-    elif lab_sim_scenario == "flip":
-        target_side = "A" if base_best_side == "H" else "H"
-        flip_mass = _clip01(0.46 + 0.28 * lab_sim_flip_score + 0.08 * close_score)
-        draw_mass = min(0.30, 0.14 + 0.10 * close_score + (0.03 if draw_risk else 0.0))
-        other_mass = max(1.0 - flip_mass - draw_mass, 0.0)
-        if target_side == "H":
-            lab_home_prob, lab_draw_prob, lab_away_prob = flip_mass, draw_mass, other_mass
+        if best_label == "D" or pred == "D":
+            purchase_type = "j2_draw_trap"
+            purchase_subtype = "stall_draw_bias"
+            purchase_conf = min(
+                0.95,
+                (0.26 * _clip01((mix_draw - 0.42) / 0.18))
+                + (0.22 * _clip01((pdw - 0.34) / 0.10))
+                + (0.20 * _clip01((draw_tension_score - 0.56) / 0.22))
+                + (0.18 * _clip01((compactness_score - 0.54) / 0.18))
+                + (0.14 * _clip01((0.05 - top_gap) / 0.05))
+            )
+            purchase_reason = (
+                f"j2_draw_bias pd={pdw:.3f} mix_draw={mix_draw:.3f} "
+                f"draw_tension={draw_tension_score:.3f} compact={compactness_score:.3f}"
+            )
         else:
-            lab_home_prob, lab_draw_prob, lab_away_prob = other_mass, draw_mass, flip_mass
-    else:
-        hold_mass = _clip01(0.44 + 0.24 * lab_sim_hold_score + 0.12 * side_edge)
-        draw_mass = min(0.32, 0.16 + 0.10 * draw_score + (0.03 if draw_risk else 0.0))
-        other_mass = max(1.0 - hold_mass - draw_mass, 0.0)
-        if preferred_side == "H":
-            lab_home_prob, lab_draw_prob, lab_away_prob = hold_mass, draw_mass, other_mass
-        else:
-            lab_home_prob, lab_draw_prob, lab_away_prob = other_mass, draw_mass, hold_mass
-
-    lab_home_prob, lab_draw_prob, lab_away_prob = _normalize_probs(lab_home_prob, lab_draw_prob, lab_away_prob)
-    adj_home, adj_draw, adj_away = _normalize_probs(
-        ((1.0 - alpha) * ph) + (alpha * lab_home_prob),
-        ((1.0 - alpha) * pdw) + (alpha * lab_draw_prob),
-        ((1.0 - alpha) * pa) + (alpha * lab_away_prob),
-    )
-    strength = abs(adj_home - ph) + abs(adj_draw - pdw) + abs(adj_away - pa)
-    return {
-        "adjusted_prob_home_b": adj_home,
-        "adjusted_prob_draw_b": adj_draw,
-        "adjusted_prob_away_b": adj_away,
-        "type_b_signal_strength": float(strength),
-        "type_b_delta_home": float(adj_home - ph),
-        "type_b_delta_draw": float(adj_draw - pdw),
-        "type_b_delta_away": float(adj_away - pa),
-        "type_b_lab_weight": float(alpha),
-    }
-
-
-def _select_type_b_label(
-    *,
-    league,
-    base_best_side,
-    prob_home,
-    prob_draw,
-    prob_away,
-    strong_draw_signal,
-    weak_draw_signal,
-    strong_flip_signal,
-    lab_sim_scenario,
-    lab_sim_stall_score,
-    lab_sim_flip_score,
-):
-    label = _argmax_hda_label(prob_home, prob_draw, prob_away)
-    top_side = max(prob_home, prob_away)
-    draw_gap = top_side - prob_draw
-    ha_gap = abs(prob_home - prob_away)
-
-    strong_draw_margin = 0.030 if league == "j1" else 0.022
-    weak_draw_margin = 0.018 if league == "j1" else 0.014
-    flip_margin = 0.026 if league == "j1" else 0.022
-
-    if strong_draw_signal:
-        strong_draw_margin += 0.010
-    if weak_draw_signal:
-        weak_draw_margin += 0.008
-    if lab_sim_scenario == "stall":
-        strong_draw_margin += 0.004
-        weak_draw_margin += 0.004
-    if lab_sim_scenario == "flip":
-        flip_margin += 0.006
-
-    if strong_draw_signal and prob_draw >= top_side - strong_draw_margin:
-        return "D"
-    if weak_draw_signal and prob_draw >= top_side - weak_draw_margin and ha_gap <= (0.120 if league == "j1" else 0.095):
-        return "D"
-
-    if strong_flip_signal and base_best_side in {"H", "A"}:
-        opposite = "A" if base_best_side == "H" else "H"
-        opp_prob = prob_away if opposite == "A" else prob_home
-        main_prob = prob_home if base_best_side == "H" else prob_away
-        if opp_prob >= main_prob - flip_margin and lab_sim_flip_score >= (0.48 if league == "j1" else 0.50):
-            return opposite
-
-    if (
-        label != "D"
-        and lab_sim_scenario == "stall"
-        and lab_sim_stall_score >= (0.58 if league == "j1" else 0.62)
-        and prob_draw >= top_side - (0.012 if league == "j1" else 0.010)
+            purchase_type = "j2_directional_stall"
+            purchase_subtype = "home_stall" if best_label == "H" else "away_stall"
+            purchase_conf = min(
+                0.95,
+                (0.24 * _clip01((top_prob - 0.35) / 0.14))
+                + (0.20 * _clip01((top_gap - 0.02) / 0.10))
+                + (0.22 * _clip01((stall_weight - 0.38) / 0.22))
+                + (0.16 * _clip01((compactness_score - 0.54) / 0.18))
+                + (0.10 * _clip01((draw_tension_score - 0.56) / 0.18))
+                + (0.08 * _clip01((direction_mix - 0.30) / 0.20))
+            )
+            purchase_reason = (
+                f"j2_stall best={best_label} top_prob={top_prob:.3f} top_gap={top_gap:.3f} "
+                f"stall={stall_weight:.3f} compact={compactness_score:.3f}"
+            )
+    elif (
+        best_label in {"H", "A"}
+        and pred == best_label
+        and flip_weight >= 0.30
+        and volatility_score >= 0.20
+        and path_gap >= 0.10
+        and top_gap <= 0.10
+        and side_gap <= 0.16
     ):
-        return "D"
-
-    return label
-
-
-def predict_type_b_draw_dev(row):
-    ph = float(pd.to_numeric(row.get("prob_home_win"), errors="coerce"))
-    pdw = float(pd.to_numeric(row.get("prob_draw"), errors="coerce"))
-    pa = float(pd.to_numeric(row.get("prob_away_win"), errors="coerce"))
-    league = str(row.get("league", "")).strip().lower()
-    flags = {x for x in str(row.get("match_type_flags", "")).split(",") if x}
-    draw_gap = float(pd.to_numeric(row.get("draw_gap"), errors="coerce"))
-    d_score_total = float(pd.to_numeric(row.get("d_score_total"), errors="coerce"))
-    primary = str(row.get("match_type_primary", ""))
-    lab_edge = float(pd.to_numeric(row.get("match_type_lab_matchup_edge"), errors="coerce"))
-    prob_shape = _compute_prob_shape(ph, pdw, pa)
-    home_title = bool(row.get("match_type_title_race_home"))
-    away_title = bool(row.get("match_type_title_race_away"))
-    main_label = str(row.get("predicted_result_main", "")).strip().upper()
-    if main_label not in {"H", "D", "A"}:
-        main_label = _argmax_hda_label(ph, pdw, pa)
-    lab_sim_scenario = str(row.get("lab_sim_scenario", "")).strip().lower()
-    lab_sim_stall_score = pd.to_numeric(row.get("lab_sim_stall_score"), errors="coerce")
-    lab_sim_flip_score = pd.to_numeric(row.get("lab_sim_flip_score"), errors="coerce")
-    lab_sim_hold_score = pd.to_numeric(row.get("lab_sim_hold_score"), errors="coerce")
-    lab_sim_reason = str(row.get("lab_sim_reason", "")).strip()
-    stall_reason_tokens = {token.strip() for token in lab_sim_reason.split(",") if token.strip()}
-    if (
-        not lab_sim_scenario
-        or pd.isna(lab_sim_stall_score)
-        or pd.isna(lab_sim_flip_score)
-        or pd.isna(lab_sim_hold_score)
+        purchase_type = "home_reversal_watch" if best_label == "A" else "away_reversal_watch"
+        purchase_subtype = "away_overread" if best_label == "A" else "home_overread"
+        purchase_conf = min(
+            0.95,
+            (0.30 * _clip01((flip_weight - 0.30) / 0.24))
+            + (0.22 * _clip01((volatility_score - 0.20) / 0.24))
+            + (0.24 * _clip01((path_gap - 0.10) / 0.22))
+            + (0.12 * _clip01((0.10 - top_gap) / 0.10))
+            + (0.12 * _clip01((0.16 - side_gap) / 0.16))
+        )
+        purchase_reason = (
+            f"best={best_label} flip={flip_weight:.3f} vol={volatility_score:.3f} "
+            f"path_gap={path_gap:.3f} top_gap={top_gap:.3f}"
+        )
+    elif (
+        pdw >= 0.34
+        and pdw >= max(ph, pa) - 0.015
+        and top_gap <= 0.03
+        and draw_tension_score >= 0.48
+        and mix_draw >= 0.30
+        and (flip_dislocation_score >= 0.18 or side_gap >= 0.05 or volatility_score >= 0.24)
     ):
-        lab_sim = simulate_lab_flow(row)
-        lab_sim_scenario = str(lab_sim.get("lab_sim_scenario", "")).strip().lower()
-        lab_sim_stall_score = float(lab_sim.get("lab_sim_stall_score", 0.0))
-        lab_sim_flip_score = float(lab_sim.get("lab_sim_flip_score", 0.0))
-        lab_sim_hold_score = float(lab_sim.get("lab_sim_hold_score", 0.0))
-        lab_sim_reason = str(lab_sim.get("lab_sim_reason", "")).strip()
-    else:
-        lab_sim_stall_score = float(lab_sim_stall_score)
-        lab_sim_flip_score = float(lab_sim_flip_score)
-        lab_sim_hold_score = float(lab_sim_hold_score)
-
-    reason = "hold_main"
-    strong_draw_signal = False
-    weak_draw_signal = False
-
-    support_count = sum(
-        [
-            int("draw_risk" in flags),
-            int("lab_low_event" in flags),
-            int("lab_style_conflict" in flags),
-            int(d_score_total >= 0.50),
-        ]
-    )
-    flip_support_count = sum(
-        [
-            int("signal_conflict" in flags),
-            int("lab_style_conflict" in flags),
-            int(abs(lab_edge) >= 2.5 if math.isfinite(lab_edge) else 0),
-            int(prob_shape["top_gap"] <= (0.060 if league == "j1" else 0.045)),
-        ]
-    )
-    compact_shape = (
-        prob_shape["top_gap"] <= (0.060 if league == "j1" else 0.045)
-        and abs(ph - pa) <= (0.220 if league == "j1" else 0.095)
-        and pdw >= (0.312 if league == "j1" else 0.322)
-    )
-    j2_close_gap_stall = league == "j2" and "close_top_gap" in stall_reason_tokens
-    strong_stall_threshold = 0.43 if league == "j1" else (0.42 if j2_close_gap_stall else 0.50)
-    weak_stall_threshold = 0.38 if league == "j1" else 0.44
-    support_needed = 1 if league == "j1" else (1 if j2_close_gap_stall or lab_sim_stall_score >= 0.60 else 2)
-    j2_stall_title_block = league == "j2" and home_title and away_title and lab_sim_stall_score < 0.70
-    stall_is_candidate = lab_sim_scenario == "stall"
-    stall_below_threshold = stall_is_candidate and lab_sim_stall_score < strong_stall_threshold
-    stall_support_miss = stall_is_candidate and not stall_below_threshold and support_count < support_needed
-    stall_compact_miss = stall_is_candidate and not stall_below_threshold and not stall_support_miss and not compact_shape
-
-    if (
-        lab_sim_scenario == "stall"
-        and lab_sim_stall_score >= strong_stall_threshold
-        and support_count >= support_needed
-        and compact_shape
-        and not j2_stall_title_block
-    ):
-        strong_draw_signal = True
-        reason = f"{league}_lab_sim_stall:{lab_sim_reason or 'stall'}"
-
-    if not strong_draw_signal:
-        weak_draw_signal = bool(
-            lab_sim_scenario == "stall"
-            and lab_sim_stall_score >= weak_stall_threshold
-            and "draw_risk" in flags
-            and (
-                support_count >= 2
-                or (
-                    pdw >= (0.315 if league == "j1" else 0.333)
-                    and draw_gap <= (0.055 if league == "j1" else 0.030)
-                    and primary in {"draw_risk", "close_match", "lab_low_event"}
+        purchase_type = "draw_trap"
+        purchase_subtype = "weak_draw_side_bias"
+        purchase_conf = min(
+            0.95,
+            (0.28 * _clip01((0.03 - top_gap) / 0.03))
+            + (0.22 * _clip01((draw_tension_score - 0.48) / 0.24))
+            + (0.20 * _clip01((mix_draw - 0.30) / 0.18))
+            + (0.18 * _clip01(max(flip_dislocation_score, volatility_score) / 0.40))
+            + (0.12 * _clip01(side_gap / 0.12))
+        )
+        purchase_reason = (
+            f"pd={pdw:.3f} top_gap={top_gap:.3f} draw_tension={draw_tension_score:.3f} "
+            f"mix_draw={mix_draw:.3f} side_gap={side_gap:.3f}"
+        )
+    elif pdw >= max(ph, pa) - 0.01 and draw_tension_score >= 0.44:
+        if league == "J1":
+            strong_j1_draw_live = bool(
+                pdw >= 0.438
+                and top_gap >= 0.158
+                and draw_tension_score >= 0.72
+                and compactness_score >= 0.69
+                and entropy_score <= 0.43
+            )
+            j1_false_draw_flag = bool(
+                not strong_j1_draw_live
+                and (
+                    pdw < 0.418
+                    or top_gap < 0.145
+                    or (path_gap >= 0.10 and side_gap <= 0.055)
+                    or (volatility_score >= 0.24 and draw_tension_score < 0.78)
+                    or (
+                        rank2_symbol == "1"
+                        and home_path_score >= away_path_score
+                        and top_gap <= 0.132
+                    )
                 )
             )
+            if j1_false_draw_flag:
+                purchase_type = "j1_false_draw_watch"
+                purchase_subtype = "draw_false_j1"
+                purchase_conf = min(
+                    0.95,
+                    (0.26 * _clip01((pdw - 0.34) / 0.10))
+                    + (0.18 * _clip01((draw_tension_score - 0.44) / 0.24))
+                    + (0.16 * _clip01((entropy_score - 0.40) / 0.20))
+                    + (0.16 * _clip01((path_gap - 0.09) / 0.18))
+                    + (0.12 * _clip01((0.05 - side_gap) / 0.05))
+                    + (0.12 * _clip01((0.16 - top_gap) / 0.16))
+                )
+                purchase_reason = (
+                    f"j1_false_draw pd={pdw:.3f} top_gap={top_gap:.3f} "
+                    f"path_gap={path_gap:.3f} side_gap={side_gap:.3f} "
+                    f"draw_tension={draw_tension_score:.3f} vol={volatility_score:.3f}"
+                )
+            else:
+                purchase_type = "j1_draw_rescue_watch"
+                if strong_j1_draw_live or (
+                    pdw >= 0.448
+                    and top_gap >= 0.168
+                    and draw_tension_score >= 0.80
+                    and compactness_score >= 0.71
+                ):
+                    purchase_subtype = "draw_rescue_live_j1"
+                else:
+                    purchase_subtype = "draw_rescue_soft_j1"
+        elif league == "J2":
+            purchase_type = "j2_false_draw_watch"
+            purchase_subtype = "draw_live_j2"
+        else:
+            purchase_type = "chaos_draw_watch"
+            purchase_subtype = "draw_live"
+        purchase_conf = min(
+            0.95,
+            (0.32 * _clip01((pdw - 0.32) / 0.10))
+            + (0.24 * _clip01((draw_tension_score - 0.44) / 0.26))
+            + (0.18 * _clip01((entropy_score - 0.46) / 0.28))
+            + (0.14 * _clip01((0.05 - top_gap) / 0.05))
+            + (0.12 * _clip01((mix_draw - 0.28) / 0.20))
         )
-        if weak_draw_signal:
-            reason = f"weak_draw_hold:{lab_sim_reason or 'stall'}"
+        purchase_reason = (
+            f"pd={pdw:.3f} draw_tension={draw_tension_score:.3f} "
+            f"entropy={entropy_score:.3f} top_gap={top_gap:.3f}"
+        )
+    elif best_label in {"H", "A"} and (side_gap >= 0.05 or path_gap >= 0.08):
+        purchase_type = "chaos_side_watch"
+        purchase_subtype = "home_watch" if best_label == "H" else "away_watch"
+        purchase_conf = min(
+            0.95,
+            (0.24 * _clip01((top_prob - 0.34) / 0.16))
+            + (0.20 * _clip01((entropy_score - 0.42) / 0.30))
+            + (0.18 * _clip01((volatility_score - 0.16) / 0.26))
+            + (0.18 * _clip01(side_gap / 0.16))
+            + (0.20 * _clip01(path_gap / 0.24))
+        )
+        purchase_reason = (
+            f"best={best_label} top_prob={top_prob:.3f} side_gap={side_gap:.3f} "
+            f"path_gap={path_gap:.3f} entropy={entropy_score:.3f}"
+        )
+    else:
+        purchase_type = "chaos_flat"
+        purchase_subtype = "flat_watch"
+        purchase_conf = min(
+            0.95,
+            (0.26 * _clip01((0.06 - top_gap) / 0.06))
+            + (0.24 * _clip01((0.10 - side_gap) / 0.10))
+            + (0.22 * _clip01((entropy_score - 0.38) / 0.32))
+            + (0.14 * _clip01((volatility_score - 0.14) / 0.24))
+            + (0.14 * _clip01((0.10 - path_gap) / 0.10))
+        )
+        purchase_reason = (
+            f"top_prob={top_prob:.3f} top_gap={top_gap:.3f} side_gap={side_gap:.3f} "
+            f"entropy={entropy_score:.3f} path_gap={path_gap:.3f}"
+        )
 
-    strong_flip_signal = bool(
-        lab_sim_scenario == "flip"
-        and main_label in {"H", "A"}
-        and lab_sim_flip_score >= (0.52 if league == "j1" else 0.56)
-        and flip_support_count >= 2
-        and prob_shape["top_gap"] <= (0.090 if league == "j1" else 0.070)
-        and abs(ph - pa) <= (0.140 if league == "j1" else 0.090)
-        and (league != "j2" or not (home_title and away_title))
+    purchase_confidence = _confidence_label(purchase_conf)
+    away_overread_draw_cover_flag = bool(
+        purchase_type == "chaos_side_watch"
+        and purchase_subtype == "away_watch"
+        and (pred == "A" or best_label == "A")
+        and pdw >= 0.34
+        and pa <= 0.43
+        and abs(ph - pa) >= 0.14
+        and top_gap >= 0.05
+        and flip_dislocation_score >= 0.24
+        and entropy_score >= 0.50
+        and away_path_score >= 0.56
     )
 
-    prob_adjust = _build_type_b_prob_adjustment(row)
-    type_b_home = float(prob_adjust.get("adjusted_prob_home_b", ph))
-    type_b_draw = float(prob_adjust.get("adjusted_prob_draw_b", pdw))
-    type_b_away = float(prob_adjust.get("adjusted_prob_away_b", pa))
-    type_b_label = _select_type_b_label(
-        league=league,
-        base_best_side="H" if ph >= pa else "A",
-        prob_home=type_b_home,
-        prob_draw=type_b_draw,
-        prob_away=type_b_away,
-        strong_draw_signal=strong_draw_signal,
-        weak_draw_signal=weak_draw_signal,
-        strong_flip_signal=strong_flip_signal,
-        lab_sim_scenario=lab_sim_scenario,
-        lab_sim_stall_score=lab_sim_stall_score,
-        lab_sim_flip_score=lab_sim_flip_score,
-    )
-    if strong_draw_signal:
-        reason = f"{league}_lab_sim_stall:{lab_sim_reason or 'stall'}"
-    elif strong_flip_signal:
-        reason = f"{league}_lab_sim_flip:{lab_sim_reason or 'flip'}"
-    elif lab_sim_scenario == "hold":
-        reason = f"{league}_lab_sim_hold:{lab_sim_reason or 'hold'}"
-    elif weak_draw_signal:
-        reason = f"weak_draw_hold:{lab_sim_reason or 'stall'}"
-    elif lab_sim_scenario == "flip":
-        reason = f"weak_flip_hold:{lab_sim_reason or 'flip'}"
+    if pred == "D":
+        false_draw_watch_flag = purchase_type in {"j1_false_draw_watch", "j2_false_draw_watch"}
+        strong_draw_core_flag = bool(
+            not false_draw_watch_flag
+            and pdw >= 0.452
+            and top_gap >= 0.175
+            and draw_core_score >= 0.86
+            and profile in {"draw_core", "soft_draw"}
+            and entropy_score <= 0.44
+            and compactness_score >= 0.71
+            and draw_tension_score >= 0.82
+        )
+        draw_core_flag = bool(
+            strong_draw_core_flag
+        )
+        if league == "J1":
+            draw_core_flag = False
+        draw_cut_flag = bool(
+            (top_gap <= 0.025)
+            or (draw_gap >= -0.030)
+            or swing_close_score >= 0.58
+            or profile in {"soft_swing", "swing_close", "undiff_close"}
+        )
+        if false_draw_watch_flag:
+            tier = "watch"
+            admission_policy = "rank1_draw_watch"
+            primary_pick_symbol = "0"
+            secondary_pick_symbol = best_side_symbol
+            risk_level = "draw_watch"
+            ticket_guidance = "draw_watch_split"
+            decision_summary = f"draw watch split: pd={pdw:.3f} gap={draw_gap:.3f} top_gap={top_gap:.3f}"
+        elif draw_core_flag:
+            tier = "core"
+            admission_policy = "rank1_draw_core"
+            primary_pick_symbol = "0"
+            secondary_pick_symbol = best_side_symbol
+            risk_level = "low"
+            ticket_guidance = "draw_core_keep"
+            decision_summary = f"draw core keep: pd={pdw:.3f} gap={draw_gap:.3f} top_gap={top_gap:.3f}"
+        elif draw_cut_flag:
+            tier = "cut"
+            admission_policy = "rank2_draw_cut"
+            primary_pick_symbol = best_side_symbol
+            secondary_pick_symbol = "0"
+            risk_level = "high"
+            ticket_guidance = "draw_cut_to_side"
+            decision_summary = f"weak draw cut: pd={pdw:.3f} gap={draw_gap:.3f} top_gap={top_gap:.3f}"
+        else:
+            tier = "rescue"
+            admission_policy = "rank1_draw_rescue"
+            primary_pick_symbol = "0"
+            secondary_pick_symbol = best_side_symbol
+            risk_level = "medium"
+            ticket_guidance = "draw_rescue_split"
+            decision_summary = f"draw rescue split: pd={pdw:.3f} gap={draw_gap:.3f} top_gap={top_gap:.3f}"
+        return {
+            "match_purchase_type": purchase_type,
+            "match_purchase_subtype": purchase_subtype,
+            "purchase_type_confidence": purchase_confidence,
+            "purchase_type_reason": purchase_reason,
+            "admission_policy": admission_policy,
+            "rank1_symbol": rank1_symbol,
+            "rank2_symbol": rank2_symbol,
+            "rank3_symbol": rank3_symbol,
+            "rank1_prob": rank1_prob,
+            "rank2_prob": rank2_prob,
+            "rank3_prob": rank3_prob,
+            "anchor_candidate_flag": anchor_candidate_flag,
+            "anchor_candidate_score": anchor_candidate_score,
+            "anchor_candidate_reason": anchor_candidate_reason,
+            "draw_core_candidate_flag": draw_core_candidate_flag,
+            "draw_core_candidate_score": draw_core_candidate_score,
+            "draw_core_candidate_reason": draw_core_candidate_reason,
+            "away_overread_draw_cover_flag": away_overread_draw_cover_flag,
+            "away_overread_draw_cover_score": away_overread_draw_cover_score,
+            "away_overread_draw_cover_reason": away_overread_draw_cover_reason,
+            "draw_core_flag": draw_core_flag,
+            "draw_purchase_tier": tier,
+            "primary_pick_symbol": primary_pick_symbol,
+            "secondary_pick_symbol": secondary_pick_symbol,
+            "risk_level": risk_level,
+            "ticket_guidance": ticket_guidance,
+            "decision_summary": decision_summary,
+        }
 
+    side_secondary_symbol = next((sym for sym, _ in ranked if sym not in {pred_symbol, _sym(best_label)}), "")
+    if not side_secondary_symbol:
+        side_secondary_symbol = next((sym for sym, _ in ranked if sym != pred_symbol), "")
+    if rank1_symbol == "0" and pred_symbol in {"1", "2"} and pred_symbol == rank2_symbol:
+        admission_policy = "rank2_side_escape"
+        side_primary_symbol = rank2_symbol
+        side_secondary_symbol = rank3_symbol
+    else:
+        admission_policy = "rank1_side_cover"
+        side_primary_symbol = rank1_symbol
+        side_secondary_symbol = rank2_symbol
+    max_prob = max(ph, pdw, pa)
+    risk_level = "low" if (max_prob >= 0.45 and top_gap >= 0.08) else "medium"
+    # Legacy side_single/side_single_strong tended to kill secondary/third paths and
+    # force an answer too early. Keep side admissions under cover semantics instead.
+    ticket_guidance = "side_with_cover"
     return {
-        "type_b_symbol": type_b_label,
-        "type_b_reason": reason,
-        "type_b_draw_signal_strong": bool(strong_draw_signal),
-        "type_b_draw_signal_weak": bool(weak_draw_signal),
-        "type_b_reverse_signal_strong": bool(strong_flip_signal),
-        "type_b_reverse_signal_weak": bool(lab_sim_scenario == "flip" and not strong_flip_signal),
-        "type_b_stall_candidate": bool(stall_is_candidate),
-        "type_b_stall_below_threshold": bool(stall_below_threshold),
-        "type_b_stall_support_miss": bool(stall_support_miss),
-        "type_b_stall_compact_miss": bool(stall_compact_miss),
-        "adjusted_prob_home_b": type_b_home,
-        "adjusted_prob_draw_b": type_b_draw,
-        "adjusted_prob_away_b": type_b_away,
-        "type_b_signal_strength": float(prob_adjust.get("type_b_signal_strength", 0.0)),
-        "type_b_delta_home": float(prob_adjust.get("type_b_delta_home", 0.0)),
-        "type_b_delta_draw": float(prob_adjust.get("type_b_delta_draw", 0.0)),
-        "type_b_delta_away": float(prob_adjust.get("type_b_delta_away", 0.0)),
-        "type_b_lab_weight": float(prob_adjust.get("type_b_lab_weight", 0.0)),
+        "match_purchase_type": purchase_type,
+        "match_purchase_subtype": purchase_subtype,
+        "purchase_type_confidence": purchase_confidence,
+        "purchase_type_reason": purchase_reason,
+        "admission_policy": admission_policy,
+        "rank1_symbol": rank1_symbol,
+        "rank2_symbol": rank2_symbol,
+        "rank3_symbol": rank3_symbol,
+        "rank1_prob": rank1_prob,
+        "rank2_prob": rank2_prob,
+        "rank3_prob": rank3_prob,
+        "anchor_candidate_flag": anchor_candidate_flag,
+        "anchor_candidate_score": anchor_candidate_score,
+        "anchor_candidate_reason": anchor_candidate_reason,
+        "draw_core_candidate_flag": draw_core_candidate_flag,
+        "draw_core_candidate_score": draw_core_candidate_score,
+        "draw_core_candidate_reason": draw_core_candidate_reason,
+        "away_overread_draw_cover_flag": away_overread_draw_cover_flag,
+        "away_overread_draw_cover_score": away_overread_draw_cover_score,
+        "away_overread_draw_cover_reason": away_overread_draw_cover_reason,
+        "draw_core_flag": False,
+        "draw_purchase_tier": "side",
+        "primary_pick_symbol": side_primary_symbol,
+        "secondary_pick_symbol": side_secondary_symbol,
+        "risk_level": risk_level,
+        "ticket_guidance": ticket_guidance,
+        "decision_summary": (
+            f"side ranks r1={rank1_symbol} r2={rank2_symbol} r3={rank3_symbol}: "
+            f"top_gap={top_gap:.3f} max_prob={max_prob:.3f}"
+        ),
     }
 
 
-def add_match_type_prediction_variants(df):
+def add_buyplan_purchase_context(df):
+    if df is None or df.empty:
+        return df
+    out = df.copy()
+    ctx = out.apply(_build_buyplan_purchase_context, axis=1, result_type="expand")
+    out = pd.concat([out, ctx], axis=1)
+    return out
+
+
+def write_buyplan_context_csv(df: pd.DataFrame, output_csv: str):
+    if df is None or df.empty or not output_csv:
+        return ""
+    cols = [
+        "match_id",
+        "league",
+        "home_team",
+        "away_team",
+        "match_purchase_type",
+        "match_purchase_subtype",
+        "purchase_type_confidence",
+        "purchase_type_reason",
+        "admission_policy",
+        "rank1_symbol",
+        "rank2_symbol",
+        "rank3_symbol",
+        "rank1_prob",
+        "rank2_prob",
+        "rank3_prob",
+        "legacy_direct_override_applied",
+        "legacy_direct_override_reason",
+        "anchor_candidate_flag",
+        "anchor_candidate_score",
+        "anchor_candidate_reason",
+        "draw_core_candidate_flag",
+        "draw_core_candidate_score",
+        "draw_core_candidate_reason",
+        "away_overread_draw_cover_flag",
+        "away_overread_draw_cover_score",
+        "away_overread_draw_cover_reason",
+        "match_context_title_race_home",
+        "match_context_title_race_away",
+        "match_context_acl_race_home",
+        "match_context_acl_race_away",
+        "match_context_acl_border_home",
+        "match_context_acl_border_away",
+        "match_context_promotion_race_home",
+        "match_context_promotion_race_away",
+        "match_context_po_race_home",
+        "match_context_po_race_away",
+        "match_context_survival_race_home",
+        "match_context_survival_race_away",
+        "match_context_relegation_escape_home",
+        "match_context_relegation_escape_away",
+        "match_context_top_direct_duel",
+        "match_context_bottom_direct_duel",
+        "match_context_zone_home",
+        "match_context_zone_away",
+        "match_context_pressure_score_home",
+        "match_context_pressure_score_away",
+        "draw_core_flag",
+        "draw_purchase_tier",
+        "primary_pick_symbol",
+        "secondary_pick_symbol",
+        "risk_level",
+        "ticket_guidance",
+        "decision_summary",
+        "lab_hold_weight",
+        "lab_stall_weight",
+        "lab_flip_weight",
+        "lab_volatility_score",
+        "lab_draw_tension_score",
+        "lab_dynamic_swing_score",
+        "lab_tempo_band",
+        "lab_control_band",
+        "lab_pressure_band",
+        "lab_state_notes",
+    ]
+    keep = [c for c in cols if c in df.columns]
+    if not keep:
+        return ""
+    out_path = os.path.join(os.path.dirname(os.path.abspath(output_csv)), "predictions_buyplan_context.csv")
+    df[keep].to_csv(out_path, index=False, encoding="utf-8-sig")
+    print(f"[BUYPLAN_CONTEXT] saved={out_path}")
+    return out_path
+
+
+def _build_main_proxy_triplet(row):
+    ph = float(pd.to_numeric(row.get("prob_home_win"), errors="coerce"))
+    pdw = float(pd.to_numeric(row.get("prob_draw"), errors="coerce"))
+    pa = float(pd.to_numeric(row.get("prob_away_win"), errors="coerce"))
+    base_triplet = _normalize_hda_triplet(ph, pdw, pa)
+    label = str(row.get("predicted_result_main", "")).strip().upper()
+    if label not in {"H", "D", "A"}:
+        return base_triplet
+    d_score_total = float(pd.to_numeric(row.get("d_score_total"), errors="coerce"))
+    match_intensity = float(pd.to_numeric(row.get("match_intensity_score"), errors="coerce"))
+    focus_stability = float(pd.to_numeric(row.get("focus_stability_score"), errors="coerce"))
+    main_conf = _clip01(
+        (0.60 * d_score_total)
+        + (0.20 * match_intensity)
+        + (0.20 * focus_stability)
+    )
+    shift = 0.035 + (0.16 * main_conf)
+    h, d, a = base_triplet
+    if label == "D":
+        take_home = min(h * 0.28, shift * 0.5)
+        take_away = min(a * 0.28, shift * 0.5)
+        h -= take_home
+        a -= take_away
+        d += take_home + take_away
+    elif label == "H":
+        take_draw = min(d * 0.35, shift * 0.60)
+        take_away = min(a * 0.20, shift * 0.40)
+        d -= take_draw
+        a -= take_away
+        h += take_draw + take_away
+    elif label == "A":
+        take_draw = min(d * 0.35, shift * 0.60)
+        take_home = min(h * 0.20, shift * 0.40)
+        d -= take_draw
+        h -= take_home
+        a += take_draw + take_home
+    return _normalize_hda_triplet(h, d, a)
+
+
+def apply_confidence_probability_fusion(df, stage_label="PRED"):
+    if df is None or df.empty:
+        return df
+    out = df.copy()
+    required = {
+        "prob_elo_home", "prob_elo_draw", "prob_elo_away",
+        "prob_home_win", "prob_draw", "prob_away_win",
+        "predicted_result_main",
+    }
+    if not required.issubset(out.columns):
+        return out
+    if not ENABLE_CONFIDENCE_PROB_FUSION:
+        print(f"[CONF_BLEND] stage={stage_label} enabled=0; lab-blend確率を維持")
+        return out
+
+    base_vals = out[["prob_elo_home", "prob_elo_draw", "prob_elo_away"]].apply(
+        lambda s: pd.to_numeric(s, errors="coerce")
+    ).fillna(0.0).to_numpy(dtype=float)
+    if {"prob_lab_home", "prob_lab_draw", "prob_lab_away"}.issubset(out.columns):
+        lab_vals = out[["prob_lab_home", "prob_lab_draw", "prob_lab_away"]].apply(
+            lambda s: pd.to_numeric(s, errors="coerce")
+        ).fillna(0.0).to_numpy(dtype=float)
+    else:
+        lab_vals = np.zeros_like(base_vals)
+    main_proxy = out.apply(_build_main_proxy_triplet, axis=1, result_type="expand")
+    main_proxy.columns = ["prob_main_home", "prob_main_draw", "prob_main_away"]
+    out = pd.concat([out, main_proxy], axis=1)
+    main_vals = out[["prob_main_home", "prob_main_draw", "prob_main_away"]].to_numpy(dtype=float)
+
+    base_ranked = np.sort(base_vals, axis=1)
+    base_top_gap = base_ranked[:, 2] - base_ranked[:, 1]
+    base_clarity = np.clip(base_top_gap / 0.18, 0.0, 1.0)
+    elo = pd.to_numeric(out.get("elo_diff_for_prob", pd.Series(np.nan, index=out.index)), errors="coerce").fillna(0.0).to_numpy(dtype=float)
+    xg = pd.to_numeric(out.get("match_type_xg_diff", pd.Series(np.nan, index=out.index)), errors="coerce").fillna(0.0).to_numpy(dtype=float)
+    rank_gap = pd.to_numeric(out.get("match_type_rank_gap", pd.Series(np.nan, index=out.index)), errors="coerce").fillna(0.0).to_numpy(dtype=float)
+    structural_alignment = (
+        (np.sign(elo) == np.sign(xg)).astype(float)
+        + (np.sign(elo) == np.sign(-rank_gap)).astype(float)
+    ) / 2.0
+    weather_penalty = pd.to_numeric(out.get("weather_penalty", pd.Series(0.0, index=out.index)), errors="coerce").fillna(0.0).to_numpy(dtype=float)
+    base_conf = np.clip(
+        (0.55 * base_clarity)
+        + (0.30 * structural_alignment)
+        + (0.15 * (1.0 - np.clip(weather_penalty / 1.7, 0.0, 1.0))),
+        0.0,
+        1.0,
+    )
+
+    lab_conf = pd.to_numeric(out.get("confidence_lab", pd.Series(0.0, index=out.index)), errors="coerce").fillna(0.0).to_numpy(dtype=float)
+    main_conf = (
+        0.55 * pd.to_numeric(out.get("d_score_total", pd.Series(0.0, index=out.index)), errors="coerce").fillna(0.0).to_numpy(dtype=float)
+        + 0.20 * pd.to_numeric(out.get("match_intensity_score", pd.Series(0.0, index=out.index)), errors="coerce").fillna(0.0).to_numpy(dtype=float)
+        + 0.15 * pd.to_numeric(out.get("focus_stability_score", pd.Series(0.0, index=out.index)), errors="coerce").fillna(0.0).to_numpy(dtype=float)
+        + 0.10 * pd.to_numeric(out.get("lab_draw_support_score", pd.Series(0.0, index=out.index)), errors="coerce").fillna(0.0).to_numpy(dtype=float)
+    )
+    argmax_label = out.apply(
+        lambda row: _argmax_hda_label(row.get("prob_home_win"), row.get("prob_draw"), row.get("prob_away_win")),
+        axis=1,
+    ).astype(str)
+    pred_main = out["predicted_result_main"].astype(str)
+    main_conf = np.clip(main_conf + np.where(pred_main.to_numpy() != argmax_label.to_numpy(), 0.12, 0.0), 0.0, 1.0)
+
+    out["confidence_base"] = base_conf
+    out["confidence_lab"] = lab_conf
+    out["confidence_main"] = main_conf
+
+    alpha = pd.to_numeric(out.get("lab_prob_blend_alpha", pd.Series(0.0, index=out.index)), errors="coerce").fillna(0.0).to_numpy(dtype=float)
+    base_share = np.clip((1.0 - alpha) * BASE_CONFIDENCE_WEIGHT, 0.0, None)
+    lab_share = np.clip(alpha * LAB_CONFIDENCE_WEIGHT, 0.0, None)
+    non_main_sum = np.where((base_share + lab_share) > 1e-12, base_share + lab_share, 1.0)
+    base_share = base_share / non_main_sum
+    lab_share = lab_share / non_main_sum
+    main_share = np.clip(MAIN_CONFIDENCE_WEIGHT * main_conf, 0.0, 0.18)
+    out["weight_main"] = main_share
+    out["weight_base"] = base_share * (1.0 - main_share)
+    out["weight_lab"] = lab_share * (1.0 - main_share)
+
+    final_vals = (
+        out["weight_base"].to_numpy(dtype=float)[:, None] * base_vals
+        + out["weight_lab"].to_numpy(dtype=float)[:, None] * lab_vals
+        + out["weight_main"].to_numpy(dtype=float)[:, None] * main_vals
+    )
+    final_den = np.where(final_vals.sum(axis=1) > 1e-12, final_vals.sum(axis=1), 1.0)
+    final_vals = final_vals / final_den[:, None]
+    match_type = out.get("match_type", pd.Series("", index=out.index)).astype(str).to_numpy(dtype=object)
+    basis_hint = out.get("lab_basis_hint", pd.Series("", index=out.index)).astype(str).to_numpy(dtype=object)
+    prob_draw_now = final_vals[:, 1]
+    prob_home_now = final_vals[:, 0]
+    prob_away_now = final_vals[:, 2]
+    home_fatigue = pd.to_numeric(out.get("home_total_fatigue_score", pd.Series(np.nan, index=out.index)), errors="coerce").to_numpy(dtype=float)
+    away_fatigue = pd.to_numeric(out.get("away_total_fatigue_score", pd.Series(np.nan, index=out.index)), errors="coerce").to_numpy(dtype=float)
+    home_motivation = pd.to_numeric(
+        out.get("rankmot_motivation_score_5w_home", pd.Series(np.nan, index=out.index)),
+        errors="coerce",
+    ).to_numpy(dtype=float)
+    away_motivation = pd.to_numeric(
+        out.get("rankmot_motivation_score_5w_away", pd.Series(np.nan, index=out.index)),
+        errors="coerce",
+    ).to_numpy(dtype=float)
+    home_ready_edge_all = (
+        ((away_fatigue - home_fatigue) >= J1_HOME_READY_FATIGUE_EDGE)
+        & ((home_motivation - away_motivation) >= J1_HOME_READY_MOTIVATION_EDGE)
+        & ((prob_home_now - prob_away_now) >= -J1_HOME_READY_LAB_EDGE_MAX)
+    )
+    neutral_balanced_draw = (
+        (match_type == "neutral")
+        & (basis_hint == "basis_balanced")
+        & (
+            (prob_draw_now >= J1_NEUTRAL_BALANCED_DRAW_MIN)
+            | (home_ready_edge_all & (prob_draw_now >= J1_NEUTRAL_BALANCED_HOME_READY_DRAW_MIN))
+        )
+        & (prob_draw_now <= J1_NEUTRAL_BALANCED_DRAW_MAX)
+        & (np.abs(prob_home_now - prob_away_now) <= J1_NEUTRAL_BALANCED_HA_GAP_MAX)
+    )
+    if np.any(neutral_balanced_draw):
+        shift = np.minimum(prob_draw_now[neutral_balanced_draw] - 0.360, J1_NEUTRAL_BALANCED_DRAW_SHIFT_MAX)
+        shift = np.clip(shift, 0.0, None)
+        home_ready_edge = home_ready_edge_all[neutral_balanced_draw]
+        home_ge_away = prob_home_now[neutral_balanced_draw] >= prob_away_now[neutral_balanced_draw]
+        restore_home = home_ready_edge | home_ge_away
+        final_vals[neutral_balanced_draw, 1] -= shift
+        final_vals[neutral_balanced_draw, 0] += np.where(restore_home, shift, shift * 0.40)
+        final_vals[neutral_balanced_draw, 2] += np.where(restore_home, shift * 0.40, shift)
+        final_den = np.where(final_vals.sum(axis=1) > 1e-12, final_vals.sum(axis=1), 1.0)
+        final_vals = final_vals / final_den[:, None]
+    base_label = np.array([_argmax_hda_label(*vals) for vals in base_vals], dtype=object)
+    lab_label = np.array([_argmax_hda_label(*vals) for vals in lab_vals], dtype=object)
+    main_label = out["predicted_result_main"].astype(str).str.upper().to_numpy(dtype=object)
+    dominant_model = np.array(["BASE"] * len(out), dtype=object)
+    dominant_model = np.where(out["weight_lab"].to_numpy(dtype=float) > out["weight_base"].to_numpy(dtype=float), "LAB", dominant_model)
+    dominant_model = np.where(out["weight_main"].to_numpy(dtype=float) > np.maximum(out["weight_base"].to_numpy(dtype=float), out["weight_lab"].to_numpy(dtype=float)), "MAIN", dominant_model)
+    final_label = np.array([_argmax_hda_label(*vals) for vals in final_vals], dtype=object)
+    fusion_reason = np.array([f"{m}_FUSION" for m in dominant_model], dtype=object)
+    fusion_reason = np.where(
+        (dominant_model == "MAIN") & (final_label == main_label),
+        np.char.add(np.char.add(dominant_model.astype(str), "_"), np.char.add(main_label.astype(str), "_FUSION")),
+        fusion_reason,
+    )
+    out["adopted_model"] = dominant_model
+    out["fusion_reason"] = fusion_reason
+    out["fusion_detail"] = [
+        (
+            f"adopt={dominant_model[i]}; final={final_label[i]}; "
+            f"w=({out['weight_base'].iat[i]:.3f},{out['weight_lab'].iat[i]:.3f},{out['weight_main'].iat[i]:.3f}); "
+            f"c=({out['confidence_base'].iat[i]:.3f},{out['confidence_lab'].iat[i]:.3f},{out['confidence_main'].iat[i]:.3f}); "
+            f"labels=({base_label[i]},{lab_label[i]},{main_label[i]})"
+        )
+        for i in range(len(out))
+    ]
+    out["prob_final_home"] = final_vals[:, 0]
+    out["prob_final_draw"] = final_vals[:, 1]
+    out["prob_final_away"] = final_vals[:, 2]
+    print(
+        f"[CONF_BLEND] stage={stage_label} "
+        f"w_base_mean={float(out['weight_base'].mean()):.3f} "
+        f"w_lab_mean={float(out['weight_lab'].mean()):.3f} "
+        f"w_main_mean={float(out['weight_main'].mean()):.3f}"
+    )
+    return out
+
+
+def add_main_prediction_columns(df):
     out = df.copy()
     required = {"prob_home_win", "prob_draw", "prob_away_win"}
     if out.empty or (not required.issubset(out.columns)):
         return out
 
+    out = apply_lab_probability_blend(out)
+    if {"prob_final_home", "prob_final_draw", "prob_final_away"}.issubset(out.columns):
+        out["prob_home_win"] = pd.to_numeric(out["prob_final_home"], errors="coerce")
+        out["prob_draw"] = pd.to_numeric(out["prob_final_draw"], errors="coerce")
+        out["prob_away_win"] = pd.to_numeric(out["prob_final_away"], errors="coerce")
+        out["prob_home"] = out["prob_home_win"]
+        out["prob_away"] = out["prob_away_win"]
+
     meta = out.apply(_build_match_type_meta, axis=1, result_type="expand")
     out = pd.concat([out, meta], axis=1)
     d_scores = out.apply(_compute_d_scores, axis=1, result_type="expand")
     out = pd.concat([out, d_scores], axis=1)
-    lab_flow = out.apply(simulate_lab_flow, axis=1, result_type="expand")
-    out = pd.concat([out, lab_flow], axis=1)
+    close_split_scores = out.apply(_compute_close_split_scores, axis=1, result_type="expand")
+    out = pd.concat([out, close_split_scores], axis=1)
     out["predicted_result_main"] = out.apply(_calc_predicted_result_main, axis=1)
+    out["main_rule_applied"] = "BASE_FUSION"
+    if ENABLE_MAIN_NARROW_DRAW_OVERRIDE:
+        ph = pd.to_numeric(out["prob_home_win"], errors="coerce")
+        pdw = pd.to_numeric(out["prob_draw"], errors="coerce")
+        pa = pd.to_numeric(out["prob_away_win"], errors="coerce")
+        max_other = pd.concat([ph, pa], axis=1).max(axis=1)
+        draw_edge = pdw - max_other
+        match_type = out.get("match_type", pd.Series("", index=out.index)).astype(str)
+        basis_hint = out.get("lab_basis_hint", pd.Series("", index=out.index)).astype(str)
+        draw_support = pd.to_numeric(
+            out.get("lab_draw_support_score", pd.Series(np.nan, index=out.index)),
+            errors="coerce",
+        )
+        strong_type = match_type.isin(["home_strong", "away_strong"])
+        pred_main_draw = out["predicted_result_main"].astype(str).eq("D")
+        if str(LEAGUE).lower() == "j1":
+            prob_min = float(J1_MAIN_NARROW_DRAW_PROB_MIN)
+            gap_max = float(J1_MAIN_NARROW_DRAW_GAP_MAX)
+            relaxed_draw_ok = (
+                basis_hint.isin(["draw_compressed", "flat_draw_trap"])
+                & draw_support.ge(0.58)
+                & draw_edge.le(gap_max + 0.015)
+            )
+            keep_draw = draw_edge.le(gap_max) | relaxed_draw_ok
+            restore_mask = pred_main_draw & strong_type & pdw.ge(prob_min) & (~keep_draw.fillna(False))
+            restore_label = np.where(ph >= pa, "H", "A")
+            if restore_mask.any():
+                out.loc[restore_mask, "predicted_result_main"] = restore_label[restore_mask.to_numpy()]
+                out.loc[restore_mask, "main_rule_applied"] = f"J1_MAIN_DRAW_GUARD(draw_edge>{gap_max:.3f})"
+                out.loc[restore_mask, "type_adjust_note"] = (
+                    out.get("type_adjust_note", pd.Series("", index=out.index)).astype(str)
+                    + f"; J1_MAIN_DRAW_GUARD(draw_edge>{gap_max:.3f})"
+                )
+        elif str(LEAGUE).lower() == "j2":
+            prob_min = float(J2_MAIN_NARROW_DRAW_PROB_MIN)
+            gap_max = float(J2_MAIN_NARROW_DRAW_GAP_MAX)
+            keep_draw = draw_edge.le(gap_max)
+            restore_mask = pred_main_draw & strong_type & pdw.ge(prob_min) & (~keep_draw.fillna(False))
+            restore_label = np.where(ph >= pa, "H", "A")
+            if restore_mask.any():
+                out.loc[restore_mask, "predicted_result_main"] = restore_label[restore_mask.to_numpy()]
+                out.loc[restore_mask, "main_rule_applied"] = f"J2_MAIN_DRAW_GUARD(draw_edge>{gap_max:.3f})"
+                out.loc[restore_mask, "type_adjust_note"] = (
+                    out.get("type_adjust_note", pd.Series("", index=out.index)).astype(str)
+                    + f"; J2_MAIN_DRAW_GUARD(draw_edge>{gap_max:.3f})"
+                )
+    if str(LEAGUE).lower() == "j2" and ENABLE_J2_MAIN_SIGNAL_CONFLICT_BALANCED_AWAY_RESTORE:
+        pred_main_draw = out["predicted_result_main"].astype(str).eq("D")
+        match_type = out.get("match_type", pd.Series("", index=out.index)).astype(str)
+        basis_hint = out.get("lab_basis_hint", pd.Series("", index=out.index)).astype(str)
+        away_xg = out.get("match_type_sig_away_xg", pd.Series(False, index=out.index)).fillna(False).astype(bool)
+        away_rank = out.get("match_type_sig_away_rank", pd.Series(False, index=out.index)).fillna(False).astype(bool)
+        home_xg = out.get("match_type_sig_home_xg", pd.Series(False, index=out.index)).fillna(False).astype(bool)
+        restore_mask = (
+            pred_main_draw
+            & match_type.eq("signal_conflict")
+            & basis_hint.eq("basis_balanced")
+            & (away_xg | away_rank)
+            & (~home_xg)
+        )
+        if restore_mask.any():
+            out.loc[restore_mask, "predicted_result_main"] = "A"
+            out.loc[restore_mask, "main_rule_applied"] = "J2_MAIN_SIGNAL_CONFLICT_BALANCED_AWAY"
+            out.loc[restore_mask, "type_adjust_note"] = (
+                out.get("type_adjust_note", pd.Series("", index=out.index)).astype(str)
+                + "; J2_MAIN_SIGNAL_CONFLICT_BALANCED_AWAY"
+            )
+    if str(LEAGUE).lower() == "j2" and ENABLE_J2_MAIN_NEUTRAL_DRAW_COMPRESSED_AWAY_RESTORE:
+        pred_main_draw = out["predicted_result_main"].astype(str).eq("D")
+        match_type = out.get("match_type", pd.Series("", index=out.index)).astype(str)
+        basis_hint = out.get("lab_basis_hint", pd.Series("", index=out.index)).astype(str)
+        home_sig_ct = pd.to_numeric(
+            out.get("match_type_home_signal_count", pd.Series(0, index=out.index)),
+            errors="coerce",
+        ).fillna(0.0)
+        away_sig_ct = pd.to_numeric(
+            out.get("match_type_away_signal_count", pd.Series(0, index=out.index)),
+            errors="coerce",
+        ).fillna(0.0)
+        away_xg = out.get("match_type_sig_away_xg", pd.Series(False, index=out.index)).fillna(False).astype(bool)
+        away_rank = out.get("match_type_sig_away_rank", pd.Series(False, index=out.index)).fillna(False).astype(bool)
+        restore_mask = (
+            pred_main_draw
+            & match_type.eq("neutral")
+            & basis_hint.eq("draw_compressed")
+            & home_sig_ct.le(0.0)
+            & away_sig_ct.ge(1.0)
+            & (away_xg | away_rank)
+        )
+        if restore_mask.any():
+            out.loc[restore_mask, "predicted_result_main"] = "A"
+            out.loc[restore_mask, "main_rule_applied"] = "J2_MAIN_NEUTRAL_DRAW_COMPRESSED_AWAY"
+            out.loc[restore_mask, "type_adjust_note"] = (
+                out.get("type_adjust_note", pd.Series("", index=out.index)).astype(str)
+                + "; J2_MAIN_NEUTRAL_DRAW_COMPRESSED_AWAY"
+            )
+    if str(LEAGUE).lower() == "j1" and ENABLE_J1_MAIN_NEUTRAL_SPLIT_SIDE_AWAY_RESTORE:
+        pred_main_draw = out["predicted_result_main"].astype(str).eq("D")
+        match_type = out.get("match_type", pd.Series("", index=out.index)).astype(str)
+        basis_hint = out.get("lab_basis_hint", pd.Series("", index=out.index)).astype(str)
+        lab_edge = pd.to_numeric(
+            out.get("match_type_lab_matchup_edge", pd.Series(np.nan, index=out.index)),
+            errors="coerce",
+        )
+        restore_mask = (
+            pred_main_draw
+            & match_type.eq("neutral")
+            & basis_hint.eq("split_side")
+            & (lab_edge <= J1_MAIN_NEUTRAL_SPLIT_SIDE_LAB_EDGE_MAX)
+            & (
+                pd.to_numeric(out["prob_away_win"], errors="coerce")
+                >= pd.to_numeric(out["prob_home_win"], errors="coerce")
+                - J1_MAIN_NEUTRAL_SPLIT_SIDE_AWAY_GAP_MAX
+            )
+        )
+        if restore_mask.any():
+            out.loc[restore_mask, "predicted_result_main"] = "A"
+            out.loc[restore_mask, "main_rule_applied"] = "J1_MAIN_NEUTRAL_SPLIT_SIDE_AWAY"
+            out.loc[restore_mask, "type_adjust_note"] = (
+                out.get("type_adjust_note", pd.Series("", index=out.index)).astype(str)
+                + "; J1_MAIN_NEUTRAL_SPLIT_SIDE_AWAY"
+            )
+    out["predicted_result_main_prefusion"] = out["predicted_result_main"]
+    out = apply_confidence_probability_fusion(out, "MAIN")
+    if {"prob_final_home", "prob_final_draw", "prob_final_away"}.issubset(out.columns):
+        out["prob_home_win"] = pd.to_numeric(out["prob_final_home"], errors="coerce")
+        out["prob_draw"] = pd.to_numeric(out["prob_final_draw"], errors="coerce")
+        out["prob_away_win"] = pd.to_numeric(out["prob_final_away"], errors="coerce")
+        out["prob_home"] = out["prob_home_win"]
+        out["prob_away"] = out["prob_away_win"]
+    out["predicted_result_main_postfusion_argmax"] = out.apply(_calc_predicted_result_main, axis=1)
+    if str(LEAGUE).lower() == "j1" and ENABLE_J1_MAIN_HOME_STRONG_DRAW_COMPRESSED_POSTFUSION_SYNC:
+        match_type = out.get("match_type", pd.Series("", index=out.index)).astype(str)
+        basis_hint = out.get("lab_basis_hint", pd.Series("", index=out.index)).astype(str)
+        prob_draw = pd.to_numeric(out.get("prob_draw", pd.Series(np.nan, index=out.index)), errors="coerce")
+        prob_home = pd.to_numeric(out.get("prob_home_win", pd.Series(np.nan, index=out.index)), errors="coerce")
+        prob_away = pd.to_numeric(out.get("prob_away_win", pd.Series(np.nan, index=out.index)), errors="coerce")
+        top_gap = (
+            pd.concat([prob_home, prob_draw, prob_away], axis=1)
+            .apply(
+                lambda r: (
+                    (lambda vals: vals[0] - vals[1] if len(vals) >= 2 else np.nan)(
+                        sorted([x for x in r.tolist() if pd.notna(x)], reverse=True)
+                    )
+                ),
+                axis=1,
+            )
+            .astype(float)
+        )
+        sync_mask = (
+            match_type.eq("home_strong")
+            & basis_hint.eq("draw_compressed")
+            & out["predicted_result_main_prefusion"].astype(str).isin(["H", "A"])
+            & out["predicted_result_main_postfusion_argmax"].astype(str).eq("D")
+            & prob_draw.ge(J1_MAIN_HOME_STRONG_DRAW_COMPRESSED_POSTFUSION_DRAW_MIN)
+            & top_gap.ge(J1_MAIN_HOME_STRONG_DRAW_COMPRESSED_POSTFUSION_GAP_MIN)
+        )
+        if sync_mask.any():
+            out.loc[sync_mask, "predicted_result_main"] = "D"
+            out.loc[sync_mask, "main_rule_applied"] = "J1_HOME_STRONG_DRAW_COMPRESSED_POSTFUSION"
+            out.loc[sync_mask, "type_adjust_note"] = (
+                out.get("type_adjust_note", pd.Series("", index=out.index)).astype(str)
+                + "; J1_HOME_STRONG_DRAW_COMPRESSED_POSTFUSION"
+            )
     out["predicted_result_main_symbol"] = out.apply(
         lambda r: _symbol_result_argmax(r["prob_home_win"], r["prob_draw"], r["prob_away_win"]),
         axis=1,
     )
-    out["type_adjust_note"] = out["match_type_reason"]
-
-    type_b = out.apply(predict_type_b_draw_dev, axis=1, result_type="expand")
-    out = pd.concat([out, type_b], axis=1)
-    out["adjusted_prob_home_b"] = pd.to_numeric(out.get("adjusted_prob_home_b"), errors="coerce")
-    out["adjusted_prob_draw_b"] = pd.to_numeric(out.get("adjusted_prob_draw_b"), errors="coerce")
-    out["adjusted_prob_away_b"] = pd.to_numeric(out.get("adjusted_prob_away_b"), errors="coerce")
-    out["predicted_result_type_b"] = (
-        out.get("type_b_symbol", pd.Series(index=out.index, dtype="object"))
-        .fillna("")
-        .astype(str)
-        .str.upper()
+    type_adjust_note = out.get("type_adjust_note", pd.Series("", index=out.index)).astype(str)
+    match_type_reason = out.get("match_type_reason", pd.Series("", index=out.index)).astype(str)
+    out["type_adjust_note"] = np.where(
+        type_adjust_note.str.len() > 0,
+        type_adjust_note.str.lstrip("; ").str.strip(),
+        match_type_reason,
     )
-    out["type_adjust_note_b"] = out.get("type_b_reason", pd.Series(index=out.index, dtype="object")).fillna("na")
-    out["predicted_result_type_b_symbol"] = out["predicted_result_type_b"].map({"H": "1", "D": "0", "A": "2"}).fillna("")
-    out["type_b_reverse_signal_strong"] = out.get(
-        "type_b_reverse_signal_strong", pd.Series(False, index=out.index)
-    ).fillna(False).astype(bool)
-    out["type_b_reverse_signal_weak"] = out.get(
-        "type_b_reverse_signal_weak", pd.Series(False, index=out.index)
-    ).fillna(False).astype(bool)
-    out["type_b_stall_candidate"] = out.get(
-        "type_b_stall_candidate", pd.Series(False, index=out.index)
-    ).fillna(False).astype(bool)
-    out["type_b_stall_below_threshold"] = out.get(
-        "type_b_stall_below_threshold", pd.Series(False, index=out.index)
-    ).fillna(False).astype(bool)
-    out["type_b_stall_support_miss"] = out.get(
-        "type_b_stall_support_miss", pd.Series(False, index=out.index)
-    ).fillna(False).astype(bool)
-    out["type_b_stall_compact_miss"] = out.get(
-        "type_b_stall_compact_miss", pd.Series(False, index=out.index)
-    ).fillna(False).astype(bool)
-    type_b_scope = "BACKTEST" if "actual_result" in out.columns else "PRED"
-    print(
-        f"[TYPE_B_STALL_DIAG:{type_b_scope}] "
-        f"rows={len(out)} "
-        f"stall_total={int(out['type_b_stall_candidate'].sum())} "
-        f"below_threshold={int(out['type_b_stall_below_threshold'].sum())} "
-        f"support_miss={int(out['type_b_stall_support_miss'].sum())} "
-        f"compact_miss={int(out['type_b_stall_compact_miss'].sum())} "
-        f"final_type_b_D={int((out['predicted_result_type_b'] == 'D').sum())}"
-    )
-    out["adjusted_prob_home_c"] = out["adjusted_prob_home_b"]
-    out["adjusted_prob_draw_c"] = out["adjusted_prob_draw_b"]
-    out["adjusted_prob_away_c"] = out["adjusted_prob_away_b"]
-    # Legacy type_a columns remain as empty compatibility placeholders only.
-    out["adjusted_prob_home_a"] = out["adjusted_prob_home_c"]
-    out["adjusted_prob_draw_a"] = out["adjusted_prob_draw_c"]
-    out["adjusted_prob_away_a"] = out["adjusted_prob_away_c"]
-    out["type_a_symbol"] = ""
-    out["type_a_reason"] = "legacy_unused"
-    out["type_a_draw_signal_strong"] = False
-    out["type_a_draw_signal_weak"] = False
-    out["predicted_result_type_a"] = ""
-    out["type_adjust_note_a"] = "legacy_unused"
-    out["predicted_result_type_a_symbol"] = ""
-    type_c_active = []
-    type_c_note = []
-    type_c_symbol = []
-    for _, row in out.iterrows():
-        base_b = str(row.get("predicted_result_type_b", "")).upper()
-        league = str(row.get("league", "")).strip().lower()
-        flags = {x for x in str(row.get("match_type_flags", "")).split(",") if x}
-        ph = float(pd.to_numeric(row.get("adjusted_prob_home_b"), errors="coerce"))
-        pa = float(pd.to_numeric(row.get("adjusted_prob_away_b"), errors="coerce"))
-        pdw = float(pd.to_numeric(row.get("adjusted_prob_draw_b"), errors="coerce"))
-        prob_shape = _compute_prob_shape(ph, pdw, pa)
-        d_score_total = float(pd.to_numeric(row.get("d_score_total"), errors="coerce"))
-        use_c_draw = base_b == "D"
-        note = f"inherit_type_b:{row.get('type_adjust_note_b', 'none')}" if use_c_draw else ""
-        if (not use_c_draw) and league == "j1":
-            best_non_draw = max(ph, pa)
-            stall_score = float(pd.to_numeric(row.get("lab_sim_stall_score"), errors="coerce"))
-            weak_stall_bridge = bool(row.get("type_b_draw_signal_weak"))
-            compact_draw = (
-                "draw_risk" in flags
-                and prob_shape["top_gap"] <= 0.040
-                and abs(ph - pa) <= 0.100
-                and d_score_total >= 0.30
-            )
-            lowevent_draw = (
-                "lab_low_event" in flags
-                and prob_shape["top_gap"] <= 0.040
-                and pdw >= 0.320
-            )
-            gradient_draw = (
-                "draw_risk" in flags
-                and pdw >= 0.325
-                and abs(best_non_draw - pdw) <= 0.085
-                and stall_score >= 0.36
-            )
-            if weak_stall_bridge or compact_draw or lowevent_draw or gradient_draw:
-                use_c_draw = True
-                note = "j1_type_c_gradient_promote"
-        final_c = "D" if use_c_draw else ""
-        type_c_active.append(final_c)
-        type_c_note.append(note)
-        type_c_symbol.append("0" if final_c == "D" else "")
-    out["type_c_symbol"] = out["predicted_result_type_c"] if "predicted_result_type_c" in out.columns else pd.Series(index=out.index, dtype="object")
-    out["type_c_reason"] = type_c_note
-    out["type_c_draw_signal_strong"] = out.get("type_b_draw_signal_strong", False)
-    out["type_c_draw_signal_weak"] = out.get("type_b_draw_signal_weak", False)
-    out["predicted_result_type_c"] = type_c_active
-    out["type_adjust_note_c"] = type_c_note
-    out["predicted_result_type_c_symbol"] = type_c_symbol
-    out["type_c_symbol"] = out["predicted_result_type_c"]
-    out["type_c_reason"] = out["type_adjust_note_c"]
     return out
 
 
@@ -3571,6 +5864,47 @@ def save_match_type_diagnostics(df, league, season_year):
             )
     summary_df = pd.DataFrame(rows).sort_values(["league", "matches", "hit_rate"], ascending=[True, False, False])
     summary_path = os.path.join(PROFILE_SCAN_DIR, f"match_type_summary_{str(league).lower()}_{season_year}.csv")
+    basis_rows = []
+    for lg, part in work.groupby("league", dropna=False, sort=True) if "league" in work.columns else [(str(league).upper(), work)]:
+        actual = part.get("actual_result", pd.Series(index=part.index, dtype="object")).astype(str).str.upper()
+        pred = part.get("predicted_result", pd.Series(index=part.index, dtype="object")).astype(str).str.upper()
+        basis_series = part.get("lab_basis_hint", pd.Series("basis_balanced", index=part.index)).fillna("basis_balanced").astype(str)
+        for basis_hint, sub in part.groupby(basis_series, dropna=False, sort=True):
+            act = actual.loc[sub.index]
+            pr = pred.loc[sub.index]
+            valid = act.isin(["H", "D", "A"]) & pr.isin(["H", "D", "A"])
+            basis_rows.append(
+                {
+                    "league": str(lg).upper(),
+                    "basis_hint": str(basis_hint),
+                    "matches": int(len(sub)),
+                    "hits": int((act[valid] == pr[valid]).sum()) if int(valid.sum()) > 0 else 0,
+                    "hit_rate": float((act[valid] == pr[valid]).mean()) if int(valid.sum()) > 0 else None,
+                    "pred_H": int((pr == "H").sum()),
+                    "pred_D": int((pr == "D").sum()),
+                    "pred_A": int((pr == "A").sum()),
+                    "act_H": int((act == "H").sum()),
+                    "act_D": int((act == "D").sum()),
+                    "act_A": int((act == "A").sum()),
+                    "side_path_mean": float(
+                        pd.to_numeric(
+                            pd.concat(
+                                [
+                                    part.loc[sub.index, "lab_side_path_home_score"] if "lab_side_path_home_score" in part.columns else pd.Series(index=sub.index, dtype="float64"),
+                                    part.loc[sub.index, "lab_side_path_away_score"] if "lab_side_path_away_score" in part.columns else pd.Series(index=sub.index, dtype="float64"),
+                                ],
+                                axis=1,
+                            ).max(axis=1),
+                            errors="coerce",
+                        ).mean()
+                    ),
+                    "draw_support_mean": float(pd.to_numeric(part.loc[sub.index, "lab_draw_support_score"], errors="coerce").mean()) if "lab_draw_support_score" in part.columns else None,
+                    "dispersion_mean": float(pd.to_numeric(part.loc[sub.index, "lab_dispersion_score"], errors="coerce").mean()) if "lab_dispersion_score" in part.columns else None,
+                    "mix_draw_mean": float(pd.to_numeric(part.loc[sub.index, "lab_mix_draw"], errors="coerce").mean()) if "lab_mix_draw" in part.columns else None,
+                }
+            )
+    basis_summary_df = pd.DataFrame(basis_rows).sort_values(["league", "matches", "hit_rate"], ascending=[True, False, False])
+    basis_summary_path = os.path.join(PROFILE_SCAN_DIR, f"match_type_basis_summary_{str(league).lower()}_{season_year}.csv")
     detail_cols = [c for c in [
         "match_id", "league", "節", "home_team", "away_team", "actual_result", "predicted_result",
         "match_type", "match_type_signal_conflict", "match_type_home_signal_count", "match_type_away_signal_count",
@@ -3579,149 +5913,33 @@ def save_match_type_diagnostics(df, league, season_year):
         "match_type_sig_home_elo", "match_type_sig_home_xg", "match_type_sig_home_rank",
         "prob_home_win", "prob_draw", "prob_away_win", "draw_risk_flag", "draw_gap",
         "d_score_close", "d_score_stall", "d_score_total",
-        "type_c_draw_signal_strong", "type_c_draw_signal_weak",
-        "type_b_reverse_signal_strong", "type_b_reverse_signal_weak",
+        "draw_core_score", "swing_close_score", "close_split_profile",
         "d_combo_close_lowevent", "d_combo_close_conflict", "d_combo_drawrisk_stall",
         "d_flag_close_lowevent", "d_flag_close_conflict", "d_flag_drawrisk_stall", "d_flag_two_of_three",
         "d_flag_j1_close_lowevent", "d_flag_j1_drawrisk_stall",
         "d_flag_j2_second_draw_close", "d_flag_j2_drawrisk_second",
-        "lab_sim_stall_score", "lab_sim_flip_score", "lab_sim_hold_score", "lab_sim_scenario", "lab_sim_reason",
-        "lab_sim_j1_stall_candidate", "lab_sim_j1_flip_candidate", "lab_sim_j1_hold_candidate",
+        "lab_hold_weight", "lab_stall_weight", "lab_flip_weight",
+        "lab_volatility_score", "lab_draw_tension_score",
+        "lab_tempo_band", "lab_control_band", "lab_pressure_band",
+        "lab_matchup_profile",
+        "lab_matchup_edge_score", "lab_style_conflict_score", "lab_low_event_score",
+        "lab_dynamic_swing_score",
+        "lab_hold_foundation_score", "lab_stall_compactness_score", "lab_flip_dislocation_score",
+        "lab_side_path_home_score", "lab_side_path_away_score",
+        "lab_draw_support_score", "lab_dispersion_score", "lab_basis_hint",
+        "lab_home_path_score", "lab_away_path_score", "lab_scenario_entropy_score",
+        "lab_draw_path_score", "lab_mix_home", "lab_mix_draw", "lab_mix_away",
+        "lab_confidence_delta", "lab_floor_delta", "lab_ceiling_delta",
+        "lab_recovery_delta", "lab_regression_delta", "lab_persistence_delta",
+        "lab_state_notes",
         "decision_reason",
     ] if c in work.columns]
     detail_df = work[detail_cols].copy()
     detail_path = os.path.join(PROFILE_SCAN_DIR, f"match_type_detail_{str(league).lower()}_{season_year}.csv")
     summary_df.to_csv(summary_path, index=False, encoding="utf-8-sig")
+    basis_summary_df.to_csv(basis_summary_path, index=False, encoding="utf-8-sig")
     detail_df.to_csv(detail_path, index=False, encoding="utf-8-sig")
-    print(f"[MATCH_TYPE_DIAG] summary={summary_path} detail={detail_path}")
-    return summary_path, detail_path
-
-
-def save_lab_sim_diagnostics(df, league, season_year):
-    if df is None or df.empty:
-        return None, None
-    os.makedirs(PROFILE_SCAN_DIR, exist_ok=True)
-    work = df.copy()
-    actual = work.get("actual_result", pd.Series(index=work.index, dtype="object")).astype(str).str.upper()
-    main = work.get("predicted_result_main", work.get("predicted_result", pd.Series(index=work.index, dtype="object"))).astype(str).str.upper()
-    valid = actual.isin(["H", "D", "A"]) & main.isin(["H", "D", "A"])
-    flip_actual = valid & actual.isin(["H", "A"]) & main.isin(["H", "A"]) & (actual != main)
-    rows = []
-    for scenario, sub in work.groupby("lab_sim_scenario", dropna=False, sort=True):
-        idx = sub.index
-        scenario_valid = valid.loc[idx]
-        rows.append(
-            {
-                "scenario": str(scenario),
-                "matches": int(len(sub)),
-                "main_hit_rate": float((actual.loc[idx][scenario_valid] == main.loc[idx][scenario_valid]).mean()) if int(scenario_valid.sum()) > 0 else None,
-                "actual_D_rate": float((actual.loc[idx] == "D").mean()) if len(sub) > 0 else None,
-                "main_miss_HA_flip_rate": float(flip_actual.loc[idx].mean()) if len(sub) > 0 else None,
-                "stall_score_mean": float(pd.to_numeric(sub.get("lab_sim_stall_score"), errors="coerce").mean()),
-                "flip_score_mean": float(pd.to_numeric(sub.get("lab_sim_flip_score"), errors="coerce").mean()),
-                "hold_score_mean": float(pd.to_numeric(sub.get("lab_sim_hold_score"), errors="coerce").mean()),
-            }
-        )
-    summary_df = pd.DataFrame(rows).sort_values(["matches", "scenario"], ascending=[False, True])
-    summary_path = os.path.join(PROFILE_SCAN_DIR, f"lab_sim_summary_{str(league).lower()}_{season_year}.csv")
-    detail_cols = [c for c in [
-        "match_id", "league", "節", "home_team", "away_team", "actual_result", "predicted_result_main",
-        "lab_sim_stall_score", "lab_sim_flip_score", "lab_sim_hold_score", "lab_sim_scenario", "lab_sim_reason",
-        "lab_sim_j1_stall_candidate", "lab_sim_j1_flip_candidate", "lab_sim_j1_hold_candidate",
-        "prob_home_win", "prob_draw", "prob_away_win", "draw_risk_flag", "draw_gap",
-        "match_type_primary", "match_type_flags", "match_type_reason", "match_type_signal_conflict",
-    ] if c in work.columns]
-    detail_df = work[detail_cols].copy()
-    detail_path = os.path.join(PROFILE_SCAN_DIR, f"lab_sim_detail_{str(league).lower()}_{season_year}.csv")
-    summary_df.to_csv(summary_path, index=False, encoding="utf-8-sig")
-    detail_df.to_csv(detail_path, index=False, encoding="utf-8-sig")
-    print(f"[LAB_SIM_DIAG] summary={summary_path} detail={detail_path}")
-    return summary_path, detail_path
-
-
-def save_match_type_variant_diagnostics(df, league, season_year):
-    required = {"predicted_result_main", "predicted_result_type_b", "predicted_result_type_c"}
-    if df is None or df.empty or (not required.issubset(df.columns)):
-        return None, None
-
-    os.makedirs(PROFILE_SCAN_DIR, exist_ok=True)
-    rows = []
-    if "actual_result" in df.columns:
-        actual = df["actual_result"].astype(str).str.upper()
-        for col in ["predicted_result_main", "predicted_result_type_b", "predicted_result_type_c"]:
-            pred = df[col].astype(str).str.upper()
-            valid = actual.isin(["H", "D", "A"]) & pred.isin(["H", "D", "A"])
-            rows.append(
-                {
-                    "variant": col,
-                    "matches": int(valid.sum()),
-                    "hits": int((pred[valid] == actual[valid]).sum()) if int(valid.sum()) > 0 else 0,
-                    "hit_rate": float((pred[valid] == actual[valid]).mean()) if int(valid.sum()) > 0 else None,
-                    "pred_H": int((pred == "H").sum()),
-                    "pred_D": int((pred == "D").sum()),
-                    "pred_A": int((pred == "A").sum()),
-                    "changed_matches": "",
-                    "improved_vs_main": "",
-                    "worsened_vs_main": "",
-                }
-            )
-    if "actual_result" in df.columns:
-        actual = df["actual_result"].astype(str).str.upper()
-        main = df["predicted_result_main"].astype(str).str.upper()
-        for variant_col in ["predicted_result_type_b", "predicted_result_type_c"]:
-            pred = df[variant_col].astype(str).str.upper()
-            changed = pred != main
-            valid = actual.isin(["H", "D", "A"]) & main.isin(["H", "D", "A"]) & pred.isin(["H", "D", "A"])
-            improved = changed & valid & (pred == actual) & (main != actual)
-            worsened = changed & valid & (pred != actual) & (main == actual)
-            rows.append(
-                {
-                    "variant": f"main_vs_{variant_col.replace('predicted_result_', '')}",
-                    "matches": int(len(df)),
-                    "hits": int((~changed).sum()),
-                    "hit_rate": float((~changed).mean()),
-                    "pred_H": "",
-                    "pred_D": "",
-                    "pred_A": "",
-                    "changed_matches": int(changed.sum()),
-                    "improved_vs_main": int(improved.sum()),
-                    "worsened_vs_main": int(worsened.sum()),
-                }
-            )
-    summary_path = os.path.join(PROFILE_SCAN_DIR, f"match_type_variant_summary_{str(league).lower()}_{season_year}.csv")
-    pd.DataFrame(rows).to_csv(summary_path, index=False, encoding="utf-8-sig")
-
-    detail_rows = []
-    base_cols = ["league", "節", "match_id", "home_team", "away_team", "match_type", "match_type_primary", "match_type_flags"]
-    for _, row in df.iterrows():
-        diff_b = str(row.get("predicted_result_main", "")) != str(row.get("predicted_result_type_b", ""))
-        diff_c = str(row.get("predicted_result_main", "")) != str(row.get("predicted_result_type_c", ""))
-        if not diff_b and not diff_c:
-            continue
-        item = {c: row.get(c, "") for c in base_cols}
-        item.update(
-            {
-                "actual_result": row.get("actual_result", ""),
-                "predicted_result_main": row.get("predicted_result_main", ""),
-                "predicted_result_type_b": row.get("predicted_result_type_b", ""),
-                "predicted_result_type_c": row.get("predicted_result_type_c", ""),
-                "type_adjust_note_b": row.get("type_adjust_note_b", ""),
-                "type_adjust_note_c": row.get("type_adjust_note_c", ""),
-                "main_hit": row.get("predicted_result_main", "") == row.get("actual_result", ""),
-                "type_b_hit": row.get("predicted_result_type_b", "") == row.get("actual_result", ""),
-                "type_c_hit": row.get("predicted_result_type_c", "") == row.get("actual_result", ""),
-                "main_vs_type_b_changed": bool(diff_b),
-                "main_vs_type_c_changed": bool(diff_c),
-                "type_b_improved_vs_main": bool(diff_b and row.get("predicted_result_type_b", "") == row.get("actual_result", "") and row.get("predicted_result_main", "") != row.get("actual_result", "")),
-                "type_b_worsened_vs_main": bool(diff_b and row.get("predicted_result_type_b", "") != row.get("actual_result", "") and row.get("predicted_result_main", "") == row.get("actual_result", "")),
-                "type_c_improved_vs_main": bool(diff_c and row.get("predicted_result_type_c", "") == row.get("actual_result", "") and row.get("predicted_result_main", "") != row.get("actual_result", "")),
-                "type_c_worsened_vs_main": bool(diff_c and row.get("predicted_result_type_c", "") != row.get("actual_result", "") and row.get("predicted_result_main", "") == row.get("actual_result", "")),
-            }
-        )
-        detail_rows.append(item)
-    detail_path = os.path.join(PROFILE_SCAN_DIR, f"match_type_variant_detail_{str(league).lower()}_{season_year}.csv")
-    pd.DataFrame(detail_rows).to_csv(detail_path, index=False, encoding="utf-8-sig")
-    print(f"[MATCH_TYPE_VARIANT_DIAG] summary={summary_path} detail={detail_path}")
+    print(f"[MATCH_TYPE_DIAG] summary={summary_path} basis={basis_summary_path} detail={detail_path}")
     return summary_path, detail_path
 
 
@@ -3730,16 +5948,68 @@ def apply_main_prediction_result(df, stage_label="PRED"):
         return df
     out = df.copy()
     main = out["predicted_result_main"].astype(str).str.upper()
+    out["predicted_result_source"] = "main_rule"
+    out["predicted_result_prob_ref"] = out.get(
+        "predicted_result_main_postfusion_argmax",
+        pd.Series("", index=out.index),
+    ).astype(str).str.upper()
     cur = out.get("predicted_result", pd.Series("", index=out.index)).astype(str).str.upper()
     changed = main.isin(["H", "D", "A"]) & (main != cur)
+    if "fusion_reason" in out.columns:
+        out["decision_reason_base"] = out["fusion_reason"].astype(str)
+        if "decision_reason" in out.columns:
+            cur_reason = out["decision_reason"].astype(str)
+            replace_mask = cur_reason.eq("") | cur_reason.eq("ARGMAX") | cur_reason.eq("MATCH_TYPE_MAIN_OVERRIDE")
+            out.loc[replace_mask, "decision_reason"] = out.loc[replace_mask, "fusion_reason"].astype(str)
     if not changed.any():
         return out
     out.loc[changed, "predicted_result"] = main.loc[changed]
     if "final_result" in out.columns:
         out.loc[changed, "final_result"] = main.loc[changed]
     if "decision_reason" in out.columns:
-        out.loc[changed, "decision_reason"] = "MATCH_TYPE_MAIN_OVERRIDE"
+        out.loc[changed, "decision_reason"] = out.loc[changed, "fusion_reason"].astype(str) if "fusion_reason" in out.columns else "MATCH_TYPE_MAIN_OVERRIDE"
     print(f"[MATCH_TYPE_MAIN_APPLY] stage={stage_label} changed={int(changed.sum())}")
+    return out
+
+
+def apply_connected_prediction_overrides(df, league, stage_label="PRED"):
+    if df is None or df.empty:
+        return df
+    out = df.copy()
+    before = out.get("predicted_result", pd.Series("", index=out.index)).astype(str).str.upper()
+    for fn in [
+        apply_narrow_draw_override,
+        apply_incentive_rank_context_override,
+        apply_j1_home_restore_override,
+        apply_j1_away_restore_override,
+        apply_j1_signal_conflict_home_restore,
+        apply_j1_signal_conflict_away_restore,
+        apply_j2_away_restore_overrides,
+    ]:
+        out = fn(out, league)
+    if "decision_reason" in out.columns:
+        base_reason = out.get("decision_reason_base", out["decision_reason"]).astype(str)
+        final_reason = out["decision_reason"].astype(str)
+        fusion_reason = out.get("fusion_reason", pd.Series("", index=out.index)).astype(str)
+        out["decision_reason_detail"] = np.where(
+            final_reason.eq(base_reason) | final_reason.eq(fusion_reason) | final_reason.eq(""),
+            out.get("fusion_detail", pd.Series("", index=out.index)).astype(str),
+            final_reason + " | " + out.get("fusion_detail", pd.Series("", index=out.index)).astype(str),
+        )
+        if "main_rule_applied" in out.columns:
+            main_rule = out["main_rule_applied"].astype(str)
+            sync_mask = (
+                main_rule.eq("BASE_FUSION")
+                & final_reason.ne("")
+                & final_reason.ne("ARGMAX")
+                & final_reason.ne("MATCH_TYPE_MAIN_OVERRIDE")
+                & final_reason.ne(base_reason)
+                & final_reason.ne(fusion_reason)
+            )
+            out.loc[sync_mask, "main_rule_applied"] = final_reason.loc[sync_mask]
+    after = out.get("predicted_result", pd.Series("", index=out.index)).astype(str).str.upper()
+    changed = before.isin(["H", "D", "A"]) & after.isin(["H", "D", "A"]) & before.ne(after)
+    print(f"[CONNECTED_OVERRIDES] stage={stage_label} changed={int(changed.sum())}")
     return out
 
 
@@ -3757,9 +6027,21 @@ def save_argmax_diagnostics(df, league, season_year):
         work["試合日"] = dt.dt.strftime("%Y-%m-%d")
 
     work["pred_argmax"] = _calc_argmax_result_from_probs(work).astype(str).str.upper()
+    if "predicted_result" in work.columns:
+        work["pred_final_label"] = work["predicted_result"].astype(str).str.upper()
+    if "predicted_result_main_postfusion_argmax" in work.columns:
+        work["pred_postfusion_main_argmax"] = work["predicted_result_main_postfusion_argmax"].astype(str).str.upper()
     actual = work["actual_result"].astype(str).str.upper()
     valid = actual.isin(["H", "D", "A"]) & work["pred_argmax"].isin(["H", "D", "A"])
     work["is_hit_argmax"] = np.where(valid, (work["pred_argmax"] == actual).astype(int), pd.NA)
+    if {"pred_final_label", "actual_result"}.issubset(work.columns):
+        valid_final = actual.isin(["H", "D", "A"]) & work["pred_final_label"].isin(["H", "D", "A"])
+        work["is_hit_final_label"] = np.where(valid_final, (work["pred_final_label"] == actual).astype(int), pd.NA)
+    if {"pred_postfusion_main_argmax", "actual_result"}.issubset(work.columns):
+        valid_postfusion = actual.isin(["H", "D", "A"]) & work["pred_postfusion_main_argmax"].isin(["H", "D", "A"])
+        work["is_hit_postfusion_main_argmax"] = np.where(
+            valid_postfusion, (work["pred_postfusion_main_argmax"] == actual).astype(int), pd.NA
+        )
     work["max_prob"] = pd.concat(
         [
             pd.to_numeric(work["prob_home_win"], errors="coerce"),
@@ -3786,7 +6068,11 @@ def save_argmax_diagnostics(df, league, season_year):
         "home_team",
         "away_team",
         "actual_result",
+        "pred_final_label",
+        "pred_postfusion_main_argmax",
         "pred_argmax",
+        "is_hit_final_label",
+        "is_hit_postfusion_main_argmax",
         "is_hit_argmax",
         "max_prob",
         "prob_home_win",
@@ -3993,13 +6279,167 @@ def apply_narrow_draw_override(df, league):
     pa = pd.to_numeric(out["prob_away_win"], errors="coerce")
     gap = pd.concat([ph, pa], axis=1).max(axis=1) - pdw
     flag = pdw.ge(prob_min) & gap.le(gap_max)
+    reason = pd.Series(
+        np.where(
+            flag.fillna(False),
+            f"prob_draw>={prob_min:.3f} & gap<={gap_max:.3f}",
+            "",
+        ),
+        index=out.index,
+        dtype="object",
+    )
+    if league_key == "j1" and "match_type" in out.columns:
+        match_type = out["match_type"].astype(str)
+        basis_hint = out.get("lab_basis_hint", pd.Series("", index=out.index)).astype(str)
+        pred_main = out.get("predicted_result_main", pd.Series("", index=out.index)).astype(str).str.upper()
+        lab_edge = pd.to_numeric(
+            out.get("match_type_lab_matchup_edge", pd.Series(np.nan, index=out.index)),
+            errors="coerce",
+        )
+        draw_support = pd.to_numeric(
+            out.get("lab_draw_support_score", pd.Series(np.nan, index=out.index)),
+            errors="coerce",
+        )
+        home_strong = match_type.eq("home_strong")
+        away_strong = match_type.eq("away_strong")
+        strong_type = home_strong | away_strong
+        strong_prob_min = float(J1_NARROW_DRAW_STRONG_PROB_MIN)
+        strong_gap_max = float(J1_NARROW_DRAW_STRONG_GAP_MAX)
+        strong_relaxed_ok = (
+            basis_hint.isin(["draw_compressed", "flat_draw_trap"])
+            & draw_support.ge(0.60)
+            & gap.le(strong_gap_max + 0.010)
+        )
+        strong_flag = away_strong & pdw.ge(strong_prob_min) & (gap.le(strong_gap_max) | strong_relaxed_ok)
+        flag = flag & ~strong_type
+        flag = flag | strong_flag.fillna(False)
+        if home_strong.any():
+            reason.loc[home_strong.fillna(False)] = ""
+        if away_strong.any():
+            reason.loc[away_strong.fillna(False)] = np.where(
+                strong_flag.loc[away_strong.fillna(False)].fillna(False),
+                (
+                    f"away_strong prob_draw>={strong_prob_min:.3f} & "
+                    f"(gap<={strong_gap_max:.3f} or lab_draw_support)"
+                ),
+                "",
+            )
+        neutral = match_type.eq("neutral")
+        neutral_balanced = neutral & basis_hint.isin(["basis_balanced", "split_side"])
+        if neutral_balanced.any():
+            neutral_prob_min = float(J1_NARROW_DRAW_NEUTRAL_BALANCED_PROB_MIN)
+            neutral_gap_max = float(J1_NARROW_DRAW_NEUTRAL_BALANCED_GAP_MAX)
+            neutral_support_min = float(J1_NARROW_DRAW_NEUTRAL_BALANCED_SUPPORT_MIN)
+            neutral_balanced_flag = (
+                pdw.ge(neutral_prob_min)
+                & gap.le(neutral_gap_max)
+                & draw_support.ge(neutral_support_min)
+            )
+            flag = flag & ~neutral_balanced
+            flag = flag | (neutral_balanced & neutral_balanced_flag).fillna(False)
+            reason.loc[neutral_balanced.fillna(False)] = np.where(
+                neutral_balanced_flag.loc[neutral_balanced.fillna(False)].fillna(False),
+                (
+                    f"neutral_balanced prob_draw>={neutral_prob_min:.3f} & "
+                    f"gap<={neutral_gap_max:.3f} & draw_support>={neutral_support_min:.3f}"
+                ),
+                "",
+            )
+        skip_split_side_away = (
+            match_type.eq("neutral")
+            & basis_hint.eq("split_side")
+            & pred_main.eq("A")
+            & (lab_edge <= J1_MAIN_NEUTRAL_SPLIT_SIDE_LAB_EDGE_MAX)
+        )
+        flag = flag & (~skip_split_side_away.fillna(False))
+        reason.loc[skip_split_side_away.fillna(False)] = ""
+    elif league_key == "j2" and "match_type" in out.columns:
+        match_type = out["match_type"].astype(str)
+        basis_hint = out.get("lab_basis_hint", pd.Series("", index=out.index)).astype(str)
+        pred_main = out.get("predicted_result_main", pd.Series("", index=out.index)).astype(str).str.upper()
+        pred_pref = out.get("predicted_result_main_prefusion", pd.Series("", index=out.index)).astype(str).str.upper()
+        skip_signal_conflict_balanced = (
+            match_type.eq("signal_conflict")
+            & basis_hint.eq("basis_balanced")
+            & pred_main.eq("A")
+        )
+        home_sig_ct = pd.to_numeric(
+            out.get("match_type_home_signal_count", pd.Series(0, index=out.index)),
+            errors="coerce",
+        ).fillna(0.0)
+        away_sig_ct = pd.to_numeric(
+            out.get("match_type_away_signal_count", pd.Series(0, index=out.index)),
+            errors="coerce",
+        ).fillna(0.0)
+        rank_gap = pd.to_numeric(
+            out.get("match_type_rank_gap", out.get("rank_gap", pd.Series(np.nan, index=out.index))),
+            errors="coerce",
+        )
+        home_fatigue = pd.to_numeric(
+            out.get("home_total_fatigue_score", pd.Series(np.nan, index=out.index)),
+            errors="coerce",
+        )
+        away_fatigue = pd.to_numeric(
+            out.get("away_total_fatigue_score", pd.Series(np.nan, index=out.index)),
+            errors="coerce",
+        )
+        fatigue_edge = away_fatigue - home_fatigue
+        skip_neutral_draw_compressed = (
+            match_type.eq("neutral")
+            & basis_hint.eq("draw_compressed")
+            & pred_main.eq("A")
+            & home_sig_ct.le(0.0)
+            & away_sig_ct.ge(1.0)
+        )
+        skip_away_pref_a = (
+            ENABLE_J2_NARROW_DRAW_SIDE_RESTORE
+            & match_type.eq("away_strong")
+            & basis_hint.isin(["draw_compressed", "basis_balanced"])
+            & pred_pref.eq("A")
+            & pa.ge(J2_NARROW_DRAW_AWAY_PREF_A_PROB_MIN)
+            & home_sig_ct.le(1.0)
+            & away_sig_ct.ge(2.0)
+        )
+        skip_home_pref_h = (
+            ENABLE_J2_NARROW_DRAW_SIDE_RESTORE
+            & match_type.eq("home_strong")
+            & basis_hint.isin(["draw_compressed", "basis_balanced"])
+            & pred_pref.eq("H")
+            & ph.ge(J2_NARROW_DRAW_HOME_PREF_H_PROB_MIN)
+            & home_sig_ct.ge(2.0)
+            & away_sig_ct.le(0.0)
+        )
+        skip_neutral_pref_d_home = (
+            ENABLE_J2_NARROW_DRAW_NEUTRAL_DRAW_COMPRESSED_RESTORE
+            & match_type.eq("neutral")
+            & basis_hint.eq("draw_compressed")
+            & pred_pref.eq("D")
+            & rank_gap.le(J2_NARROW_DRAW_NEUTRAL_HOME_RANK_GAP_MAX)
+            & fatigue_edge.ge(J2_NARROW_DRAW_NEUTRAL_FATIGUE_EDGE_MIN)
+            & home_sig_ct.ge(away_sig_ct)
+        )
+        skip_neutral_pref_d_away = (
+            ENABLE_J2_NARROW_DRAW_NEUTRAL_DRAW_COMPRESSED_RESTORE
+            & match_type.eq("neutral")
+            & basis_hint.eq("draw_compressed")
+            & pred_pref.eq("D")
+            & rank_gap.ge(J2_NARROW_DRAW_NEUTRAL_AWAY_RANK_GAP_MIN)
+            & fatigue_edge.ge(J2_NARROW_DRAW_NEUTRAL_FATIGUE_EDGE_MIN)
+            & pa.ge(ph)
+        )
+        skip_mask = (
+            skip_signal_conflict_balanced
+            | skip_neutral_draw_compressed
+            | skip_away_pref_a
+            | skip_home_pref_h
+            | skip_neutral_pref_d_home
+            | skip_neutral_pref_d_away
+        )
+        flag = flag & (~skip_mask.fillna(False))
+        reason.loc[skip_mask.fillna(False)] = ""
     flag = flag.fillna(False)
     out["narrow_draw_override_applied"] = flag
-    out["narrow_draw_override_reason"] = np.where(
-        flag,
-        f"prob_draw>={prob_min:.3f} & gap<={gap_max:.3f}",
-        "",
-    )
+    out["narrow_draw_override_reason"] = reason.where(flag, "")
     for col in ["predicted_result", "final_result"]:
         if col in out.columns:
             out.loc[flag, col] = "D"
@@ -4058,7 +6498,9 @@ def apply_incentive_rank_context_override(df, league):
     is_rain = out.get("is_rain", pd.Series(False, index=out.index)).astype(str).str.lower().isin(["true", "1"])
     is_heavy_rain = out.get("is_heavy_rain", pd.Series(False, index=out.index)).astype(str).str.lower().isin(["true", "1"])
     is_strong_wind = out.get("is_strong_wind", pd.Series(False, index=out.index)).astype(str).str.lower().isin(["true", "1"])
-    weather_penalty = (is_heavy_rain.astype(float) * 0.8) + (is_rain.astype(float) * 0.45) + (is_strong_wind.astype(float) * 0.45)
+    weather_penalty = pd.Series(
+        adverse_weather_penalty(is_rain, is_heavy_rain, is_strong_wind), index=out.index
+    )
     home_adverse = ((home_fatigue - away_fatigue).clip(lower=0.0) * 0.12) + (home_absence * 8.0) + weather_penalty
     away_adverse = ((away_fatigue - home_fatigue).clip(lower=0.0) * 0.12) + (away_absence * 8.0) + weather_penalty
 
@@ -4071,24 +6513,32 @@ def apply_incentive_rank_context_override(df, league):
         out.loc[home_survival_draw, ["predicted_result", "final_result"]] = "D"
         out.loc[home_survival_draw, "incentive_rank_context_applied"] = True
         out.loc[home_survival_draw, "incentive_rank_context_reason"] = "home_relegation_draw_hold"
+        out.loc[home_survival_draw, "legacy_direct_override_applied"] = True
+        out.loc[home_survival_draw, "legacy_direct_override_reason"] = "INCENTIVE_HOME_RELEGATION_DRAW"
         if "decision_reason" in out.columns:
             out.loc[home_survival_draw, "decision_reason"] = "INCENTIVE_HOME_RELEGATION_DRAW"
     if away_survival_draw.any():
         out.loc[away_survival_draw, ["predicted_result", "final_result"]] = "D"
         out.loc[away_survival_draw, "incentive_rank_context_applied"] = True
         out.loc[away_survival_draw, "incentive_rank_context_reason"] = "away_relegation_draw_hold"
+        out.loc[away_survival_draw, "legacy_direct_override_applied"] = True
+        out.loc[away_survival_draw, "legacy_direct_override_reason"] = "INCENTIVE_AWAY_RELEGATION_DRAW"
         if "decision_reason" in out.columns:
             out.loc[away_survival_draw, "decision_reason"] = "INCENTIVE_AWAY_RELEGATION_DRAW"
     if home_title_push.any():
         out.loc[home_title_push, ["predicted_result", "final_result"]] = "H"
         out.loc[home_title_push, "incentive_rank_context_applied"] = True
         out.loc[home_title_push, "incentive_rank_context_reason"] = "home_title_tiebreak"
+        out.loc[home_title_push, "legacy_direct_override_applied"] = True
+        out.loc[home_title_push, "legacy_direct_override_reason"] = "INCENTIVE_HOME_TITLE_TIEBREAK"
         if "decision_reason" in out.columns:
             out.loc[home_title_push, "decision_reason"] = "INCENTIVE_HOME_TITLE_TIEBREAK"
     if away_title_push.any():
         out.loc[away_title_push, ["predicted_result", "final_result"]] = "A"
         out.loc[away_title_push, "incentive_rank_context_applied"] = True
         out.loc[away_title_push, "incentive_rank_context_reason"] = "away_title_tiebreak"
+        out.loc[away_title_push, "legacy_direct_override_applied"] = True
+        out.loc[away_title_push, "legacy_direct_override_reason"] = "INCENTIVE_AWAY_TITLE_TIEBREAK"
         if "decision_reason" in out.columns:
             out.loc[away_title_push, "decision_reason"] = "INCENTIVE_AWAY_TITLE_TIEBREAK"
     return out
@@ -4099,18 +6549,25 @@ def apply_j1_away_restore_override(df, league):
         return df
     if df is None or df.empty:
         return df
-    required = {"prob_home_win", "prob_draw", "prob_away_win", "predicted_result"}
+    required = {"prob_home_win", "prob_draw", "prob_away_win", "predicted_result", "match_type"}
     if not required.issubset(df.columns):
         return df
 
     out = df.copy()
+    if "legacy_direct_override_applied" not in out.columns:
+        out["legacy_direct_override_applied"] = False
+    if "legacy_direct_override_reason" not in out.columns:
+        out["legacy_direct_override_reason"] = ""
     if "j1_away_restore_override_applied" not in out.columns:
         out["j1_away_restore_override_applied"] = False
     if "j1_away_restore_override_reason" not in out.columns:
         out["j1_away_restore_override_reason"] = ""
 
+    match_type = out["match_type"].astype(str)
     cond = (
         out["predicted_result"].astype(str).eq("D")
+        & ~match_type.eq("home_strong")
+        & ~match_type.eq("close_match")
         & out["prob_away_win"].notna()
         & out["prob_home_win"].notna()
         & out["prob_draw"].notna()
@@ -4128,8 +6585,91 @@ def apply_j1_away_restore_override(df, league):
         out.loc[cond, "decision_reason"] = "J1_AWAY_RESTORE_OVERRIDE"
     out.loc[cond, "j1_away_restore_override_applied"] = True
     out.loc[cond, "j1_away_restore_override_reason"] = (
-        "pred=D and away~home while draw only slightly above away"
+        "pred=D and away~home while draw only slightly above away; exclude home_strong/close_match"
     )
+    out.loc[cond, "legacy_direct_override_applied"] = True
+    out.loc[cond, "legacy_direct_override_reason"] = "J1_AWAY_RESTORE_OVERRIDE"
+    return out
+
+
+def apply_j1_home_restore_override(df, league):
+    if not ENABLE_J1_HOME_RESTORE_OVERRIDE or str(league).lower() != "j1":
+        return df
+    if df is None or df.empty:
+        return df
+    required = {
+        "prob_home_win", "prob_draw", "prob_away_win", "predicted_result", "match_type",
+        "lab_basis_hint", "home_total_fatigue_score", "away_total_fatigue_score",
+        "rankmot_motivation_score_5w_home", "rankmot_motivation_score_5w_away",
+    }
+    if not required.issubset(df.columns):
+        return df
+
+    out = df.copy()
+    if "legacy_direct_override_applied" not in out.columns:
+        out["legacy_direct_override_applied"] = False
+    if "legacy_direct_override_reason" not in out.columns:
+        out["legacy_direct_override_reason"] = ""
+    if "j1_home_restore_override_applied" not in out.columns:
+        out["j1_home_restore_override_applied"] = False
+    if "j1_home_restore_override_reason" not in out.columns:
+        out["j1_home_restore_override_reason"] = ""
+
+    pred = out["predicted_result"].astype(str)
+    match_type = out["match_type"].astype(str)
+    basis_hint = out["lab_basis_hint"].astype(str)
+    home_fatigue = pd.to_numeric(out["home_total_fatigue_score"], errors="coerce")
+    away_fatigue = pd.to_numeric(out["away_total_fatigue_score"], errors="coerce")
+    home_motivation = pd.to_numeric(out["rankmot_motivation_score_5w_home"], errors="coerce")
+    away_motivation = pd.to_numeric(out["rankmot_motivation_score_5w_away"], errors="coerce")
+    draw_support = pd.to_numeric(out.get("lab_draw_support_score", pd.Series(np.nan, index=out.index)), errors="coerce")
+    home_ready_edge = (
+        (away_fatigue - home_fatigue >= J1_HOME_READY_FATIGUE_EDGE)
+        & (home_motivation - away_motivation >= J1_HOME_READY_MOTIVATION_EDGE)
+        & (out["prob_home_win"] >= out["prob_away_win"] - J1_HOME_READY_LAB_EDGE_MAX)
+    )
+    cond = (
+        pred.isin(["D", "A"])
+        & match_type.eq("neutral")
+        & basis_hint.eq("basis_balanced")
+        & home_ready_edge.fillna(False)
+        & out["prob_home_win"].notna()
+        & out["prob_away_win"].notna()
+        & out["prob_draw"].notna()
+        & (out["prob_home_win"] >= out["prob_away_win"] - J1_HOME_RESTORE_AWAY_GAP_MAX)
+        & (out["prob_draw"] <= out["prob_home_win"] + J1_HOME_RESTORE_DRAW_GAP_MAX)
+        & (out["prob_draw"] >= J1_HOME_RESTORE_DRAW_MIN)
+        & (
+            (out["prob_draw"] <= J1_HOME_RESTORE_DRAW_MAX)
+            | (draw_support <= J1_HOME_RESTORE_DRAW_SUPPORT_MAX)
+        )
+    )
+    compressed_cond = (
+        pred.eq("D")
+        & match_type.eq("neutral")
+        & basis_hint.eq("draw_compressed")
+        & (away_fatigue - home_fatigue >= J1_HOME_RESTORE_COMPRESSED_FATIGUE_EDGE)
+        & (home_motivation - away_motivation >= J1_HOME_RESTORE_COMPRESSED_MOTIVATION_EDGE)
+        & (pd.to_numeric(out.get("match_type_rank_gap", pd.Series(np.nan, index=out.index)), errors="coerce") <= -1.0)
+        & (pd.to_numeric(out.get("elo_diff_for_prob", pd.Series(np.nan, index=out.index)), errors="coerce") <= 0.0)
+        & (out["prob_home_win"] >= out["prob_away_win"] - J1_HOME_RESTORE_COMPRESSED_HOME_GAP_MAX)
+        & (out["prob_draw"] <= J1_HOME_RESTORE_COMPRESSED_DRAW_MAX)
+    )
+    cond = cond | compressed_cond.fillna(False)
+    if not cond.any():
+        return out
+
+    out.loc[cond, "predicted_result"] = "H"
+    if "final_result" in out.columns:
+        out.loc[cond, "final_result"] = "H"
+    if "decision_reason" in out.columns:
+        out.loc[cond, "decision_reason"] = "J1_HOME_RESTORE_OVERRIDE"
+    out.loc[cond, "j1_home_restore_override_applied"] = True
+    out.loc[cond, "j1_home_restore_override_reason"] = (
+        "pred in {D,A} and neutral/basis_balanced with clear home_ready_edge; restore to H"
+    )
+    out.loc[cond, "legacy_direct_override_applied"] = True
+    out.loc[cond, "legacy_direct_override_reason"] = "J1_HOME_RESTORE_OVERRIDE"
     return out
 
 
@@ -4143,17 +6683,53 @@ def apply_j1_signal_conflict_away_restore(df, league):
         return df
 
     out = df.copy()
+    if "legacy_direct_override_applied" not in out.columns:
+        out["legacy_direct_override_applied"] = False
+    if "legacy_direct_override_reason" not in out.columns:
+        out["legacy_direct_override_reason"] = ""
     if "j1_signal_conflict_away_restore_applied" not in out.columns:
         out["j1_signal_conflict_away_restore_applied"] = False
     if "j1_signal_conflict_away_restore_reason" not in out.columns:
         out["j1_signal_conflict_away_restore_reason"] = ""
 
+    home_fatigue = pd.to_numeric(out.get("home_total_fatigue_score", pd.Series(np.nan, index=out.index)), errors="coerce")
+    away_fatigue = pd.to_numeric(out.get("away_total_fatigue_score", pd.Series(np.nan, index=out.index)), errors="coerce")
+    rank_gap = pd.to_numeric(out.get("match_type_rank_gap", pd.Series(np.nan, index=out.index)), errors="coerce")
+    basis_hint = out.get("lab_basis_hint", pd.Series("", index=out.index)).astype(str)
+    home_motivation = pd.to_numeric(
+        out.get("rankmot_motivation_score_5w_home", pd.Series(np.nan, index=out.index)),
+        errors="coerce",
+    )
+    away_motivation = pd.to_numeric(
+        out.get("rankmot_motivation_score_5w_away", pd.Series(np.nan, index=out.index)),
+        errors="coerce",
+    )
+    home_relegation = out.get("match_type_relegation_risk_home", pd.Series(False, index=out.index)).fillna(False).astype(bool)
+    away_relegation = out.get("match_type_relegation_risk_away", pd.Series(False, index=out.index)).fillna(False).astype(bool)
+    home_gap = pd.to_numeric(out["prob_home_win"], errors="coerce") - pd.to_numeric(out["prob_away_win"], errors="coerce")
+    home_ready_block = (
+        basis_hint.eq("draw_compressed")
+        & ((away_fatigue - home_fatigue) >= J1_SIGNAL_CONFLICT_AWAY_RESTORE_HOME_FATIGUE_EDGE_MAX)
+        & (rank_gap <= J1_SIGNAL_CONFLICT_AWAY_RESTORE_HOME_RANK_GAP_MIN)
+    )
+    balanced_home_block = (
+        ENABLE_J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE
+        & basis_hint.eq("basis_balanced")
+        & away_relegation
+        & (~home_relegation)
+        & ((away_fatigue - home_fatigue) >= J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_FATIGUE_EDGE)
+        & ((home_motivation - away_motivation) >= J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_MOTIVATION_EDGE)
+        & home_gap.ge(J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_HOME_GAP_MIN)
+        & home_gap.le(J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_HOME_GAP_MAX)
+    )
     cond = (
         out["match_type"].astype(str).eq("signal_conflict")
         & out["predicted_result"].astype(str).eq("H")
         & out["prob_away_win"].notna()
         & out["prob_home_win"].notna()
         & (out["prob_away_win"] >= out["prob_home_win"] - J1_SIGNAL_CONFLICT_AWAY_RESTORE_HOME_GAP_MAX)
+        & (~home_ready_block.fillna(False))
+        & (~balanced_home_block.fillna(False))
     )
     if not cond.any():
         return out
@@ -4167,6 +6743,171 @@ def apply_j1_signal_conflict_away_restore(df, league):
     out.loc[cond, "j1_signal_conflict_away_restore_reason"] = (
         f"signal_conflict and away>=home-{J1_SIGNAL_CONFLICT_AWAY_RESTORE_HOME_GAP_MAX:.3f}"
     )
+    out.loc[cond, "legacy_direct_override_applied"] = True
+    out.loc[cond, "legacy_direct_override_reason"] = "J1_SIGNAL_CONFLICT_AWAY_RESTORE"
+    return out
+
+
+def apply_j1_signal_conflict_home_restore(df, league):
+    if not ENABLE_J1_SIGNAL_CONFLICT_HOME_RESTORE or str(league).lower() != "j1":
+        return df
+    if df is None or df.empty:
+        return df
+    required = {
+        "prob_home_win", "prob_away_win", "predicted_result", "match_type", "lab_basis_hint",
+        "home_total_fatigue_score", "away_total_fatigue_score", "match_type_rank_gap",
+    }
+    if not required.issubset(df.columns):
+        return df
+
+    out = df.copy()
+    if "legacy_direct_override_applied" not in out.columns:
+        out["legacy_direct_override_applied"] = False
+    if "legacy_direct_override_reason" not in out.columns:
+        out["legacy_direct_override_reason"] = ""
+    if "j1_signal_conflict_home_restore_applied" not in out.columns:
+        out["j1_signal_conflict_home_restore_applied"] = False
+    if "j1_signal_conflict_home_restore_reason" not in out.columns:
+        out["j1_signal_conflict_home_restore_reason"] = ""
+
+    home_fatigue = pd.to_numeric(out["home_total_fatigue_score"], errors="coerce")
+    away_fatigue = pd.to_numeric(out["away_total_fatigue_score"], errors="coerce")
+    rank_gap = pd.to_numeric(out["match_type_rank_gap"], errors="coerce")
+    home_motivation = pd.to_numeric(
+        out.get("rankmot_motivation_score_5w_home", pd.Series(np.nan, index=out.index)),
+        errors="coerce",
+    )
+    away_motivation = pd.to_numeric(
+        out.get("rankmot_motivation_score_5w_away", pd.Series(np.nan, index=out.index)),
+        errors="coerce",
+    )
+    home_relegation = out.get("match_type_relegation_risk_home", pd.Series(False, index=out.index)).fillna(False).astype(bool)
+    away_relegation = out.get("match_type_relegation_risk_away", pd.Series(False, index=out.index)).fillna(False).astype(bool)
+    home_gap = pd.to_numeric(out["prob_home_win"], errors="coerce") - pd.to_numeric(out["prob_away_win"], errors="coerce")
+    cond = (
+        out["match_type"].astype(str).eq("signal_conflict")
+        & out["lab_basis_hint"].astype(str).eq("draw_compressed")
+        & out["predicted_result"].astype(str).eq("D")
+        & (away_fatigue - home_fatigue >= J1_SIGNAL_CONFLICT_HOME_RESTORE_FATIGUE_EDGE)
+        & (out["prob_home_win"] >= out["prob_away_win"] - J1_SIGNAL_CONFLICT_HOME_RESTORE_HOME_GAP_MAX)
+        & (rank_gap <= J1_SIGNAL_CONFLICT_HOME_RESTORE_RANK_GAP_MAX)
+    )
+    balanced_cond = (
+        ENABLE_J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE
+        & out["match_type"].astype(str).eq("signal_conflict")
+        & out["lab_basis_hint"].astype(str).eq("basis_balanced")
+        & out["predicted_result"].astype(str).eq("D")
+        & away_relegation
+        & (~home_relegation)
+        & (away_fatigue - home_fatigue >= J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_FATIGUE_EDGE)
+        & ((home_motivation - away_motivation) >= J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_MOTIVATION_EDGE)
+        & home_gap.ge(J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_HOME_GAP_MIN)
+        & home_gap.le(J1_SIGNAL_CONFLICT_BALANCED_HOME_RESTORE_HOME_GAP_MAX)
+    )
+    cond = cond | balanced_cond.fillna(False)
+    if not cond.any():
+        return out
+
+    out.loc[cond, "predicted_result"] = "H"
+    if "final_result" in out.columns:
+        out.loc[cond, "final_result"] = "H"
+    if "decision_reason" in out.columns:
+        out.loc[cond, "decision_reason"] = "J1_SIGNAL_CONFLICT_HOME_RESTORE"
+    out.loc[cond, "j1_signal_conflict_home_restore_applied"] = True
+    out.loc[cond, "j1_signal_conflict_home_restore_reason"] = (
+        "signal_conflict draw_compressed with strong home fatigue/rank edge and home~away probs"
+    )
+    out.loc[cond, "legacy_direct_override_applied"] = True
+    out.loc[cond, "legacy_direct_override_reason"] = "J1_SIGNAL_CONFLICT_HOME_RESTORE"
+    return out
+
+
+def _clip_unit(series, low, high):
+    series = pd.to_numeric(series, errors="coerce")
+    width = max(float(high) - float(low), 1e-9)
+    return ((series - float(low)) / width).clip(0.0, 1.0)
+
+
+def _prepare_j2_restore_context(out):
+    idx = out.index
+    ctx = {}
+    ctx["pred_h"] = out["predicted_result"].astype(str).eq("H")
+    ctx["pred_d"] = out["predicted_result"].astype(str).eq("D")
+    ctx["match_type"] = out["match_type"].astype(str)
+    ctx["basis_hint"] = out.get("lab_basis_hint", pd.Series("", index=idx)).astype(str)
+    ctx["prob_home"] = pd.to_numeric(out.get("prob_home_win", pd.Series(np.nan, index=idx)), errors="coerce")
+    ctx["prob_draw"] = pd.to_numeric(out.get("prob_draw", pd.Series(np.nan, index=idx)), errors="coerce")
+    ctx["prob_away"] = pd.to_numeric(out.get("prob_away_win", pd.Series(np.nan, index=idx)), errors="coerce")
+    ctx["home_fatigue"] = pd.to_numeric(out.get("home_total_fatigue_score", pd.Series(np.nan, index=idx)), errors="coerce")
+    ctx["away_fatigue"] = pd.to_numeric(out.get("away_total_fatigue_score", pd.Series(np.nan, index=idx)), errors="coerce")
+    ctx["home_motivation"] = pd.to_numeric(out.get("rankmot_motivation_score_5w_home", pd.Series(np.nan, index=idx)), errors="coerce")
+    ctx["away_motivation"] = pd.to_numeric(out.get("rankmot_motivation_score_5w_away", pd.Series(np.nan, index=idx)), errors="coerce")
+    ctx["rank_gap"] = pd.to_numeric(out.get("match_type_rank_gap", pd.Series(np.nan, index=idx)), errors="coerce")
+    ctx["elo_diff"] = pd.to_numeric(out.get("elo_diff_for_prob", pd.Series(np.nan, index=idx)), errors="coerce")
+    ctx["fatigue_edge"] = ctx["away_fatigue"] - ctx["home_fatigue"]
+    ctx["motivation_edge"] = ctx["home_motivation"] - ctx["away_motivation"]
+    ctx["draw_home_gap"] = ctx["prob_draw"] - ctx["prob_home"]
+    ctx["home_away_gap"] = ctx["prob_home"] - ctx["prob_away"]
+    ctx["prob_ready"] = ctx["prob_home"].notna() & ctx["prob_draw"].notna() & ctx["prob_away"].notna()
+    ctx["score_home_ready"] = (
+        0.45 * _clip_unit(ctx["fatigue_edge"], 0.0, 6.0)
+        + 0.35 * _clip_unit(ctx["motivation_edge"], -1.0, 4.0)
+        + 0.20 * _clip_unit(-ctx["rank_gap"], -2.0, 6.0)
+    ).clip(0.0, 1.0)
+    ctx["score_draw_escape"] = (
+        0.45 * (1.0 - _clip_unit(ctx["draw_home_gap"], 0.0, 0.14))
+        + 0.30 * _clip_unit(ctx["prob_home"], 0.24, 0.39)
+        + 0.25 * _clip_unit(ctx["home_away_gap"], -0.06, 0.12)
+    ).clip(0.0, 1.0)
+    ctx["score_press"] = (
+        0.50 * _clip_unit(ctx["elo_diff"], -50.0, 55.0)
+        + 0.30 * _clip_unit(ctx["fatigue_edge"], 0.0, 5.5)
+        + 0.20 * (1.0 - _clip_unit(ctx["draw_home_gap"], 0.0, 0.12))
+    ).clip(0.0, 1.0)
+    ctx["cluster_neutral_balanced"] = ctx["match_type"].eq("neutral") & ctx["basis_hint"].eq("basis_balanced")
+    ctx["cluster_neutral_draw"] = ctx["match_type"].eq("neutral") & ctx["basis_hint"].eq("draw_compressed")
+    ctx["cluster_home_balanced"] = ctx["match_type"].eq("home_strong") & ctx["basis_hint"].eq("basis_balanced")
+    ctx["cluster_home_draw"] = ctx["match_type"].eq("home_strong") & ctx["basis_hint"].eq("draw_compressed")
+    ctx["cluster_home_flat"] = ctx["match_type"].eq("home_strong") & ctx["basis_hint"].eq("flat_draw_trap")
+    ctx["cluster_away_draw"] = ctx["match_type"].eq("away_strong") & ctx["basis_hint"].eq("draw_compressed")
+    ctx["cluster_away_flat"] = ctx["match_type"].eq("away_strong") & ctx["basis_hint"].eq("flat_draw_trap")
+    ctx["cluster_close_draw"] = ctx["match_type"].eq("close_match") & ctx["basis_hint"].eq("draw_compressed")
+    ctx["cluster_close_flat"] = ctx["match_type"].eq("close_match") & ctx["basis_hint"].eq("flat_draw_trap")
+    ctx["cluster_signal_split"] = ctx["match_type"].eq("signal_conflict") & ctx["basis_hint"].eq("split_side")
+    return ctx
+
+
+def _apply_j2_home_restore(out, cond, reason, cluster, ctx, reason_group=None):
+    if not cond.any():
+        return out
+    out.loc[cond, "predicted_result"] = "H"
+    if "final_result" in out.columns:
+        out.loc[cond, "final_result"] = "H"
+    if "decision_reason" in out.columns:
+        out.loc[cond, "decision_reason"] = reason
+    out.loc[cond, "j2_restore_cluster"] = cluster
+    if "j2_restore_reason_group" in out.columns:
+        out.loc[cond, "j2_restore_reason_group"] = str(reason_group or cluster)
+    out.loc[cond, "j2_restore_home_ready_score"] = ctx["score_home_ready"][cond]
+    out.loc[cond, "j2_restore_draw_escape_score"] = ctx["score_draw_escape"][cond]
+    out.loc[cond, "j2_restore_press_score"] = ctx["score_press"][cond]
+    return out
+
+
+def _apply_j2_away_restore(out, cond, reason, cluster, ctx, reason_group=None):
+    if not cond.any():
+        return out
+    out.loc[cond, "predicted_result"] = "A"
+    if "final_result" in out.columns:
+        out.loc[cond, "final_result"] = "A"
+    if "decision_reason" in out.columns:
+        out.loc[cond, "decision_reason"] = reason
+    out.loc[cond, "j2_restore_cluster"] = cluster
+    if "j2_restore_reason_group" in out.columns:
+        out.loc[cond, "j2_restore_reason_group"] = str(reason_group or cluster)
+    out.loc[cond, "j2_restore_home_ready_score"] = ctx["score_home_ready"][cond]
+    out.loc[cond, "j2_restore_draw_escape_score"] = ctx["score_draw_escape"][cond]
+    out.loc[cond, "j2_restore_press_score"] = ctx["score_press"][cond]
     return out
 
 
@@ -4196,9 +6937,333 @@ def apply_j2_away_restore_overrides(df, league):
     ]:
         if col not in out.columns:
             out[col] = ""
+    for col in [
+        "j2_restore_cluster",
+        "j2_restore_reason_group",
+        "j2_restore_home_ready_score",
+        "j2_restore_draw_escape_score",
+        "j2_restore_press_score",
+    ]:
+        if col not in out.columns:
+            out[col] = np.nan if col not in {"j2_restore_cluster", "j2_restore_reason_group"} else ""
 
-    pred_h = out["predicted_result"].astype(str).eq("H")
-    match_type = out["match_type"].astype(str)
+    ctx = _prepare_j2_restore_context(out)
+    pred_h = ctx["pred_h"]
+    pred_d = ctx["pred_d"]
+    match_type = ctx["match_type"]
+    basis_hint = ctx["basis_hint"]
+    prob_home = ctx["prob_home"]
+    prob_draw = ctx["prob_draw"]
+    prob_away = ctx["prob_away"]
+    home_fatigue = ctx["home_fatigue"]
+    away_fatigue = ctx["away_fatigue"]
+    home_motivation = ctx["home_motivation"]
+    away_motivation = ctx["away_motivation"]
+    rank_gap = ctx["rank_gap"]
+    elo_diff = ctx["elo_diff"]
+    fatigue_edge = ctx["fatigue_edge"]
+    motivation_edge = ctx["motivation_edge"]
+    draw_home_gap = ctx["draw_home_gap"]
+    draw_away_gap = prob_draw - prob_away
+    home_sig_ct = pd.to_numeric(
+        out.get("match_type_home_signal_count", pd.Series(0, index=out.index)),
+        errors="coerce",
+    ).fillna(0.0)
+    away_sig_ct = pd.to_numeric(
+        out.get("match_type_away_signal_count", pd.Series(0, index=out.index)),
+        errors="coerce",
+    ).fillna(0.0)
+
+    home_balanced_cond = pd.Series(False, index=out.index)
+    if ENABLE_J2_HOME_RESTORE_OVERRIDE:
+        home_balanced_cond |= (
+            pred_d
+            & ctx["cluster_home_balanced"]
+            & ctx["prob_ready"]
+            & (prob_home >= prob_away)
+            & (prob_draw <= prob_home + J2_HOME_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_HOME_RESTORE_FATIGUE_EDGE)
+            & (motivation_edge >= J2_HOME_RESTORE_MOTIVATION_EDGE)
+            & (rank_gap <= J2_HOME_RESTORE_RANK_GAP_MAX)
+        )
+
+    if ENABLE_J2_NEUTRAL_HOME_RESTORE:
+        neutral_base = (
+            pred_d
+            & (ctx["cluster_neutral_balanced"] | ctx["cluster_neutral_draw"])
+            & ctx["prob_ready"]
+            & (fatigue_edge >= J2_NEUTRAL_HOME_RESTORE_FATIGUE_EDGE)
+            & (motivation_edge >= J2_NEUTRAL_HOME_RESTORE_MOTIVATION_EDGE)
+            & (rank_gap <= -1.0)
+            & (prob_home >= (prob_away - J2_NEUTRAL_HOME_RESTORE_HOME_GAP_MAX))
+        )
+        cond_balanced = (
+            neutral_base & ctx["cluster_neutral_balanced"]
+            & (prob_draw <= prob_home + J2_NEUTRAL_HOME_RESTORE_DRAW_GAP_MAX)
+        )
+        cond_compressed = (
+            neutral_base & ctx["cluster_neutral_draw"]
+            & elo_diff.notna()
+            & (elo_diff <= 0.0)
+            & (prob_draw <= prob_home + 0.14)
+        )
+        cond = cond_balanced | cond_compressed
+        out = _apply_j2_home_restore(
+            out, cond, "J2_NEUTRAL_HOME_RESTORE", "neutral_base", ctx, "neutral_base"
+        )
+
+    if ENABLE_J2_HOME_STRONG_BALANCED_RESTORE:
+        home_balanced_cond |= (
+            pred_d
+            & ctx["cluster_home_balanced"]
+            & ctx["prob_ready"]
+            & (prob_draw <= prob_home + J2_HOME_STRONG_BALANCED_RESTORE_DRAW_GAP_MAX)
+            & (prob_home >= (prob_away - J2_HOME_STRONG_BALANCED_RESTORE_HOME_GAP_MAX))
+            & (fatigue_edge >= J2_HOME_STRONG_BALANCED_RESTORE_FATIGUE_EDGE)
+            & (motivation_edge >= J2_HOME_STRONG_BALANCED_RESTORE_MOTIVATION_EDGE)
+            & (rank_gap <= J2_HOME_STRONG_BALANCED_RESTORE_RANK_GAP_MAX)
+            & elo_diff.notna()
+            & (elo_diff <= 0.0)
+        )
+
+    if ENABLE_J2_SIGNAL_CONFLICT_HOME_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_signal_split"]
+            & prob_home.notna() & prob_draw.notna()
+            & (prob_draw <= prob_home + J2_SIGNAL_CONFLICT_HOME_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_SIGNAL_CONFLICT_HOME_RESTORE_FATIGUE_EDGE)
+            & (motivation_edge >= J2_SIGNAL_CONFLICT_HOME_RESTORE_MOTIVATION_EDGE)
+            & (rank_gap <= J2_SIGNAL_CONFLICT_HOME_RESTORE_RANK_GAP_MAX)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_SIGNAL_CONFLICT_HOME_RESTORE", "signal_split", ctx, "signal_split"
+        )
+
+    if ENABLE_J2_AWAY_STRONG_FLAT_HOME_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_away_flat"]
+            & prob_home.notna() & prob_draw.notna()
+            & (prob_draw <= prob_home + J2_AWAY_STRONG_FLAT_HOME_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_AWAY_STRONG_FLAT_HOME_RESTORE_FATIGUE_EDGE)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_AWAY_STRONG_FLAT_HOME_RESTORE", "away_flat", ctx, "away_flat"
+        )
+
+    if ENABLE_J2_CLOSE_FLAT_HOME_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_close_flat"]
+            & prob_home.notna() & prob_draw.notna()
+            & (prob_draw <= prob_home + J2_CLOSE_FLAT_HOME_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_CLOSE_FLAT_HOME_RESTORE_FATIGUE_EDGE)
+            & (rank_gap <= -1.0)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_CLOSE_FLAT_HOME_RESTORE", "close_flat", ctx, "close_flat"
+        )
+
+    if ENABLE_J2_HOME_STRONG_FLAT_HOME_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_home_flat"]
+            & prob_home.notna() & prob_draw.notna()
+            & (prob_draw <= prob_home + J2_HOME_STRONG_FLAT_HOME_RESTORE_DRAW_GAP_MAX)
+            & (motivation_edge >= J2_HOME_STRONG_FLAT_HOME_RESTORE_MOTIVATION_EDGE)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_HOME_STRONG_FLAT_HOME_RESTORE", "home_flat", ctx, "home_flat"
+        )
+
+    home_draw_cond = pd.Series(False, index=out.index)
+    if ENABLE_J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE:
+        home_draw_cond |= (
+            pred_d
+            & ctx["cluster_home_draw"]
+            & ctx["prob_ready"]
+            & (prob_draw <= prob_home + J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE_FATIGUE_EDGE)
+            & (motivation_edge >= J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE_MOTIVATION_EDGE)
+            & (rank_gap <= J2_HOME_STRONG_DRAW_COMPRESSED_RESTORE_RANK_GAP_MAX)
+        )
+    if ENABLE_J2_HOME_STRONG_DEEP_HOME_RESTORE:
+        home_draw_cond |= (
+            pred_d
+            & ctx["cluster_home_draw"]
+            & prob_home.notna() & prob_draw.notna()
+            & (prob_draw <= prob_home + J2_HOME_STRONG_DEEP_HOME_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_HOME_STRONG_DEEP_HOME_RESTORE_FATIGUE_EDGE)
+            & (rank_gap <= J2_HOME_STRONG_DEEP_HOME_RESTORE_RANK_GAP_MAX)
+        )
+    if ENABLE_J2_HOME_STRONG_ELITE_HOME_RESTORE:
+        home_draw_cond |= (
+            pred_d
+            & ctx["cluster_home_draw"]
+            & prob_home.notna() & prob_draw.notna() & elo_diff.notna()
+            & (prob_home >= J2_HOME_STRONG_ELITE_HOME_RESTORE_HOME_MIN)
+            & (elo_diff >= J2_HOME_STRONG_ELITE_HOME_RESTORE_ELO_MIN)
+            & (prob_draw <= prob_home)
+        )
+    out = _apply_j2_home_restore(
+        out, home_draw_cond, "J2_HOME_DRAW_RESTORE", "home_draw", ctx, "home_draw"
+    )
+
+    if ENABLE_J2_NEUTRAL_POS_ELO_HOME_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_neutral_draw"]
+            & prob_home.notna() & prob_draw.notna() & elo_diff.notna()
+            & (prob_home >= J2_NEUTRAL_POS_ELO_HOME_RESTORE_HOME_MIN)
+            & (draw_home_gap <= J2_NEUTRAL_POS_ELO_HOME_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_NEUTRAL_POS_ELO_HOME_RESTORE_FATIGUE_EDGE)
+            & (elo_diff >= J2_NEUTRAL_POS_ELO_HOME_RESTORE_ELO_MIN)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_NEUTRAL_POS_ELO_HOME_RESTORE", "neutral_draw", ctx, "neutral_draw"
+        )
+
+    if ENABLE_J2_NEUTRAL_NEG_ELO_HOME_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_neutral_draw"]
+            & prob_home.notna() & prob_draw.notna() & elo_diff.notna()
+            & (draw_home_gap <= J2_NEUTRAL_NEG_ELO_HOME_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_NEUTRAL_NEG_ELO_HOME_RESTORE_FATIGUE_EDGE)
+            & (motivation_edge >= J2_NEUTRAL_NEG_ELO_HOME_RESTORE_MOTIVATION_EDGE)
+            & (rank_gap >= J2_NEUTRAL_NEG_ELO_HOME_RESTORE_RANK_GAP_MIN)
+            & (elo_diff <= J2_NEUTRAL_NEG_ELO_HOME_RESTORE_ELO_MAX)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_NEUTRAL_NEG_ELO_HOME_RESTORE", "neutral_draw", ctx, "neutral_draw"
+        )
+
+    if ENABLE_J2_HOME_STRONG_TIGHT_BALANCED_RESTORE:
+        home_balanced_cond |= (
+            pred_d
+            & ctx["cluster_home_balanced"]
+            & prob_home.notna() & prob_draw.notna()
+            & (draw_home_gap <= J2_HOME_STRONG_TIGHT_BALANCED_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_HOME_STRONG_TIGHT_BALANCED_RESTORE_FATIGUE_EDGE)
+            & (rank_gap <= J2_HOME_STRONG_TIGHT_BALANCED_RESTORE_RANK_GAP_MAX)
+        )
+    out = _apply_j2_home_restore(
+        out, home_balanced_cond, "J2_HOME_BALANCED_RESTORE", "home_balanced", ctx, "home_balanced"
+    )
+
+    if ENABLE_J2_NEUTRAL_TIGHT_BALANCED_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_neutral_balanced"]
+            & prob_home.notna() & prob_draw.notna() & elo_diff.notna()
+            & (draw_home_gap <= J2_NEUTRAL_TIGHT_BALANCED_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_NEUTRAL_TIGHT_BALANCED_RESTORE_FATIGUE_EDGE)
+            & (elo_diff >= J2_NEUTRAL_TIGHT_BALANCED_RESTORE_ELO_MIN)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_NEUTRAL_TIGHT_BALANCED_RESTORE", "neutral_balanced", ctx, "neutral_balanced"
+        )
+
+    if ENABLE_J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_neutral_draw"]
+            & prob_home.notna() & prob_draw.notna() & elo_diff.notna()
+            & (draw_home_gap <= J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE_FATIGUE_EDGE)
+            & (rank_gap <= J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE_RANK_GAP_MAX)
+            & (elo_diff <= J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE_ELO_MAX)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_NEUTRAL_DEEP_DRAW_HOME_RESTORE", "neutral_draw", ctx, "neutral_draw"
+        )
+
+    if ENABLE_J2_NEUTRAL_POS_PRESS_HOME_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_neutral_draw"]
+            & prob_home.notna() & prob_draw.notna() & elo_diff.notna()
+            & (prob_home >= J2_NEUTRAL_POS_PRESS_HOME_RESTORE_HOME_MIN)
+            & (draw_home_gap <= J2_NEUTRAL_POS_PRESS_HOME_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_NEUTRAL_POS_PRESS_HOME_RESTORE_FATIGUE_EDGE)
+            & (elo_diff >= J2_NEUTRAL_POS_PRESS_HOME_RESTORE_ELO_MIN)
+            & (motivation_edge <= J2_NEUTRAL_POS_PRESS_HOME_RESTORE_MOTIVATION_MAX)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_NEUTRAL_POS_PRESS_HOME_RESTORE", "neutral_draw", ctx, "neutral_draw"
+        )
+
+    if ENABLE_J2_NEUTRAL_DRAW_HOME_RESTORE_V2:
+        cond = (
+            pred_d
+            & ctx["cluster_neutral_draw"]
+            & prob_home.notna() & prob_draw.notna()
+            & (draw_home_gap <= J2_NEUTRAL_DRAW_HOME_RESTORE_V2_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_NEUTRAL_DRAW_HOME_RESTORE_V2_FATIGUE_EDGE_MIN)
+            & (rank_gap <= J2_NEUTRAL_DRAW_HOME_RESTORE_V2_RANK_GAP_MAX)
+            & (home_sig_ct >= away_sig_ct)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_NEUTRAL_DRAW_HOME_RESTORE_V2", "neutral_draw", ctx, "neutral_draw"
+        )
+
+    if ENABLE_J2_NEUTRAL_DRAW_AWAY_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_neutral_draw"]
+            & prob_away.notna() & prob_draw.notna()
+            & (draw_away_gap <= J2_NEUTRAL_DRAW_AWAY_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_NEUTRAL_DRAW_AWAY_RESTORE_FATIGUE_EDGE_MIN)
+            & (rank_gap >= J2_NEUTRAL_DRAW_AWAY_RESTORE_RANK_GAP_MIN)
+            & (prob_away >= prob_home)
+        )
+        out = _apply_j2_away_restore(
+            out, cond, "J2_NEUTRAL_DRAW_AWAY_RESTORE", "neutral_draw", ctx, "neutral_draw"
+        )
+
+    if ENABLE_J2_CLOSE_DRAW_HOME_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_close_draw"]
+            & prob_home.notna() & prob_draw.notna() & elo_diff.notna()
+            & (draw_home_gap <= J2_CLOSE_DRAW_HOME_RESTORE_DRAW_GAP_MAX)
+            & (prob_home <= J2_CLOSE_DRAW_HOME_RESTORE_HOME_MAX)
+            & (elo_diff <= J2_CLOSE_DRAW_HOME_RESTORE_ELO_MAX)
+            & (motivation_edge >= J2_CLOSE_DRAW_HOME_RESTORE_MOTIVATION_MIN)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_CLOSE_DRAW_HOME_RESTORE", "close_draw", ctx, "close_draw"
+        )
+
+    if ENABLE_J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_neutral_balanced"]
+            & prob_home.notna() & prob_draw.notna() & elo_diff.notna()
+            & (prob_home >= J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE_HOME_MIN)
+            & (draw_home_gap <= J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE_DRAW_GAP_MAX)
+            & (fatigue_edge >= J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE_FATIGUE_EDGE)
+            & (elo_diff >= J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE_ELO_MIN)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_NEUTRAL_BALANCED_PRESS_HOME_RESTORE", "neutral_balanced", ctx, "neutral_balanced"
+        )
+
+    if ENABLE_J2_AWAY_STRONG_DRAW_HOME_RESTORE:
+        cond = (
+            pred_d
+            & ctx["cluster_away_draw"]
+            & prob_home.notna() & prob_draw.notna() & elo_diff.notna()
+            & (prob_home <= J2_AWAY_STRONG_DRAW_HOME_RESTORE_HOME_MAX)
+            & (draw_home_gap >= J2_AWAY_STRONG_DRAW_HOME_RESTORE_DRAW_GAP_MIN)
+            & (fatigue_edge <= J2_AWAY_STRONG_DRAW_HOME_RESTORE_FATIGUE_EDGE_MAX)
+            & (motivation_edge >= J2_AWAY_STRONG_DRAW_HOME_RESTORE_MOTIVATION_MIN)
+            & (elo_diff <= J2_AWAY_STRONG_DRAW_HOME_RESTORE_ELO_MAX)
+        )
+        out = _apply_j2_home_restore(
+            out, cond, "J2_AWAY_STRONG_DRAW_HOME_RESTORE", "away_draw", ctx, "away_draw"
+        )
 
     if ENABLE_J2_AWAY_STRONG_AWAY_RESTORE:
         cond = pred_h & match_type.eq("away_strong")
@@ -4208,6 +7273,8 @@ def apply_j2_away_restore_overrides(df, league):
                 out.loc[cond, "final_result"] = "A"
             if "decision_reason" in out.columns:
                 out.loc[cond, "decision_reason"] = "J2_AWAY_STRONG_AWAY_RESTORE"
+            out.loc[cond, "j2_restore_cluster"] = "away_strong"
+            out.loc[cond, "j2_restore_reason_group"] = "away_strong"
             out.loc[cond, "j2_away_strong_away_restore_applied"] = True
             out.loc[cond, "j2_away_strong_away_restore_reason"] = "match_type=away_strong and pred=H"
 
@@ -4219,6 +7286,8 @@ def apply_j2_away_restore_overrides(df, league):
                 out.loc[cond, "final_result"] = "A"
             if "decision_reason" in out.columns:
                 out.loc[cond, "decision_reason"] = "J2_SIGNAL_CONFLICT_AWAY_RESTORE"
+            out.loc[cond, "j2_restore_cluster"] = "signal_conflict"
+            out.loc[cond, "j2_restore_reason_group"] = "signal_conflict"
             out.loc[cond, "j2_signal_conflict_away_restore_applied"] = True
             out.loc[cond, "j2_signal_conflict_away_restore_reason"] = "match_type=signal_conflict and pred=H"
 
@@ -4236,6 +7305,8 @@ def apply_j2_away_restore_overrides(df, league):
                 out.loc[cond, "final_result"] = "A"
             if "decision_reason" in out.columns:
                 out.loc[cond, "decision_reason"] = "J2_NEG_HOME_ADV_AWAY_RESTORE"
+            out.loc[cond, "j2_restore_cluster"] = "neg_home_adv"
+            out.loc[cond, "j2_restore_reason_group"] = "neg_home_adv"
             out.loc[cond, "j2_neg_home_adv_away_restore_applied"] = True
             out.loc[cond, "j2_neg_home_adv_away_restore_reason"] = (
                 "home_advantage_diff<0"
@@ -4274,6 +7345,8 @@ def apply_j2_away_restore_overrides(df, league):
                 out.loc[cond, "final_result"] = "D"
             if "decision_reason" in out.columns:
                 out.loc[cond, "decision_reason"] = "J2_AWAY_DRAW_RESTORE"
+            out.loc[cond, "j2_restore_cluster"] = "away_draw_restore"
+            out.loc[cond, "j2_restore_reason_group"] = "away_draw_restore"
             out.loc[cond, "j2_away_draw_restore_applied"] = True
             out.loc[cond, "j2_away_draw_restore_reason"] = (
                 f"pred=A; prob_draw>={J2_AWAY_DRAW_RESTORE_DRAW_MIN:.3f}"
@@ -4950,6 +8023,15 @@ TEAM_NAME_ALIAS_MAP = {
     _normalize_team_text(k): _normalize_team_text(v)
     for k, v in TEAM_NAME_ALIAS_RAW_MAP.items()
 }
+
+# 公式順位表は正式名と略称を同じセルに含む。既知の同一チームの
+# 表記の組み合わせだけを許可し、末尾や部分一致による誤結合を避ける。
+TEAM_NAME_ALIAS_MAP.update({
+    _normalize_team_text(full + " " + short): _normalize_team_text(team)
+    for full, team in TEAM_NAME_ALIAS_RAW_MAP.items()
+    for short, short_team in TEAM_NAME_ALIAS_RAW_MAP.items()
+    if team == short_team
+})
 
 # J2(2026特別大会)では未公開が続くため、予測入力から除外するフィジカル系指標
 J2_EXCLUDED_STATS_BASE_NAMES = [
@@ -6315,7 +9397,12 @@ def compute_probabilities_and_result(
             draw_elo = float("nan")
     prob_home_win_before_signfix = float(prob_home_win)
     prob_away_win_before_signfix = float(prob_away_win)
-    sign_fix_reason = None
+    prob_home_win, prob_draw, prob_away_win, sign_fix_reason = enforce_elo_sign_monotonic(
+        prob_home_win,
+        prob_draw,
+        prob_away_win,
+        elo_diff_for_prob,
+    )
     sum_before_round = prob_home_win + prob_draw + prob_away_win
     if not np.isclose(sum_before_round, 1.0, atol=1e-6):
         print(
@@ -7580,11 +10667,25 @@ def log_prediction_consistency(df, label):
     raw_vs_cal_match = (work["_raw_argmax"] == work["_cal_argmax"])
     pred_vs_highest_match = (work["predicted_result"] == work["predicted_highest_prob_result"])
     delta_draw = pd.to_numeric(work["prob_draw"], errors="coerce") - pd.to_numeric(work["prob_draw_raw"], errors="coerce")
+    postfusion_col = "predicted_result_main_postfusion_argmax"
+    has_postfusion = postfusion_col in work.columns
+    if has_postfusion:
+        postfusion = work[postfusion_col].astype(str).str.upper()
+        pred_vs_postfusion_match = (work["predicted_result"].astype(str).str.upper() == postfusion)
+    else:
+        postfusion = pd.Series("", index=work.index)
+        pred_vs_postfusion_match = pd.Series(False, index=work.index)
 
     print(
         f"[PRED_CHECK:{label}] raw_argmax_vs_cal_argmax_match_rate={raw_vs_cal_match.mean()*100:.1f}% "
         f"pred_vs_highest_match_rate={pred_vs_highest_match.mean()*100:.1f}%"
     )
+    if has_postfusion:
+        print(
+            f"[PRED_CHECK:{label}] pred_vs_postfusion_main_argmax_match_rate="
+            f"{pred_vs_postfusion_match.mean()*100:.1f}% "
+            f"mismatch_count={int((~pred_vs_postfusion_match).sum())}"
+        )
     print(
         f"[PRED_CHECK:{label}] draw_delta(mean/max/plus_count)="
         f"{delta_draw.mean(skipna=True):.6f}/{delta_draw.max(skipna=True):.6f}/{int((delta_draw > 0).sum())}"
@@ -7595,9 +10696,13 @@ def log_prediction_consistency(df, label):
     d_rate = (pred == "D").mean() * 100
     a_rate = (pred == "A").mean() * 100
     print(f"[PRED_CHECK:{label}] predicted_result_ratio(H/D/A)={h_rate:.1f}%/{d_rate:.1f}%/{a_rate:.1f}%")
+    if "predicted_result_source" in work.columns:
+        source_counts = work["predicted_result_source"].astype(str).value_counts(dropna=False).to_dict()
+        print(f"[PRED_CHECK:{label}] predicted_result_source_counts={source_counts}")
 
     mismatch_highest = work[work["predicted_highest_prob_result"] != work["_raw_argmax"]]
     mismatch_pred = work[work["predicted_result"] != work["_cal_argmax"]]
+    mismatch_postfusion = work[work["predicted_result"].astype(str).str.upper() != postfusion] if has_postfusion else pd.DataFrame()
     if len(mismatch_highest) > 0:
         mids = mismatch_highest[match_id_col].astype(str).tolist() if match_id_col else mismatch_highest.index.astype(str).tolist()
         print(f"[PRED_CHECK:{label}][WARN] highest_vs_raw_argmax_mismatch={len(mismatch_highest)} match_ids={mids}")
@@ -7608,6 +10713,28 @@ def log_prediction_consistency(df, label):
         print(f"[PRED_CHECK:{label}][WARN] predicted_vs_cal_argmax_mismatch={len(mismatch_pred)} match_ids={mids}")
     else:
         print(f"[PRED_CHECK:{label}] predicted_vs_cal_argmax_mismatch=0")
+    if has_postfusion:
+        if len(mismatch_postfusion) > 0:
+            mids = mismatch_postfusion[match_id_col].astype(str).tolist() if match_id_col else mismatch_postfusion.index.astype(str).tolist()
+            print(f"[PRED_CHECK:{label}][WARN] predicted_vs_postfusion_main_argmax_mismatch={len(mismatch_postfusion)} match_ids={mids}")
+        else:
+            print(f"[PRED_CHECK:{label}] predicted_vs_postfusion_main_argmax_mismatch=0")
+
+    if "actual_result" in work.columns and has_postfusion:
+        actual = work["actual_result"].astype(str).str.upper()
+        valid_actual = actual.isin(["H", "D", "A"])
+        pred_final = work["predicted_result"].astype(str).str.upper()
+        valid_pred = pred_final.isin(["H", "D", "A"])
+        valid_postfusion = postfusion.isin(["H", "D", "A"])
+        final_mask = valid_actual & valid_pred
+        postfusion_mask = valid_actual & valid_postfusion
+        final_acc = float((pred_final[final_mask] == actual[final_mask]).mean()) if int(final_mask.sum()) > 0 else float("nan")
+        postfusion_acc = float((postfusion[postfusion_mask] == actual[postfusion_mask]).mean()) if int(postfusion_mask.sum()) > 0 else float("nan")
+        delta_acc = final_acc - postfusion_acc if pd.notna(final_acc) and pd.notna(postfusion_acc) else float("nan")
+        print(
+            f"[PRED_CHECK:{label}] final_vs_postfusion_accuracy="
+            f"{final_acc:.4f}/{postfusion_acc:.4f} delta={delta_acc:+.4f}"
+        )
 
 
 def _normalize_probs(ph, pdw, pa):
@@ -7737,6 +10864,52 @@ def enforce_elo_sign_monotonic(prob_home_win, prob_draw, prob_away_win, elo_diff
         ELO_SIGN_FIX_COUNTER["pos_to_home"] += 1
     ph, pdw, pa = _normalize_probs(ph, pdw, pa)
     return ph, pdw, pa, fix_reason
+
+
+def enforce_final_elo_sign_monotonic(df, stage_label="FINAL"):
+    """Enforce H/A direction after every probability blend, before final labeling."""
+    if df is None or df.empty or not ENFORCE_ELO_SIGN_MONOTONIC:
+        return df
+    required = {"elo_diff_for_prob", "prob_home_win", "prob_away_win"}
+    if not required.issubset(df.columns):
+        return df
+    out = df.copy()
+    diff = pd.to_numeric(out["elo_diff_for_prob"], errors="coerce")
+    ph = pd.to_numeric(out["prob_home_win"], errors="coerce")
+    pa = pd.to_numeric(out["prob_away_win"], errors="coerce")
+    pos_fix = diff.gt(0) & ph.lt(pa)
+    neg_fix = diff.lt(0) & ph.gt(pa)
+    fix_mask = (pos_fix | neg_fix).fillna(False)
+    for home_col, away_col in [
+        ("prob_home_win", "prob_away_win"),
+        ("prob_home", "prob_away"),
+        ("prob_final_home", "prob_final_away"),
+        ("prob_blend_home", "prob_blend_away"),
+    ]:
+        if home_col not in out.columns or away_col not in out.columns:
+            continue
+        old_home = out.loc[fix_mask, home_col].copy()
+        out.loc[fix_mask, home_col] = out.loc[fix_mask, away_col].to_numpy()
+        out.loc[fix_mask, away_col] = old_home.to_numpy()
+    out["final_elo_sign_fix_applied"] = fix_mask
+    out["final_elo_sign_fix_reason"] = np.where(
+        pos_fix,
+        "pos_diff_home_lt_away_swap",
+        np.where(neg_fix, "neg_diff_home_gt_away_swap", ""),
+    )
+    final_argmax = out.apply(
+        lambda row: _argmax_hda_label(
+            row.get("prob_home_win"), row.get("prob_draw"), row.get("prob_away_win")
+        ),
+        axis=1,
+    )
+    out["predicted_result_main"] = final_argmax
+    out["predicted_result_main_postfusion_argmax"] = final_argmax
+    print(
+        f"[FINAL_ELO_SIGN_FIX] stage={stage_label} total={int(fix_mask.sum())} "
+        f"pos={int(pos_fix.sum())} neg={int(neg_fix.sum())}"
+    )
+    return out
 
 
 def sanitize_prob_triplet(ph, pdw, pa, fallback=PROB_FALLBACK):
@@ -7915,6 +11088,93 @@ def normalize_team_series(series):
     return series.map(canonical_team_name)
 
 
+def build_unordered_pair_key(home, away):
+    home_key = canonical_team_name(home)
+    away_key = canonical_team_name(away)
+    if not home_key or not away_key:
+        return None
+    a_key, b_key = sorted([str(home_key), str(away_key)])
+    return f"{a_key}||{b_key}"
+
+
+def load_derby_table(csv_path):
+    default_cols = [
+        "home_team", "away_team", "derby_name", "derby_type", "derby_intensity",
+        "stall_bias", "flip_bias", "entropy_bias", "volatility_bias", "notes",
+    ]
+    if not csv_path or (not os.path.exists(csv_path)):
+        print(f"[DERBY] csv not found: {csv_path}")
+        return pd.DataFrame(columns=default_cols + ["home_canon", "away_canon", "derby_pair_key"])
+    try:
+        src = pd.read_csv(csv_path, encoding="utf-8-sig")
+    except Exception as e:
+        print(f"[DERBY][WARN] csv load failed: {csv_path} ({e})")
+        return pd.DataFrame(columns=default_cols + ["home_canon", "away_canon", "derby_pair_key"])
+    required = {"home_team", "away_team", "derby_name"}
+    if src.empty or not required.issubset(src.columns):
+        print(f"[DERBY][WARN] required columns missing: path={csv_path}")
+        return pd.DataFrame(columns=default_cols + ["home_canon", "away_canon", "derby_pair_key"])
+    out = src.copy()
+    out["home_canon"] = normalize_team_series(out["home_team"])
+    out["away_canon"] = normalize_team_series(out["away_team"])
+    out["derby_pair_key"] = [
+        build_unordered_pair_key(h, a)
+        for h, a in zip(out["home_team"], out["away_team"])
+    ]
+    out = out.dropna(subset=["home_canon", "away_canon", "derby_pair_key"]).copy()
+    dup_count = int(out.duplicated(subset=["derby_pair_key"]).sum())
+    if dup_count > 0:
+        print(f"[DERBY][WARN] duplicate unordered pairs detected={dup_count}; keep first")
+        out = out.drop_duplicates(subset=["derby_pair_key"], keep="first")
+    print(f"[DERBY] loaded={len(out)} path={csv_path}")
+    return out
+
+
+def merge_derby_context(df, derby_df, stage_label=""):
+    if df is None or df.empty:
+        return df
+    out = df.copy()
+    if not {"home_team", "away_team"}.issubset(out.columns):
+        return out
+    if derby_df is None or derby_df.empty:
+        out["derby_match"] = False
+        out["derby_name"] = ""
+        out["derby_type"] = ""
+        out["derby_intensity"] = np.nan
+        out["derby_stall_bias"] = np.nan
+        out["derby_flip_bias"] = np.nan
+        out["derby_entropy_bias"] = np.nan
+        out["derby_volatility_bias"] = np.nan
+        out["derby_notes"] = ""
+        print(f"[DERBY] scope={stage_label or '-'} skipped(empty master)")
+        return out
+    work = derby_df.copy()
+    keep_cols = [
+        "derby_pair_key", "derby_name", "derby_type", "derby_intensity",
+        "stall_bias", "flip_bias", "entropy_bias", "volatility_bias", "notes",
+    ]
+    keep_cols = [c for c in keep_cols if c in work.columns]
+    work = work[keep_cols].drop_duplicates(subset=["derby_pair_key"], keep="first").copy()
+    out["derby_pair_key"] = [
+        build_unordered_pair_key(h, a)
+        for h, a in zip(out["home_team"], out["away_team"])
+    ]
+    out = out.merge(work, on="derby_pair_key", how="left")
+    matched = out["derby_name"].notna()
+    out["derby_match"] = matched.fillna(False)
+    out["derby_name"] = out["derby_name"].fillna("")
+    out["derby_type"] = out["derby_type"].fillna("")
+    out["derby_intensity"] = pd.to_numeric(out["derby_intensity"], errors="coerce")
+    out["derby_stall_bias"] = pd.to_numeric(out.get("stall_bias", pd.Series(np.nan, index=out.index)), errors="coerce")
+    out["derby_flip_bias"] = pd.to_numeric(out.get("flip_bias", pd.Series(np.nan, index=out.index)), errors="coerce")
+    out["derby_entropy_bias"] = pd.to_numeric(out.get("entropy_bias", pd.Series(np.nan, index=out.index)), errors="coerce")
+    out["derby_volatility_bias"] = pd.to_numeric(out.get("volatility_bias", pd.Series(np.nan, index=out.index)), errors="coerce")
+    out["derby_notes"] = out.get("notes", pd.Series("", index=out.index)).fillna("")
+    out = out.drop(columns=["stall_bias", "flip_bias", "entropy_bias", "volatility_bias", "notes", "derby_pair_key"], errors="ignore")
+    print(f"[DERBY] scope={stage_label or '-'} matched={int(matched.fillna(False).sum())}/{len(out)}")
+    return out
+
+
 def drop_j2_excluded_stats_columns(df):
     out = df.copy()
     if LEAGUE != "j2":
@@ -7954,7 +11214,64 @@ def _safe_numeric(s, default=0.0):
     return pd.to_numeric(s, errors="coerce").fillna(default)
 
 
-def load_absence_impact_team_round_map(absence_csv_path, match_round_numbers):
+def _absence_uncertainty_weeks(expected_weeks):
+    """Return an automatic fade width without adding manual CSV columns."""
+    weeks = _safe_float_value(expected_weeks, 0.0)
+    if weeks <= 4:
+        return 1.0
+    if weeks <= 12:
+        return 2.0
+    if weeks <= 24:
+        return 3.0
+    return 4.0
+
+
+def _absence_date_factor(match_date, start_date, expected_return_date, expected_weeks):
+    match_ts = pd.to_datetime(match_date, errors="coerce")
+    start_ts = pd.to_datetime(start_date, errors="coerce")
+    return_ts = pd.to_datetime(expected_return_date, errors="coerce")
+    if pd.isna(match_ts) or pd.isna(start_ts) or pd.isna(return_ts):
+        return 0.0
+    match_ts = match_ts.normalize()
+    start_ts = start_ts.normalize()
+    return_ts = return_ts.normalize()
+    if match_ts < start_ts:
+        return 0.0
+
+    duration_weeks = _safe_float_value(expected_weeks, 0.0)
+    if duration_weeks <= 0:
+        duration_weeks = max(1.0, (return_ts - start_ts).days / 7.0)
+    width_days = _absence_uncertainty_weeks(duration_weeks) * 7.0
+    fade_start = return_ts - pd.Timedelta(days=width_days)
+    fade_end = return_ts + pd.Timedelta(days=width_days)
+    if match_ts <= fade_start:
+        return 1.0
+    if match_ts >= fade_end:
+        return 0.0
+    return float((fade_end - match_ts).days / max((fade_end - fade_start).days, 1))
+
+
+def _build_absence_match_fixtures(match_frames):
+    parts = []
+    for frame in match_frames or []:
+        if frame is None or frame.empty or "節" not in frame.columns:
+            continue
+        work = frame.copy()
+        work["round_no"] = work["節"].map(extract_round_number).astype("Int64")
+        work["match_date"] = pd.to_datetime(work.get("datetime"), errors="coerce").dt.normalize()
+        for col in ["home_team", "away_team"]:
+            if col not in work.columns:
+                continue
+            side = work[["round_no", "match_date", col]].rename(columns={col: "team"})
+            side["team"] = normalize_team_series(side["team"])
+            parts.append(side)
+    if not parts:
+        return pd.DataFrame(columns=["round_no", "match_date", "team"])
+    fixtures = pd.concat(parts, ignore_index=True).dropna(subset=["round_no", "match_date", "team"])
+    return fixtures.drop_duplicates(["round_no", "match_date", "team"])
+
+
+def load_absence_impact_team_round_map(absence_csv_path, match_frames):
     if (not absence_csv_path) or (not os.path.exists(absence_csv_path)):
         print("[ABSENCE] 欠場影響CSVが見つからないためスキップします。")
         return pd.DataFrame()
@@ -7968,18 +11285,47 @@ def load_absence_impact_team_round_map(absence_csv_path, match_round_numbers):
         print("[ABSENCE] 欠場影響CSVが空のためスキップします。")
         return pd.DataFrame()
 
-    required = {"team", "round_start"}
-    if not required.issubset(set(src.columns)):
-        print(f"[ABSENCE][WARN] 必須列不足: need={required}, have={set(src.columns)}")
+    columns = set(src.columns)
+    dated_mode = {"team", "start_date", "expected_return_date"}.issubset(columns)
+    legacy_mode = {"team", "round_start"}.issubset(columns)
+    if not dated_mode and not legacy_mode:
+        print(
+            "[ABSENCE][WARN] 必須列不足: "
+            "need=team + (start_date/expected_return_date or round_start) "
+            f"have={columns}"
+        )
         return pd.DataFrame()
 
     work = src.copy()
     if "season" not in work.columns:
         work["season"] = int(SEASON_YEAR)
     work["season"] = _safe_numeric(work["season"], default=int(SEASON_YEAR)).astype("Int64")
-    work["round_start"] = _safe_numeric(work["round_start"]).astype("Int64")
+    if "round_start" not in work.columns:
+        work["round_start"] = pd.Series(pd.NA, index=work.index, dtype="Int64")
+    else:
+        work["round_start"] = pd.to_numeric(work["round_start"], errors="coerce").astype("Int64")
     work["expected_rounds"] = _safe_numeric(work.get("expected_rounds", 1), default=1).astype("Int64")
     work.loc[work["expected_rounds"] <= 0, "expected_rounds"] = 1
+    start_values = work["start_date"] if "start_date" in work.columns else pd.Series(pd.NaT, index=work.index)
+    return_values = (
+        work["expected_return_date"]
+        if "expected_return_date" in work.columns
+        else pd.Series(pd.NaT, index=work.index)
+    )
+    week_values = (
+        work["expected_weeks"]
+        if "expected_weeks" in work.columns
+        else pd.Series(float("nan"), index=work.index)
+    )
+    work["start_date"] = pd.to_datetime(start_values, errors="coerce", yearfirst=True)
+    work["expected_return_date"] = pd.to_datetime(
+        return_values, errors="coerce", yearfirst=True
+    )
+    work["expected_weeks"] = pd.to_numeric(week_values, errors="coerce")
+    calculated_days = work["expected_weeks"].fillna(0.0) * 7.0
+    calculated_return = work["start_date"] + pd.to_timedelta(calculated_days, unit="D")
+    calculated_return = calculated_return.where(work["expected_weeks"].notna())
+    work["expected_return_date"] = work["expected_return_date"].fillna(calculated_return)
 
     # 影響列が無い場合は weight から代用
     if "impact_total" not in work.columns:
@@ -8003,34 +11349,39 @@ def load_absence_impact_team_round_map(absence_csv_path, match_round_numbers):
     work["team_name"] = normalize_team_series(work["team"].astype(str))
     work["_merge_team_name"] = normalize_team_series(work["team_name"])
 
-    target_rounds = sorted({int(x) for x in match_round_numbers if pd.notna(x)})
-    if not target_rounds:
-        print("[ABSENCE][WARN] 対象節が特定できないため欠場影響を無効化します。")
+    fixtures = _build_absence_match_fixtures(match_frames)
+    if fixtures.empty:
+        print("[ABSENCE][WARN] 対象試合日時が特定できないため欠場影響を無効化します。")
         return pd.DataFrame()
-    min_r = min(target_rounds)
-    max_r = max(target_rounds)
 
     expanded_rows = []
     for _, r in work.iterrows():
-        if pd.isna(r["round_start"]) or pd.isna(r["season"]) or pd.isna(r["_merge_team_name"]):
+        if pd.isna(r["season"]) or pd.isna(r["_merge_team_name"]):
             continue
-        start_r = int(r["round_start"])
-        span = int(r["expected_rounds"]) if pd.notna(r["expected_rounds"]) else 1
-        end_r = start_r + max(span, 1) - 1
-        # 予測対象節へクリップ
-        s = max(start_r, min_r)
-        e = min(end_r, max_r)
-        if s > e:
-            continue
-        for rr in range(s, e + 1):
+        team_fixtures = fixtures[fixtures["team"].eq(r["_merge_team_name"])]
+        for _, fixture in team_fixtures.iterrows():
+            if pd.notna(r["start_date"]) and pd.notna(r["expected_return_date"]):
+                factor = _absence_date_factor(
+                    fixture["match_date"], r["start_date"], r["expected_return_date"], r["expected_weeks"]
+                )
+            elif pd.notna(r["round_start"]):
+                start_r = int(r["round_start"])
+                span = int(r["expected_rounds"]) if pd.notna(r["expected_rounds"]) else 1
+                end_r = start_r + max(span, 1) - 1
+                factor = 1.0 if start_r <= int(fixture["round_no"]) <= end_r else 0.0
+            else:
+                factor = 0.0
+            if factor <= 0.0:
+                continue
             expanded_rows.append(
                 {
                     "season": int(r["season"]),
                     "_merge_team_name": r["_merge_team_name"],
-                    "round_no": rr,
-                    "absence_impact_total": float(r["impact_total"]),
-                    "absence_impact_attack": float(r["impact_attack"]),
-                    "absence_impact_defense": float(r["impact_defense"]),
+                    "round_no": int(fixture["round_no"]),
+                    "match_date": fixture["match_date"],
+                    "absence_impact_total": float(r["impact_total"]) * factor,
+                    "absence_impact_attack": float(r["impact_attack"]) * factor,
+                    "absence_impact_defense": float(r["impact_defense"]) * factor,
                     "absence_players_count": 1,
                 }
             )
@@ -8041,7 +11392,7 @@ def load_absence_impact_team_round_map(absence_csv_path, match_round_numbers):
 
     out = pd.DataFrame(expanded_rows)
     out = (
-        out.groupby(["season", "_merge_team_name", "round_no"], as_index=False)
+        out.groupby(["season", "_merge_team_name", "round_no", "match_date"], as_index=False)
         .agg(
             absence_impact_total=("absence_impact_total", "sum"),
             absence_impact_attack=("absence_impact_attack", "sum"),
@@ -8050,7 +11401,8 @@ def load_absence_impact_team_round_map(absence_csv_path, match_round_numbers):
         )
     )
     print(
-        f"[ABSENCE] 取り込み完了: src_rows={len(work)}, expanded={len(expanded_rows)}, team_round_rows={len(out)}"
+        f"[ABSENCE] 取り込み完了: mode={'date' if dated_mode else 'round'} "
+        f"src_rows={len(work)}, expanded={len(expanded_rows)}, team_match_rows={len(out)}"
     )
     return out
 
@@ -8068,6 +11420,7 @@ def merge_absence_impacts(df, absence_map_df, stage_label):
 
     out = df.copy()
     out["_round_no"] = out["節"].map(extract_round_number).astype("Int64")
+    out["_match_date"] = pd.to_datetime(out.get("datetime"), errors="coerce").dt.normalize()
     out["_season"] = int(SEASON_YEAR)
     out["_merge_home_team"] = normalize_team_series(out["home_team"])
     out["_merge_away_team"] = normalize_team_series(out["away_team"])
@@ -8092,26 +11445,26 @@ def merge_absence_impacts(df, absence_map_df, stage_label):
     out = audited_left_merge(
         out,
         home_map[
-            ["season", "_merge_team_name", "round_no", "absence_impact_total_home", "absence_impact_attack_home", "absence_impact_defense_home", "absence_players_count_home"]
+            ["season", "_merge_team_name", "round_no", "match_date", "absence_impact_total_home", "absence_impact_attack_home", "absence_impact_defense_home", "absence_players_count_home"]
         ],
         stage=f"{stage_label}_home",
-        left_on=["_season", "_merge_home_team", "_round_no"],
-        right_on=["season", "_merge_team_name", "round_no"],
+        left_on=["_season", "_merge_home_team", "_round_no", "_match_date"],
+        right_on=["season", "_merge_team_name", "round_no", "match_date"],
         validate="many_to_one",
     )
-    out = out.drop(columns=["season", "_merge_team_name", "round_no"], errors="ignore")
+    out = out.drop(columns=["season", "_merge_team_name", "round_no", "match_date"], errors="ignore")
 
     out = audited_left_merge(
         out,
         away_map[
-            ["season", "_merge_team_name", "round_no", "absence_impact_total_away", "absence_impact_attack_away", "absence_impact_defense_away", "absence_players_count_away"]
+            ["season", "_merge_team_name", "round_no", "match_date", "absence_impact_total_away", "absence_impact_attack_away", "absence_impact_defense_away", "absence_players_count_away"]
         ],
         stage=f"{stage_label}_away",
-        left_on=["_season", "_merge_away_team", "_round_no"],
-        right_on=["season", "_merge_team_name", "round_no"],
+        left_on=["_season", "_merge_away_team", "_round_no", "_match_date"],
+        right_on=["season", "_merge_team_name", "round_no", "match_date"],
         validate="many_to_one",
     )
-    out = out.drop(columns=["season", "_merge_team_name", "round_no"], errors="ignore")
+    out = out.drop(columns=["season", "_merge_team_name", "round_no", "match_date"], errors="ignore")
 
     for c in [
         "absence_impact_total_home", "absence_impact_attack_home", "absence_impact_defense_home", "absence_players_count_home",
@@ -8121,7 +11474,7 @@ def merge_absence_impacts(df, absence_map_df, stage_label):
             out[c] = 0.0
         out[c] = pd.to_numeric(out[c], errors="coerce").fillna(0.0)
 
-    out = out.drop(columns=["_merge_home_team", "_merge_away_team", "_round_no", "_season"], errors="ignore")
+    out = out.drop(columns=["_merge_home_team", "_merge_away_team", "_round_no", "_match_date", "_season"], errors="ignore")
     return out
 
 
@@ -8136,8 +11489,58 @@ def normalize_travel_distance_matrix(df):
     return out
 
 
+def _weather_match_fallback_key(match_id):
+    """Build a match key that ignores kickoff HHMM but keeps date and matchup."""
+    text = str(match_id or "").strip()
+    match = re.match(r"^([^_]+)_(\d{4})_(\d{4})\d{4}_(.+)$", text)
+    if not match:
+        return ""
+    return f"{match.group(1)}_{match.group(2)}_{match.group(3)}_{match.group(4)}"
+
+
+def _add_weather_match_id_aliases(df, weather_cache_df):
+    """Alias weather rows to schedule/result IDs when only kickoff HHMM differs."""
+    if df.empty or weather_cache_df.empty or "match_id" not in df.columns or "match_id" not in weather_cache_df.columns:
+        return weather_cache_df, 0
+
+    weather = weather_cache_df.copy()
+    exact_ids = set(weather["match_id"].dropna().astype(str).str.strip())
+    left = df[["match_id"]].copy()
+    left["match_id"] = left["match_id"].astype(str).str.strip()
+    left = left[~left["match_id"].isin(exact_ids)].drop_duplicates("match_id")
+    left["__weather_fallback_key"] = left["match_id"].map(_weather_match_fallback_key)
+    left = left[left["__weather_fallback_key"].ne("")]
+
+    right = weather.reset_index(names="__weather_source_index")
+    right["__weather_fallback_key"] = right["match_id"].map(_weather_match_fallback_key)
+    right = right[right["__weather_fallback_key"].ne("")]
+    if "__weather_asof" in right.columns:
+        right = right.sort_values(["__weather_fallback_key", "__weather_asof"], kind="mergesort")
+    right = right.drop_duplicates("__weather_fallback_key", keep="last")
+
+    aliases = left.merge(
+        right[["__weather_fallback_key", "__weather_source_index"]],
+        on="__weather_fallback_key",
+        how="inner",
+        validate="many_to_one",
+    )
+    if aliases.empty:
+        return weather, 0
+
+    alias_rows = weather.loc[aliases["__weather_source_index"].to_numpy()].copy().reset_index(drop=True)
+    alias_rows["match_id"] = aliases["match_id"].to_numpy()
+    weather = pd.concat([weather, alias_rows], ignore_index=True, sort=False)
+    return weather, len(alias_rows)
+
+
 def merge_weather_cache(df, weather_cache_df, stage):
     _ensure_merge_qc_dir()
+    weather_cache_df, fallback_matches = _add_weather_match_id_aliases(df, weather_cache_df)
+    if fallback_matches:
+        print(
+            f"[WEATHER_MATCH_FALLBACK] stage={stage} matched={fallback_matches} "
+            "key=league+season+date+home+away (kickoff_hhmm ignored)"
+        )
     _log_df_key_health(stage, "left_before", df, ["match_id"])
     _log_df_key_health(stage, "right", weather_cache_df, ["match_id"])
 
@@ -8164,16 +11567,37 @@ def merge_weather_cache(df, weather_cache_df, stage):
     else:
         print(f"[MERGE_QC] {stage}: left_only=0")
 
-    weather_cols = [c for c in ["is_rain", "is_heavy_rain", "is_strong_wind"] if c in merged.columns]
-    if not weather_cols:
-        merged["is_rain"] = pd.NA
-        merged["is_heavy_rain"] = pd.NA
-        merged["is_strong_wind"] = pd.NA
-        weather_cols = ["is_rain", "is_heavy_rain", "is_strong_wind"]
-
-    merged["weather_missing"] = (merged["_merge_weather"] == "left_only") | merged[weather_cols].isna().all(axis=1)
+    weather_cols = ["is_rain", "is_heavy_rain", "is_strong_wind"]
     for col in weather_cols:
-        merged[col] = merged[col].fillna(False).astype(bool)
+        if col not in merged:
+            merged[col] = pd.NA
+
+    merged["weather_missing"] = (merged["_merge_weather"] == "left_only") | merged[weather_cols].isna().any(axis=1)
+    if "weather_fetch_ok" in merged:
+        merged["weather_missing"] |= pd.to_numeric(merged["weather_fetch_ok"], errors="coerce").eq(0)
+    if "weather_quality_status" in merged:
+        merged["weather_missing"] |= merged["weather_quality_status"].isin(["partial_match_window", "outside_match_window"])
+    acquired = pd.to_datetime(merged.get("last_updated_at", pd.Series(pd.NaT, index=merged.index)), errors="coerce", utc=True)
+    now_utc = pd.Timestamp.now(tz="UTC")
+    merged["weather_age_hours"] = (now_utc - acquired).dt.total_seconds() / 3600
+    kickoff_local = pd.to_datetime(merged["datetime"], errors="coerce")
+    if kickoff_local.dt.tz is None:
+        kickoff_local = kickoff_local.dt.tz_localize("Asia/Tokyo")
+    upcoming_weather = kickoff_local.gt(now_utc)
+    merged["weather_freshness_status"] = np.where(
+        acquired.isna(), "acquisition_unknown",
+        np.where(merged["weather_age_hours"].between(0, float(os.environ.get("WEATHER_MAX_FORECAST_AGE_HOURS", "24"))), "fresh", "stale")
+    )
+    # A failed refresh can leave an old CSV in place: do not silently apply it
+    # to a future fixture. Historical snapshots retain their recorded evidence.
+    merged["weather_missing"] |= upcoming_weather & merged["weather_freshness_status"].ne("fresh")
+    for col in weather_cols:
+        merged[col] = merged[col].map(lambda v: str(v).strip().lower() in {"true", "1", "1.0"} if pd.notna(v) else False)
+        merged.loc[merged["weather_missing"], col] = False
+    # False補完は「晴天」の断定ではなく、欠損時に補正を加えない中立処理。
+    merged["weather_adjustment_status"] = np.where(
+        merged["weather_missing"], "unknown_no_adjustment", "available_flags"
+    )
 
     # 数値天候の欠損は補完（欠損事実は weather_missing で保持）
     for col, default_val in [("temperature", WEATHER_DEFAULT_TEMPERATURE), ("wind_speed", WEATHER_DEFAULT_WIND_SPEED)]:
@@ -8200,6 +11624,15 @@ def normalize_weather_cache_columns(df):
         out["temperature"] = out["temp_kickoff"]
     if "wind_speed" not in out.columns and "wind_kickoff" in out.columns:
         out["wind_speed"] = out["wind_kickoff"]
+    if "wind_speed" in out.columns:
+        wind_kmh = pd.to_numeric(out["wind_speed"], errors="coerce")
+        # Open-Meteoの既定値と保存済みスナップショットはkm/h。旧8km/h判定を読み込み時に是正する。
+        units = out.get("wind_speed_unit", pd.Series("km/h", index=out.index)).fillna("km/h")
+        factors = units.map({"km/h": 1.0, "kmh": 1.0, "m/s": 3.6, "mph": 1.609344, "kn": 1.852})
+        wind_kmh *= factors
+        out["wind_speed"] = wind_kmh
+        out["is_strong_wind"] = wind_kmh.ge(STRONG_WIND_THRESHOLD_KMH).where(wind_kmh.notna(), pd.NA)
+        out["wind_speed_unit"] = WIND_SPEED_UNIT
 
     # 取得時刻（なければ空列を作る）
     if "last_updated_at" not in out.columns:
@@ -8280,7 +11713,11 @@ def load_weather_union_dataframe(primary_weather_csv):
             "is_strong_wind",
             "temperature",
             "wind_speed",
+            "wind_speed_unit",
             "last_updated_at",
+            "weather_fetch_ok", "weather_quality_status", "weather_data_kind",
+            "weather_window_hours", "precip_kickoff", "precip_max_match",
+            "precip_sum_match", "wind_max_match", "adverse_weather_during_match",
             "__weather_asof",
             "__weather_source",
         ]
@@ -8717,19 +12154,7 @@ def load_acl_events(path):
         print(f"[ACL] schedule csv not found: {path}")
         return pd.DataFrame(columns=required_cols)
 
-    df = pd.read_csv(path)
-    missing = [c for c in required_cols if c not in df.columns]
-    if missing:
-        raise ValueError(f"ACL schedule csv に必須列がありません: missing={missing} path={path}")
-
-    out = df.copy()
-    out = out.dropna(how="all")
-    out["team"] = out["team"].astype(str).str.strip()
-    out["match_date"] = pd.to_datetime(out["match_date"], errors="coerce")
-    out["fatigue_grade"] = pd.to_numeric(out["fatigue_grade"], errors="coerce")
-    out = out.dropna(subset=["match_date"])
-    out = out[out["team"].ne("")]
-    out["fatigue_grade"] = out["fatigue_grade"].fillna(0.0)
+    out = normalize_acl_schedule(path)
     out["_team_key"] = normalize_team_series(out["team"])
     out = out.sort_values(["_team_key", "match_date"], kind="mergesort").reset_index(drop=True)
     return out
@@ -8773,6 +12198,13 @@ def get_acl_fatigue(team, target_date, acl_event_index, effective_days):
     target_ts = pd.Timestamp(target_date)
     event_ts = pd.Timestamp(event["match_date"])
     days_since = (target_ts.normalize() - event_ts.normalize()).days
+    if days_since > int(ACL_SECOND_WINDOW_DAYS):
+        return {
+            "acl_fatigue": 0.0,
+            "acl_last_date": pd.NaT,
+            "acl_days_since": pd.NA,
+            "acl_travel_type": "",
+        }
     fatigue_value = 0.0
     if 1 <= days_since <= int(effective_days):
         fatigue_value = float(event.get("fatigue_grade", 0.0) or 0.0)
@@ -8780,13 +12212,13 @@ def get_acl_fatigue(team, target_date, acl_event_index, effective_days):
         if days_since <= 3:
             fatigue_value *= (1.0 + ACL_FATIGUE_SHORT_REST_BONUS)
         travel_type = str(event.get("travel_type", "") or "").strip().lower()
-        if travel_type in {"away", "international_away", "overseas", "long_away"}:
+        if travel_type in ACL_AWAY_TRAVEL_TYPES:
             fatigue_value *= (1.0 + ACL_FATIGUE_TRAVEL_AWAY_BONUS)
     elif int(effective_days) < days_since <= int(ACL_SECOND_WINDOW_DAYS):
         fatigue_value = float(event.get("fatigue_grade", 0.0) or 0.0)
         fatigue_value *= ACL_FATIGUE_MULTIPLIER
         travel_type = str(event.get("travel_type", "") or "").strip().lower()
-        if travel_type in {"away", "international_away", "overseas", "long_away"}:
+        if travel_type in ACL_AWAY_TRAVEL_TYPES:
             fatigue_value *= (1.0 + ACL_FATIGUE_TRAVEL_AWAY_BONUS)
         fatigue_value *= ACL_SECOND_WINDOW_DECAY
 
@@ -8856,6 +12288,24 @@ def merge_external_stats(
         external_stats["team_name"] = external_stats["team_name"].astype(str).str.strip()
         external_stats["_merge_team_name"] = normalize_team_series(external_stats["team_name"])
 
+        target_team_keys = set(normalize_team_series(df["home_team"]).dropna())
+        target_team_keys.update(normalize_team_series(df["away_team"]).dropna())
+        external_team_keys = set(external_stats["_merge_team_name"].dropna())
+        overlap = target_team_keys & external_team_keys
+        if merge_col_prefix == "rankmot_" and target_team_keys - external_team_keys:
+            print(
+                f"[MERGE_QC][WARN] {stage_label}: 順位情報の未結合 "
+                f"missing_teams={sorted(target_team_keys - external_team_keys)} "
+                f"matched={len(overlap)}/{len(target_team_keys)} source={stats_csv_path}"
+            )
+        if target_team_keys and not overlap:
+            print(
+                f"[MERGE_QC][INFO] {stage_label}: 対象リーグとのチーム一致なし "
+                f"(target_teams={len(target_team_keys)}, external_teams={len(external_team_keys)}); "
+                "対象外データとしてスキップ"
+            )
+            return df
+
         # マージ対象カラム抽出
         stats_cols = [
             col for col in external_stats.columns
@@ -8924,6 +12374,8 @@ def merge_external_stats(
         return out
 
     except FileNotFoundError:
+        if merge_col_prefix == "rankmot_":
+            print(f"[MERGE_QC][WARN] {stage_label}: 順位情報の未結合 source={stats_csv_path} (ファイルなし)")
         print(f"警告: 外部スタッツファイル '{stats_csv_path}' が見つかりません。スキップ。")
         return df
 
@@ -9009,31 +12461,60 @@ try:
         fatigue_scores_df["datetime"] = pd.to_datetime(fatigue_scores_df["datetime"], errors="coerce")
 
     merge_keys = ["datetime", "home_team", "away_team"]
-    fatigue_cols = ["home_fatigue_score", "away_fatigue_score"]
+    fatigue_detail_cols = [
+        "home_rest_fatigue", "away_rest_fatigue",
+        "home_recent_load_carry", "away_recent_load_carry",
+        "home_travel_fatigue", "away_travel_fatigue",
+        "home_away_condition_penalty", "away_away_condition_penalty",
+        "away_travel_distance_km", "travel_lookup_status",
+        "fatigue_measurement_version", "external_schedule_coverage", "travel_distance_basis",
+        "home_last_match_at", "away_last_match_at", "home_rest_hours", "away_rest_hours",
+        "home_matches_last7d", "away_matches_last7d", "home_matches_last14d", "away_matches_last14d",
+        "home_external_matches_last14d", "away_external_matches_last14d",
+        "home_external_load_unknown", "away_external_load_unknown",
+        "home_external_events_json", "away_external_events_json",
+    ]
+    fatigue_cols = ["home_fatigue_score", "away_fatigue_score"] + [
+        c for c in fatigue_detail_cols if c in fatigue_scores_df.columns
+    ]
     fatigue_merge_df = fatigue_scores_df[merge_keys + fatigue_cols].copy()
     dup = int(fatigue_merge_df.duplicated(subset=merge_keys).sum())
     if dup:
         print(f"[MERGE_QC][WARN] fatigue: 右側重複キー={dup} -> 最後の行を採用して重複排除")
         fatigue_merge_df = fatigue_merge_df.drop_duplicates(subset=merge_keys, keep="last")
 
+    fatigue_future_merge_df, future_rescued = add_fatigue_time_aliases(
+        df_2025_future, fatigue_merge_df, merge_keys
+    )
+    fatigue_finished_merge_df, finished_rescued = add_fatigue_time_aliases(
+        df_2025_finished, fatigue_merge_df, merge_keys
+    )
+    if future_rescued or finished_rescued:
+        print(
+            f"[FATIGUE_TIME_FALLBACK] tolerance=10min "
+            f"future={future_rescued} finished={finished_rescued}"
+        )
+
     df_2025_future = audited_left_merge(
         df_2025_future,
-        fatigue_merge_df,
+        fatigue_future_merge_df,
         stage="fatigue_future",
         on=merge_keys,
         validate="one_to_one",
     )
     df_2025_finished = audited_left_merge(
         df_2025_finished,
-        fatigue_merge_df,
+        fatigue_finished_merge_df,
         stage="fatigue_finished",
         on=merge_keys,
         validate="one_to_one",
     )
     report_missing_rates(df_2025_future, "after_fatigue_future")
     report_missing_rates(df_2025_finished, "after_fatigue_finished")
+    validate_prediction_fatigue(df_2025_future)
+    validate_prediction_fatigue(df_2025_finished)
 except FileNotFoundError:
-    print(f"警告: 疲労度ファイル '{team_fatigue_scores_csv}' が見つかりませんでした。スキップします。")
+    raise RuntimeError(f"FATIGUE_INPUT: 疲労度ファイル '{team_fatigue_scores_csv}' がありません。予測を停止します。")
 except Exception as e:
     print(f"エラー: 疲労度のマージ中にエラーが発生しました: {e}")
     raise
@@ -9098,10 +12579,12 @@ else:
     df_2025_future["is_heavy_rain"] = False
     df_2025_future["is_strong_wind"] = False
     df_2025_future["weather_missing"] = True
+    df_2025_future["weather_adjustment_status"] = "unknown_no_adjustment"
     df_2025_finished["is_rain"] = False
     df_2025_finished["is_heavy_rain"] = False
     df_2025_finished["is_strong_wind"] = False
     df_2025_finished["weather_missing"] = True
+    df_2025_finished["weather_adjustment_status"] = "unknown_no_adjustment"
 
 # team_master_stats.csv をマージ
 df_2025_future = merge_external_stats(
@@ -9159,17 +12642,17 @@ df_2025_finished = merge_external_stats(
 report_missing_rates(df_2025_future, "after_rankmot_future")
 report_missing_rates(df_2025_finished, "after_rankmot_finished")
 
-# 欠場影響（absences_with_impact.csv）を節×チームでマージ
-match_rounds = set()
-if "節" in df_2025_future.columns:
-    match_rounds |= set(df_2025_future["節"].map(extract_round_number).dropna().astype(int).tolist())
-if "節" in df_2025_finished.columns:
-    match_rounds |= set(df_2025_finished["節"].map(extract_round_number).dropna().astype(int).tolist())
-absence_map_df = load_absence_impact_team_round_map(absence_impact_csv, match_rounds)
+# 欠場影響（absences_with_impact.csv）を試合日×チームでマージ。
+# 新形式は expected_weeks から自動幅を付けて減衰し、旧形式は節指定へフォールバックする。
+absence_map_df = load_absence_impact_team_round_map(
+    absence_impact_csv,
+    [df_2025_future, df_2025_finished],
+)
 df_2025_future = merge_absence_impacts(df_2025_future, absence_map_df, stage_label="absence_future")
 df_2025_finished = merge_absence_impacts(df_2025_finished, absence_map_df, stage_label="absence_finished")
 report_missing_rates(df_2025_future, "after_absence_future")
 report_missing_rates(df_2025_finished, "after_absence_finished")
+derby_master_df = load_derby_table(derby_master_csv)
 
 # team_travel_distances.csv を読み込み、データフレームとして準備 (行列形式)
 # これはルックアップテーブルとして使用
@@ -9427,12 +12910,13 @@ df_pred = pd.DataFrame(predictions)
 df_pred = apply_round_type_draw_control(df_pred, "PRED")
 df_pred = add_data_quality_flags(df_pred)
 df_pred = fill_management_default_values(df_pred)
-df_pred = recalculate_predicted_result(df_pred, "predicted_result")
+df_pred = merge_derby_context(df_pred, derby_master_df, "PRED")
+df_pred = recalculate_predicted_result(df_pred, "predicted_result_prefusion_argmax")
 df_pred = recalculate_predicted_highest_prob_result(df_pred, "predicted_highest_prob_result")
 if not DRAW_TWEAK_ENABLED and not df_pred.empty:
-    df_pred["predicted_highest_prob_result"] = df_pred["predicted_result"]
+    df_pred["predicted_highest_prob_result"] = df_pred["predicted_result_prefusion_argmax"]
     if "argmax_raw_result" in df_pred.columns:
-        df_pred["argmax_raw_result"] = df_pred["predicted_result"]
+        df_pred["argmax_raw_result"] = df_pred["predicted_result_prefusion_argmax"]
 if DRAW_TWEAK_ENABLED and DRAW_ASSIGN_BY_EXPECTATION:
     # 最終ラベルは「調整後確率」をベースに、節単位の期待ドロー数へ合わせてDを付与する
     df_pred = assign_draw_results_by_expectation(df_pred, "final_result")
@@ -9440,17 +12924,15 @@ else:
     print(f"[DRAW_ASSIGN] disabled (DRAW_TWEAK_MODE={DRAW_TWEAK_MODE}, DRAW_ASSIGN_BY_EXPECTATION={int(DRAW_ASSIGN_BY_EXPECTATION)})")
 df_pred = sync_and_validate_prediction_results(df_pred, "PRED", raise_on_error=True)
 df_pred = _add_force_draw_flag(df_pred)
-df_pred = apply_narrow_draw_override(df_pred, LEAGUE)
-df_pred = apply_j1_away_restore_override(df_pred, LEAGUE)
 df_pred = apply_draw_candidate_flags(df_pred)
 df_pred = merge_football_lab_compare(df_pred, LEAGUE, "PRED")
+df_pred = add_team_state_and_lab_context(df_pred)
 df_pred = apply_match_type_flags(df_pred)
-df_pred = apply_main_prediction_result(df_pred, "PRED")
-df_pred = apply_incentive_rank_context_override(df_pred, LEAGUE)
-df_pred = add_match_type_prediction_variants(df_pred)
-df_pred = apply_j1_signal_conflict_away_restore(df_pred, LEAGUE)
-df_pred = apply_j2_away_restore_overrides(df_pred, LEAGUE)
+df_pred = add_main_prediction_columns(df_pred)
+df_pred = enforce_final_elo_sign_monotonic(df_pred, "PRED_POST_BLEND")
 df_pred = apply_main_prediction_result(df_pred, "PRED_FINAL")
+df_pred = apply_connected_prediction_overrides(df_pred, LEAGUE, "PRED_FINAL")
+df_pred = add_buyplan_purchase_context(df_pred)
 log_draw_tweak_audit(df_pred, "PRED")
 log_decision_rule_once()
 log_hda_diagnostics(df_pred, "PRED")
@@ -9502,6 +12984,7 @@ pred_write_guard = _guarded_write_csv(
 )
 if pred_write_guard["written"]:
     print(f"予測結果を {output_csv} に出力しました。")
+    write_buyplan_context_csv(df_pred, output_csv)
 else:
     print(f"[WRITE_GUARD] 予測結果の本体上書きをスキップしました: {output_csv}")
 if output_csv != LEGACY_OUTPUT_CSV:
@@ -9741,12 +13224,13 @@ if "stats_source_csv" not in df_backtest.columns:
 df_backtest = apply_round_type_draw_control(df_backtest, "BACKTEST")
 df_backtest = add_data_quality_flags(df_backtest)
 df_backtest = fill_management_default_values(df_backtest)
-df_backtest = recalculate_predicted_result(df_backtest, "predicted_result")
+df_backtest = merge_derby_context(df_backtest, derby_master_df, "BACKTEST")
+df_backtest = recalculate_predicted_result(df_backtest, "predicted_result_prefusion_argmax")
 df_backtest = recalculate_predicted_highest_prob_result(df_backtest, "predicted_highest_prob_result")
 if not DRAW_TWEAK_ENABLED and not df_backtest.empty:
-    df_backtest["predicted_highest_prob_result"] = df_backtest["predicted_result"]
+    df_backtest["predicted_highest_prob_result"] = df_backtest["predicted_result_prefusion_argmax"]
     if "argmax_raw_result" in df_backtest.columns:
-        df_backtest["argmax_raw_result"] = df_backtest["predicted_result"]
+        df_backtest["argmax_raw_result"] = df_backtest["predicted_result_prefusion_argmax"]
 df_backtest_argmax = _apply_backtest_decision_rule(df_backtest.copy(), "argmax")
 if DRAW_TWEAK_ENABLED and (DRAW_ASSIGN_BY_EXPECTATION or BACKTEST_DECISION_RULE in {"expect", "both"}):
     df_backtest_expect = _apply_backtest_decision_rule(df_backtest.copy(), "expect")
@@ -9762,8 +13246,6 @@ else:
     df_backtest = df_backtest_argmax.copy()
 df_backtest = sync_and_validate_prediction_results(df_backtest, "BACKTEST", raise_on_error=True)
 df_backtest = _add_force_draw_flag(df_backtest)
-df_backtest = apply_narrow_draw_override(df_backtest, LEAGUE)
-df_backtest = apply_j1_away_restore_override(df_backtest, LEAGUE)
 log_draw_tweak_audit(df_backtest, "BACKTEST")
 log_hda_diagnostics(df_backtest, "BACKTEST")
 log_pred_dist(df_backtest, "BACKTEST", scope="all")
@@ -9805,13 +13287,13 @@ df_backtest = apply_draw_candidate_flags(df_backtest)
 save_draw_diagnostics(df_backtest, LEAGUE, SEASON_YEAR)
 save_draw_threshold_scan(df_backtest, LEAGUE, SEASON_YEAR)
 df_backtest = merge_football_lab_compare(df_backtest, LEAGUE, "BACKTEST")
+df_backtest = add_team_state_and_lab_context(df_backtest)
 df_backtest = apply_match_type_flags(df_backtest)
-df_backtest = apply_main_prediction_result(df_backtest, "BACKTEST")
-df_backtest = apply_incentive_rank_context_override(df_backtest, LEAGUE)
-df_backtest = add_match_type_prediction_variants(df_backtest)
-df_backtest = apply_j1_signal_conflict_away_restore(df_backtest, LEAGUE)
-df_backtest = apply_j2_away_restore_overrides(df_backtest, LEAGUE)
+df_backtest = add_main_prediction_columns(df_backtest)
+df_backtest = enforce_final_elo_sign_monotonic(df_backtest, "BACKTEST_POST_BLEND")
 df_backtest = apply_main_prediction_result(df_backtest, "BACKTEST_FINAL")
+df_backtest = apply_connected_prediction_overrides(df_backtest, LEAGUE, "BACKTEST_FINAL")
+df_backtest = add_buyplan_purchase_context(df_backtest)
 if "actual_result" in df_backtest.columns and "predicted_result" in df_backtest.columns:
     df_backtest["is_correct"] = (
         df_backtest["actual_result"].astype(str).str.upper()
@@ -9827,8 +13309,6 @@ except Exception as e:
     calibration_meta = {"error": str(e)}
     print(f"[CALIBRATION][WARN] skipped due to error: {e}")
 save_match_type_diagnostics(df_backtest, LEAGUE, SEASON_YEAR)
-save_lab_sim_diagnostics(df_backtest, LEAGUE, SEASON_YEAR)
-save_match_type_variant_diagnostics(df_backtest, LEAGUE, SEASON_YEAR)
 save_argmax_diagnostics(df_backtest, LEAGUE, SEASON_YEAR)
 df_backtest = drop_internal_output_columns(df_backtest)
 report_missing_rates(df_backtest, "final_backtest_df")
@@ -10072,11 +13552,76 @@ def build_report():
         "elo_diff_after_hfa",
         "elo_diff_scaled",
         "elo_diff_for_prob",
+        "prob_elo_home",
+        "prob_elo_draw",
+        "prob_elo_away",
+        "prob_lab_home",
+        "prob_lab_draw",
+        "prob_lab_away",
+        "lab_prob_blend_alpha",
         "prob_home_win",
         "prob_draw",
         "prob_away_win",
+        "draw_core_score",
+        "swing_close_score",
+        "close_split_profile",
+        "match_purchase_type",
+        "match_purchase_subtype",
+        "purchase_type_confidence",
+        "purchase_type_reason",
+        "admission_policy",
+        "rank1_symbol",
+        "rank2_symbol",
+        "rank3_symbol",
+        "rank1_prob",
+        "rank2_prob",
+        "rank3_prob",
+        "anchor_candidate_flag",
+        "anchor_candidate_score",
+        "anchor_candidate_reason",
+        "draw_core_candidate_flag",
+        "draw_core_candidate_score",
+        "draw_core_candidate_reason",
+        "away_overread_draw_cover_flag",
+        "away_overread_draw_cover_score",
+        "away_overread_draw_cover_reason",
+        "match_context_title_race_home",
+        "match_context_title_race_away",
+        "match_context_acl_race_home",
+        "match_context_acl_race_away",
+        "match_context_acl_border_home",
+        "match_context_acl_border_away",
+        "match_context_promotion_race_home",
+        "match_context_promotion_race_away",
+        "match_context_po_race_home",
+        "match_context_po_race_away",
+        "match_context_survival_race_home",
+        "match_context_survival_race_away",
+        "match_context_relegation_escape_home",
+        "match_context_relegation_escape_away",
+        "match_context_top_direct_duel",
+        "match_context_bottom_direct_duel",
+        "match_context_zone_home",
+        "match_context_zone_away",
+        "match_context_pressure_score_home",
+        "match_context_pressure_score_away",
+        "draw_core_flag",
+        "draw_purchase_tier",
+        "primary_pick_symbol",
+        "secondary_pick_symbol",
+        "risk_level",
+        "ticket_guidance",
+        "decision_summary",
+        "predicted_result_prefusion_argmax",
+        "predicted_result_main_prefusion",
+        "predicted_result_main",
+        "main_rule_applied",
+        "predicted_result_main_postfusion_argmax",
+        "predicted_result_main_symbol",
         "final_result",
         "predicted_result",
+        "predicted_result_source",
+        "predicted_result_prob_ref",
         "decision_reason",
         "argmax_result",
         "force_draw_applied",
@@ -10084,7 +13629,7 @@ def build_report():
         "argmax_raw_result",
     ]
     if "predicted_result" not in df_pred.columns:
-        df_pred = recalculate_predicted_result(df_pred, "predicted_result")
+        df_pred = apply_main_prediction_result(df_pred, "PRED_EXPORT")
     if "predicted_highest_prob_result" not in df_pred.columns:
         df_pred = recalculate_predicted_highest_prob_result(df_pred, "predicted_highest_prob_result")
     pred_cols = [c for c in desired_pred_cols if c in df_pred.columns]
@@ -10102,11 +13647,76 @@ def build_report():
         "elo_diff_after_hfa",
         "elo_diff_scaled",
         "elo_diff_for_prob",
+        "prob_elo_home",
+        "prob_elo_draw",
+        "prob_elo_away",
+        "prob_lab_home",
+        "prob_lab_draw",
+        "prob_lab_away",
+        "lab_prob_blend_alpha",
         "prob_home_win",
         "prob_draw",
         "prob_away_win",
+        "draw_core_score",
+        "swing_close_score",
+        "close_split_profile",
+        "match_purchase_type",
+        "match_purchase_subtype",
+        "purchase_type_confidence",
+        "purchase_type_reason",
+        "admission_policy",
+        "rank1_symbol",
+        "rank2_symbol",
+        "rank3_symbol",
+        "rank1_prob",
+        "rank2_prob",
+        "rank3_prob",
+        "anchor_candidate_flag",
+        "anchor_candidate_score",
+        "anchor_candidate_reason",
+        "draw_core_candidate_flag",
+        "draw_core_candidate_score",
+        "draw_core_candidate_reason",
+        "away_overread_draw_cover_flag",
+        "away_overread_draw_cover_score",
+        "away_overread_draw_cover_reason",
+        "match_context_title_race_home",
+        "match_context_title_race_away",
+        "match_context_acl_race_home",
+        "match_context_acl_race_away",
+        "match_context_acl_border_home",
+        "match_context_acl_border_away",
+        "match_context_promotion_race_home",
+        "match_context_promotion_race_away",
+        "match_context_po_race_home",
+        "match_context_po_race_away",
+        "match_context_survival_race_home",
+        "match_context_survival_race_away",
+        "match_context_relegation_escape_home",
+        "match_context_relegation_escape_away",
+        "match_context_top_direct_duel",
+        "match_context_bottom_direct_duel",
+        "match_context_zone_home",
+        "match_context_zone_away",
+        "match_context_pressure_score_home",
+        "match_context_pressure_score_away",
+        "draw_core_flag",
+        "draw_purchase_tier",
+        "primary_pick_symbol",
+        "secondary_pick_symbol",
+        "risk_level",
+        "ticket_guidance",
+        "decision_summary",
+        "predicted_result_prefusion_argmax",
+        "predicted_result_main_prefusion",
+        "predicted_result_main",
+        "main_rule_applied",
+        "predicted_result_main_postfusion_argmax",
+        "predicted_result_main_symbol",
         "final_result",
         "predicted_result",
+        "predicted_result_source",
+        "predicted_result_prob_ref",
         "decision_reason",
         "argmax_result",
         "force_draw_applied",
@@ -10116,7 +13726,7 @@ def build_report():
         "is_correct",
     ]
     if "predicted_result" not in df_backtest.columns:
-        df_backtest = recalculate_predicted_result(df_backtest, "predicted_result")
+        df_backtest = apply_main_prediction_result(df_backtest, "BACKTEST_EXPORT")
     if "predicted_highest_prob_result" not in df_backtest.columns:
         df_backtest = recalculate_predicted_highest_prob_result(df_backtest, "predicted_highest_prob_result")
     backtest_cols = [c for c in desired_backtest_cols if c in df_backtest.columns]

@@ -1,0 +1,17 @@
+{
+  "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/observation_history/matches.csv",
+  "rounds": 8,
+  "matches": 101,
+  "outputs": [
+    "candidate_summary.csv",
+    "draw_tier_summary.csv",
+    "league_summary.csv",
+    "new_season_validation.md",
+    "observation_flag_summary.csv",
+    "overall_summary.csv",
+    "purchase_subtype_summary.csv",
+    "purchase_type_summary.csv",
+    "round_summary.csv"
+  ],
+  "scope": "scored toto purchase matches only"
+}

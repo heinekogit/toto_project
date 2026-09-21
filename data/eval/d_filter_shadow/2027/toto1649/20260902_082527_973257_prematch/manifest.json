@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-02T08:25:27+09:00",
+  "round_id": "toto1649",
+  "logical_season": "2027",
+  "label": "prematch",
+  "prediction_rows": 20,
+  "buyplan_rows": 13,
+  "policies": [
+    "false_draw_only",
+    "false_draw_plus_trap",
+    "topology_guard"
+  ],
+  "official_logic_changed": false,
+  "files": {
+    "predictions_source.csv": {
+      "size": 160998,
+      "sha256": "1b77c6288ec2addb639100823846db1f0764209079cd525bb28f063beecb0481"
+    },
+    "buyplan_source.csv": {
+      "size": 22195,
+      "sha256": "adf3509ed83cb316ab9c7d4139ef6086e11dc3e2afea158449f14c9e1eca65fb"
+    },
+    "d_filter_prematch.csv": {
+      "size": 7224,
+      "sha256": "b5bac259136e61dda91e3170fb54dcee6713a5d9d3019ad78ffcd405b046b93f"
+    },
+    "buyplan_d_filter_reference.csv": {
+      "size": 23185,
+      "sha256": "d74b87dc83a142db6b43f764883086983e74cbbf4ebde0a92a6ac588a710fcf9"
+    },
+    "buyplan_d_filter_reference.html": {
+      "size": 10223,
+      "sha256": "c2e428c7abb6a52f3e2f759e19ecefaa5a7734bbcc847994da3897def1f2362c"
+    }
+  }
+}

@@ -16,6 +16,7 @@ import buyplan
 
 PURCHASE_DIR = os.path.join(ROOT_DIR, "data", "purchase_reference")
 BACKTEST_ROOT = os.path.join(PURCHASE_DIR, "backtest")
+EXPERIMENT_ROOT = os.path.join(PURCHASE_DIR, "current_predictions_experiment")
 ROUNDS_ROOT = os.path.join(ROOT_DIR, "data", "eval", "rounds")
 
 
@@ -60,6 +61,7 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Build buyplan simulation index page")
     p.add_argument("--purchase-dir", default=PURCHASE_DIR)
     p.add_argument("--backtest-root", default=BACKTEST_ROOT)
+    p.add_argument("--experiment-root", default=EXPERIMENT_ROOT)
     return p.parse_args()
 
 
@@ -67,6 +69,7 @@ def main() -> None:
     args = parse_args()
     purchase_dir = os.path.abspath(args.purchase_dir)
     backtest_root = os.path.abspath(args.backtest_root)
+    experiment_root = os.path.abspath(args.experiment_root)
     out_html = os.path.join(purchase_dir, "buyplan_simulation.html")
 
     rows = []
@@ -75,13 +78,39 @@ def main() -> None:
     if os.path.exists(current_summary):
         ticket, hits, total, avg = _best_summary(current_summary)
         rows.append(("現在", current_html, ticket, hits, total, avg))
+        current_eval = os.path.join(purchase_dir, "buyplan_current_evaluation.csv")
+        if os.path.exists(current_eval):
+            try:
+                current_eval_df = pd.read_csv(current_eval, usecols=["round_id"])
+                round_id = str(current_eval_df["round_id"].dropna().iloc[0]).strip()
+                if re.fullmatch(r"round\d{2}", round_id):
+                    round_no = int(round_id.replace("round", ""))
+                    rows.append((f"第{round_no:02d}節 simulation", current_html, ticket, hits, total, avg))
+            except Exception:
+                pass
 
     rounds = _discover_rounds(backtest_root)
     for round_name in rounds:
         summary_csv = os.path.join(backtest_root, round_name, "buyplan_scored_summary.csv")
         ticket, hits, total, avg = _best_summary(summary_csv)
         round_no = int(round_name.replace("round", ""))
-        rows.append((f"第{round_no:02d}節", os.path.join("backtest", round_name, "buyplan_simulation.html"), ticket, hits, total, avg))
+        rows.append((f"第{round_no:02d}節 backtest", os.path.join("backtest", round_name, "buyplan_simulation.html"), ticket, hits, total, avg))
+
+    experiment_rounds = _discover_rounds(experiment_root)
+    for round_name in experiment_rounds:
+        summary_csv = os.path.join(experiment_root, round_name, "buyplan_scored_summary.csv")
+        ticket, hits, total, avg = _best_summary(summary_csv)
+        round_no = int(round_name.replace("round", ""))
+        rows.append(
+            (
+                f"第{round_no:02d}節 current-predictions experiment",
+                os.path.join("current_predictions_experiment", round_name, "buyplan_simulation.html"),
+                ticket,
+                hits,
+                total,
+                avg,
+            )
+        )
 
     html: List[str] = []
     html.append("<!doctype html>")
@@ -98,7 +127,7 @@ def main() -> None:
     html.append(".left{text-align:left;}")
     html.append("</style></head><body>")
     html.append("<h2>buyplanシミュレーション一覧</h2>")
-    html.append("<p>現行の buyplan ロジックを、現在データと過去節 snapshot に再適用したバックテスト入口です。</p>")
+    html.append("<p>buyplan の見え方を 3 種類に分けた一覧です。現在 simulation、過去節 snapshot を使う backtest、現在 predictions を過去節へ当てる current-predictions experiment を並べています。</p>")
     html.append("<div class='nav'>")
     html.append("<label for='round-select'>表示を選択</label>")
     html.append("<select id='round-select' onchange=\"if(this.value){window.location.href=this.value;}\">")

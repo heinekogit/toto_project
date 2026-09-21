@@ -1,0 +1,15 @@
+match_type,lab_basis_hint,rows,d_to_h_miss,miss_rate,pred_D,actual_H
+neutral,draw_compressed,23,7,0.30434782608695654,23,7
+signal_conflict,draw_compressed,12,4,0.3333333333333333,10,5
+signal_conflict,basis_balanced,8,4,0.5,5,5
+neutral,basis_balanced,16,3,0.1875,5,10
+away_strong,basis_balanced,35,0,0.0,0,8
+home_strong,basis_balanced,34,0,0.0,2,22
+home_strong,draw_compressed,13,0,0.0,0,4
+away_strong,draw_compressed,9,0,0.0,0,2
+neutral,split_side,3,0,0.0,3,0
+away_strong,split_side,2,0,0.0,0,0
+home_strong,side_strong,2,0,0.0,0,1
+neutral,flat_draw_trap,2,0,0.0,2,0
+close_match,draw_compressed,1,0,0.0,1,0
+signal_conflict,split_side,1,0,0.0,0,1

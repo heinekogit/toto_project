@@ -10,72 +10,51 @@ import unicodedata
 from urllib.parse import urljoin
 from urllib.parse import urlparse, parse_qs
 from http_retry import get_with_retry
+from jleague_competition import resolve_competition_ids
+from jleague_matches import build_match_id, parse_match_datetimes, validate_match_identity
 
 SEASON_YEAR = os.environ.get("SEASON_YEAR", "2025")
 LEAGUE = os.environ.get("LEAGUE", "j1").lower()
-_competition_years_env = os.environ.get("COMPETITION_YEARS")
-_special_mode_auto = _competition_years_env is None and LEAGUE in {"j1", "j2"} and int(SEASON_YEAR) >= 2026
-COMPETITION_YEARS = _competition_years_env or (f"{SEASON_YEAR}1" if _special_mode_auto else SEASON_YEAR)
-TRANSITION_2026_MODE = str(COMPETITION_YEARS).endswith("1") and len(str(COMPETITION_YEARS)) == 5 and LEAGUE in {"j1", "j2"}
+COMPETITION_YEARS = os.environ.get("COMPETITION_YEARS", SEASON_YEAR)
 
 DEFAULT_FRAME_ID = "1"
 if LEAGUE == "j2":
     DEFAULT_FRAME_ID = "2"
 elif LEAGUE == "j3":
     DEFAULT_FRAME_ID = "3"
-if TRANSITION_2026_MODE:
-    DEFAULT_FRAME_ID = "35" if LEAGUE == "j1" else "36"
 COMPETITION_FRAME_IDS = os.environ.get("COMPETITION_FRAME_IDS", DEFAULT_FRAME_ID)
 COMPETITION_IDS_ENV = os.environ.get("COMPETITION_IDS")
-COMPETITION_ID_MAP = {
-    "j1": "651",
-    "j2": "655",
-}
-competition_id = COMPETITION_IDS_ENV or COMPETITION_ID_MAP.get(LEAGUE, "651")
-if TRANSITION_2026_MODE:
-    TARGET_URL = (
-        f"https://data.j-league.or.jp/SFMS01/search?"
-        f"competition_years={COMPETITION_YEARS}&competition_frame_ids={COMPETITION_FRAME_IDS}"
-    )
-else:
-    TARGET_URL = (
-        f"https://data.j-league.or.jp/SFMS01/search?"
-        f"competition_years={COMPETITION_YEARS}&competition_frame_ids={COMPETITION_FRAME_IDS}"
-        f"&competition_ids={competition_id}&tv_relay_station_name="
-    )
+competition_id = ""
+TARGET_URL = "https://data.j-league.or.jp/SFMS01/search"
 OUTPUT_CSV_FILENAME = f"{LEAGUE}_{SEASON_YEAR}_latest_results.csv"
 OUTPUT_CSV_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data"))
 OUTPUT_CSV_PATH = os.path.join(OUTPUT_CSV_DIR, OUTPUT_CSV_FILENAME)
 
 TEMP_HTML_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "temp_match_results.html")) # 一時HTMLファイルパス
 
-FALLBACK_FRAME_ID_BY_LEAGUE = {
-    "j1": "35",
-    "j2": "36",
-    "j3": "36",
-}
-
-# 2026移行モードは frame=35/36 に J1/J2 相当カードが混在するため、
-# リーグ別の固定チーム集合でカードを確定させる。
-TRANSITION_TEAM_ALLOWLIST_2026 = {
-    "j1": {
-        "鹿島", "水戸", "浦和", "千葉", "柏", "FC東京", "東京Ｖ", "町田", "川崎Ｆ", "横浜FM",
-        "清水", "名古屋", "京都", "Ｇ大阪", "Ｃ大阪", "神戸", "岡山", "広島", "福岡", "長崎",
-    },
-    "j2": {
-        "札幌", "八戸", "仙台", "秋田", "山形", "いわき", "栃木Ｃ", "大宮", "横浜FC", "湘南",
-        "甲府", "新潟", "富山", "磐田", "藤枝", "徳島", "今治", "鳥栖", "大分", "宮崎",
-    },
-}
-
 
 def _parse_id_set(text):
     return {v.strip() for v in str(text).split(",") if v.strip()}
 
 
-EXPECTED_COMPETITION_IDS = _parse_id_set(competition_id)
+EXPECTED_COMPETITION_IDS = set()
 EXPECTED_COMPETITION_YEARS = str(COMPETITION_YEARS).strip()
 EXPECTED_FRAME_IDS = _parse_id_set(COMPETITION_FRAME_IDS)
+
+
+def _configure_competition():
+    global competition_id, TARGET_URL, EXPECTED_COMPETITION_IDS
+    competition_id = resolve_competition_ids(
+        COMPETITION_YEARS,
+        COMPETITION_FRAME_IDS,
+        COMPETITION_IDS_ENV,
+    )
+    EXPECTED_COMPETITION_IDS = _parse_id_set(competition_id)
+    TARGET_URL = (
+        "https://data.j-league.or.jp/SFMS01/search?"
+        f"competition_years={COMPETITION_YEARS}&competition_frame_ids={COMPETITION_FRAME_IDS}"
+        f"&competition_ids={competition_id}&tv_relay_station_name="
+    )
 
 
 def _find_match_table(soup):
@@ -98,22 +77,13 @@ def _extract_tab_urls(soup, base_url, allowed_frame_ids=None):
             qs = parse_qs(urlparse(full_url).query)
             years = (qs.get("competition_years") or [""])[0].strip()
             frame_id = (qs.get("competition_frame_ids") or [""])[0].strip()
-            # 2026移行モードは未知フレームが追加される可能性があるため、
-            # frame_id で候補を絞り込みすぎない。
-            if (not TRANSITION_2026_MODE) and allowed_frame_ids and frame_id and frame_id not in allowed_frame_ids:
+            if allowed_frame_ids and frame_id and frame_id not in allowed_frame_ids:
                 continue
             ids = _parse_id_set((qs.get("competition_ids") or [""])[0])
             if years != EXPECTED_COMPETITION_YEARS:
                 continue
-            # 2026移行モードは competition_ids が不定（分割テーブル/タブ差し替えあり）なため
-            # 年度一致のみで候補化し、後段で重複除去する。
-            if TRANSITION_2026_MODE:
-                # 特殊モードでも competition_ids が付いている場合はリーグ一致を優先
-                if ids and not (ids & EXPECTED_COMPETITION_IDS):
-                    continue
-            else:
-                if not ids or not (ids & EXPECTED_COMPETITION_IDS):
-                    continue
+            if not ids or not (ids & EXPECTED_COMPETITION_IDS):
+                continue
         except Exception:
             continue
         if full_url in seen:
@@ -151,32 +121,19 @@ def _build_candidate_urls(soup, base_url, preferred_frame_id):
     fallback_frames = set(EXPECTED_FRAME_IDS)
     if preferred_frame_id:
         fallback_frames.add(str(preferred_frame_id))
-    if LEAGUE == "j1":
-        # 2026移行モードではJ1が複数フレームに分割されるため両方候補化
-        fallback_frames.update({"35", "36"} if TRANSITION_2026_MODE else {"35"})
-    elif LEAGUE == "j2":
-        # 同様にJ2側も取りこぼし回避のため両方候補化
-        fallback_frames.update({"36", "35"} if TRANSITION_2026_MODE else {"36"})
 
     tab_urls = _extract_tab_urls(soup, base_url, allowed_frame_ids=fallback_frames)
     tab_urls = _sort_tab_urls_by_preference(tab_urls, preferred_frame_id)
 
     manual_urls = []
     for frame_id in sorted(fallback_frames):
-        if TRANSITION_2026_MODE:
-            manual_urls.append(
-                "https://data.j-league.or.jp/SFMS01/search?"
-                f"competition_years={EXPECTED_COMPETITION_YEARS}"
-                f"&competition_frame_ids={frame_id}"
-            )
-        else:
-            manual_urls.append(
-                "https://data.j-league.or.jp/SFMS01/search?"
-                f"competition_years={EXPECTED_COMPETITION_YEARS}"
-                f"&competition_frame_ids={frame_id}"
-                f"&competition_ids={competition_id}"
-                "&tv_relay_station_name="
-            )
+        manual_urls.append(
+            "https://data.j-league.or.jp/SFMS01/search?"
+            f"competition_years={EXPECTED_COMPETITION_YEARS}"
+            f"&competition_frame_ids={frame_id}"
+            f"&competition_ids={competition_id}"
+            "&tv_relay_station_name="
+        )
 
     candidates = [base_url] + tab_urls + manual_urls
     unique = []
@@ -343,13 +300,6 @@ def _load_ranked_teams(results_csv_path):
 def _estimate_allowed_teams_for_league():
     if LEAGUE not in {"j1", "j2"}:
         return None
-    if TRANSITION_2026_MODE and str(SEASON_YEAR) == "2026":
-        fixed = TRANSITION_TEAM_ALLOWLIST_2026.get(LEAGUE)
-        if fixed:
-            print(
-                f"[INFO] 固定チームリストを適用: league={LEAGUE}, season={SEASON_YEAR}, teams={len(fixed)}"
-            )
-            return fixed
     try:
         prev_year = str(int(SEASON_YEAR) - 1)
     except Exception:
@@ -370,6 +320,7 @@ def _estimate_allowed_teams_for_league():
 
 
 def scrape_match_results():
+    _configure_competition()
     print(f"試合結果をスクレイピング中: {TARGET_URL}")
     print(f"出力CSVパス: {OUTPUT_CSV_PATH}")
 
@@ -383,10 +334,7 @@ def scrape_match_results():
         root_html_text = response.text
         root_soup = BeautifulSoup(root_html_text, 'lxml')
 
-        preferred_fallback_frame_id = os.environ.get(
-            "FALLBACK_FRAME_ID",
-            FALLBACK_FRAME_ID_BY_LEAGUE.get(LEAGUE),
-        )
+        preferred_fallback_frame_id = os.environ.get("FALLBACK_FRAME_ID", DEFAULT_FRAME_ID)
         candidate_urls = _build_candidate_urls(root_soup, TARGET_URL, preferred_fallback_frame_id)
         tables = []
 
@@ -422,10 +370,8 @@ def scrape_match_results():
         else:
             raise RuntimeError("試合結果テーブルが見つかりませんでした。")
 
-        # 日付整形ロジックを修正
-        # 曜日表記と括弧内の文字、前後の空白を削除
-        df_results['試合日'] = df_results['試合日'].str.replace(r'\s*\(.+\)\s*', '', regex=True) 
-        df_results['datetime'] = pd.to_datetime(df_results['試合日'] + ' ' + df_results['K/O時刻'], format='%y/%m/%d %H:%M', errors='coerce')
+        # 時刻未定でも日付が分かる試合は00:00にフォールバックする。
+        df_results['datetime'] = parse_match_datetimes(df_results['試合日'], df_results['K/O時刻'])
         df_results = df_results.drop(columns=['試合日', 'K/O時刻'])
 
         # 以下既存のデータ整形ロジックを継続
@@ -459,8 +405,6 @@ def scrape_match_results():
             )
             print(f"警告: スコア抽出失敗 {unparsed_mask.sum()} 件（先頭10件）: {samples}")
         df_results = df_results.drop(columns=['score_full'])
-        # 2026移行モードでは同一カードが複数フレームに重複することがある。
-        # その際、スコアあり行を優先して採用する。
         dedup_keys = ['節', 'datetime', 'home_team', 'away_team']
         df_results['__score_present'] = (
             df_results['home_score'].notna() & df_results['away_score'].notna()
@@ -472,24 +416,18 @@ def scrape_match_results():
             .drop(columns=['__score_present'])
         )
 
-        # 所属推定フィルタを適用（2026移行モードの混在カード除去にも使う）
-        # 2026 は固定チーム集合を優先し、それ以外は前年成績から推定する。
-        if LEAGUE in {"j1", "j2"}:
-            allowed_teams = _estimate_allowed_teams_for_league()
-            if allowed_teams:
-                before = len(df_results)
-                df_results = df_results[
-                    df_results['home_team'].isin(allowed_teams) & df_results['away_team'].isin(allowed_teams)
-                ].copy()
-                print(f"リーグ所属フィルタを適用: {before} -> {len(df_results)}")
-            else:
-                print("リーグ所属フィルタをスキップ: 許可チーム推定に必要な前年データが不足")
+        # competition_year/frame/competition_idで公式側がリーグを確定済み。
+        # 前年順位からの所属推定は昇降格・シーズン移行時に正規カードを削るため適用しない。
+        print(f"[LEAGUE_SCOPE] official competition filterを採用: league={LEAGUE} rows={len(df_results)}")
 
         df_results['match_id'] = df_results.apply(
-            lambda row: f"{LEAGUE}_{SEASON_YEAR}_{row['datetime'].strftime('%m%d%H%M')}_{row['home_team']}_{row['away_team']}" if pd.notna(row['datetime']) else "",
+            lambda row: build_match_id(
+                LEAGUE, SEASON_YEAR, row.get('節'), row.get('datetime'),
+                row.get('home_team'), row.get('away_team'),
+            ),
             axis=1
         )
-        df_results['match_id'] = df_results['match_id'].str.replace(r'[^\w\s-]', '', regex=True).str.replace(r'\s+', '_', regex=True)
+        validate_match_identity(df_results, label=f"{LEAGUE}_{SEASON_YEAR}_results")
 
 
         try:

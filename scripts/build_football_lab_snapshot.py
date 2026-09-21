@@ -163,6 +163,108 @@ WIDE_CHART_MAPPINGS = {
         "1試合平均総走行距離": "flab_actual_play_distance",
         "アクチュアルプレーイングタイム": "flab_actual_play_time",
     },
+    "AGI,KAGI": {
+        "ゴール": "flab_agi_goals",
+        "AGI": "flab_agi_score",
+        "被ゴール": "flab_kagi_goals_against",
+        "KAGI": "flab_kagi_score",
+    },
+    "ショートカウンター (チームスタイル指標)": {
+        "指数": "flab_style_short_counter_index",
+        "シュート率": "flab_style_short_counter_shot_rate",
+    },
+    "ロングカウンター (チームスタイル指標)": {
+        "指数": "flab_style_long_counter_index",
+        "シュート率": "flab_style_long_counter_shot_rate",
+    },
+    "敵陣ポゼッション (チームスタイル指標)": {
+        "指数": "flab_style_enemy_possession_index",
+        "シュート率": "flab_style_enemy_possession_shot_rate",
+    },
+    "自陣ポゼッション (チームスタイル指標)": {
+        "指数": "flab_style_own_possession_index",
+        "シュート率": "flab_style_own_possession_shot_rate",
+    },
+    "左サイド攻撃 (チームスタイル指標)": {
+        "指数": "flab_style_left_attack_index",
+        "シュート率": "flab_style_left_attack_shot_rate",
+    },
+    "中央攻撃 (チームスタイル指標)": {
+        "指数": "flab_style_center_attack_index",
+        "シュート率": "flab_style_center_attack_shot_rate",
+    },
+    "右サイド攻撃 (チームスタイル指標)": {
+        "指数": "flab_style_right_attack_index",
+        "シュート率": "flab_style_right_attack_shot_rate",
+    },
+}
+
+CBP_TABLE_MAPPINGS = {
+    "攻撃": {
+        "攻撃ポイント": "flab_cbp_attack_points",
+        "試合平均": "flab_cbp_attack_per_game",
+        "最近5試合": "flab_cbp_attack_last5",
+    },
+    "パス": {
+        "パスポイント": "flab_cbp_pass_points",
+        "試合平均": "flab_cbp_pass_per_game",
+        "最近5試合": "flab_cbp_pass_last5",
+    },
+    "クロス": {
+        "クロスポイント": "flab_cbp_cross_points",
+        "試合平均": "flab_cbp_cross_per_game",
+        "最近5試合": "flab_cbp_cross_last5",
+    },
+    "ドリブル": {
+        "ドリブルポイント": "flab_cbp_dribble_points",
+        "試合平均": "flab_cbp_dribble_per_game",
+        "最近5試合": "flab_cbp_dribble_last5",
+    },
+    "パスレシーブ": {
+        "パスレシーブポイント": "flab_cbp_pass_receive_points",
+        "試合平均": "flab_cbp_pass_receive_per_game",
+        "最近5試合": "flab_cbp_pass_receive_last5",
+    },
+    "シュート": {
+        "シュートポイント": "flab_cbp_shot_points",
+        "試合平均": "flab_cbp_shot_per_game",
+        "最近5試合": "flab_cbp_shot_last5",
+    },
+    "ゴール": {
+        "ゴールポイント": "flab_cbp_goal_points",
+        "試合平均": "flab_cbp_goal_per_game",
+        "最近5試合": "flab_cbp_goal_last5",
+    },
+    "奪取": {
+        "奪取ポイント": "flab_cbp_gain_points",
+        "試合平均": "flab_cbp_gain_per_game",
+        "最近5試合": "flab_cbp_gain_last5",
+    },
+    "守備": {
+        "守備ポイント": "flab_cbp_defense_points",
+        "試合平均": "flab_cbp_defense_per_game",
+        "最近5試合": "flab_cbp_defense_last5",
+    },
+    "セーブ": {
+        "セーブポイント": "flab_cbp_save_points",
+        "試合平均": "flab_cbp_save_per_game",
+        "最近5試合": "flab_cbp_save_last5",
+    },
+}
+
+AGI_KAGI_TABLE_MAPPINGS = {
+    "AGI": {
+        "AGI": "flab_agi_score",
+        "ゴール": "flab_agi_goals",
+        "シュート": "flab_agi_shots",
+        "成績順位": "flab_agi_rank",
+    },
+    "KAGI": {
+        "KAGI": "flab_kagi_score",
+        "被ゴール": "flab_kagi_goals_against",
+        "被シュート": "flab_kagi_shots_against",
+        "成績順位": "flab_kagi_rank",
+    },
 }
 
 
@@ -232,11 +334,29 @@ def parse_title_info(title_text, fallback_league):
     season = ""
     league = fallback_league.lower()
     page_label = title_text
+    regular = re.search(r"(\d{4})/(\d{2})\s+J[123](?:J[23])?\s+(.+?)\s*\|", title_text)
+    if regular:
+        season = regular.group(1)
+        page_label = regular.group(3)
+        return season, league, page_label
     m = re.search(r"(\d{4})\s+J[123](?:J[23])?百年構想リーグ\s+(.+?)\s*\|", title_text)
     if m:
         season = m.group(1)
         page_label = m.group(2)
     return season, league, page_label
+
+
+def resolve_table_mapping(page_label, section_title):
+    if section_title in WIDE_TABLE_MAPPINGS:
+        return WIDE_TABLE_MAPPINGS[section_title]
+    if page_label == "AGI,KAGI":
+        return AGI_KAGI_TABLE_MAPPINGS.get(section_title)
+    normalized_label = normalize_text(page_label)
+    if normalized_label.startswith("チャンスビルディングポイント "):
+        for key, mapping in CBP_TABLE_MAPPINGS.items():
+            if key in normalized_label:
+                return mapping
+    return None
 
 
 def parse_asof_date(html_text, fallback_date):
@@ -262,11 +382,14 @@ def find_preceding_section_title(matches, position):
 def extract_chart_section_titles(html_text):
     titles = []
     pattern = re.compile(
-        r'<h3 class="boxHeader"><span>(.*?)</span></h3>\s*<div id="ccs\d+"',
+        r'<h[23] class="boxHeader"><span>(.*?)</span></h[23]>\s*<div id="ccs\d+"',
         re.S,
     )
     for match in pattern.finditer(html_text):
-        titles.append(strip_tags(match.group(1)))
+        title = strip_tags(match.group(1))
+        if title in {"Data Menu", "Team", "Player", "Comparison", "All Style"}:
+            continue
+        titles.append(title)
     return titles
 
 
@@ -394,12 +517,14 @@ def extract_chart_rows(html_text, meta):
 
 
 def extract_team_tables(html_text, meta):
-    section_matches = list(re.finditer(r'<h3 class="boxHeader"><span>(.*?)</span></h3>', html_text, re.S))
+    section_matches = list(re.finditer(r'<h[23] class="boxHeader"><span>(.*?)</span></h[23]>', html_text, re.S))
     team_tables = []
     for idx, match in enumerate(re.finditer(r'<table[^>]*class="([^"]*statsTbl[^"]*)"[^>]*>(.*?)</table>', html_text, re.S), 1):
-        if 'class="tName"' not in match.group(2):
+        if 'class="tName"' not in match.group(2) and "class='tName'" not in match.group(2):
             continue
         section_title = find_preceding_section_title(section_matches, match.start())
+        if section_title in {"Data Menu", "Team", "Player", "Comparison", "All Style", "順位表"}:
+            section_title = meta["page_label"]
         headers = [clean_header(v) for v in re.findall(r"<th[^>]*>(.*?)</th>", match.group(2), re.S)]
         headers = [h for h in headers if h]
         tbody_match = re.search(r"<tbody>(.*?)</tbody>", match.group(2), re.S)
@@ -407,16 +532,25 @@ def extract_team_tables(html_text, meta):
             continue
         trs = re.findall(r"<tr[^>]*>(.*?)</tr>", tbody_match.group(1), re.S)
         for tr in trs:
-            tds = re.findall(r"<td[^>]*>(.*?)</td>", tr, re.S)
+            tds = re.findall(r"(<td[^>]*>.*?</td>)", tr, re.S)
             if not tds:
                 continue
             team_name = ""
             values = []
             for cell in tds:
-                cell_text = strip_tags(cell)
                 if 'class="tName"' in cell or "class='tName'" in cell:
-                    team_name = canonical_team_name(cell_text)
+                    sp_match = re.search(r'<span class="sp">(.*?)</span>', cell, re.S)
+                    if sp_match:
+                        team_name = canonical_team_name(strip_tags(sp_match.group(1)))
+                    else:
+                        span_texts = [strip_tags(v) for v in re.findall(r"<span[^>]*>(.*?)</span>", cell, re.S)]
+                        span_texts = [v for v in span_texts if v]
+                        if span_texts:
+                            team_name = canonical_team_name(span_texts[-1])
+                        else:
+                            team_name = canonical_team_name(strip_tags(cell))
                 elif team_name:
+                    cell_text = strip_tags(cell)
                     values.append(cell_text)
             if not team_name:
                 continue
@@ -464,7 +598,7 @@ def build_wide_metrics(table_rows, chart_rows):
             entry[section_map[row["metric_y_name"]]] = maybe_float(row["metric_y_value"])
 
     for row in table_rows:
-        section_map = WIDE_TABLE_MAPPINGS.get(row["section_title"])
+        section_map = resolve_table_mapping(row["page_label"], row["section_title"])
         if not section_map:
             continue
         headers = json.loads(row["headers_json"])
@@ -478,13 +612,14 @@ def build_wide_metrics(table_rows, chart_rows):
             "team_name": row["team_name"],
             "team_key": key,
         })
-        mapped_headers = []
-        for h in headers:
+        mapped_pairs = []
+        for i, h in enumerate(headers):
             cleaned = clean_header(h)
             if cleaned in section_map:
-                mapped_headers.append(section_map[cleaned])
-        for col, val in zip(mapped_headers, values):
-            entry[col] = maybe_float(val)
+                mapped_pairs.append((i, section_map[cleaned]))
+        for idx, col in mapped_pairs:
+            if idx < len(values):
+                entry[col] = maybe_float(values[idx])
     return list(wide.values())
 
 
@@ -550,6 +685,20 @@ def process_league_dir(league_dir, prediction_csv=None):
     league_dir = league_dir.resolve()
     snapshot_date = league_dir.parent.name
     fallback_league = league_dir.name.lower()
+    fetch_index = league_dir.parent / "football_lab_fetch_index.csv"
+    if fetch_index.exists():
+        with fetch_index.open(encoding="utf-8-sig", newline="") as f:
+            league_fetch_rows = [
+                row for row in csv.DictReader(f)
+                if str(row.get("league", "")).strip().lower() == fallback_league
+            ]
+        failed = [row for row in league_fetch_rows if row.get("status") != "ok"]
+        if failed:
+            labels = ", ".join(str(row.get("item_name", "")) for row in failed[:8])
+            raise RuntimeError(
+                f"Football LAB取得が不完全なためsnapshot化を停止: "
+                f"league={fallback_league} failed={len(failed)}/{len(league_fetch_rows)} items={labels}"
+            )
     chart_rows = []
     table_rows = []
     for html_path in sorted(league_dir.glob("*.htm*")):

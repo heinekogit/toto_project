@@ -1,0 +1,11 @@
+{
+  "shadow_only": true,
+  "max_shift": 0.06,
+  "style_tilt": 0.15,
+  "workspace": "/private/tmp/toto1650_uncertainty_moderate_style_d7udxx9s",
+  "base_replay": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/simulations/toto1650_latest",
+  "weather_thresholds_changed": false,
+  "result_used_for_adjustment": false,
+  "predictor_sha256": "de68c4cfff0296c0d201140d21641193a51c73d4f684f3656c145edf938fcc5d",
+  "weather_rules_sha256": "75771afa7895f90187d7a13771b7f872bb544d40811716a6db38b8299a054b86"
+}

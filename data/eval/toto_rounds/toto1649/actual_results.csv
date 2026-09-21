@@ -1,0 +1,14 @@
+﻿match_no,league,home_team,away_team,home_score,away_score,result,match_id,datetime,status,resolved_league,resolve_note,toto_round
+1,J1,東京Ｖ,神戸,0.0,2.0,2,j1_2026_09021903_東京V_神戸,2026-09-02 19:03:00,OK,J1,home_team+away_team,1649
+2,J1,Ｃ大阪,柏,2.0,0.0,1,j1_2026_09021903_C大阪_柏,2026-09-02 19:03:00,OK,J1,home_team+away_team,1649
+3,J1,広島,名古屋,3.0,0.0,1,j1_2026_09021903_広島_名古屋,2026-09-02 19:03:00,OK,J1,home_team+away_team,1649
+4,J1,千葉,岡山,1.0,2.0,2,j1_2026_09021903_千葉_岡山,2026-09-02 19:03:00,OK,J1,home_team+away_team,1649
+5,J1,福岡,浦和,2.0,3.0,2,j1_2026_09021903_福岡_浦和,2026-09-02 19:03:00,OK,J1,home_team+away_team,1649
+6,J1,水戸,鹿島,4.0,2.0,1,j1_2026_09021903_水戸_鹿島,2026-09-02 19:03:00,OK,J1,home_team+away_team,1649
+7,J1,町田,川崎Ｆ,2.0,1.0,1,j1_2026_09021903_町田_川崎F,2026-09-02 19:03:00,OK,J1,home_team+away_team,1649
+8,J1,横浜FM,京都,1.0,1.0,0,j1_2026_09021903_横浜FM_京都,2026-09-02 19:03:00,OK,J1,home_team+away_team,1649
+9,J1,清水,FC東京,1.0,1.0,0,j1_2026_09021903_清水_FC東京,2026-09-02 19:03:00,OK,J1,home_team+away_team,1649
+10,J1,長崎,Ｇ大阪,2.0,2.0,0,j1_2026_09021903_長崎_G大阪,2026-09-02 19:03:00,OK,J1,home_team+away_team,1649
+11,CUP,宮崎,富山,1.0,2.0,2,,2026-09-02 19:03:00,OK,CUP,special_results:toto_round+match_no+teams,1649
+12,CUP,愛媛ＦＣ,秋田,1.0,0.0,1,,2026-09-02 19:03:00,OK,CUP,special_results:toto_round+match_no+teams,1649
+13,CUP,鳥取,大宮,3.0,1.0,1,,2026-09-02 19:04:00,OK,CUP,special_results:toto_round+match_no+teams,1649

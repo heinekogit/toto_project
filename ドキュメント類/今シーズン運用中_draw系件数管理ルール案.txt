@@ -1,0 +1,174 @@
+今シーズン運用中 draw系件数管理ルール案
+
+目的
+draw 系分類を一律に増やさず、
+節分布と分類役割に応じて件数を管理するためのたたき台を置く。
+
+前提
+- 先シーズンは終了済み
+- 第16節-第18節では draw 系分類が厚すぎる節があった
+- 第19節では draw 系分類が実結果 D と整合した
+- よって「draw 系を減らす」ではなく、「どういう節でどこまで出すか」を決める必要がある
+
+対象
+- draw_watch
+- draw_rescue
+- draw_trap
+- 関連 guidance:
+  draw_watch_split
+  draw_rescue_split
+  draw_core_keep
+  draw_cut_to_side
+  side_with_cover
+
+基本原則
+
+1. draw 系総量を管理する
+- 個別分類だけでなく、節内の draw 系総件数を見る
+
+2. draw_watch / draw_rescue / draw_trap を同一枠で増やさない
+- それぞれ役割が違うため、別々に上限を置く
+
+3. D 実結果が少なそうな節では rescue を抑える
+- draw 系を全部止めるのではなく、まず draw_rescue から抑える
+
+4. draw_trap は別軸で扱う
+- draw 件数として数えるだけでなく、side 保持の必要性もセットで見る
+
+節内の管理単位
+
+1. draw 系総量
+- draw_watch
+- draw_rescue
+- draw_trap
+
+2. 券面側の draw 系 guidance 総量
+- draw_watch_split
+- draw_rescue_split
+- draw_core_keep
+
+3. trap 系 guidance
+- draw_cut_to_side
+- side_with_cover
+
+当面の上限案
+
+保守運用案
+
+- draw_watch:
+  節内 0-4件を目安
+
+- draw_rescue:
+  節内 0-3件を目安
+  4件以上は抑制候補
+
+- draw_trap:
+  節内 0-3件を目安
+  ただし side_with_cover / draw_cut_to_side に逃がす前提なら別扱い可
+
+- draw 系総量:
+  節内 6件前後を通常上限の目安
+  7件以上は要警戒
+  8件以上は原則抑制検討
+
+強気運用を許す条件
+
+- D が多い節になりそうな根拠が複数ある
+- 直近節でも draw 系が効いている
+- draw_watch と draw_rescue が同時に膨らんでいない
+- draw_trap が side 保持寄りに処理されている
+
+この条件を満たす場合のみ
+- draw_watch を 5-6件まで許容
+- draw_rescue を 4件まで許容
+
+抑制条件
+
+次のいずれかに当てはまれば抑制候補
+
+- draw_rescue が 4件以上
+- draw 系総量が 8件以上
+- D 実結果が少ない節が続いた直後
+- draw_rescue_split が多く、side_with_cover が少ない
+- all-same 重なりが増えている
+- rescue より harm が先行している
+
+優先順位
+
+1. まず残す
+- draw_watch
+  理由: 観測寄りで、即 harm になりにくい
+
+2. 次に調整
+- draw_trap
+  理由: side 保持へ逃がせる余地がある
+
+3. 先に抑制する
+- draw_rescue
+  理由: 件数が増えたときの副作用が大きい
+
+guidance 側の管理案
+
+draw_watch_split
+- 観測寄りなので相対的に許容しやすい
+- ただし draw_rescue_split より多くてもよいが、過半にはしない
+
+draw_rescue_split
+- 先に抑制対象にする
+- 節内 3件前後を超えたら要注意
+
+draw_core_keep
+- draw を残すが split よりは保守的
+- rescue の代替として使えるならこちらを優先
+
+draw_cut_to_side
+- draw_trap を side 保持で処理する出口として使う
+
+side_with_cover
+- trap 系の安全弁
+- draw 系件数過多のときは増やす方向を検討
+
+簡易判定ルール案
+
+パターンA
+- draw 系総量 <= 6
+- draw_rescue <= 3
+  なら現状維持
+
+パターンB
+- draw 系総量 >= 7
+- draw_rescue >= 4
+  なら draw_rescue を先に削る
+
+パターンC
+- draw 系総量 >= 7
+- draw_rescue <= 2
+- draw_watch が中心
+  なら watch 維持で様子見
+
+パターンD
+- draw_trap が多い
+- side_with_cover / draw_cut_to_side が少ない
+  なら trap の出口設計を見直す
+
+第16節-第19節を踏まえた仮メモ
+
+- 第16節-第18節
+  draw 系総量が厚すぎた可能性
+  特に draw_rescue 側の抑制優先が必要
+
+- 第19節
+  draw 系総量が多くても成立する節はある
+  ただし draw_watch と draw_rescue を同数で増やす必要はない
+
+現時点の実務案
+- draw 系総量の通常上限は 6件前後
+- 先に抑えるのは draw_rescue
+- draw_watch は観測枠として残す
+- draw_trap は side 保持出口とセットで管理する
+
+次に見ること
+- 各節で draw 系総量を記録する
+- draw_rescue 件数と harm の関係を記録する
+- draw_watch / draw_rescue / draw_trap の件数比率を残す
+- side_with_cover / draw_cut_to_side への逃がし方を追う

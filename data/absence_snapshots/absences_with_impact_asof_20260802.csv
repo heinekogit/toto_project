@@ -1,0 +1,36 @@
+﻿season,round_start,expected_rounds,origin_competition_key,applies_across_competitions,start_date,expected_weeks,expected_return_date,team,player_name,absence_type,availability,note,match_player_key,match_status,weight_minutes,weight_attack,weight_defense,impact_attack,impact_defense,impact_total,impact_total_per_round,regular_flag,debug_reason
+2026,,,special_2026,1,2026-04-08,,2026-10-07,いわき,柴田壮介,injury,out,公式 右膝前十字靱帯損傷、右膝外側半月板損傷で全治6ヶ月程度を要する見込み,2026|いわき|柴田壮介,matched,0.0625,0.25,0.0625,0.25,0.0625,0.1,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-26,,2026-12-24,ロアッソ熊本,武者大夢,injury,out,左膝前十字靭帯損傷、左膝外側半月板損傷で加療期間は手術日より約9ヶ月,2026|ロアッソ熊本|武者大夢,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-14,,2026-08-13,京都,マルコトゥーリオ,injury,out,公式 左長内転筋腱断裂で全治約3ヶ月,2026|京都|マルコトゥーリオ,matched,0.0625,0.5,0.0625,0.5,0.0625,0.15,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-03,,2026-09-01,山口,沼田航征,injury,out,右肩腱板断裂、右肩反復性肩関節脱臼の手術を行い、術後6ヶ月程度の加療予定,2026|山口|沼田航征,matched,0.03125,0.0,0.03125,0.0,0.03125,0.025,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-04-26,,2026-08-25,新潟,小野裕二,injury,out,公式 左内側半月板損傷で全治約4ヶ月の見込み,2026|新潟|小野裕二,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-23,,2026-08-22,新潟,落合陸,injury,out,公式 左膝外側半月板損傷で全治約3か月の見込み,2026|新潟|落合陸,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-27,,2026-09-25,栃木SC,櫻庭立樹,injury,out,公式 右膝外側半月板損傷で復帰まで約4〜6ヶ月を要する見込み,2026|栃木SC|櫻庭立樹,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-26,,2026-09-24,横浜FM,遠野大弥,injury,out,右アキレス腱断裂で全治6ヶ月の見込み,2026|横浜FM|遠野大弥,matched,0.0625,0.5,0.0625,0.5,0.0625,0.15,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-28,,2026-11-26,福岡,福島和毅,injury,out,公式 右膝外側半月板損傷で全治6か月,2026|福岡|福島和毅,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-19,,2027-01-17,鳥栖,水巻時飛,injury,out,公式 左足前十字靭帯損傷で全治8ヶ月,2026|鳥栖|水巻時飛,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-19,,2026-08-18,鳥栖,鈴木大馳,injury,out,公式 左足第5中足骨骨折で全治3ヶ月,2026|鳥栖|鈴木大馳,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-12,,2026-07-30,C大阪,イェンギクシニ,injury,out,左大腿直筋腱断裂,2026|C大阪|イェンギクシニ,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-04-20,,2026-07-13,G大阪,半田陸,injury,out,公式 左膝前十字靱帯損傷、外側半月板損傷,2026|G大阪|半田陸,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share; team_goals_total=0
+2026,,,special_2026,1,2026-02-20,,2026-05-15,G大阪,横井佑弥,injury,out,右前十字靭帯損傷、外側半月板損傷,2026|G大阪|横井佑弥,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share; team_goals_total=0
+2026,,,special_2026,1,2026-03-09,,2026-07-27,川崎F,山市秀翔,病気,out,右鎖骨下静脈血栓症、右胸郭出口症候群,2026|川崎F|山市秀翔,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-04-10,,2026-07-03,徳島,三井大輝,injury,out,公式 右膝外側半月板断裂,2026|徳島|三井大輝,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-02-28,,2026-05-23,札幌,中村桐耶,injury,out,左膝後十字靭帯不全、外側半月板損傷,2026|札幌|中村桐耶,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-04,,2026-09-21,東京V,吉田泰授,injury,out,公式 左膝複合靭帯損傷、半月板損傷,2026|東京V|吉田泰授,matched,0.041667,0.166667,0.041667,0.166667,0.041667,0.066667,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-04,,2026-11-16,東京V,山見大登,injury,out,公式 左膝前十字靭帯損傷,2026|東京V|山見大登,matched,0.041667,0.166667,0.041667,0.166667,0.041667,0.066667,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-18,,2026-08-10,松本,安永玲央,injury,out,公式 左第5中足骨疲労骨折,2026|松本|安永玲央,matched,0.066667,0.0,0.066667,0.0,0.066667,0.053333,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-19,,2026-07-09,水戸,島谷義進,injury,out,第5腰椎分離症,2026|水戸|島谷義進,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-02-12,,2026-06-18,甲府,林田 滉也,injury,out,右膝前十字靱帯不全損傷、右膝内側側副靱帯損傷、右母趾基節骨骨折で全治未定,2026|甲府|林田滉也,matched,0.020833,0.0,0.020833,0.0,0.020833,0.016667,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-04-30,,2026-10-15,神戸,扇原貴宏,injury,out,公式 右膝関節軟骨損傷,2026|神戸|扇原貴宏,matched,0.022222,0.0,0.022222,0.0,0.022222,0.017778,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-18,,2026-11-09,秋田,畑橋拓輝,injury,out,公式 左アキレス腱断裂,2026|秋田|畑橋拓輝,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-14,,2026-06-20,秋田,藤山智史,injury,out,右膝前十字靭帯損傷、内側側副靭帯損傷、外側半月板損傷、大腿骨外顆骨挫傷,2026|秋田|藤山智史,matched,0.022222,0.0,0.022222,0.0,0.022222,0.017778,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-05-09,,2026-11-21,高知,岡澤韻生,injury,out,公式 左膝前十字靱帯損傷、外側半月板損傷,2026|高知|岡澤韻生,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-03-25,,2026-09-16,鳥取,吉田伊吹,injury,out,右アキレス腱断裂,2026|鳥取|吉田伊吹,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,special_2026,1,2026-04-28,,2026-10-20,鳥取,温井駿斗,injury,out,公式 右アキレス腱断裂,2026|鳥取|温井駿斗,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-07-12,8.0,2026-09-06,大分,川島 康暉,injury,out,公式 右肩関節亜脱臼,2026|大分|川島康暉,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-07-12,12.0,2026-10-04,水戸,岩崎 博,injury,out,公式 右脛骨疲労骨折,2026|水戸|岩崎博,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found
+2026,,,regular_2026_27,1,2026-07-21,28.0,2027-02-02,鹿島,安西 幸輝,injury,out,公式 左膝前十字靭帯損傷,2026|鹿島|安西幸輝,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-07-21,8.0,2026-09-15,鹿島,樋口 雄太,injury,out,公式 右腓骨骨折,2026|鹿島|樋口雄太,matched,0.06383,0.0,0.06383,0.0,0.06383,0.051064,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-07-23,8.0,2026-09-17,東京V,田邉 秀斗,injury,out,公式 左膝内側側副靱帯損傷で全治6-10週,2026|東京V|田邉秀斗,matched,0.0,0.0,0.0,0.0,0.0,0.0,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-07-23,8.0,2026-09-17,東京V,森田 晃樹,injury,out,公式 左鎖骨骨折で全治6-10週,2026|東京V|森田晃樹,matched,0.0625,0.0,0.0625,0.0,0.0625,0.05,,False,def_proxy=minutes_share
+2026,,,regular_2026_27,1,2026-07-26,6.0,2026-09-06,広島,浅野 拓磨,injury,out,公式 左ヒラメ筋肉離れ,2026|広島|浅野拓磨,not_found,0.0,0.0,0.0,0.0,0.0,0.0,,False,not found; player not found

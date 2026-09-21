@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "round_id": "toto1654",
+  "created_at": "2026-09-19T14:45:41+09:00",
+  "asof": "2026-09-19",
+  "logical_season": 2027,
+  "prediction_season": 2026,
+  "production_reference": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference",
+  "production_changed": false,
+  "arms": {
+    "current": "frozen production BuyPlan",
+    "fatigue_structural": "fixed away 4 removed; recursive carry replaced by finite cause carry",
+    "fatigue_weather_weak": "fatigue_structural plus side-favourite-only weak weather uncertainty"
+  },
+  "not_applied": [
+    "fatigue_gap",
+    "fatigue_total",
+    "fatigue_uncertainty",
+    "D-filter"
+  ],
+  "source_hashes": {
+    "predictions.csv": "b10b42d461040cce3985f883dcdb424d424c897e5fd2ac02958745d13cc01f89",
+    "buyplan.csv": "f3b2b7afe50a798638fa7283f1e9f901cfa3840d707a734ca41799539bfae418"
+  },
+  "workspace": "/private/tmp/toto1654_shadow_buyplans_1sckceea",
+  "component_workspace": "/private/tmp/toto1654_fatigue_components_4e7qog2k"
+}

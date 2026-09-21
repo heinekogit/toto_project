@@ -4,17 +4,17 @@
 - csv_prev: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2025_latest_results.csv
 - prev_final_elo_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2025_final_elo.csv
 - csv_season: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_upcoming.csv
-- team_master_stats_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/stats_snapshots/team_master_stats_j1_2026_asof_20260508.csv
-- stats_asof: 2026-05-08
-- absence_impact_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/absence_snapshots/absences_with_impact_asof_20260508.csv
-- absence_asof: 20260508
+- team_master_stats_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/stats_snapshots/team_master_stats_j1_2026_asof_20260919.csv
+- stats_asof: 2026-09-19
+- absence_impact_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/absence_snapshots/absences_with_impact_asof_20260919.csv
+- absence_asof: 20260919
 - team_management_master_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/manual/team_management_master.csv
 - team_motivation_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_motivation.csv
 - team_travel_distances_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/team_travel_distances.csv
 - team_fatigue_scores_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/team_fatigue_scores_j1_2026.csv
 - acl_schedule_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/manual/acl_schedule.csv
-- weather_cache_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/weather_snapshots/weather_features_j1_2026_asof_20260508.csv
-- weather_asof: 20260508
+- weather_cache_csv: /Users/dev_tomo/Desktop/tt_prj_restart/data/weather_snapshots/weather_features_j1_2026_asof_20260919.csv
+- weather_asof: 20260919
 
 ## パラメータ
 - INITIAL_ELO: 1500
@@ -45,18 +45,18 @@
 - WEATHER_PENALTY_HEAVY_RAIN: 0.15
 - WEATHER_PENALTY_RAIN: 0.05
 - WEATHER_PENALTY_STRONG_WIND: 0.1
-- STATS_ASOF_DATE: 
+- STATS_ASOF_DATE: 2026-09-19
 - STATS_SNAPSHOT_NAME: 
 
 ## サマリ
 - league: j1
 - season_year: 2026
-- generated_at: 2026-05-10T22:39:11
+- generated_at: 2026-09-19T13:33:46
 - all_teams: 23
-- results_rows: 539
-- future_matches: 31
-- finished_matches: 159
-- accuracy: 35.85% (57/159)
+- results_rows: 450
+- future_matches: 310
+- finished_matches: 70
+- accuracy: 42.86% (30/70)
 
 ## 出力
 - predictions: /Users/dev_tomo/Desktop/tt_prj_restart/j1_2026_predictions_hfa_on.csv

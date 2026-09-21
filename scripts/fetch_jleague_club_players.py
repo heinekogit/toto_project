@@ -220,48 +220,52 @@ def canonicalize_player_df(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def parse_current_player_page(page_html: str) -> pd.DataFrame:
+    soup = BeautifulSoup(page_html, "lxml")
+    rows = []
+    for tr in soup.select("table tbody tr"):
+        link = tr.select_one("a.o-table__player-name-link")
+        if link is None:
+            continue
+        def cell(suffix):
+            node = tr.select_one(f".o-table__cell--{suffix}")
+            if node is None:
+                raise RuntimeError(f"選手一覧の必須列がありません: {suffix}")
+            return node.get_text(" ", strip=True)
+        position = tr.select_one(".o-table__player-position")
+        if position is None:
+            raise RuntimeError("選手のポジション・背番号がありません")
+        parts = position.get_text(" ", strip=True).split(maxsplit=1)
+        rows.append({
+            "player_name": link.get_text(" ", strip=True),
+            "position": parts[0], "player_no": parts[1] if len(parts) > 1 else "",
+            "birth": cell("date-of-birth"), "height_weight": cell("height-weight"),
+            "出場 試合数 ※2": cell("number-of-games-played"),
+            "ゴール 数 ※3": cell("goals-scored"),
+        })
+    if not rows:
+        raise RuntimeError("公式選手一覧ページから選手を取得できませんでした")
+    return pd.DataFrame(rows).drop_duplicates(["player_name", "birth"])
+
+
 def fetch_one_club(
     club_key: str,
     club_name: str,
     headers: Dict[str, str],
     timeout_sec: float,
 ) -> Tuple[pd.DataFrame, str]:
-    params = {"club_Data[team_name_key]": club_key}
-    req_headers = dict(headers)
-    req_headers["Referer"] = f"{BASE_URL}/club/{club_key}/day/"
-    req_headers["X-Requested-With"] = "XMLHttpRequest"
-    resp = get_with_retry(
-        AJAX_PLAYER_URL,
-        params=params,
-        headers=req_headers,
-        timeout=(5, timeout_sec),
-        max_retries=3,
-        backoff_base=1.0,
-    )
-    if not resp.text.strip():
-        # 一部環境でUAにより空レスポンスになるため、標準ブラウザUAで再試行
-        fallback_headers = dict(req_headers)
-        fallback_headers["User-Agent"] = (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
-        )
-        resp = get_with_retry(
-            AJAX_PLAYER_URL,
-            params=params,
-            headers=fallback_headers,
-            timeout=(5, timeout_sec),
-            max_retries=2,
-            backoff_base=1.0,
-        )
-    if not resp.text.strip():
-        raise RuntimeError("レスポンスが空です（UA/アクセス条件による制限の可能性）")
-
-    raw_df = parse_player_table(resp.text)
-    canon = canonicalize_player_df(raw_df)
+    url = f"{BASE_URL}/club/{club_key}/player/"
+    resp = get_with_retry(url, headers=headers, timeout=(5, timeout_sec),
+                          max_retries=3, backoff_base=1.0)
+    canon = parse_current_player_page(resp.text)
+    soup = BeautifulSoup(resp.text, "lxml")
+    heading = soup.select_one(".p-club-details-header__team-name-ja")
+    if heading is None:
+        raise RuntimeError("クラブ名を取得できませんでした")
     canon["club_key"] = club_key
-    canon["club_name"] = club_name
+    canon["club_name"] = heading.get_text(" ", strip=True)
     canon["fetched_at"] = datetime.now().isoformat(timespec="seconds")
-    canon["source_url"] = AJAX_PLAYER_URL
+    canon["source_url"] = url
     return canon, ""
 
 
@@ -276,7 +280,7 @@ def main() -> int:
     try:
         rp = load_robots(args.user_agent, args.timeout_sec, headers)
         ensure_robot_allowed(rp, args.user_agent, CLUB_TOP_URL, args.allow_disallowed)
-        ensure_robot_allowed(rp, args.user_agent, AJAX_PLAYER_URL, args.allow_disallowed)
+
     except Exception as e:
         print(f"[ERROR] robots確認失敗: {e}")
         return 1
@@ -297,6 +301,7 @@ def main() -> int:
     all_rows: List[pd.DataFrame] = []
     for idx, (club_key, club_name) in enumerate(club_pairs, start=1):
         try:
+            ensure_robot_allowed(rp, args.user_agent, f"{BASE_URL}/club/{club_key}/player/", args.allow_disallowed)
             df_one, warn = fetch_one_club(club_key, club_name, headers, args.timeout_sec)
             if warn:
                 warnings.append(f"{club_key}: {warn}")
@@ -317,6 +322,9 @@ def main() -> int:
     else:
         out_df = pd.DataFrame()
 
+    if any(not r.ok for r in results) or out_df.empty:
+        print("[ERROR] 選手取得に失敗したため既存CSVを更新しません。")
+        return 1
     out_df.to_csv(args.out, index=False, encoding="utf-8-sig")
 
     summary = {

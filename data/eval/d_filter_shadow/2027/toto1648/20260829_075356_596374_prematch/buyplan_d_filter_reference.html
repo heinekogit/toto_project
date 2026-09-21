@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D-filter参考比較 toto1648</title>
+<style>
+        :root { color-scheme:light; --ink:#172033; --muted:#657086; --line:#dbe1ea;
+          --panel:#f7f9fc; --amber:#b45309; --red:#b91c1c; }
+        * { box-sizing:border-box; }
+        body { margin:0; padding:24px; color:var(--ink); background:#eef2f7;
+          font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif; }
+        main { max-width:1500px; margin:auto; background:white; padding:24px; border-radius:14px;
+          box-shadow:0 8px 28px rgba(15,23,42,.08); }
+        h1 { margin:0 0 6px; font-size:26px; }
+        .sub { color:var(--muted); font-size:13px; }
+        .notice { margin:18px 0; padding:12px 14px; border-left:5px solid var(--amber);
+          background:#fffbeb; line-height:1.55; }
+        .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin:16px 0; }
+        .card { border:1px solid var(--line); background:var(--panel); border-radius:10px; padding:12px; }
+        .card b { display:block; margin-top:4px; font-size:22px; }
+        .legend { display:flex; gap:12px; flex-wrap:wrap; margin:12px 0; font-size:13px; color:var(--muted); }
+        .table-wrap { overflow:auto; border:1px solid var(--line); border-radius:10px; }
+        table { border-collapse:collapse; width:100%; min-width:1220px; font-size:13px; }
+        th,td { border-bottom:1px solid var(--line); padding:8px 7px; text-align:center; white-space:nowrap; }
+        th { position:sticky; top:0; z-index:1; background:#e9eef6; }
+        td.left { text-align:left; }
+        tr:hover td { background:#f8fafc; }
+        .symbol { display:inline-flex; width:28px; height:28px; align-items:center; justify-content:center;
+          border-radius:50%; font-weight:700; }
+        .sym-H { background:#dbeafe; color:#1d4ed8; } .sym-D { background:#fef3c7; color:#92400e; }
+        .sym-A { background:#dcfce7; color:#047857; } .sym-none { background:#e5e7eb; }
+        .changed { outline:2px solid var(--red); outline-offset:1px; }
+        .advice { font-weight:600; }
+        footer { margin-top:14px; color:var(--muted); font-size:12px; }
+        </style></head><body><main>
+<h1>D-filter参考比較 — toto1648</h1>
+<div class="sub">生成日時: 2026-08-29T07:53:56+09:00</div>
+<div class="notice"><b>観測専用レポートです。</b> 正式な predictions / buyplan / 10候補券は変更していません。過去の少数サンプルから作った参考ポリシーを、購入前の確認材料として並べています。</div>
+<div class="cards">
+<div class="card">対象試合<b>13</b></div>
+<div class="card">正式予想のD<b>9</b></div>
+<div class="card">False Drawのみ の変更<b>3</b></div>
+<div class="card">False Draw + Trap の変更<b>8</b></div>
+<div class="card">Topology Guard の変更<b>9</b></div>
+<div class="card">3案一致サイド変更<b>3</b></div>
+<div class="card">D判断が分岐<b>1</b></div>
+</div>
+<div class="legend"><span>H=ホーム勝ち</span><span>D=引き分け</span><span>A=アウェー勝ち</span><span>赤枠=正式予想から変更する参考案</span></div>
+<div class="table-wrap"><table><thead><tr>
+<th>No.</th><th>リーグ</th><th>ホーム</th><th>アウェー</th>
+<th>H確率</th><th>D確率</th><th>A確率</th><th>正式</th>
+<th>False Drawのみ</th>
+<th>False Draw + Trap</th>
+<th>Topology Guard</th>
+<th>参考判断</th><th>多数側</th><th>試合タイプ</th><th>D tier</th></tr></thead><tbody>
+<tr>
+<td>1</td>
+<td>J1</td>
+<td class="left">水戸</td>
+<td class="left">町田</td>
+<td>23.2%</td>
+<td>41.5%</td>
+<td>35.3%</td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-A changed">A</span></td>
+<td><span class="symbol sym-A changed">A</span></td>
+<td class="left advice">多数案でサイド変更</td>
+<td><span class="symbol sym-A">A</span></td>
+<td class="left">draw_trap</td>
+<td>cut</td>
+</tr>
+<tr>
+<td>2</td>
+<td>J1</td>
+<td class="left">清水</td>
+<td class="left">柏</td>
+<td>16.9%</td>
+<td>22.4%</td>
+<td>60.7%</td>
+<td><span class="symbol sym-A">A</span></td>
+<td><span class="symbol sym-A">A</span></td>
+<td><span class="symbol sym-A">A</span></td>
+<td><span class="symbol sym-A">A</span></td>
+<td class="left advice">正式予想がD以外</td>
+<td><span class="symbol sym-A">A</span></td>
+<td class="left">chaos_side_watch</td>
+<td>side</td>
+</tr>
+<tr>
+<td>3</td>
+<td>J1</td>
+<td class="left">京都</td>
+<td class="left">福岡</td>
+<td>33.6%</td>
+<td>39.6%</td>
+<td>26.8%</td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td class="left advice">多数案でサイド変更</td>
+<td><span class="symbol sym-H">H</span></td>
+<td class="left">draw_trap</td>
+<td>cut</td>
+</tr>
+<tr>
+<td>4</td>
+<td>J1</td>
+<td class="left">東京Ｖ</td>
+<td class="left">鹿島</td>
+<td>17.6%</td>
+<td>20.0%</td>
+<td>62.3%</td>
+<td><span class="symbol sym-A">A</span></td>
+<td><span class="symbol sym-A">A</span></td>
+<td><span class="symbol sym-A">A</span></td>
+<td><span class="symbol sym-A">A</span></td>
+<td class="left advice">正式予想がD以外</td>
+<td><span class="symbol sym-A">A</span></td>
+<td class="left">chaos_side_watch</td>
+<td>side</td>
+</tr>
+<tr>
+<td>5</td>
+<td>J1</td>
+<td class="left">神戸</td>
+<td class="left">Ｃ大阪</td>
+<td>27.9%</td>
+<td>44.2%</td>
+<td>27.8%</td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td class="left advice">3案一致でサイド変更</td>
+<td><span class="symbol sym-H">H</span></td>
+<td class="left">j1_false_draw_watch</td>
+<td>watch</td>
+</tr>
+<tr>
+<td>6</td>
+<td>J1</td>
+<td class="left">Ｇ大阪</td>
+<td class="left">広島</td>
+<td>23.4%</td>
+<td>35.1%</td>
+<td>41.5%</td>
+<td><span class="symbol sym-A">A</span></td>
+<td><span class="symbol sym-A">A</span></td>
+<td><span class="symbol sym-A">A</span></td>
+<td><span class="symbol sym-A">A</span></td>
+<td class="left advice">正式予想がD以外</td>
+<td><span class="symbol sym-A">A</span></td>
+<td class="left">chaos_side_watch</td>
+<td>side</td>
+</tr>
+<tr>
+<td>7</td>
+<td>J1</td>
+<td class="left">浦和</td>
+<td class="left">横浜FM</td>
+<td>21.6%</td>
+<td>42.2%</td>
+<td>36.2%</td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-A changed">A</span></td>
+<td><span class="symbol sym-A changed">A</span></td>
+<td class="left advice">多数案でサイド変更</td>
+<td><span class="symbol sym-A">A</span></td>
+<td class="left">draw_trap</td>
+<td>cut</td>
+</tr>
+<tr>
+<td>8</td>
+<td>J1</td>
+<td class="left">川崎Ｆ</td>
+<td class="left">千葉</td>
+<td>32.5%</td>
+<td>38.7%</td>
+<td>28.8%</td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td class="left advice">D維持・変更が分岐</td>
+<td>-</td>
+<td class="left">chaos_flat</td>
+<td>cut</td>
+</tr>
+<tr>
+<td>9</td>
+<td>J1</td>
+<td class="left">名古屋</td>
+<td class="left">岡山</td>
+<td>31.5%</td>
+<td>39.8%</td>
+<td>28.7%</td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td class="left advice">3案一致でサイド変更</td>
+<td><span class="symbol sym-H">H</span></td>
+<td class="left">j1_false_draw_watch</td>
+<td>watch</td>
+</tr>
+<tr>
+<td>10</td>
+<td>J1</td>
+<td class="left">長崎</td>
+<td class="left">FC東京</td>
+<td>24.8%</td>
+<td>41.2%</td>
+<td>34.0%</td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-A changed">A</span></td>
+<td><span class="symbol sym-A changed">A</span></td>
+<td class="left advice">多数案でサイド変更</td>
+<td><span class="symbol sym-A">A</span></td>
+<td class="left">draw_trap</td>
+<td>cut</td>
+</tr>
+<tr>
+<td>11</td>
+<td>J2</td>
+<td class="left">徳島</td>
+<td class="left">大分</td>
+<td>41.7%</td>
+<td>36.2%</td>
+<td>22.2%</td>
+<td><span class="symbol sym-H">H</span></td>
+<td><span class="symbol sym-H">H</span></td>
+<td><span class="symbol sym-H">H</span></td>
+<td><span class="symbol sym-H">H</span></td>
+<td class="left advice">正式予想がD以外</td>
+<td><span class="symbol sym-H">H</span></td>
+<td class="left">chaos_side_watch</td>
+<td>side</td>
+</tr>
+<tr>
+<td>12</td>
+<td>J2</td>
+<td class="left">八戸</td>
+<td class="left">秋田</td>
+<td>31.5%</td>
+<td>40.5%</td>
+<td>28.0%</td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td class="left advice">3案一致でサイド変更</td>
+<td><span class="symbol sym-H">H</span></td>
+<td class="left">j2_false_draw_watch</td>
+<td>watch</td>
+</tr>
+<tr>
+<td>13</td>
+<td>J2</td>
+<td class="left">仙台</td>
+<td class="left">宮崎</td>
+<td>34.8%</td>
+<td>41.2%</td>
+<td>24.0%</td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-D">D</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td><span class="symbol sym-H changed">H</span></td>
+<td class="left advice">多数案でサイド変更</td>
+<td><span class="symbol sym-H">H</span></td>
+<td class="left">j2_draw_trap</td>
+<td>cut</td>
+</tr>
+</tbody></table></div>
+<footer>元データ: predictions_source.csv / buyplan_source.csv / d_filter_prematch.csv / buyplan_d_filter_reference.csv</footer>
+</main></body></html>

@@ -90,7 +90,9 @@ def build_weather_row(client, row):
         "is_strong_wind": pd.NA,
         "temperature": pd.NA,
         "wind_speed": pd.NA,
-        "last_updated_at": datetime.now().isoformat(timespec="seconds"),
+        "wind_speed_unit": "km/h",
+        "last_updated_at": pd.NA,
+        "weather_fetch_ok": 0,
     }
 
     kickoff = row["datetime"]
@@ -103,11 +105,15 @@ def build_weather_row(client, row):
     hourly_df = pd.concat([hourly_json_to_df(d) for d in datasets], ignore_index=True)
     f = build_features_for_match({"kickoff_jst": kickoff}, hourly_df)
 
-    base["is_rain"] = bool(f["is_rain"]) if "is_rain" in f else pd.NA
-    base["is_heavy_rain"] = bool(f["is_heavy_rain"]) if "is_heavy_rain" in f else pd.NA
-    base["is_strong_wind"] = bool(f["is_strong_wind"]) if "is_strong_wind" in f else pd.NA
+    for key in ["is_rain", "is_heavy_rain", "is_strong_wind"]:
+        base[key] = bool(f[key]) if pd.notna(f.get(key)) else pd.NA
+    for key in ["last_updated_at", "weather_quality_status", "weather_data_kind", "weather_window_hours",
+                "precip_kickoff", "precip_max_match", "precip_sum_match", "wind_max_match", "adverse_weather_during_match"]:
+        base[key] = f.get(key, pd.NA)
+    base["weather_fetch_ok"] = int(f.get("weather_quality_status") == "complete")
     base["temperature"] = f.get("temp_kickoff", pd.NA)
     base["wind_speed"] = f.get("wind_kickoff", pd.NA)
+    base["wind_speed_unit"] = f.get("wind_speed_unit", "km/h")
     return base
 
 
@@ -121,7 +127,16 @@ def main():
     merged = merged.drop_duplicates(subset=["match_id"], keep="last")
 
     existing = pd.DataFrame() if args.full_refresh else load_existing_cache(args.out)
-    existing_ids = set(existing["match_id"].tolist()) if not existing.empty else set()
+    existing_ids = set()
+    if not existing.empty:
+        fetched = pd.to_datetime(existing.get('last_updated_at', pd.Series(pd.NaT, index=existing.index)), errors='coerce', utc=True)
+        age = (pd.Timestamp.now(tz='UTC') - fetched).dt.total_seconds() / 3600
+        fresh = age.between(0, float(os.environ.get('WEATHER_CACHE_MAX_AGE_HOURS', '6')))
+        provenance = existing.get('weather_data_kind', pd.Series('unknown', index=existing.index)).eq('forecast')
+        # Preserve historical records as recorded; a present forecast cannot
+        # improve their historical provenance or turn them into observations.
+        historical = pd.to_datetime(existing.get('datetime', pd.Series(pd.NaT, index=existing.index)), errors='coerce').lt(pd.Timestamp.now().normalize())
+        existing_ids = set(existing.loc[(fresh & provenance) | historical, 'match_id'])
     target = merged[~merged["match_id"].isin(existing_ids)].copy()
 
     print(f"[weather_cache] matches={len(matches)} stadium_joined={len(merged)} existing={len(existing_ids)} to_update={len(target)}")
@@ -135,7 +150,7 @@ def main():
         match_id = r["match_id"]
         try:
             out = build_weather_row(client, r)
-            if pd.notna(out.get("temperature")) or pd.notna(out.get("wind_speed")):
+            if out.get("weather_fetch_ok") == 1:
                 success += 1
             else:
                 failed += 1
@@ -153,7 +168,7 @@ def main():
         combined["is_strong_wind"] = pd.NA
         combined["temperature"] = pd.NA
         combined["wind_speed"] = pd.NA
-        combined["last_updated_at"] = datetime.now().isoformat(timespec="seconds")
+        combined["last_updated_at"] = pd.NA
     combined = combined.drop_duplicates(subset=["match_id"], keep="last")
     combined = combined.sort_values("datetime", na_position="last")
     combined.to_csv(args.out, index=False, encoding="utf-8-sig")

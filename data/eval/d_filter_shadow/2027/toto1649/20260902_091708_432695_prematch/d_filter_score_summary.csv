@@ -1,0 +1,4 @@
+﻿policy,matches,baseline_hits,filtered_hits,changed_matches,rescue,harm,net_rescue,baseline_hit_rate,filtered_hit_rate
+false_draw_only,10,2,4,5,3,1,2,0.2,0.4
+false_draw_plus_trap,10,2,4,5,3,1,2,0.2,0.4
+topology_guard,10,2,4,5,3,1,2,0.2,0.4

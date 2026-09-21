@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import csv
 import datetime as dt
 import html
 import os
@@ -7,7 +8,17 @@ import re
 from collections import Counter
 
 
+RANKMOT_ISSUE_RE = re.compile(
+    r"\[MERGE_QC\]\[(?:INFO|WARN|ERROR)\]\s+rankmot_[^:]*:.*"
+    r"(?:対象リーグとのチーム一致なし|順位情報の未結合|left_only=[1-9]\d*)", re.I
+)
+
 ISSUE_PATTERNS = [
+    (
+        RANKMOT_ISSUE_RE,
+        "順位情報の結合不一致",
+        "順位・モチベーション情報が予測に取り込まれていません。チーム名と入力CSVを確認してください。",
+    ),
     (
         re.compile(
             r"Network/DNS unavailable|Could not resolve host|Temporary failure in name resolution|"
@@ -23,9 +34,28 @@ ISSUE_PATTERNS = [
         "Elo差と H/A 勝率の向きが一致しない試合があります。即停止ではありませんが、モデル整合性の要確認です。",
     ),
     (
-        re.compile(r"\[MERGE_QC\]\[WARN\]|\[MISSING_QC\]\[WARN\]", re.I),
-        "データ結合/欠損警告",
-        "前段データの結合漏れや欠損率上昇があります。入力CSVやチーム名対応を確認してください。",
+        re.compile(r"\[MERGE_QC\]\[WARN\]\s+absence_", re.I),
+        "欠場情報の未登録/不一致",
+        "欠場管理データに該当するチーム・試合日の行がありません。欠場者なしと未確認の両方を含みます。",
+    ),
+    (
+        re.compile(r"\[MERGE_QC\]\[WARN\]\s+weather_cache_", re.I),
+        "天気情報の未取得",
+        "試合IDに対応する天気キャッシュがありません。対象試合の日時・会場と天気取得範囲を確認してください。",
+    ),
+    (
+        re.compile(r"\[MERGE_QC\]\[WARN\]\s+fatigue_", re.I),
+        "疲労情報の結合不一致",
+        "主に試合日時未定などにより疲労データを結合できない試合があります。",
+    ),
+    (
+        re.compile(
+            r"\[MISSING_QC\]\[WARN\]|"
+            r"\[MERGE_QC\]\[WARN\]\s+(?!(?:absence_|weather_cache_|fatigue_))",
+            re.I,
+        ),
+        "その他のデータ結合/欠損警告",
+        "前段データの結合漏れや欠損率上昇があります。入力CSVや結合キーを確認してください。",
     ),
     (
         re.compile(r"command not found", re.I),
@@ -43,12 +73,12 @@ ISSUE_PATTERNS = [
         "ファイル読み書き権限を確認してください。",
     ),
     (
-        re.compile(r"Traceback \(most recent call last\)|Exception|ERROR:", re.I),
+        re.compile(r"Traceback \(most recent call last\)|\bException\b|(?:^|\[)ERROR(?::|\])", re.I),
         "実行時エラー",
         "Python処理中に例外が発生しています。該当STEPの詳細ログを確認してください。",
     ),
     (
-        re.compile(r"\b429\b|Too Many Requests|rate limit(?:ed|ing)?", re.I),
+        re.compile(r"(?:HTTP(?:/\S+)?\s+|status(?: code)?[=: ]+)429\b|Too Many Requests|rate limit(?:ed|ing)?", re.I),
         "レート制限",
         "取得先のアクセス制限に達しています。時間をおいて再実行してください。",
     ),
@@ -60,38 +90,66 @@ def _escape(s: str) -> str:
 
 
 def parse_log(lines: list[str]) -> dict:
-    steps = {}
+    steps = []
     current_step = None
+    current_league = "共通"
     preflight = []
     warnings = []
     errors = []
     result_counts = Counter()
     issue_counter = Counter()
     issue_examples = {}
+    merge_details = []
 
     step_line_re = re.compile(r"^\[STEP\]\s+([^:]+)\s*:\s*(.*)$")
     result_line_re = re.compile(r"^\[RESULT\]\s+([^:]+)\s*:\s*(OK|ERROR)\s*$")
     preflight_re = re.compile(r"^\[PREFLIGHT\]\s+([^:]+)\s*:\s*(OK|ERROR)\s*$")
+    league_re = re.compile(r"^===\s+League:\s*([^/\s]+)")
+    summary_count_re = re.compile(r"^(OK|ERROR):\s*\d+\s*$", re.I)
+    merge_warn_re = re.compile(r"\[MERGE_QC\]\[WARN\]\s+([^:]+):\s+left_only=(\d+)(?:\s*->\s*(.+))?")
+    merge_csv_re = re.compile(r"\[MERGE_QC\]\s+([^:]+):\s+left_only CSV保存\s*->\s*(.+)")
 
     for idx, line in enumerate(lines, start=1):
         raw = line.rstrip("\n")
         if not raw.strip():
             continue
 
+        m = league_re.match(raw)
+        if m:
+            current_league = m.group(1).strip().lower()
+            current_step = None
+            continue
+
         m = step_line_re.match(raw)
         if m:
             step_name = m.group(1).strip()
             purpose = m.group(2).strip()
-            current_step = step_name
-            steps.setdefault(step_name, {"purpose": purpose, "result": "UNKNOWN", "line": idx})
+            current_step = {
+                "league": current_league,
+                "name": step_name,
+                "purpose": purpose,
+                "result": "UNKNOWN",
+                "line": idx,
+            }
+            steps.append(current_step)
             continue
 
         m = result_line_re.match(raw)
         if m:
             step_name = m.group(1).strip()
             result = m.group(2).strip()
-            steps.setdefault(step_name, {"purpose": "", "result": result, "line": idx})
-            steps[step_name]["result"] = result
+            if current_step is not None and current_step["name"] == step_name:
+                current_step["result"] = result
+            else:
+                steps.append(
+                    {
+                        "league": current_league,
+                        "name": step_name,
+                        "purpose": "",
+                        "result": result,
+                        "line": idx,
+                    }
+                )
             result_counts[result] += 1
             continue
 
@@ -100,13 +158,12 @@ def parse_log(lines: list[str]) -> dict:
             preflight.append({"target": m.group(1).strip(), "status": m.group(2).strip(), "line": idx})
             continue
 
-        is_warn = "[WARN]" in raw or re.search(r"\bWARN\b", raw)
-        # "ERROR: 0"（終了コード集計）は正常系扱い
+        is_warn = "[WARN]" in raw or re.search(r"\bWARN\b", raw) or RANKMOT_ISSUE_RE.search(raw)
         normalized_raw = re.sub(r"\x1b\[[0-9;]*m", "", raw).strip()
-        error_zero_only = bool(re.match(r"^ERROR:\s*0$", normalized_raw, re.I))
+        summary_count_only = bool(summary_count_re.match(normalized_raw))
         is_error = (
             ("[ERROR]" in raw or "ERROR:" in raw or "FATAL:" in raw or "Traceback" in raw)
-            and not error_zero_only
+            and not summary_count_only
         )
 
         if is_warn:
@@ -114,8 +171,33 @@ def parse_log(lines: list[str]) -> dict:
         if is_error:
             errors.append((idx, raw))
 
-        if error_zero_only:
+        if summary_count_only:
             continue
+
+        m = merge_warn_re.search(raw)
+        if m:
+            stage = m.group(1).strip()
+            category = (
+                "欠場" if stage.startswith("absence_") else
+                "天気" if stage.startswith("weather_cache_") else
+                "疲労/日程" if stage.startswith("fatigue_") else
+                "その他"
+            )
+            merge_details.append({
+                "league": current_league,
+                "category": category,
+                "stage": stage,
+                "count": int(m.group(2)),
+                "line": idx,
+                "csv_path": (m.group(3) or "").strip(),
+            })
+        m = merge_csv_re.search(raw)
+        if m:
+            stage = m.group(1).strip()
+            for detail in reversed(merge_details):
+                if detail["league"] == current_league and detail["stage"] == stage:
+                    detail["csv_path"] = m.group(2).strip()
+                    break
 
         for pattern, issue_name, issue_hint in ISSUE_PATTERNS:
             if pattern.search(raw):
@@ -145,13 +227,32 @@ def parse_log(lines: list[str]) -> dict:
         "errors": errors,
         "result_counts": result_counts,
         "top_issues": top_issues,
+        "merge_details": merge_details,
     }
+
+
+def _csv_examples(path: str, limit: int = 5) -> list[str]:
+    if not path or not os.path.isfile(path):
+        return []
+    preferred = ["match_id", "home_team", "away_team", "datetime", "節"]
+    try:
+        with open(path, "r", encoding="utf-8-sig", errors="replace", newline="") as f:
+            reader = csv.DictReader(f)
+            examples = []
+            for row in reader:
+                fields = [f"{key}={row.get(key, '')}" for key in preferred if row.get(key, "") not in (None, "")]
+                examples.append(" / ".join(fields) if fields else str(row))
+                if len(examples) >= limit:
+                    break
+            return examples
+    except Exception:
+        return []
 
 
 def render_html(parsed: dict, log_path: str, title: str) -> str:
     now = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    status = "ERRORあり" if parsed["errors"] or parsed["result_counts"].get("ERROR", 0) else "概ね正常"
-    color = "#c62828" if status == "ERRORあり" else "#2e7d32"
+    status = "ERRORあり" if parsed["errors"] or parsed["result_counts"].get("ERROR", 0) else ("要確認" if parsed["warnings"] or parsed["top_issues"] else "概ね正常")
+    color = {"ERRORあり": "#c62828", "要確認": "#b26a00", "概ね正常": "#2e7d32"}[status]
 
     parts = []
     parts.append("<!doctype html>")
@@ -193,11 +294,12 @@ def render_html(parsed: dict, log_path: str, title: str) -> str:
         parts.append("</tbody></table>")
 
     if parsed["steps"]:
-        parts.append("<h2>STEP結果</h2><table><thead><tr><th>STEP</th><th>説明</th><th>結果</th><th>定義行</th></tr></thead><tbody>")
-        for name, info in sorted(parsed["steps"].items(), key=lambda x: x[1]["line"]):
+        parts.append("<h2>STEP結果</h2><table><thead><tr><th>リーグ</th><th>STEP</th><th>説明</th><th>結果</th><th>定義行</th></tr></thead><tbody>")
+        for info in parsed["steps"]:
+            name = info["name"]
             cls = "err" if info["result"] == "ERROR" else ""
             parts.append(
-                f"<tr><td class='mono'>{_escape(name)}</td><td>{_escape(info['purpose'])}</td>"
+                f"<tr><td>{_escape(info['league'])}</td><td class='mono'>{_escape(name)}</td><td>{_escape(info['purpose'])}</td>"
                 f"<td class='{cls}'>{_escape(info['result'])}</td><td>{info['line']}</td></tr>"
             )
         parts.append("</tbody></table>")
@@ -215,6 +317,27 @@ def render_html(parsed: dict, log_path: str, title: str) -> str:
         parts.append("</tbody></table>")
     else:
         parts.append("<div>明確な警告パターンは検出されませんでした。</div>")
+
+    if parsed.get("merge_details"):
+        parts.append("<h2>結合・欠損警告の詳細</h2>")
+        parts.append(
+            "<table><thead><tr><th>分類</th><th>リーグ</th><th>処理</th><th>対象件数</th>"
+            "<th>対象例（最大5件）</th><th>詳細CSV</th></tr></thead><tbody>"
+        )
+        for detail in parsed["merge_details"]:
+            csv_path = detail.get("csv_path", "")
+            examples = _csv_examples(csv_path)
+            example_html = "<br>".join(_escape(x) for x in examples) if examples else "—"
+            csv_html = (
+                f"<a class='mono' href='file://{_escape(csv_path)}'>{_escape(csv_path)}</a>"
+                if csv_path else "—"
+            )
+            parts.append(
+                f"<tr><td>{_escape(detail['category'])}</td><td>{_escape(detail['league'])}</td>"
+                f"<td class='mono'>{_escape(detail['stage'])}</td><td>{detail['count']}</td>"
+                f"<td class='mono'>{example_html}</td><td>{csv_html}</td></tr>"
+            )
+        parts.append("</tbody></table>")
 
     parts.append("<h2>エラー抜粋（先頭20件）</h2>")
     if parsed["errors"]:

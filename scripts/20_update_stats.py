@@ -8,6 +8,8 @@ import sys
 import unicodedata
 from datetime import datetime
 from http_retry import get_with_retry
+from jleague_stats_availability import find_latest_stats_fallback, is_unavailable_page
+from jleague_standings import parse_official_standings
 # from selenium import webdriver # Selenium関連のインポートを削除
 # from selenium.webdriver.chrome.options import Options
 # from selenium.webdriver.chrome.service import Service
@@ -75,6 +77,10 @@ except ValueError:
     STATS_SUCCESS_THRESHOLD = 0.7
 STATS_SUCCESS_THRESHOLD = min(max(STATS_SUCCESS_THRESHOLD, 0.0), 1.0)
 DEBUG_LOG = False
+try:
+    STATS_REQUEST_INTERVAL = max(0.0, float(os.environ.get("STATS_REQUEST_INTERVAL", "1")))
+except ValueError:
+    STATS_REQUEST_INTERVAL = 1.0
 
 PLACEHOLDER_VALUES = {"", "-", "-%", "—", "－", "N/A", "n/a"}
 NON_STATS_COLUMNS = {"team_name", "team_id", "league", "season", "round", "fetched_date"}
@@ -174,12 +180,111 @@ def canonical_team_name(v):
     return TEAM_ALIAS_MAP.get(text, text)
 
 
+def skip_stats_during_preseason():
+    """Keep prior stats while the regular league standings are unopened."""
+    if LEAGUE not in {"j1", "j2", "j3"}:
+        return False
+    standings_url = f"https://www.jleague.jp/{LEAGUE}/standings/"
+    try:
+        response = get_with_retry(standings_url, timeout=(5, 30), max_retries=3)
+        response.raise_for_status()
+        standings = parse_official_standings(
+            response.text,
+            season=SEASON_YEAR,
+            league=LEAGUE,
+            fetched_date=datetime.now().strftime("%Y%m%d"),
+        )
+    except Exception as exc:
+        print(f"[STATS_PREFLIGHT][WARN] 開幕状態を確認できないため通常取得を続行: {exc}")
+        return False
+    if not standings["preseason"].eq(1).all():
+        print(f"[STATS_PREFLIGHT] state=ACTIVE league={LEAGUE}; 通常取得を続行")
+        return False
+
+    fallback = find_latest_stats_fallback(BASE_DIR, LEAGUE, SEASON_YEAR)
+    if not fallback:
+        raise RuntimeError("新シーズン開幕前で、維持できる既存スタッツがありません。")
+    if fallback["rows"] != len(standings):
+        print(
+            f"[STATS_SKIP][WARN] fallback_team_coverage={fallback['rows']}/{len(standings)}; "
+            "未収録クラブは予測側の欠損フォールバックを使用"
+        )
+    print(
+        f"[STATS_SKIP] state=PRESEASON_NOT_PUBLISHED action=KEEP_EXISTING "
+        f"standings={standings_url} teams={len(standings)} "
+        f"fallback={fallback['path']} rows={fallback['rows']} "
+        f"filled_values={fallback['filled_values']}"
+    )
+    return True
+
+
 def build_metric_urls(source_league, season, metric_key):
-    # j2j3 は /club/ なし構成が使われるため、両方試す。
+    # 現行の公式URLを最優先し、旧URLは互換候補としてのみ残す。
+    season_int = int(season)
+    current_season = f"{season_int}-{str(season_int + 1)[-2:]}" if season_int >= 2026 else str(season)
+    current_league = "j2" if source_league == "j2j3" else source_league
     return [
+        f"https://www.jleague.jp/{current_league}/stats/club/{current_season}/{metric_key}/search-list/",
+        f"https://www.jleague.jp/{source_league}/stats/club/{season}/{metric_key}/",
         f"https://www.jleague.jp/stats/{source_league}/club/{season}/{metric_key}/",
         f"https://www.jleague.jp/stats/{source_league}/{season}/{metric_key}/",
     ]
+
+
+def extract_stats_rows(page_source, stat_name):
+    """Extract one metric from both legacy and current jleague.jp markup."""
+    soup = BeautifulSoup(page_source, "lxml")
+    ranking_list = soup.find("ul", class_="ranking_list")
+    rows = []
+    placeholder_count = 0
+    invalid_count = 0
+    target_count = 0
+
+    if ranking_list:
+        list_items = ranking_list.find_all("li")
+        target_count = len(list_items)
+        for li in list_items:
+            team_name_tag = li.find("p", class_="team")
+            stat_value_div_tag = li.find("div", class_=re.compile(r"ranking_stats"))
+            if not team_name_tag or not stat_value_div_tag:
+                continue
+            team_name_span = team_name_tag.find("span", class_=re.compile(r"embM"))
+            if team_name_span and team_name_span.next_sibling:
+                team_name = team_name_span.next_sibling.strip()
+            else:
+                team_name = team_name_tag.text.strip()
+            stat_value_tag = stat_value_div_tag.find("p")
+            stat_value_text = stat_value_tag.text.strip() if stat_value_tag else ""
+            stat_value, parse_error = parse_stat_value(stat_value_text)
+            if parse_error == "placeholder":
+                placeholder_count += 1
+            elif parse_error == "invalid":
+                invalid_count += 1
+            elif team_name:
+                rows.append({"team_name": team_name, stat_name: stat_value})
+        return rows, placeholder_count, invalid_count, target_count, "legacy"
+
+    # 現行Next.jsページでは、表示DOMは先頭10件だけだが、全件が
+    # self.__next_f の rankingList に name/score として埋め込まれている。
+    next_rows = re.findall(
+        r'\\"name\\":\\"([^"\\]+)\\".{0,1200}?\\"score\\":(-?[0-9]+(?:\.[0-9]+)?)',
+        page_source,
+    )
+    seen = set()
+    for team_name, score_text in next_rows:
+        key = canonical_team_name(team_name)
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        stat_value, parse_error = parse_stat_value(score_text)
+        if parse_error == "placeholder":
+            placeholder_count += 1
+        elif parse_error == "invalid":
+            invalid_count += 1
+        else:
+            rows.append({"team_name": team_name, stat_name: stat_value})
+    target_count = len(next_rows)
+    return rows, placeholder_count, invalid_count, target_count, "nextjs"
 
 
 def load_j2_target_team_keys():
@@ -211,7 +316,13 @@ def scrape_jleague_stats():
     all_team_stats_data = []
     attempted_metrics = len(TARGET_METRICS)
     succeeded_metrics = 0
+    unavailable_metrics = 0
+    structure_missing_metrics = 0
+    network_failed_metrics = 0
     print(f"[INFO] stats source: league={LEAGUE}, source={STATS_SOURCE}, season={SEASON_YEAR}")
+
+    if skip_stats_during_preseason():
+        return 0
 
     print(f"TEMP_HTML_DIRのパス: {TEMP_HTML_DIR}")
     if not os.path.exists(TEMP_HTML_DIR):
@@ -239,17 +350,30 @@ def scrape_jleague_stats():
 
         page_source = None
         used_url = None
+        unavailable_urls = []
         try:
             for url in urls:
                 try:
                     response = get_with_retry(url, timeout=(5, 20), max_retries=3)
                     response.raise_for_status()
+                    if is_unavailable_page(response.text):
+                        unavailable_urls.append(url)
+                        print(f"[STATS_NOT_PUBLISHED] {stat_name}: unavailable page {url}")
+                        # 最優先の現行公式URLが明示的に未公開なら、旧URLを
+                        # 別種ページとして誤解析せず、この指標を未公開とする。
+                        if url == urls[0]:
+                            break
+                        continue
                     page_source = response.text
                     used_url = url
                     break
                 except requests.exceptions.RequestException as e:
                     print(f"[WARN] URL候補失敗 {stat_name} from {url}: {e}")
             if page_source is None:
+                if unavailable_urls:
+                    unavailable_metrics += 1
+                    print(f"[STATS_NOT_PUBLISHED] {stat_name}: 公式URLで未公開")
+                    continue
                 raise requests.exceptions.RequestException(
                     f"all url candidates failed for {stat_name}"
                 )
@@ -262,90 +386,42 @@ def scrape_jleague_stats():
             if DEBUG_LOG:
                 print(f"HTMLコンテンツを一時ファイル {temp_html_path} に保存しました。")
 
-            soup = BeautifulSoup(page_source, 'lxml') # 取得したHTMLをBeautifulSoupでパース
-            
-            ranking_list = soup.find('ul', class_='ranking_list')
-            if DEBUG_LOG:
-                print(f"ランキングリスト ('ul.ranking_list') 検出結果: {ranking_list is not None}")
-            
-            if ranking_list:
-                stats_for_current_page = []
-                list_items = ranking_list.find_all('li')
-                placeholder_count = 0
-                invalid_count = 0
-                if DEBUG_LOG:
-                    print(f"リストアイテム数: {len(list_items)}")
-
-                for li in list_items:
-                    team_name_tag = li.find('p', class_='team')
-                    stat_value_div_tag = li.find('div', class_=re.compile(r'ranking_stats'))
-                    
-                    if team_name_tag and stat_value_div_tag:
-                        team_name_span = team_name_tag.find('span', class_=re.compile(r'embM'))
-                        if team_name_span and team_name_span.next_sibling:
-                            team_name = team_name_span.next_sibling.strip()
-                            if DEBUG_LOG:
-                                print(f"抽出チーム名 (next_sibling): {team_name}")
-                        else:
-                            team_name = team_name_tag.text.strip()
-                            if DEBUG_LOG:
-                                print(f"抽出チーム名 (text.strip): {team_name}")
-                        
-                        stat_value_p_tag = stat_value_div_tag.find('p')
-                        stat_value = None
-                        if stat_value_p_tag:
-                            stat_value_text = stat_value_p_tag.text.strip()
-                            stat_value, parse_error = parse_stat_value(stat_value_text)
-                            if parse_error == "placeholder":
-                                placeholder_count += 1
-                                if DEBUG_LOG:
-                                    print(f"未公開値: {stat_name}='{stat_value_text}'")
-                            elif parse_error == "invalid":
-                                invalid_count += 1
-                                if DEBUG_LOG:
-                                    print(f"警告: {stat_name} のスタッツ値 '{stat_value_text}' を数値に変換できませんでした。")
-                            elif DEBUG_LOG:
-                                print(f"抽出スタッツ値: {stat_name}={stat_value}")
-                        
-                        if team_name and stat_value is not None:
-                            stats_for_current_page.append({
-                                'team_name': team_name,
-                                stat_name: stat_value
-                            })
-                    else:
-                        if DEBUG_LOG:
-                            print("警告: チーム名タグまたはスタッツ値タグが見つかりませんでした。")
-                
-                print(
-                    f"現在のページで抽出されたスタッツ数: {len(stats_for_current_page)} "
-                    f"(未公開値={placeholder_count}, 変換失敗={invalid_count}, 対象行={len(list_items)})"
-                )
-                if stats_for_current_page:
-                    df_stats = pd.DataFrame(stats_for_current_page)
-                    # ページ/メトリクスごとの表記揺れを吸収してから結合する
-                    df_stats["team_name"] = df_stats["team_name"].map(canonical_team_name)
-                    value_cols = [c for c in df_stats.columns if c != "team_name"]
-                    if value_cols:
-                        df_stats = (
-                            df_stats.groupby("team_name", as_index=False)[value_cols[0]]
-                            .mean()
-                        )
-                    all_team_stats_data.append(df_stats)
-                    succeeded_metrics += 1
-                else:
-                    if list_items and placeholder_count == len(list_items):
-                        print(f"警告: {stat_name} は全チーム未公開（'-'）のためスキップします。")
-                    else:
-                        print(f"警告: {stat_name} のデータが抽出できませんでした。スキップします。")
+            stats_for_current_page, placeholder_count, invalid_count, target_count, parser_kind = (
+                extract_stats_rows(page_source, stat_name)
+            )
+            print(
+                f"現在のページで抽出されたスタッツ数: {len(stats_for_current_page)} "
+                f"(未公開値={placeholder_count}, 変換失敗={invalid_count}, "
+                f"対象行={target_count}, parser={parser_kind})"
+            )
+            if stats_for_current_page:
+                df_stats = pd.DataFrame(stats_for_current_page)
+                # ページ/メトリクスごとの表記揺れを吸収してから結合する
+                df_stats["team_name"] = df_stats["team_name"].map(canonical_team_name)
+                value_cols = [c for c in df_stats.columns if c != "team_name"]
+                if value_cols:
+                    df_stats = (
+                        df_stats.groupby("team_name", as_index=False)[value_cols[0]]
+                        .mean()
+                    )
+                all_team_stats_data.append(df_stats)
+                succeeded_metrics += 1
             else:
-                print(f"警告: {stat_name} のランキングリスト ('ul.ranking_list') が見つかりませんでした。スキップします。")
+                if target_count and placeholder_count == target_count:
+                    unavailable_metrics += 1
+                    print(f"警告: {stat_name} は全チーム未公開（'-'）のためスキップします。")
+                else:
+                    structure_missing_metrics += 1
+                    print(f"警告: {stat_name} のランキングデータが抽出できませんでした。スキップします。")
 
         except requests.exceptions.RequestException as e:
+            network_failed_metrics += 1
             print(f"ネットワークエラー {stat_name}: {e}")
         except Exception as e:
+            structure_missing_metrics += 1
             print(f"スクレイピング中にエラー発生 {stat_name}: {e}") # 例外の種類をrequests.exceptions.RequestExceptionとGeneric Exceptionに分割
         
-        time.sleep(1) # サイトに負荷をかけないように1秒待機
+        time.sleep(STATS_REQUEST_INTERVAL) # 通常はサイト負荷を避ける。検証時のみ環境変数で短縮可。
 
     # finally: # Seleniumを使用しないため不要
     #     if driver:
@@ -355,13 +431,34 @@ def scrape_jleague_stats():
     success_rate = (succeeded_metrics / attempted_metrics) if attempted_metrics else 0.0
     print(
         f"[METRIC_QC] attempted_metrics={attempted_metrics}, "
-        f"succeeded_metrics={succeeded_metrics}, success_rate={success_rate:.2%}"
+        f"succeeded_metrics={succeeded_metrics}, success_rate={success_rate:.2%}, "
+        f"unavailable_metrics={unavailable_metrics}, "
+        f"structure_missing_metrics={structure_missing_metrics}, "
+        f"network_failed_metrics={network_failed_metrics}"
     )
 
     if not all_team_stats_data:
+        # 開幕前など全指標が公式側で未公開の場合は、検証済みの既存データを維持する。
+        # 空データや当日名の偽スナップショットは作らない。
+        if unavailable_metrics == attempted_metrics:
+            fallback = find_latest_stats_fallback(BASE_DIR, LEAGUE, SEASON_YEAR)
+            if fallback:
+                print(
+                    f"[STATS_SKIP] state=NOT_PUBLISHED action=KEEP_EXISTING "
+                    f"fallback={fallback['path']} rows={fallback['rows']} "
+                    f"filled_values={fallback['filled_values']}"
+                )
+                return 0
+            raise RuntimeError(
+                "全スタッツが未公開で、維持できる既存スタッツもありません。 "
+                f"(attempted_metrics={attempted_metrics})"
+            )
         raise RuntimeError(
             f"取得できるスタッツデータがありませんでした。 "
-            f"(attempted_metrics={attempted_metrics}, succeeded_metrics={succeeded_metrics})"
+            f"(attempted_metrics={attempted_metrics}, succeeded_metrics={succeeded_metrics}, "
+            f"unavailable_metrics={unavailable_metrics}, "
+            f"structure_missing_metrics={structure_missing_metrics}, "
+            f"network_failed_metrics={network_failed_metrics})"
         )
 
     if success_rate < STATS_SUCCESS_THRESHOLD:

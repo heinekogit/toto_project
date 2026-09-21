@@ -9,6 +9,7 @@ if [[ ! -x "$PYTHON" ]]; then
 fi
 
 SEASON_YEAR="${SEASON_YEAR:-2026}"
+PREDICTION_SEASON_YEAR="${PREDICTION_SEASON_YEAR:-2026}"
 ROUND="${ROUND:-round02}"
 PURCHASE_DIR="${PURCHASE_DIR:-$ROOT_DIR/data/purchase_reference}"
 EVAL_ROOT="${EVAL_ROOT:-$ROOT_DIR/data/eval}"
@@ -20,10 +21,13 @@ else
 fi
 SNAPSHOT_DIR="$ROUND_DIR/snapshot"
 
-expected_round_no="${ROUND#round}"
-expected_round_no="${expected_round_no##0}"
-if [[ -z "$expected_round_no" ]]; then
-  expected_round_no="0"
+expected_round_no=""
+if [[ "$ROUND" == round* ]]; then
+  expected_round_no="${ROUND#round}"
+  expected_round_no="${expected_round_no##0}"
+  if [[ -z "$expected_round_no" ]]; then
+    expected_round_no="0"
+  fi
 fi
 
 validate_snapshot_round() {
@@ -35,7 +39,8 @@ import sys
 import unicodedata
 
 pred_csv = sys.argv[1]
-expected = int(sys.argv[2])
+expected_arg = sys.argv[2].strip()
+expected = int(expected_arg) if expected_arg else None
 
 def normalize_league(value):
     text = unicodedata.normalize("NFKC", str(value or "")).strip().lower()
@@ -78,6 +83,9 @@ if bad_leagues:
 
 if len(rounds) == 1:
     actual = next(iter(rounds))
+    if expected is None:
+        print(f"[OK] snapshot節番号チェック: 保存ID={sys.argv[2] or 'toto'} / snapshot=第{actual}節")
+        sys.exit(0)
     if actual != expected:
         print(
             "ERROR: ROUNDとsnapshotの節番号が一致しません: "
@@ -97,7 +105,7 @@ else:
 
 print(
     "[OK] snapshot mixed節チェック: "
-    f"{detail} / ROUND={expected:02d} は保存用IDとして扱います"
+    f"{detail} / ROUND={expected if expected is not None else 'toto'} は保存用IDとして扱います"
 )
 PY
 }
@@ -109,7 +117,9 @@ else
   "$PYTHON" "$ROOT_DIR/scripts/eval/00_snapshot_purchase.py" \
     --round "$ROUND" \
     --srcdir "$PURCHASE_DIR" \
-    --outdir "$SNAPSHOT_DIR"
+    --outdir "$SNAPSHOT_DIR" \
+    --logical-season "$SEASON_YEAR" \
+    --prediction-season "$PREDICTION_SEASON_YEAR"
 fi
 validate_snapshot_round "$SNAPSHOT_DIR/predictions.csv"
 
@@ -122,6 +132,7 @@ echo "==> export actual results"
 "$PYTHON" "$ROOT_DIR/scripts/eval/01_export_actual_results.py" \
   --round "$ROUND" \
   --season "$SEASON_YEAR" \
+  --result-season "$PREDICTION_SEASON_YEAR" \
   --snapshot-dir "$SNAPSHOT_DIR" \
   --out "$ROUND_DIR/actual_results.csv" \
   --python "$PYTHON"
@@ -142,9 +153,55 @@ echo "==> build scored html"
   --evaluation "$ROUND_DIR/evaluation.csv" \
   --out "$ROUND_DIR/buyplan_scored.html"
 
+echo "==> accumulate observations"
+"$PYTHON" "$ROOT_DIR/scripts/eval/04_accumulate_observations.py" \
+  --round "$ROUND" \
+  --round-dir "$ROUND_DIR" \
+  --out-dir "$EVAL_ROOT/observation_history"
+
+echo "==> accumulate post-match market alignment"
+"$PYTHON" "$ROOT_DIR/scripts/eval/19_build_market_alignment.py" \
+  --round "$ROUND" \
+  --round-dir "$ROUND_DIR" \
+  --history-dir "$EVAL_ROOT/observation_history"
+
+echo "==> rebuild cross-round observation report"
+"$PYTHON" "$ROOT_DIR/scripts/eval/05_build_observation_report.py" \
+  --history-dir "$EVAL_ROOT/observation_history"
+
+echo "==> evaluate observation-only D filters"
+"$PYTHON" "$ROOT_DIR/scripts/eval/06_evaluate_d_filter_candidates.py" \
+  --history-dir "$EVAL_ROOT/observation_history"
+
+echo "==> condition and upset feedback"
+"$PYTHON" "$ROOT_DIR/scripts/eval/13_build_condition_feedback.py" \
+  --history-dir "$EVAL_ROOT/observation_history"
+
+SHADOW_PARENT="$EVAL_ROOT/d_filter_shadow/$SEASON_YEAR/$ROUND"
+if [[ -d "$SHADOW_PARENT" ]]; then
+  echo "==> score frozen pre-match D-filter shadow"
+  "$PYTHON" "$ROOT_DIR/scripts/eval/08_score_d_filter_shadow.py" \
+    --round "$ROUND" \
+    --logical-season "$SEASON_YEAR" \
+    --shadow-root "$EVAL_ROOT/d_filter_shadow" \
+    --actual "$ROUND_DIR/actual_results.csv"
+else
+  echo "[INFO] D-filter shadow採点をスキップ: pre-match snapshotなし ($SHADOW_PARENT)"
+fi
+
 echo "==> rebuild scored index"
-"$PYTHON" "$ROOT_DIR/data/reports/build_buyplan_scored_index.py" \
-  --rounds-dir "$EVAL_ROOT/rounds" \
-  --out "$EVAL_ROOT/rounds/buyplan_scored_index.html"
+if [[ "$ROUND" == toto* ]]; then
+  "$PYTHON" "$ROOT_DIR/data/reports/build_buyplan_scored_index.py" \
+    --rounds-dir "$EVAL_ROOT/toto_rounds" \
+    --kind toto \
+    --season "$SEASON_YEAR" \
+    --toto-order-csv "$ROOT_DIR/data/manual/toto節リスト.csv" \
+    --out "$EVAL_ROOT/toto_rounds/buyplan_scored_index.html"
+else
+  "$PYTHON" "$ROOT_DIR/data/reports/build_buyplan_scored_index.py" \
+    --rounds-dir "$EVAL_ROOT/rounds" \
+    --kind round \
+    --out "$EVAL_ROOT/rounds/buyplan_scored_index.html"
+fi
 
 echo "完了: $ROUND_DIR"

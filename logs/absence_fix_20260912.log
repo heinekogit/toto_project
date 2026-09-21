@@ -1,0 +1,5 @@
+[OK] absence snapshot: data/absence_snapshots/absences_with_impact_asof_20260912.csv
+[OK] team_shares snapshot: data/absence_snapshots/team_shares_asof_20260912.csv
+[OK] absences_with_impact: data/manual/absences_with_impact.csv rows=95
+[OK] team_shares: data/manual/team_shares.csv rows=39
+[INFO] matched=95, fuzzy=0, not_found=0

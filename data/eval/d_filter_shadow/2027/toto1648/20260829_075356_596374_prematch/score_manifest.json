@@ -1,0 +1,44 @@
+{
+  "round_id": "toto1648",
+  "shadow_dir": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/d_filter_shadow/2027/toto1648/20260829_075356_596374_prematch",
+  "actual_source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1648/actual_results.csv",
+  "matches": 13,
+  "summary": [
+    {
+      "policy": "false_draw_only",
+      "matches": 13,
+      "baseline_hits": 4,
+      "filtered_hits": 7,
+      "changed_matches": 3,
+      "rescue": 3,
+      "harm": 0,
+      "net_rescue": 3,
+      "baseline_hit_rate": 0.3076923076923077,
+      "filtered_hit_rate": 0.5384615384615384
+    },
+    {
+      "policy": "false_draw_plus_trap",
+      "matches": 13,
+      "baseline_hits": 4,
+      "filtered_hits": 9,
+      "changed_matches": 8,
+      "rescue": 6,
+      "harm": 1,
+      "net_rescue": 5,
+      "baseline_hit_rate": 0.3076923076923077,
+      "filtered_hit_rate": 0.6923076923076923
+    },
+    {
+      "policy": "topology_guard",
+      "matches": 13,
+      "baseline_hits": 4,
+      "filtered_hits": 10,
+      "changed_matches": 9,
+      "rescue": 7,
+      "harm": 1,
+      "net_rescue": 6,
+      "baseline_hit_rate": 0.3076923076923077,
+      "filtered_hit_rate": 0.7692307692307693
+    }
+  ]
+}

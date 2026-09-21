@@ -1,0 +1,21 @@
+{
+  "shadow_only": true,
+  "production_changed": false,
+  "season": 2026,
+  "leagues_evaluated_separately": [
+    "j1",
+    "j2"
+  ],
+  "implemented": [
+    "remove_fixed_away_4",
+    "remove_recursive_carry",
+    "cause_preserving_components"
+  ],
+  "not_implemented": [
+    "fatigue_gap",
+    "fatigue_total",
+    "uncertainty",
+    "prediction_adjustment",
+    "buyplan_adjustment"
+  ]
+}

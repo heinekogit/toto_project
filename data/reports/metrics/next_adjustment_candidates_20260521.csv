@@ -1,0 +1,4 @@
+area,pattern,evidence,priority
+buyplan,D->A side bias / draw_core / draw_compressed,"matches=2, avg H=1.5, D=1.0, A=7.5",high
+buyplan,D->A side bias / low_tempo_draw / draw_compressed,"matches=1, avg H=0.0, D=7.0, A=3.0",high
+predictor,pred D overused / J2 / mixed_close,"matches=48, draw_miss_to_side_rate=0.458, actual_draw_rate=0.167",high
