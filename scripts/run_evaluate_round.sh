@@ -153,6 +153,12 @@ echo "==> build scored html"
   --evaluation "$ROUND_DIR/evaluation.csv" \
   --out "$ROUND_DIR/buyplan_scored.html"
 
+if [[ "$ROUND" == toto* ]]; then
+  echo "==> build human-readable growth validation"
+  "$PYTHON" "$ROOT_DIR/scripts/eval/20_build_growth_report.py" \
+    --round "$ROUND" --eval-root "$EVAL_ROOT"
+fi
+
 echo "==> accumulate observations"
 "$PYTHON" "$ROOT_DIR/scripts/eval/04_accumulate_observations.py" \
   --round "$ROUND" \

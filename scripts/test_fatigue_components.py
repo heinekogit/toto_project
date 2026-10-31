@@ -3,6 +3,7 @@
 import importlib.util
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import pandas as pd
 
@@ -18,6 +19,21 @@ def _load_module():
 
 
 class FatigueComponentTest(unittest.TestCase):
+    def test_acl_uses_confirmed_appearance_and_generic_travel_load(self):
+        module = _load_module()
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "acl.csv"
+            pd.DataFrame([
+                {"match_date": "2026/10/13", "team": "鹿島", "fatigue_grade": 7,
+                 "distance_km": 2000, "competition": "ACL", "status": "confirmed", "source": "official-result"},
+                {"match_date": "2026/10/20", "team": "鹿島", "fatigue_grade": 7,
+                 "distance_km": 2000, "competition": "ACL", "status": "scheduled", "source": ""},
+            ]).to_csv(path, index=False)
+            events = module.load_acl_team_events(path)
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events.iloc[0].event_load, 2000 * module.TRAVEL_DISTANCE_WEIGHT)
+        self.assertEqual(events.iloc[0].status, "confirmed")
+
     def test_missing_distance_cannot_be_published_or_predicted(self):
         module = _load_module()
         matches = pd.DataFrame([{'match_id': 'm', 'datetime': pd.Timestamp('2026-09-06'), 'home_team': 'H', 'away_team': 'A'}])

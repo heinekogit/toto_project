@@ -1,0 +1,21 @@
+{
+  "source_hashes": {
+    "data/reports/next_probability_calibration/matches.csv": "1894e720f03f7150551df0711bc481f2144bf3231264351124b4e93230338360",
+    "data/purchase_reference/buyplan.csv": "bb81be4a6cdc5c68929df96bfcceaee48c0344c245a38cdb03cc999574544e89",
+    "scripts/next_model/compare_anchor_arrangements.py": "a32c9858be996b7ffe2e786c3e738e4a2e897c4557ec2ced521457eb3de257ad",
+    "scripts/next_model/anchor_arrangement.py": "cc6cc4ba98812350f32c232c5433a54ae4b2a26ac875b99d7968c89337450c38"
+  },
+  "excluded_incomplete_rounds": [
+    "toto1649"
+  ],
+  "production_changed": false,
+  "actual_results_used_in_optimization": false,
+  "steps": 20000,
+  "seed": 20261017,
+  "graded_target_mean_multipliers": [
+    0.5,
+    1.5
+  ],
+  "evaluation": "exact independent 3^13 enumeration",
+  "validation_status": "retrospective exploratory; future frozen evaluation required"
+}

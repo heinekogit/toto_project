@@ -1,8 +1,13 @@
 import unittest
-from fetch_jleague_club_players import parse_current_player_page
+from fetch_jleague_club_players import parse_club_links, parse_current_player_page
 
 
 class CurrentPlayerPageTest(unittest.TestCase):
+    def test_current_league_club_links(self):
+        html = '<a href="/j1/club/">Ｊ１</a><a href="/club/kashima/">鹿島アントラーズ</a><a href="/club/mito/">水戸ホーリーホック</a>'
+        self.assertEqual(parse_club_links(html), [
+            ('kashima', '鹿島アントラーズ'), ('mito', '水戸ホーリーホック')])
+
     def test_current_table_keeps_name_and_stats_separate(self):
         row = '''<tr><th class="o-table__cell--player"><p class="o-table__player-position">DF 4</p><a class="o-table__player-name-link">岩﨑 博</a><span>HG</span></th><td class="o-table__cell--date-of-birth">2002/10/11</td><td class="o-table__cell--height-weight">186 / 80</td><td class="o-table__cell--number-of-games-played">5</td><td class="o-table__cell--goals-scored">0</td></tr>'''
         df = parse_current_player_page('<table><tbody>' + row + row + '</tbody></table>')

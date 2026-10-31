@@ -12,6 +12,8 @@ WEATHER_SNAPSHOT_DIR="${WEATHER_SNAPSHOT_DIR:-$ROOT_DIR/data/weather_snapshots}"
 STADIUMS_FILE="${STADIUMS_FILE:-$ROOT_DIR/data/manual/stadiums.csv}"
 ABSENCES_CSV="${ABSENCES_CSV:-$ROOT_DIR/data/manual/欠場管理リスト.csv}"
 PLAYERS_CSV="${PLAYERS_CSV:-$ROOT_DIR/data/manual/jleague_club_players.csv}"
+PLAYERS_SUMMARY_JSON="${PLAYERS_SUMMARY_JSON:-$ROOT_DIR/data/manual/jleague_club_players_summary.json}"
+PLAYER_FETCH_SLEEP_SEC="${PLAYER_FETCH_SLEEP_SEC:-1.5}"
 ABSENCE_OUT_DIR="${ABSENCE_OUT_DIR:-$ROOT_DIR/data/manual}"
 ABSENCE_SNAPSHOT_DIR="${ABSENCE_SNAPSHOT_DIR:-$ROOT_DIR/data/absence_snapshots}"
 WEATHER_LOOKAHEAD_DAYS="${WEATHER_LOOKAHEAD_DAYS:-7}"
@@ -92,14 +94,20 @@ if [[ "$preflight_ok" -eq 0 ]]; then
   exit 1
 fi
 
-# 欠場影響を先に更新（予測特徴量で利用）
+# 欠場影響を先に更新（予測特徴量で利用）。名簿取得失敗時は古い名簿で続行しない。
+describe_step "fetch_jleague_club_players.py" "公式選手名簿を全クラブ取得"
+run_step_safe "fetch_jleague_club_players.py" "$PYTHON" "$ROOT_DIR/scripts/fetch_jleague_club_players.py" \
+  --out "$PLAYERS_CSV" --summary-out "$PLAYERS_SUMMARY_JSON" \
+  --min-clubs 60 --sleep-sec "$PLAYER_FETCH_SLEEP_SEC" || exit 1
 if [[ -f "$ABSENCES_CSV" && -f "$PLAYERS_CSV" ]]; then
   describe_step "build_absence_impact.py" "欠場管理CSVと選手マスタから欠場影響CSVを更新"
   run_step_safe "build_absence_impact.py" "$PYTHON" "$ROOT_DIR/scripts/build_absence_impact.py" \
     "$ABSENCES_CSV" "$PLAYERS_CSV" --out-dir "$ABSENCE_OUT_DIR" --season "$SEASON_YEAR" \
-    --asof-date "$STATS_ASOF_DATE" --snapshot-dir "$ABSENCE_SNAPSHOT_DIR"
+    --asof-date "$STATS_ASOF_DATE" --snapshot-dir "$ABSENCE_SNAPSHOT_DIR" \
+    --max-player-age-days 1 --reject-active-unmatched || exit 1
 else
-  echo "[WARN] build_absence_impact.py をスキップ: 入力CSV不足 (absences=$ABSENCES_CSV players=$PLAYERS_CSV)"
+  echo "[ERROR] build_absence_impact.py 入力CSV不足 (absences=$ABSENCES_CSV players=$PLAYERS_CSV)"
+  exit 1
 fi
 
 for LEAGUE in $LEAGUES; do
@@ -147,7 +155,7 @@ for LEAGUE in $LEAGUES; do
   fi
 
   describe_step "11_prediction_01.py" "最新の取得済みデータで予測CSVを更新（節タイプ補正は無効化）"
-  run_step_safe "11_prediction_01.py" ENABLE_ROUND_TYPE_DRAW_CONTROL="0" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" STATS_ASOF_DATE="$STATS_ASOF_DATE" "$PYTHON" "$ROOT_DIR/scripts/11_prediction_01.py" || exit 1
+  run_step_safe "11_prediction_01.py" ENABLE_ROUND_TYPE_DRAW_CONTROL="0" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" STATS_ASOF_DATE="$STATS_ASOF_DATE" ABSENCE_ASOF_DATE="$STATS_ASOF_DATE" ABSENCE_SNAPSHOT_DIR="$ABSENCE_SNAPSHOT_DIR" ABSENCE_REQUIRE_EXACT_ASOF="1" "$PYTHON" "$ROOT_DIR/scripts/11_prediction_01.py" || exit 1
   PREDICTIONS_FILE="$ROOT_DIR/${LEAGUE}_${SEASON_YEAR}_predictions_hfa_on.csv"
   if [[ -f "$PREDICTIONS_FILE" ]]; then
     describe_step "12_build_weather_rule_shadow.py" "天候単位・大雨排他・欠損状態をQC（予測の追加変更なし）"

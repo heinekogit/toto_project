@@ -1,0 +1,13 @@
+{
+  "round_id": "toto1665",
+  "matches": 13,
+  "market_favorite_hits": 6,
+  "market_favorite_hit_rate": 0.46153846153846156,
+  "mean_actual_market_share": 0.4507538461538462,
+  "geometric_mean_actual_market_share": 0.3947391216547098,
+  "market_log_loss": 0.9295301837822519,
+  "strong_favorite_60_count": 6,
+  "strong_favorite_60_misses": 1,
+  "source_pdf": "toto1665.pdf",
+  "source_pdf_sha256": "f032d4521bc3253fc93ddd6cd9d9c9295df32c555079ea5140013100e317b60f"
+}

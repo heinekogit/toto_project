@@ -1,0 +1,16 @@
+{
+  "source": "data/reports/next_probability_calibration/matches.csv",
+  "source_sha256": "1894e720f03f7150551df0711bc481f2144bf3231264351124b4e93230338360",
+  "current_buyplan_sha256": "bb81be4a6cdc5c68929df96bfcceaee48c0344c245a38cdb03cc999574544e89",
+  "strategies": {
+    "v2.2": "production algorithm reproduced from fixed per-match allocations",
+    "draw_spread_strict": "D per ticket 1..6; draw-count square sum at most balanced minimum + 20",
+    "draw_spread_mild": "D per ticket 1..7; draw-count square sum at most balanced minimum + 40"
+  },
+  "optimization_outcomes": 12000,
+  "swap_steps": 2000,
+  "optimization_seed": 13010,
+  "evaluation": "exact enumeration of all 3^13 outcome combinations under independent match probabilities",
+  "actual_results_used_in_optimization": false,
+  "production_changed": false
+}

@@ -5696,3 +5696,31 @@
 2026-09-19 13:33:43,344 INFO WEATHER_FETCH: success=10 eligible_total=10 total=10 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
 2026-09-19 13:33:49,650 INFO WEATHER_TARGET_FILTER: asof=2026-09-19 lookahead_days=7 before=319 after=19
 2026-09-19 13:34:18,841 INFO WEATHER_FETCH: success=19 eligible_total=19 total=19 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-08 20:57:18,183 INFO WEATHER_TARGET_FILTER: asof=2026-10-08 lookahead_days=7 before=300 after=10
+2026-10-08 20:57:33,373 INFO WEATHER_FETCH: success=10 eligible_total=10 total=10 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-08 20:57:39,801 INFO WEATHER_TARGET_FILTER: asof=2026-10-08 lookahead_days=7 before=290 after=10
+2026-10-08 20:57:54,955 INFO WEATHER_FETCH: success=10 eligible_total=10 total=10 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-10 09:13:58,269 INFO WEATHER_TARGET_FILTER: asof=2026-10-10 lookahead_days=7 before=298 after=16
+2026-10-10 09:14:24,693 INFO WEATHER_FETCH: success=16 eligible_total=16 total=16 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-10 09:14:31,206 INFO WEATHER_TARGET_FILTER: asof=2026-10-10 lookahead_days=7 before=290 after=19
+2026-10-10 09:15:00,352 INFO WEATHER_FETCH: success=19 eligible_total=19 total=19 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-17 09:41:36,099 INFO WEATHER_TARGET_FILTER: asof=2026-10-17 lookahead_days=7 before=290 after=25
+2026-10-17 09:42:16,062 INFO WEATHER_FETCH: success=25 eligible_total=25 total=25 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-17 09:42:22,718 INFO WEATHER_TARGET_FILTER: asof=2026-10-17 lookahead_days=7 before=280 after=22
+2026-10-17 09:42:57,127 INFO WEATHER_FETCH: success=22 eligible_total=22 total=22 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-21 09:04:27,090 INFO WEATHER_TARGET_FILTER: asof=2026-10-21 lookahead_days=7 before=280 after=20
+2026-10-21 09:05:13,455 INFO WEATHER_FETCH: success=20 eligible_total=20 total=20 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-21 09:05:19,995 INFO WEATHER_TARGET_FILTER: asof=2026-10-21 lookahead_days=7 before=270 after=20
+2026-10-21 09:06:19,864 INFO WEATHER_FETCH: success=20 eligible_total=20 total=20 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-24 09:36:59,779 INFO WEATHER_TARGET_FILTER: asof=2026-10-24 lookahead_days=7 before=270 after=16
+2026-10-24 09:37:32,466 INFO WEATHER_FETCH: success=16 eligible_total=16 total=16 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-24 09:37:39,424 INFO WEATHER_TARGET_FILTER: asof=2026-10-24 lookahead_days=7 before=260 after=20
+2026-10-24 09:38:13,542 INFO WEATHER_FETCH: success=20 eligible_total=20 total=20 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-31 10:00:02,688 INFO WEATHER_TARGET_FILTER: asof=2026-10-31 lookahead_days=7 before=260 after=16
+2026-10-31 10:00:28,838 INFO WEATHER_FETCH: success=16 eligible_total=16 total=16 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-31 10:00:35,569 INFO WEATHER_TARGET_FILTER: asof=2026-10-31 lookahead_days=7 before=250 after=26
+2026-10-31 10:01:15,664 INFO WEATHER_FETCH: success=26 eligible_total=26 total=26 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-31 10:25:02,368 INFO WEATHER_TARGET_FILTER: asof=2026-10-31 lookahead_days=7 before=260 after=16
+2026-10-31 10:25:02,403 INFO WEATHER_FETCH: success=16 eligible_total=16 total=16 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-10-31 10:25:08,957 INFO WEATHER_TARGET_FILTER: asof=2026-10-31 lookahead_days=7 before=250 after=26
+2026-10-31 10:25:09,004 INFO WEATHER_FETCH: success=26 eligible_total=26 total=26 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000

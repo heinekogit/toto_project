@@ -1,0 +1,25 @@
+{
+  "created_at": "2026-09-22T21:38:10+09:00",
+  "input": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/next_model/validation_v2/lab_xg_v0/predictions.csv",
+  "ticket_counts": [
+    5,
+    10,
+    15,
+    20,
+    30
+  ],
+  "probability_floors": [
+    0.5,
+    0.35,
+    0.25
+  ],
+  "complete_rounds": 7,
+  "prematch_proven_rounds": 3,
+  "exclusions": [
+    {
+      "round_id": "toto1649",
+      "rows": 10,
+      "reason": "not a complete 13-match round"
+    }
+  ]
+}

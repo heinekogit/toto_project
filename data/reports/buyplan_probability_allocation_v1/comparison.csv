@@ -1,0 +1,17 @@
+round_id,strategy,draw_cells,prematch_proven,joint_probability_sum,best_hits,average_hits
+toto1644,coverage_v1,5,False,6.416557210467229e-05,8.0,4.9
+toto1644,probability_allocation_v1,34,False,8.522098056585305e-06,7.0,4.8
+toto1645,coverage_v1,3,False,0.0003694139386269243,6.0,5.2
+toto1645,probability_allocation_v1,31,False,2.6533598337111528e-05,9.0,5.1
+toto1647,coverage_v1,4,False,0.0005121594467879214,6.0,4.3
+toto1647,probability_allocation_v1,32,False,1.861133761061707e-05,8.0,4.3
+toto1648,coverage_v1,4,False,0.0005387626838172268,7.0,5.3
+toto1648,probability_allocation_v1,33,False,2.499316305315001e-05,7.0,4.5
+toto1650,coverage_v1,4,True,0.00038456678196855184,6.0,5.0
+toto1650,probability_allocation_v1,32,True,1.7594983776496384e-05,6.0,4.4
+toto1653,coverage_v1,6,True,0.00024139194742362068,9.0,6.0
+toto1653,probability_allocation_v1,33,True,1.5530660761548235e-05,8.0,4.8
+toto1654,coverage_v1,4,True,0.00021578987869107528,8.0,6.9
+toto1654,probability_allocation_v1,33,True,1.1841490389113373e-05,6.0,5.1
+toto1660,coverage_v1,3,False,0.00021140953237113694,,
+toto1660,probability_allocation_v1,33,False,1.4415365612058549e-05,,

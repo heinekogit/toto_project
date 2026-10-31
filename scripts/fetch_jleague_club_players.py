@@ -4,7 +4,9 @@ import json
 import os
 import re
 import sys
+import tempfile
 import time
+import unicodedata
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
@@ -21,6 +23,7 @@ from http_retry import get_with_retry
 BASE_URL = "https://www.jleague.jp"
 ROBOTS_URL = f"{BASE_URL}/robots.txt"
 CLUB_TOP_URL = f"{BASE_URL}/club/"
+CLUB_LIST_URLS = [f"{BASE_URL}/{league}/club/" for league in ("j1", "j2", "j3")]
 AJAX_PLAYER_URL = f"{BASE_URL}/club/ajax_player/"
 DEFAULT_UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -49,6 +52,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--timeout-sec", type=float, default=20.0, help="HTTPタイムアウト（秒）")
     p.add_argument("--user-agent", default=DEFAULT_UA, help="User-Agent")
     p.add_argument("--max-clubs", type=int, default=0, help="先頭Nクラブのみ取得（0=全件）")
+    p.add_argument("--min-clubs", type=int, default=0, help="全件更新時に必要な最低クラブ数")
     p.add_argument(
         "--allow-disallowed",
         action="store_true",
@@ -109,42 +113,37 @@ def ensure_robot_allowed(
     raise RuntimeError(f"{msg} / --allow-disallowed 指定なし")
 
 
-def discover_club_keys(headers: Dict[str, str], timeout_sec: float) -> List[Tuple[str, str]]:
-    resp = get_with_retry(
-        CLUB_TOP_URL,
-        headers=headers,
-        timeout=(5, timeout_sec),
-        max_retries=3,
-        backoff_base=1.0,
-    )
-    soup = BeautifulSoup(resp.text, "lxml")
+def parse_club_links(page_html: str) -> List[Tuple[str, str]]:
+    soup = BeautifulSoup(page_html, "lxml")
     pairs: List[Tuple[str, str]] = []
     seen = set()
-    select = soup.find("select", attrs={"name": "clubName"})
-    if select is not None:
-        for opt in select.find_all("option"):
-            key = normalize_text(opt.get("value", ""))
-            name = normalize_text(opt.get_text(" ", strip=True))
-            if not key:
-                continue
-            if key in seen:
-                continue
-            seen.add(key)
-            pairs.append((key, name or key))
+    for a in soup.find_all("a", href=True):
+        href = normalize_text(a.get("href", ""))
+        m = re.match(r"^/club/([^/]+)/(?:day/?)?$", href)
+        if not m:
+            continue
+        key = normalize_text(m.group(1))
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        name = normalize_club_name(normalize_text(a.get_text(" ", strip=True))) or key
+        pairs.append((key, name))
+    return pairs
 
-    # /club/<slug>/day/ 形式のリンクから抽出（現行クラブ一覧）
-    if not pairs:
-        for a in soup.find_all("a", href=True):
-            href = normalize_text(a.get("href", ""))
-            m = re.match(r"^/club/([^/]+)/day/?$", href)
-            if not m:
-                continue
-            key = normalize_text(m.group(1))
-            if not key or key in seen:
-                continue
-            seen.add(key)
-            name = normalize_club_name(normalize_text(a.get_text(" ", strip=True))) or key
-            pairs.append((key, name))
+
+def discover_club_keys(headers: Dict[str, str], timeout_sec: float,
+                       rp: RobotFileParser, user_agent: str,
+                       allow_disallowed: bool) -> List[Tuple[str, str]]:
+    pairs: List[Tuple[str, str]] = []
+    seen = set()
+    for url in CLUB_LIST_URLS:
+        ensure_robot_allowed(rp, user_agent, url, allow_disallowed)
+        resp = get_with_retry(url, headers=headers, timeout=(5, timeout_sec),
+                              max_retries=3, backoff_base=1.0)
+        for key, name in parse_club_links(resp.text):
+            if key not in seen:
+                seen.add(key)
+                pairs.append((key, name))
 
     if not pairs:
         raise RuntimeError("クラブキーを抽出できませんでした")
@@ -290,7 +289,8 @@ def main() -> int:
         club_pairs = [(k, k) for k in keys]
     else:
         try:
-            club_pairs = discover_club_keys(headers, args.timeout_sec)
+            club_pairs = discover_club_keys(headers, args.timeout_sec, rp,
+                                            args.user_agent, args.allow_disallowed)
         except Exception as e:
             print(f"[ERROR] クラブ一覧取得失敗: {e}")
             return 1
@@ -325,7 +325,22 @@ def main() -> int:
     if any(not r.ok for r in results) or out_df.empty:
         print("[ERROR] 選手取得に失敗したため既存CSVを更新しません。")
         return 1
-    out_df.to_csv(args.out, index=False, encoding="utf-8-sig")
+    if args.min_clubs and len(club_pairs) < args.min_clubs:
+        print(f"[ERROR] クラブ数不足: {len(club_pairs)} < {args.min_clubs}; 既存CSVは保持します。")
+        return 1
+    if (out_df["club_key"].nunique() != len(club_pairs)
+            or out_df["player_name"].isna().any()
+            or out_df["player_name"].astype(str).str.strip().eq("").any()
+            or out_df.groupby("club_key").size().min() < 15):
+        print("[ERROR] 選手一覧が不完全です。既存CSVは保持します。")
+        return 1
+    if not args.club_keys and not args.max_clubs and os.path.exists(args.out):
+        previous = pd.read_csv(args.out, encoding="utf-8-sig", usecols=["club_name"])
+        norm = lambda value: unicodedata.normalize("NFKC", str(value)).replace(" ", "").strip()
+        missing = set(previous["club_name"].dropna().map(norm)) - set(out_df["club_name"].dropna().map(norm))
+        if missing:
+            print(f"[ERROR] 既存名簿のクラブが欠落: {sorted(missing)}; 既存CSVは保持します。")
+            return 1
 
     summary = {
         "generated_at": datetime.now().isoformat(timespec="seconds"),
@@ -342,8 +357,20 @@ def main() -> int:
         "results": [r.__dict__ for r in results],
         "notice": "本サイトの利用規約・著作権規定に従って利用してください。無断転載等は行わないでください。",
     }
-    with open(args.summary_out, "w", encoding="utf-8") as f:
+    # A failed download or write must not leave a truncated production master.
+    out_dir = os.path.dirname(os.path.abspath(args.out))
+    summary_dir = os.path.dirname(os.path.abspath(args.summary_out))
+    os.makedirs(summary_dir, exist_ok=True)
+    with tempfile.NamedTemporaryFile(mode="w", prefix=".players-", suffix=".csv", dir=out_dir,
+                                     encoding="utf-8-sig", delete=False) as f:
+        csv_tmp = f.name
+        out_df.to_csv(f, index=False)
+    with tempfile.NamedTemporaryFile(mode="w", prefix=".players-summary-", suffix=".json", dir=summary_dir,
+                                     encoding="utf-8", delete=False) as f:
+        summary_tmp = f.name
         json.dump(summary, f, ensure_ascii=False, indent=2)
+    os.replace(csv_tmp, args.out)
+    os.replace(summary_tmp, args.summary_out)
 
     print(f"[OK] csv: {args.out}")
     print(f"[OK] summary: {args.summary_out}")

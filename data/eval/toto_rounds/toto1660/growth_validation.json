@@ -1,0 +1,459 @@
+{
+  "round_id": "toto1660",
+  "version": "v2.1",
+  "strategy": "probability_allocation_v1",
+  "resolved": 13,
+  "pending": 0,
+  "model_version": "base_lambda_v1 + lab_xg_v0",
+  "actual_counts": {
+    "H": 5,
+    "D": 2,
+    "A": 6
+  },
+  "official": {
+    "ticket_count": 10,
+    "ticket_names": [
+      "ticket01",
+      "ticket02",
+      "ticket03",
+      "ticket04",
+      "ticket05",
+      "ticket06",
+      "ticket07",
+      "ticket08",
+      "ticket09",
+      "ticket10"
+    ],
+    "ticket_hits": [
+      8,
+      4,
+      9,
+      4,
+      6,
+      4,
+      5,
+      4,
+      3,
+      3
+    ],
+    "best_hits": 9,
+    "mean_hits": 5.0,
+    "accuracy": 0.38461538461538464,
+    "draw_cells": 33,
+    "ge10": 0,
+    "ge11": 0,
+    "ge12": 0,
+    "ge13": 0,
+    "draw_pair_coverage": 0
+  },
+  "shadow": {
+    "ticket_count": 10,
+    "ticket_names": [
+      "ticket11",
+      "ticket12",
+      "ticket13",
+      "ticket14",
+      "ticket15",
+      "ticket16",
+      "ticket17",
+      "ticket18",
+      "ticket19",
+      "ticket20"
+    ],
+    "ticket_hits": [
+      6,
+      6,
+      5,
+      6,
+      5,
+      6,
+      4,
+      6,
+      5,
+      7
+    ],
+    "best_hits": 7,
+    "mean_hits": 5.6,
+    "accuracy": 0.43076923076923074,
+    "draw_cells": 3,
+    "ge10": 0,
+    "ge11": 0,
+    "ge12": 0,
+    "ge13": 0,
+    "draw_pair_coverage": 0
+  },
+  "shadow_version": "v2.0",
+  "model": {
+    "matches": 13,
+    "top_hits": 6,
+    "top_accuracy": 0.46153846153846156,
+    "brier": 0.6014875546433058,
+    "outcome_rows": [
+      {
+        "結果": "H",
+        "平均予測確率": "32.6%",
+        "実際の割合": "38.5%",
+        "実数": 5
+      },
+      {
+        "結果": "D",
+        "平均予測確率": "25.2%",
+        "実際の割合": "15.4%",
+        "実数": 2
+      },
+      {
+        "結果": "A",
+        "平均予測確率": "42.3%",
+        "実際の割合": "46.2%",
+        "実数": 6
+      }
+    ]
+  },
+  "records": [
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 1,
+      "home_team": "C大阪",
+      "away_team": "横浜ＦM",
+      "result": "D",
+      "probabilities": [
+        0.2941966697154773,
+        0.2542985940302749,
+        0.4515047362542477
+      ],
+      "picks": [
+        "D",
+        "H",
+        "A",
+        "A",
+        "H",
+        "A",
+        "D",
+        "A",
+        "A",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 2,
+      "home_team": "ＦＣ東京",
+      "away_team": "浦和",
+      "result": "H",
+      "probabilities": [
+        0.4716057460109246,
+        0.2381875668089465,
+        0.2902066871801289
+      ],
+      "picks": [
+        "H",
+        "H",
+        "H",
+        "H",
+        "D",
+        "A",
+        "A",
+        "D",
+        "H",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 3,
+      "home_team": "福岡",
+      "away_team": "岡山",
+      "result": "H",
+      "probabilities": [
+        0.2977763892614499,
+        0.2683338502733609,
+        0.4338897604651891
+      ],
+      "picks": [
+        "H",
+        "D",
+        "H",
+        "D",
+        "A",
+        "H",
+        "D",
+        "A",
+        "A",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 4,
+      "home_team": "千葉",
+      "away_team": "長崎",
+      "result": "D",
+      "probabilities": [
+        0.3058293642118,
+        0.2569797020687979,
+        0.4371909337194021
+      ],
+      "picks": [
+        "H",
+        "A",
+        "D",
+        "H",
+        "D",
+        "D",
+        "A",
+        "A",
+        "A",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 5,
+      "home_team": "水戸",
+      "away_team": "清水",
+      "result": "A",
+      "probabilities": [
+        0.3578633389583403,
+        0.2626586204636776,
+        0.3794780405779823
+      ],
+      "picks": [
+        "A",
+        "H",
+        "D",
+        "A",
+        "H",
+        "H",
+        "A",
+        "D",
+        "D",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 6,
+      "home_team": "京都",
+      "away_team": "町田",
+      "result": "A",
+      "probabilities": [
+        0.2387858328055305,
+        0.2257286454313027,
+        0.5354855217631667
+      ],
+      "picks": [
+        "H",
+        "D",
+        "A",
+        "H",
+        "A",
+        "A",
+        "H",
+        "A",
+        "D",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 7,
+      "home_team": "東京V",
+      "away_team": "広島",
+      "result": "A",
+      "probabilities": [
+        0.1312192141599087,
+        0.2066301178536661,
+        0.6621506679864249
+      ],
+      "picks": [
+        "A",
+        "D",
+        "A",
+        "A",
+        "A",
+        "D",
+        "A",
+        "A",
+        "H",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 8,
+      "home_team": "川崎F",
+      "away_team": "名古屋",
+      "result": "A",
+      "probabilities": [
+        0.4813137250674298,
+        0.2356607144887242,
+        0.283025560443846
+      ],
+      "picks": [
+        "H",
+        "A",
+        "A",
+        "D",
+        "H",
+        "H",
+        "A",
+        "D",
+        "H",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 9,
+      "home_team": "甲府",
+      "away_team": "栃木C",
+      "result": "H",
+      "probabilities": [
+        0.2912178227791365,
+        0.2477714229185747,
+        0.4610107543022886
+      ],
+      "picks": [
+        "D",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A",
+        "D",
+        "A",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 10,
+      "home_team": "鳥栖",
+      "away_team": "藤枝",
+      "result": "H",
+      "probabilities": [
+        0.3803730302207053,
+        0.2792277041196249,
+        0.3403992656596697
+      ],
+      "picks": [
+        "H",
+        "D",
+        "H",
+        "H",
+        "A",
+        "D",
+        "D",
+        "H",
+        "A",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 11,
+      "home_team": "徳島",
+      "away_team": "今治",
+      "result": "A",
+      "probabilities": [
+        0.380777427312869,
+        0.2713953732776386,
+        0.3478271994094924
+      ],
+      "picks": [
+        "A",
+        "H",
+        "D",
+        "H",
+        "D",
+        "H",
+        "D",
+        "A",
+        "A",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 12,
+      "home_team": "山形",
+      "away_team": "仙台",
+      "result": "A",
+      "probabilities": [
+        0.2631050001094942,
+        0.2633842904320276,
+        0.4735107094584782
+      ],
+      "picks": [
+        "D",
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "D",
+        "A",
+        "D"
+      ]
+    },
+    {
+      "round_id": "toto1660",
+      "version": "v2.1",
+      "match_no": 13,
+      "home_team": "いわき",
+      "away_team": "秋田",
+      "result": "H",
+      "probabilities": [
+        0.3375909396283515,
+        0.2626180397465192,
+        0.399791020625129
+      ],
+      "picks": [
+        "H",
+        "A",
+        "A",
+        "D",
+        "H",
+        "H",
+        "A",
+        "A",
+        "D",
+        "D"
+      ]
+    }
+  ],
+  "sources": {
+    "buyplan": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/snapshot/buyplan.csv",
+      "sha256": "b84de9da75d6e140a30188b6c7e313ed35365a386b948948c4370054a30b2a3f"
+    },
+    "actual": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/actual_results.csv",
+      "sha256": "09c9369b9258c8b3b39b0c6bbd2b42df2bd4a7f29144dade06dd14607e612077"
+    },
+    "engine_manifest": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/snapshot/buyplan_engine_manifest.json",
+      "sha256": "8653279e65cf255795eb190eafe60572e5497005baf8ecc5ad883887d963caff"
+    },
+    "shadow": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/snapshot/shadow_buyplan.csv",
+      "sha256": "5b7c8e739de591fda4dd19bd1c4477da404b2b837dd56b31b8cf6a1ce9e0d7d0"
+    }
+  },
+  "created_at": "2026-10-12T14:13:47.871117+09:00",
+  "comparison_fair": true
+}

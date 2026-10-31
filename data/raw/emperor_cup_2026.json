@@ -1,0 +1,3198 @@
+{
+  "matchScheduleList": {
+    "competitionName": "天皇杯 JFA 第106回全日本サッカー選手権大会",
+    "matchSchedule": [
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "1",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "三交鈴鹿",
+        "venueFullName": "三重交通Gスポーツの杜鈴鹿サッカー・ラグビー場メインG",
+        "homeTeamName": "アトレチコ鈴鹿",
+        "homeTeamQualificationDescription": "三重県代表",
+        "awayTeamName": "FC BASARA HYOGO",
+        "awayTeamQualificationDescription": "兵庫県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "1",
+          "awayScore": "1",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "1",
+          "exMatch": true,
+          "homeTeamScore1ex": "0",
+          "awayTeamScore1ex": "0",
+          "homeTeamScore2ex": "0",
+          "awayTeamScore2ex": "0",
+          "homePKScore": "3",
+          "awayPKScore": "1"
+        },
+        "scorer": {
+          "homeScorer": [
+            "90+2分 渡邊 星来"
+          ],
+          "awayScorer": [
+            "88分 小延 将大"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m01.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "2",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "Ａｘｉｓ",
+        "venueFullName": "Ａｘｉｓバードスタジアム",
+        "homeTeamName": "ガイナーレ鳥取",
+        "homeTeamQualificationDescription": "鳥取県代表",
+        "awayTeamName": "ロアッソ熊本",
+        "awayTeamQualificationDescription": "熊本県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "2",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "1",
+          "exMatch": true,
+          "homeTeamScore1ex": "0",
+          "awayTeamScore1ex": "1",
+          "homeTeamScore2ex": "1",
+          "awayTeamScore2ex": "0",
+          "homePKScore": "6",
+          "awayPKScore": "5"
+        },
+        "scorer": {
+          "homeScorer": [
+            "55分 藤田 一途",
+            "110分 篠田 大輝"
+          ],
+          "awayScorer": [
+            "84分 半代 将都",
+            "94分 鹿取 勇斗"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m02.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "3",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ユアスタ",
+        "venueFullName": "ユアテックスタジアム仙台",
+        "homeTeamName": "東北学院大学",
+        "homeTeamQualificationDescription": "宮城県代表",
+        "awayTeamName": "ザスパ群馬",
+        "awayTeamQualificationDescription": "群馬県代表",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "1",
+          "awayScore": "3",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "2",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "75分 村上 一翔"
+          ],
+          "awayScorer": [
+            "40分 出間 思努",
+            "69分 出間 思努",
+            "86分 中島 大嘉"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m03.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "4",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "カンセキ",
+        "venueFullName": "カンセキスタジアムとちぎ",
+        "homeTeamName": "栃木SC",
+        "homeTeamQualificationDescription": "栃木県代表",
+        "awayTeamName": "ブリオベッカ浦安・市川",
+        "awayTeamQualificationDescription": "千葉県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "0",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "44分 鈴木 輪太朗 イブラヒーム",
+            "74分 中村 仁郎"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m04.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "5",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "HATOスタ",
+        "venueFullName": "平和堂ＨＡＴＯスタジアム",
+        "homeTeamName": "レイラック滋賀FC",
+        "homeTeamQualificationDescription": "滋賀県代表",
+        "awayTeamName": "JAPANサッカーカレッジ",
+        "awayTeamQualificationDescription": "新潟県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "1",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "1",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "63分 北條 真汰",
+            "90+5分 井出 敬大"
+          ],
+          "awayScorer": [
+            "81分 堺 千空"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m05.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "6",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "鳴門大塚",
+        "venueFullName": "鳴門･大塚スポーツパークポカリスエットスタジアム",
+        "homeTeamName": "ＦＣ徳島",
+        "homeTeamQualificationDescription": "徳島県代表",
+        "awayTeamName": "川副クラブ",
+        "awayTeamQualificationDescription": "佐賀県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "1",
+          "awayScore": "0",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "78分 富永 涼大"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m06.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "7",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ミクスタ",
+        "venueFullName": "ミクニワールドスタジアム北九州",
+        "homeTeamName": "ギラヴァンツ北九州",
+        "homeTeamQualificationDescription": "福岡県代表",
+        "awayTeamName": "沖縄SV",
+        "awayTeamQualificationDescription": "沖縄県代表",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "1",
+          "awayScore": "2",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": true,
+          "homeTeamScore1ex": "0",
+          "awayTeamScore1ex": "1",
+          "homeTeamScore2ex": "0",
+          "awayTeamScore2ex": "0"
+        },
+        "scorer": {
+          "homeScorer": [
+            "50分 井澤 春輝"
+          ],
+          "awayScorer": [
+            "40分 髙橋 剣士朗",
+            "93分 小堀 空"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m07.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "8",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "18:00",
+        "matchTimeJpn": "18:00",
+        "venue": "みよし陸",
+        "venueFullName": "広島県みよし運動公園陸上競技場",
+        "homeTeamName": "ベルガロッソいわみ",
+        "homeTeamQualificationDescription": "島根県代表",
+        "awayTeamName": "長崎国際大学",
+        "awayTeamQualificationDescription": "長崎県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "0",
+          "homeTeamScore1st": "2",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "4分 長谷川 夢叶",
+            "31分 長谷川 夢叶"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m08.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "9",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "17:00",
+        "matchTimeJpn": "17:00",
+        "venue": "紀三井寺",
+        "venueFullName": "和歌山県紀三井寺公園陸上競技場",
+        "homeTeamName": "アルテリーヴォ和歌山",
+        "homeTeamQualificationDescription": "和歌山県代表",
+        "awayTeamName": "アスルクラロ沼津",
+        "awayTeamQualificationDescription": "静岡県代表",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "0",
+          "awayScore": "6",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "2",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "4",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": [
+            "29分 内田 優晟",
+            "38分 滝 裕太",
+            "48分 滝 裕太",
+            "59分 篠﨑 輝和",
+            "69分 川又 堅碁",
+            "75分 真家 英嵩"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m09.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "10",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "いちご",
+        "venueFullName": "いちご宮崎新富サッカー場",
+        "homeTeamName": "ヴェロスクロノス都農",
+        "homeTeamQualificationDescription": "宮崎県代表",
+        "awayTeamName": "カマタマーレ讃岐",
+        "awayTeamQualificationDescription": "香川県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "1",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "1",
+          "exMatch": true,
+          "homeTeamScore1ex": "1",
+          "awayTeamScore1ex": "0",
+          "homeTeamScore2ex": "1",
+          "awayTeamScore2ex": "0"
+        },
+        "scorer": {
+          "homeScorer": [
+            "35分 井上 将弥",
+            "102分 山田 雄太",
+            "107分 髙貝 樹幹"
+          ],
+          "awayScorer": [
+            "90+1分 淺田 彗潤"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m10.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "11",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "クラド",
+        "venueFullName": "クラサスドーム大分",
+        "homeTeamName": "ヴェルスパ大分",
+        "homeTeamQualificationDescription": "大分県代表",
+        "awayTeamName": "高知ユナイテッドSC",
+        "awayTeamQualificationDescription": "高知県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "0",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "3",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "59分 武沢 一翔",
+            "75分 國分 龍司",
+            "90+3分 布方 叶夢"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m11.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "12",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "Ｋｓスタ",
+        "venueFullName": "ケーズデンキスタジアム水戸",
+        "homeTeamName": "流通経済大学",
+        "homeTeamQualificationDescription": "茨城県代表",
+        "awayTeamName": "クリアソン新宿",
+        "awayTeamQualificationDescription": "東京都代表",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "1",
+          "awayScore": "2",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "1",
+          "exMatch": true,
+          "homeTeamScore1ex": "0",
+          "awayTeamScore1ex": "0",
+          "homeTeamScore2ex": "0",
+          "awayTeamScore2ex": "1"
+        },
+        "scorer": {
+          "homeScorer": [
+            "66分 奈須 琉世"
+          ],
+          "awayScorer": [
+            "86分 坂本 修佑",
+            "116分 菊谷 篤資"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m12.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "13",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "レモンＳ",
+        "venueFullName": "レモンガススタジアム平塚",
+        "homeTeamName": "専修大学",
+        "homeTeamQualificationDescription": "神奈川県代表",
+        "awayTeamName": "筑波大学",
+        "awayTeamQualificationDescription": "アマチュアシード",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "1",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "85分 塚越 幹太",
+            "88分 那須 奏輔"
+          ],
+          "awayScorer": [
+            "19分 安食 優斗"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m13.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "14",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "とうスタ",
+        "venueFullName": "とうほう・みんなのスタジアム",
+        "homeTeamName": "福島ユナイテッドFC",
+        "homeTeamQualificationDescription": "福島県代表",
+        "awayTeamName": "大山サッカークラブ",
+        "awayTeamQualificationDescription": "山形県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "7",
+          "awayScore": "0",
+          "homeTeamScore1st": "3",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "4",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "12分 三浦 知良",
+            "32分 野末 学",
+            "45+1分 佐々木 奈琉",
+            "52分 千葉 虎士",
+            "55分 三浦 知良",
+            "70分 清水 一雅",
+            "84分 岡田 優希"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m14.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "15",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "石川西部",
+        "venueFullName": "石川県西部緑地公園陸上競技場",
+        "homeTeamName": "金沢星稜大学",
+        "homeTeamQualificationDescription": "石川県代表",
+        "awayTeamName": "京都産業大学",
+        "awayTeamQualificationDescription": "京都府代表",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "1",
+          "awayScore": "4",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "4",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "66分 宮前 享真"
+          ],
+          "awayScorer": [
+            "4分 高川 諒希",
+            "15分 末谷 誓梧",
+            "17分 妹尾 颯斗",
+            "38分 妹尾 颯斗"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m15.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "16",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ＪＩＴス",
+        "venueFullName": "ＪＩＴ リサイクルインク スタジアム",
+        "homeTeamName": "山梨学院大学",
+        "homeTeamQualificationDescription": "山梨県代表",
+        "awayTeamName": "東京国際大学ＦＣ",
+        "awayTeamQualificationDescription": "埼玉県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "1",
+          "awayScore": "0",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "39分 片岡 空良"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m16.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "17",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "ヒマスタ",
+        "venueFullName": "岐阜メモリアルセンターヒマラヤスタジアム岐阜",
+        "homeTeamName": "FC岐阜",
+        "homeTeamQualificationDescription": "岐阜県代表",
+        "awayTeamName": "富山新庄クラブ",
+        "awayTeamQualificationDescription": "富山県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "1",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "1",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "45+2分 武 颯",
+            "74分 武 颯",
+            "79分 泉澤 仁"
+          ],
+          "awayScorer": [
+            "90+4分 遠藤 青空"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m17.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "18",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "白波スタ",
+        "venueFullName": "白波スタジアム",
+        "homeTeamName": "鹿児島ユナイテッドFC",
+        "homeTeamQualificationDescription": "鹿児島県代表",
+        "awayTeamName": "レノファ山口FC",
+        "awayTeamQualificationDescription": "山口県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "1",
+          "homeTeamScore1st": "2",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "1",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "15分 髙橋 旺良",
+            "40分 有田 稜"
+          ],
+          "awayScorer": [
+            "90+4分 渡邉 颯太"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m18.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "19",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "Ｅピース",
+        "venueFullName": "エディオンピースウイング広島",
+        "homeTeamName": "ＳＲＣ広島",
+        "homeTeamQualificationDescription": "広島県代表",
+        "awayTeamName": "ＦＣマルヤス岡崎",
+        "awayTeamQualificationDescription": "愛知県代表",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "1",
+          "awayScore": "6",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "2",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "4",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "43分 炭廣 翔"
+          ],
+          "awayScorer": [
+            "20分 酒井 達磨",
+            "38分 西本 雅崇",
+            "61分 酒井 達磨",
+            "63分 小川 真輝",
+            "68分 榎本 大輝",
+            "87分 西本 雅崇"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m19.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "20",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ロートＦ",
+        "venueFullName": "ロートフィールド奈良",
+        "homeTeamName": "奈良クラブ",
+        "homeTeamQualificationDescription": "奈良県代表",
+        "awayTeamName": "FC大阪",
+        "awayTeamQualificationDescription": "大阪府代表",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "1",
+          "awayScore": "4",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "3",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "22分 高畠 捷"
+          ],
+          "awayScorer": [
+            "42分 舘野 俊祐",
+            "55分 ヴィニシウス・ソウザ",
+            "68分 ヴィニシウス・ソウザ",
+            "75分 長野 星輝"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m20.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "21",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ニンスタ",
+        "venueFullName": "ニンジニアスタジアム",
+        "homeTeamName": "愛媛FC",
+        "homeTeamQualificationDescription": "愛媛県代表",
+        "awayTeamName": "環太平洋大学",
+        "awayTeamQualificationDescription": "岡山県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "1",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "1",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "64分 樺山 諒乃介",
+            "69分 樺山 諒乃介"
+          ],
+          "awayScorer": [
+            "49分 笠原 颯太"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m21.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "22",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "いわスタ",
+        "venueFullName": "いわぎんスタジアム",
+        "homeTeamName": "いわてグルージャ盛岡",
+        "homeTeamQualificationDescription": "岩手県代表",
+        "awayTeamName": "札幌大学",
+        "awayTeamQualificationDescription": "北海道代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "1",
+          "awayScore": "0",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "90+4分 石田 崚真"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m22.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "23",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "サンアル",
+        "venueFullName": "サンプロ アルウィン",
+        "homeTeamName": "AC長野パルセイロ",
+        "homeTeamQualificationDescription": "長野県代表",
+        "awayTeamName": "福井ユナイテッドＦＣ",
+        "awayTeamQualificationDescription": "福井県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "1",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "85分 行德 瑛",
+            "89分 吉田 桂介"
+          ],
+          "awayScorer": [
+            "26分 若月 尋"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m23.pdf"
+      },
+      {
+        "matchTypeName": "１回戦",
+        "matchNumber": "24",
+        "matchDate": "2026/08/19",
+        "matchDateJpn": "2026/08/19",
+        "matchDateWeek": "水",
+        "matchTime": "18:00",
+        "matchTimeJpn": "18:00",
+        "venue": "カクスタ",
+        "venueFullName": "カクヒログループ アスレチックスタジアム",
+        "homeTeamName": "ラインメール青森",
+        "homeTeamQualificationDescription": "青森県代表",
+        "awayTeamName": "秋田大学",
+        "awayTeamQualificationDescription": "秋田県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "15",
+          "awayScore": "0",
+          "homeTeamScore1st": "8",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "7",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "3分 田頭 亮太",
+            "8分 松本 孝平",
+            "16分 遠藤 元一",
+            "19分 松本 孝平",
+            "26分 今村 優介",
+            "34分 今村 優介",
+            "40分 今村 優介",
+            "41分 兒玉 澪王斗",
+            "47分 兒玉 澪王斗",
+            "48分 今村 優介",
+            "54分 兒玉 澪王斗",
+            "62分 今井 那生",
+            "71分 今村 優介",
+            "87分 松本 孝平",
+            "90+2分 平尾 泰雅"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m24.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "25",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "メルスタ",
+        "venueFullName": "メルカリスタジアム",
+        "homeTeamName": "鹿島アントラーズ",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "アトレチコ鈴鹿",
+        "awayTeamQualificationDescription": "三重県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "0",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "3",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "47分 千田 海人",
+            "75分 チャヴリッチ",
+            "90分 レオ・セアラ"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m25.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "26",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "プレド",
+        "venueFullName": "大和ハウス プレミストドーム",
+        "homeTeamName": "北海道コンサドーレ札幌",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "ヴァンフォーレ甲府",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "1",
+          "awayScore": "3",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "3",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "30分 髙尾 瑠"
+          ],
+          "awayScorer": [
+            "59分 スタチオーリ・ミケーレ",
+            "70分 スタチオーリ・ミケーレ",
+            "81分 内藤 大和"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m26.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "27",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "豊田Ｓ",
+        "venueFullName": "豊田スタジアム",
+        "homeTeamName": "名古屋グランパス",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "ガイナーレ鳥取",
+        "awayTeamQualificationDescription": "鳥取県代表",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "1",
+          "awayScore": "3",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "3",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "28分 藤井 陽也"
+          ],
+          "awayScorer": [
+            "80分 篠田 大輝",
+            "86分 篠田 大輝",
+            "89分 河村 匠"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m27.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "28",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "味フィ西",
+        "venueFullName": "味の素フィールド西が丘",
+        "homeTeamName": "東京ヴェルディ",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "ザスパ群馬",
+        "awayTeamQualificationDescription": "群馬県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "4",
+          "awayScore": "1",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "3",
+          "awayTeamScore2nd": "1",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "24分 神田 奏真",
+            "70分 白井 亮丞",
+            "89分 熊取谷 一星",
+            "90分 川村 楽人"
+          ],
+          "awayScorer": [
+            "65分 出間 思努"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m28.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "29",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "Ｕ等々力",
+        "venueFullName": "Uvanceとどろきスタジアム by Fujitsu",
+        "homeTeamName": "川崎フロンターレ",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "栃木SC",
+        "awayTeamQualificationDescription": "栃木県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "1",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "45分 大関 友翔",
+            "50分 紺野 和也",
+            "56分 大関 友翔"
+          ],
+          "awayScorer": [
+            "29分 オタボー・ケネス"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m29.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "30",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ヤマハ",
+        "venueFullName": "ヤマハスタジアム（磐田）",
+        "homeTeamName": "ジュビロ磐田",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "テゲバジャーロ宮崎",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "0",
+          "awayScore": "1",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "0",
+          "exMatch": true,
+          "homeTeamScore1ex": "0",
+          "awayTeamScore1ex": "0",
+          "homeTeamScore2ex": "0",
+          "awayTeamScore2ex": "1"
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": [
+            "110分 土信田 悠生"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m30.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "31",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "パナスタ",
+        "venueFullName": "パナソニック スタジアム 吹田",
+        "homeTeamName": "ガンバ大阪",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "レイラック滋賀FC",
+        "awayTeamQualificationDescription": "滋賀県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "0",
+          "homeTeamScore1st": "2",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "2分 宇佐美 貴史",
+            "17分 宇佐美 貴史"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m31.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "32",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "鳴門大塚",
+        "venueFullName": "鳴門･大塚スポーツパークポカリスエットスタジアム",
+        "homeTeamName": "徳島ヴォルティス",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "ＦＣ徳島",
+        "awayTeamQualificationDescription": "徳島県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "0",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "29分 稲見 哲行",
+            "58分 トニー・アンデルソン",
+            "78分 渡 大生"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m32.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "33",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "福山",
+        "venueFullName": "福山通運ローズスタジアム",
+        "homeTeamName": "サンフレッチェ広島",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "沖縄SV",
+        "awayTeamQualificationDescription": "沖縄県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "4",
+          "awayScore": "1",
+          "homeTeamScore1st": "2",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "14分 松本 泰志",
+            "41分 加藤 陸次樹",
+            "50分 加藤 陸次樹",
+            "79分 鮎川 峻"
+          ],
+          "awayScorer": [
+            "12分 オウンゴール"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m33.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "34",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ハワスタ",
+        "venueFullName": "ハワイアンズスタジアムいわき",
+        "homeTeamName": "いわきＦＣ",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "大分トリニータ",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "0",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "0",
+          "exMatch": true,
+          "homeTeamScore1ex": "2",
+          "awayTeamScore1ex": "0",
+          "homeTeamScore2ex": "0",
+          "awayTeamScore2ex": "0"
+        },
+        "scorer": {
+          "homeScorer": [
+            "101分 田中 幹大",
+            "104分 中島 舜"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m34.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "35",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ＪＦＥス",
+        "venueFullName": "ＪＦＥ晴れの国スタジアム",
+        "homeTeamName": "ファジアーノ岡山",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "ベルガロッソいわみ",
+        "awayTeamQualificationDescription": "島根県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "0",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "18分 田上 大地",
+            "61分 河野 孝汰",
+            "72分 河野 孝汰"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m35.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "36",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "フクアリ",
+        "venueFullName": "フクダ電子アリーナ",
+        "homeTeamName": "ジェフユナイテッド千葉",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "アスルクラロ沼津",
+        "awayTeamQualificationDescription": "静岡県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "1",
+          "awayScore": "1",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "0",
+          "exMatch": true,
+          "homeTeamScore1ex": "0",
+          "awayTeamScore1ex": "0",
+          "homeTeamScore2ex": "1",
+          "awayTeamScore2ex": "1",
+          "homePKScore": "8",
+          "awayPKScore": "7"
+        },
+        "scorer": {
+          "homeScorer": [
+            "120+1分 河野 貴志"
+          ],
+          "awayScorer": [
+            "117分 ウエンデル"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m36.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "37",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ノエスタ",
+        "venueFullName": "ノエビアスタジアム神戸",
+        "homeTeamName": "ヴィッセル神戸",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "ヴェロスクロノス都農",
+        "awayTeamQualificationDescription": "宮崎県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "1",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "1",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "38分 小松 蓮",
+            "74分 小松 蓮"
+          ],
+          "awayScorer": [
+            "52分 濱田 智也"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m37.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "38",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "駅スタ",
+        "venueFullName": "駅前不動産スタジアム",
+        "homeTeamName": "サガン鳥栖",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "カターレ富山",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "4",
+          "awayScore": "0",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "3",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "45+2分 神山 京右",
+            "57分 髙橋 利樹",
+            "67分 髙橋 利樹",
+            "78分 吉田 真那斗"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m38.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "39",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "20:05",
+        "matchTimeJpn": "20:05",
+        "venue": "ベススタ",
+        "venueFullName": "ベスト電器スタジアム",
+        "homeTeamName": "アビスパ福岡",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "ヴェルスパ大分",
+        "awayTeamQualificationDescription": "大分県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "0",
+          "awayScore": "0",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "0",
+          "exMatch": true,
+          "homeTeamScore1ex": "0",
+          "awayTeamScore1ex": "0",
+          "homeTeamScore2ex": "0",
+          "awayTeamScore2ex": "0",
+          "homePKScore": "5",
+          "awayPKScore": "4"
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m39.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "40",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "ニッパツ",
+        "venueFullName": "ニッパツ三ツ沢球技場",
+        "homeTeamName": "横浜ＦＣ",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "クリアソン新宿",
+        "awayTeamQualificationDescription": "東京都代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "1",
+          "homeTeamScore1st": "2",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "23分 ジョアン・パウロ",
+            "30分 窪田 稜",
+            "66分 小倉 陽太"
+          ],
+          "awayScorer": [
+            "37分 前澤 甲気"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m40.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "41",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "三協Ｆ柏",
+        "venueFullName": "三協フロンテア柏スタジアム",
+        "homeTeamName": "柏レイソル",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "専修大学",
+        "awayTeamQualificationDescription": "神奈川県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "1",
+          "homeTeamScore1st": "2",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "1",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "33分 瀬川 祐輔",
+            "45+1分 長南 開史"
+          ],
+          "awayScorer": [
+            "52分 岡田 海人"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m41.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "42",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "アシさと",
+        "venueFullName": "アシックス里山スタジアム",
+        "homeTeamName": "ＦＣ今治",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "ブラウブリッツ秋田",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "4",
+          "awayScore": "1",
+          "homeTeamScore1st": "2",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "1",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "9分 持井 響太",
+            "33分 古山 兼悟",
+            "87分 ウェズレイ・タンキ",
+            "90+3分 森 晃太"
+          ],
+          "awayScorer": [
+            "83分 飯泉 涼矢"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m42.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "43",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "日産ス",
+        "venueFullName": "日産スタジアム",
+        "homeTeamName": "横浜Ｆ・マリノス",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "福島ユナイテッドFC",
+        "awayTeamQualificationDescription": "福島県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "1",
+          "awayScore": "0",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "35分 諏訪間 幸成"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m43.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "44",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "Ｋｓスタ",
+        "venueFullName": "ケーズデンキスタジアム水戸",
+        "homeTeamName": "水戸ホーリーホック",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "京都産業大学",
+        "awayTeamQualificationDescription": "京都府代表",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "0",
+          "awayScore": "2",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "1",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": [
+            "11分 妹尾 颯斗",
+            "61分 妹尾 颯斗"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m44.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "45",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "浦和駒場",
+        "venueFullName": "浦和駒場スタジアム",
+        "homeTeamName": "浦和レッズ",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "山梨学院大学",
+        "awayTeamQualificationDescription": "山梨県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "0",
+          "homeTeamScore1st": "2",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "18分 オナイウ 阿道",
+            "23分 オナイウ 阿道",
+            "84分 片山 瑛一"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m45.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "46",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ＮＡＣＫ",
+        "venueFullName": "ＮＡＣＫ５スタジアム大宮",
+        "homeTeamName": "ＲＢ大宮アルディージャ",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "ヴァンラーレ八戸",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "0",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "22分 杉本 健勇",
+            "59分 スファナット・ムエアンタ"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m46.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "47",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "ハナサカ",
+        "venueFullName": "YANMAR HANASAKA STADIUM",
+        "homeTeamName": "セレッソ大阪",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "FC岐阜",
+        "awayTeamQualificationDescription": "岐阜県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "1",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "21分 ルーカス・フェルナンデス",
+            "54分 小見 洋太",
+            "90+6分 小見 洋太"
+          ],
+          "awayScorer": [
+            "28分 ジョルダン・テル"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m47.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "48",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "デンカＳ",
+        "venueFullName": "デンカビッグスワンスタジアム",
+        "homeTeamName": "アルビレックス新潟",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "鹿児島ユナイテッドFC",
+        "awayTeamQualificationDescription": "鹿児島県代表",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "0",
+          "awayScore": "4",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "3",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": [
+            "38分 武 星弥",
+            "51分 外山 鉄馬",
+            "72分 嵯峨 理久",
+            "90+4分 圓道 将良"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m48.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "49",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "たけびし",
+        "venueFullName": "たけびしスタジアム京都",
+        "homeTeamName": "京都サンガＦ.Ｃ.",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "ＦＣマルヤス岡崎",
+        "awayTeamQualificationDescription": "愛知県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "1",
+          "awayScore": "0",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "67分 長沢 駿"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m49.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "50",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ＮＤスタ",
+        "venueFullName": "ＮＤソフトスタジアム山形",
+        "homeTeamName": "モンテディオ山形",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "藤枝ＭＹＦＣ",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "3",
+          "awayScore": "5",
+          "homeTeamScore1st": "3",
+          "awayTeamScore1st": "2",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "1",
+          "exMatch": true,
+          "homeTeamScore1ex": "0",
+          "awayTeamScore1ex": "0",
+          "homeTeamScore2ex": "0",
+          "awayTeamScore2ex": "2"
+        },
+        "scorer": {
+          "homeScorer": [
+            "15分 横山 塁",
+            "18分 森 海渡",
+            "35分 吉尾 海夏"
+          ],
+          "awayScorer": [
+            "7分 金本 毅騎",
+            "13分 中川 創",
+            "50分 角田 惠風",
+            "108分 北原 槙",
+            "120+4分 中村 優斗"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m50.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "51",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "アイスタ",
+        "venueFullName": "ＩＡＩスタジアム日本平",
+        "homeTeamName": "清水エスパルス",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "FC大阪",
+        "awayTeamQualificationDescription": "大阪府代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "1",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": true,
+          "homeTeamScore1ex": "1",
+          "awayTeamScore1ex": "0",
+          "homeTeamScore2ex": "0",
+          "awayTeamScore2ex": "0"
+        },
+        "scorer": {
+          "homeScorer": [
+            "62分 オ・セフン",
+            "93分 松崎 快"
+          ],
+          "awayScorer": [
+            "17分 菅原 龍之助"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m51.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "52",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ピースタ",
+        "venueFullName": "PEACE STADIUM Connected by SoftBank",
+        "homeTeamName": "Ｖ・ファーレン長崎",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "愛媛FC",
+        "awayTeamQualificationDescription": "愛媛県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "2",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "3",
+          "awayTeamScore2nd": "2",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "53分 洪 怜鎭",
+            "60分 関口 正大",
+            "72分 澤田 崇"
+          ],
+          "awayScorer": [
+            "62分 樺山 諒乃介",
+            "67分 オウンゴール"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m52.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "53",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "Ｇスタ",
+        "venueFullName": "町田ＧＩＯＮスタジアム",
+        "homeTeamName": "ＦＣ町田ゼルビア",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "いわてグルージャ盛岡",
+        "awayTeamQualificationDescription": "岩手県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "0",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "37分 松尾 佑介",
+            "69分 テテ・イェンギ",
+            "84分 中村 帆高"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m53.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "54",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ユアスタ",
+        "venueFullName": "ユアテックスタジアム仙台",
+        "homeTeamName": "ベガルタ仙台",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "栃木シティ",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "1",
+          "awayScore": "2",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "1",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "19分 宮崎 鴻"
+          ],
+          "awayScorer": [
+            "45+2分 大嶌 貴",
+            "70分 山下 敬大"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m54.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "55",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "味スタ",
+        "venueFullName": "味の素スタジアム",
+        "homeTeamName": "ＦＣ東京",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "AC長野パルセイロ",
+        "awayTeamQualificationDescription": "長野県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "6",
+          "awayScore": "0",
+          "homeTeamScore1st": "3",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "3",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "9分 山田 楓喜",
+            "15分 森重 真人",
+            "45+4分 安斎 颯馬",
+            "58分 山田 楓喜",
+            "67分 安斎 颯馬",
+            "84分 本間 至恩"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m55.pdf"
+      },
+      {
+        "matchTypeName": "２回戦",
+        "matchNumber": "56",
+        "matchDate": "2026/08/26",
+        "matchDateJpn": "2026/08/26",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "レモンＳ",
+        "venueFullName": "レモンガススタジアム平塚",
+        "homeTeamName": "湘南ベルマーレ",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "ラインメール青森",
+        "awayTeamQualificationDescription": "青森県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "1",
+          "awayScore": "0",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "66分 松村 秀明"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m56.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "57",
+        "matchDate": "2026/09/23",
+        "matchDateJpn": "2026/09/23",
+        "matchDateWeek": "水",
+        "matchTime": "17:00",
+        "matchTimeJpn": "17:00",
+        "venue": "メルスタ",
+        "venueFullName": "メルカリスタジアム",
+        "homeTeamName": "鹿島アントラーズ",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "ヴァンフォーレ甲府",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "1",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "1",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "34分 レオ・セアラ",
+            "54分 吉田 湊海",
+            "62分 大森 渚生"
+          ],
+          "awayScorer": [
+            "88分 村上 千歩"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m57.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "58",
+        "matchDate": "2026/10/07",
+        "matchDateJpn": "2026/10/07",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "味スタ",
+        "venueFullName": "味の素スタジアム",
+        "homeTeamName": "ガイナーレ鳥取",
+        "homeTeamQualificationDescription": "鳥取県代表",
+        "awayTeamName": "東京ヴェルディ",
+        "awayTeamQualificationDescription": "J1",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "0",
+          "awayScore": "0",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "0",
+          "exMatch": true,
+          "homeTeamScore1ex": "0",
+          "awayTeamScore1ex": "0",
+          "homeTeamScore2ex": "0",
+          "awayTeamScore2ex": "0",
+          "homePKScore": "3",
+          "awayPKScore": "4"
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m58.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "59",
+        "matchDate": "2026/10/07",
+        "matchDateJpn": "2026/10/07",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "いちご",
+        "venueFullName": "いちご宮崎新富サッカー場",
+        "homeTeamName": "川崎フロンターレ",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "テゲバジャーロ宮崎",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "0",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "12分 マルシーニョ",
+            "50分 三浦 颯太"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m59.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "60",
+        "matchDate": "2026/09/23",
+        "matchDateJpn": "2026/09/23",
+        "matchDateWeek": "水",
+        "matchTime": "17:00",
+        "matchTimeJpn": "17:00",
+        "venue": "パナスタ",
+        "venueFullName": "パナソニック スタジアム 吹田",
+        "homeTeamName": "ガンバ大阪",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "徳島ヴォルティス",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "5",
+          "awayScore": "0",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "4",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "19分 宇佐美 貴史",
+            "57分 山下 諒也",
+            "64分 デニス・ヒュメット",
+            "86分 池谷 銀姿郎",
+            "89分 食野 亮太郎"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m60.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "61",
+        "matchDate": "2026/10/07",
+        "matchDateJpn": "2026/10/07",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "ハワスタ",
+        "venueFullName": "ハワイアンズスタジアムいわき",
+        "homeTeamName": "サンフレッチェ広島",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "いわきＦＣ",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "4",
+          "awayScore": "0",
+          "homeTeamScore1st": "2",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "9分 鮎川 峻",
+            "22分 鈴木 章斗",
+            "48分 鈴木 章斗",
+            "68分 小林 志紋"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m61.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "62",
+        "matchDate": "2026/10/07",
+        "matchDateJpn": "2026/10/07",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "フクアリ",
+        "venueFullName": "フクダ電子アリーナ",
+        "homeTeamName": "ファジアーノ岡山",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "ジェフユナイテッド千葉",
+        "awayTeamQualificationDescription": "J1",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "1",
+          "awayScore": "0",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "64分 松本 昌也"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m62.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "63",
+        "matchDate": "2026/09/23",
+        "matchDateJpn": "2026/09/23",
+        "matchDateWeek": "水",
+        "matchTime": "17:00",
+        "matchTimeJpn": "17:00",
+        "venue": "ノエスタ",
+        "venueFullName": "ノエビアスタジアム神戸",
+        "homeTeamName": "ヴィッセル神戸",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "サガン鳥栖",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "1",
+          "awayScore": "0",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "78分 エリキ"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m63.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "64",
+        "matchDate": "2026/10/07",
+        "matchDateJpn": "2026/10/07",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "ニッパツ",
+        "venueFullName": "ニッパツ三ツ沢球技場",
+        "homeTeamName": "アビスパ福岡",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "横浜ＦＣ",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": true,
+          "homeScore": "0",
+          "awayScore": "1",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": [
+            "22分 駒沢 直哉"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m64.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "65",
+        "matchDate": "2026/09/23",
+        "matchDateJpn": "2026/09/23",
+        "matchDateWeek": "水",
+        "matchTime": "17:00",
+        "matchTimeJpn": "17:00",
+        "venue": "三協Ｆ柏",
+        "venueFullName": "三協フロンテア柏スタジアム",
+        "homeTeamName": "柏レイソル",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "ＦＣ今治",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "4",
+          "awayScore": "0",
+          "homeTeamScore1st": "2",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "37分 細谷 真大",
+            "44分 久保 藤次郎",
+            "53分 細谷 真大",
+            "85分 戸嶋 祥郎"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m65.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "66",
+        "matchDate": "2026/10/07",
+        "matchDateJpn": "2026/10/07",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "日産ス",
+        "venueFullName": "日産スタジアム",
+        "homeTeamName": "横浜Ｆ・マリノス",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "京都産業大学",
+        "awayTeamQualificationDescription": "京都府代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "1",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "61分 ジョルディ・クルークス",
+            "68分 天野 純"
+          ],
+          "awayScorer": [
+            "35分 福永 裕也"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m66.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "67",
+        "matchDate": "2026/10/07",
+        "matchDateJpn": "2026/10/07",
+        "matchDateWeek": "水",
+        "matchTime": "18:00",
+        "matchTimeJpn": "18:00",
+        "venue": "ＮＡＣＫ",
+        "venueFullName": "ＮＡＣＫ５スタジアム大宮",
+        "homeTeamName": "浦和レッズ",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "ＲＢ大宮アルディージャ",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "3",
+          "awayScore": "2",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "3",
+          "awayTeamScore2nd": "2",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "60分 笹 修大",
+            "63分 肥田野 蓮治",
+            "79分 オナイウ 阿道"
+          ],
+          "awayScorer": [
+            "64分 小林 柚希",
+            "82分 泉 柊椰"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m67.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "68",
+        "matchDate": "2026/10/07",
+        "matchDateJpn": "2026/10/07",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "ハナサカ",
+        "venueFullName": "YANMAR HANASAKA STADIUM",
+        "homeTeamName": "セレッソ大阪",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "鹿児島ユナイテッドFC",
+        "awayTeamQualificationDescription": "鹿児島県代表",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "0",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "25分 ルーカス・フェルナンデス",
+            "80分 阪田 澪哉"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m68.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "69",
+        "matchDate": "2026/09/23",
+        "matchDateJpn": "2026/09/23",
+        "matchDateWeek": "水",
+        "matchTime": "17:00",
+        "matchTimeJpn": "17:00",
+        "venue": "サンガＳ",
+        "venueFullName": "サンガスタジアム by KYOCERA",
+        "homeTeamName": "京都サンガＦ.Ｃ.",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "藤枝ＭＹＦＣ",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "1",
+          "awayScore": "0",
+          "homeTeamScore1st": "0",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "88分 エベルトン・マセイオ"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m69.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "70",
+        "matchDate": "2026/10/07",
+        "matchDateJpn": "2026/10/07",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "アイスタ",
+        "venueFullName": "ＩＡＩスタジアム日本平",
+        "homeTeamName": "清水エスパルス",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "Ｖ・ファーレン長崎",
+        "awayTeamQualificationDescription": "J1",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "1",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "1",
+          "homeTeamScore2nd": "0",
+          "awayTeamScore2nd": "0",
+          "exMatch": true,
+          "homeTeamScore1ex": "0",
+          "awayTeamScore1ex": "0",
+          "homeTeamScore2ex": "1",
+          "awayTeamScore2ex": "0"
+        },
+        "scorer": {
+          "homeScorer": [
+            "13分 北川 航也",
+            "116分 弓場 将輝"
+          ],
+          "awayScorer": [
+            "39分 チアゴ・サンタナ"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m70.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "71",
+        "matchDate": "2026/09/23",
+        "matchDateJpn": "2026/09/23",
+        "matchDateWeek": "水",
+        "matchTime": "17:00",
+        "matchTimeJpn": "17:00",
+        "venue": "Ｇスタ",
+        "venueFullName": "町田ＧＩＯＮスタジアム",
+        "homeTeamName": "ＦＣ町田ゼルビア",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "栃木シティ",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "2",
+          "awayScore": "1",
+          "homeTeamScore1st": "1",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "1",
+          "awayTeamScore2nd": "1",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "22分 ミッチェル・デューク",
+            "70分 小川 航基"
+          ],
+          "awayScorer": [
+            "69分 小池 裕太"
+          ]
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m71.pdf"
+      },
+      {
+        "matchTypeName": "３回戦",
+        "matchNumber": "72",
+        "matchDate": "2026/10/07",
+        "matchDateJpn": "2026/10/07",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "レモンＳ",
+        "venueFullName": "レモンガススタジアム平塚",
+        "homeTeamName": "ＦＣ東京",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "湘南ベルマーレ",
+        "awayTeamQualificationDescription": "J2",
+        "score": {
+          "homeWinFlag": true,
+          "awayWinFlag": false,
+          "homeScore": "4",
+          "awayScore": "0",
+          "homeTeamScore1st": "2",
+          "awayTeamScore1st": "0",
+          "homeTeamScore2nd": "2",
+          "awayTeamScore2nd": "0",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [
+            "14分 山田 楓喜",
+            "34分 ダニ・ゴメス",
+            "72分 安斎 颯馬",
+            "77分 仲川 輝人"
+          ],
+          "awayScorer": []
+        },
+        "matchStatus": "試合終了",
+        "officialReportURL": "../schedule_result/pdf/m72.pdf"
+      },
+      {
+        "matchTypeName": "ラウンド16",
+        "matchNumber": "73",
+        "matchDate": "2026/12/09",
+        "matchDateJpn": "2026/12/09",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ノエスタ",
+        "venueFullName": "ノエビアスタジアム神戸",
+        "homeTeamName": "ヴィッセル神戸",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "清水エスパルス",
+        "awayTeamQualificationDescription": "J1",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "ラウンド16",
+        "matchNumber": "74",
+        "matchDate": "2026/12/09",
+        "matchDateJpn": "2026/12/09",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "メルスタ",
+        "venueFullName": "メルカリスタジアム",
+        "homeTeamName": "鹿島アントラーズ",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "セレッソ大阪",
+        "awayTeamQualificationDescription": "J1",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "ラウンド16",
+        "matchNumber": "75",
+        "matchDate": "2026/12/09",
+        "matchDateJpn": "2026/12/09",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "ニッパツ",
+        "venueFullName": "ニッパツ三ツ沢球技場",
+        "homeTeamName": "横浜ＦＣ",
+        "homeTeamQualificationDescription": "J2",
+        "awayTeamName": "ＦＣ東京",
+        "awayTeamQualificationDescription": "J1",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "ラウンド16",
+        "matchNumber": "76",
+        "matchDate": "2026/12/09",
+        "matchDateJpn": "2026/12/09",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "Ｕ等々力",
+        "venueFullName": "Uvanceとどろきスタジアム by Fujitsu",
+        "homeTeamName": "川崎フロンターレ",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "横浜Ｆ・マリノス",
+        "awayTeamQualificationDescription": "J1",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "ラウンド16",
+        "matchNumber": "77",
+        "matchDate": "2026/12/09",
+        "matchDateJpn": "2026/12/09",
+        "matchDateWeek": "水",
+        "matchTime": "18:30",
+        "matchTimeJpn": "18:30",
+        "venue": "Ｇスタ",
+        "venueFullName": "町田ＧＩＯＮスタジアム",
+        "homeTeamName": "ＦＣ町田ゼルビア",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "東京ヴェルディ",
+        "awayTeamQualificationDescription": "J1",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "ラウンド16",
+        "matchNumber": "78",
+        "matchDate": "2026/12/09",
+        "matchDateJpn": "2026/12/09",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "三協Ｆ柏",
+        "venueFullName": "三協フロンテア柏スタジアム",
+        "homeTeamName": "柏レイソル",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "ファジアーノ岡山",
+        "awayTeamQualificationDescription": "J1",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "ラウンド16",
+        "matchNumber": "79",
+        "matchDate": "2026/12/09",
+        "matchDateJpn": "2026/12/09",
+        "matchDateWeek": "水",
+        "matchTime": "19:00",
+        "matchTimeJpn": "19:00",
+        "venue": "サンガＳ",
+        "venueFullName": "サンガスタジアム by KYOCERA",
+        "homeTeamName": "京都サンガＦ.Ｃ.",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "サンフレッチェ広島",
+        "awayTeamQualificationDescription": "J1",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "ラウンド16",
+        "matchNumber": "80",
+        "matchDate": "2026/12/09",
+        "matchDateJpn": "2026/12/09",
+        "matchDateWeek": "水",
+        "matchTime": "18:00",
+        "matchTimeJpn": "18:00",
+        "venue": "パナスタ",
+        "venueFullName": "パナソニック スタジアム 吹田",
+        "homeTeamName": "ガンバ大阪",
+        "homeTeamQualificationDescription": "J1",
+        "awayTeamName": "浦和レッズ",
+        "awayTeamQualificationDescription": "J1",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "準々決勝",
+        "matchNumber": "81",
+        "matchDate": "未定",
+        "matchDateJpn": "未定",
+        "matchDateWeek": "",
+        "matchTime": "未定",
+        "matchTimeJpn": "未定",
+        "venue": "未定",
+        "venueFullName": "",
+        "homeTeamName": "No.73の勝者",
+        "homeTeamQualificationDescription": "",
+        "awayTeamName": "No.74の勝者",
+        "awayTeamQualificationDescription": "",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "準々決勝",
+        "matchNumber": "82",
+        "matchDate": "未定",
+        "matchDateJpn": "未定",
+        "matchDateWeek": "",
+        "matchTime": "未定",
+        "matchTimeJpn": "未定",
+        "venue": "未定",
+        "venueFullName": "",
+        "homeTeamName": "No.75の勝者",
+        "homeTeamQualificationDescription": "",
+        "awayTeamName": "No.76の勝者",
+        "awayTeamQualificationDescription": "",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "準々決勝",
+        "matchNumber": "83",
+        "matchDate": "未定",
+        "matchDateJpn": "未定",
+        "matchDateWeek": "",
+        "matchTime": "未定",
+        "matchTimeJpn": "未定",
+        "venue": "未定",
+        "venueFullName": "",
+        "homeTeamName": "No.77の勝者",
+        "homeTeamQualificationDescription": "",
+        "awayTeamName": "No.78の勝者",
+        "awayTeamQualificationDescription": "",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "準々決勝",
+        "matchNumber": "84",
+        "matchDate": "未定",
+        "matchDateJpn": "未定",
+        "matchDateWeek": "",
+        "matchTime": "未定",
+        "matchTimeJpn": "未定",
+        "venue": "未定",
+        "venueFullName": "",
+        "homeTeamName": "No.79の勝者",
+        "homeTeamQualificationDescription": "",
+        "awayTeamName": "No.80の勝者",
+        "awayTeamQualificationDescription": "",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "準決勝",
+        "matchNumber": "85",
+        "matchDate": "未定",
+        "matchDateJpn": "未定",
+        "matchDateWeek": "",
+        "matchTime": "未定",
+        "matchTimeJpn": "未定",
+        "venue": "未定",
+        "venueFullName": "",
+        "homeTeamName": "No.81の勝者",
+        "homeTeamQualificationDescription": "",
+        "awayTeamName": "No.82の勝者",
+        "awayTeamQualificationDescription": "",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "準決勝",
+        "matchNumber": "86",
+        "matchDate": "未定",
+        "matchDateJpn": "未定",
+        "matchDateWeek": "",
+        "matchTime": "未定",
+        "matchTimeJpn": "未定",
+        "venue": "未定",
+        "venueFullName": "",
+        "homeTeamName": "No.83の勝者",
+        "homeTeamQualificationDescription": "",
+        "awayTeamName": "No.84の勝者",
+        "awayTeamQualificationDescription": "",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      },
+      {
+        "matchTypeName": "決勝戦",
+        "matchNumber": "87",
+        "matchDate": "未定",
+        "matchDateJpn": "未定",
+        "matchDateWeek": "",
+        "matchTime": "未定",
+        "matchTimeJpn": "未定",
+        "venue": "未定",
+        "venueFullName": "",
+        "homeTeamName": "No.85の勝者",
+        "homeTeamQualificationDescription": "",
+        "awayTeamName": "No.86の勝者",
+        "awayTeamQualificationDescription": "",
+        "score": {
+          "homeWinFlag": false,
+          "awayWinFlag": false,
+          "homeScore": "",
+          "awayScore": "",
+          "homeTeamScore1st": "",
+          "awayTeamScore1st": "",
+          "homeTeamScore2nd": "",
+          "awayTeamScore2nd": "",
+          "exMatch": false
+        },
+        "scorer": {
+          "homeScorer": [],
+          "awayScorer": []
+        },
+        "matchStatus": "",
+        "officialReportURL": ""
+      }
+    ]
+  }
+}

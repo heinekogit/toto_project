@@ -1,0 +1,14 @@
+match_no,league,home_team,away_team,best_second,actual_symbol,actual_result,ticket01,ticket01_is_hit,ticket02,ticket02_is_hit,ticket03,ticket03_is_hit,ticket04,ticket04_is_hit,ticket05,ticket05_is_hit,ticket06,ticket06_is_hit,ticket07,ticket07_is_hit,ticket08,ticket08_is_hit,ticket09,ticket09_is_hit,ticket10,ticket10_is_hit
+1,UNKNOWN,横浜FM,千葉,,1,H,1,True,1,True,1,True,1,True,1,True,1,True,1,True,1,True,1,True,1,True
+2,UNKNOWN,名古屋,神戸,,0,D,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False
+3,UNKNOWN,水戸,FC東京,,1,H,1,True,1,True,1,True,1,True,1,True,1,True,1,True,1,True,1,True,1,True
+4,UNKNOWN,京都,Ｃ大阪,,0,D,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False
+5,UNKNOWN,広島,Ｇ大阪,,0,D,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False
+6,UNKNOWN,柏,町田,,2,A,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False
+7,UNKNOWN,清水,岡山,,2,A,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False
+8,UNKNOWN,鹿島,川崎Ｆ,,0,D,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False
+9,UNKNOWN,東京Ｖ,浦和,,2,A,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False
+10,UNKNOWN,長崎,福岡,,2,A,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False
+11,UNKNOWN,八戸,栃木Ｃ,,2,A,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False
+12,UNKNOWN,宮崎,大分,,2,A,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False
+13,UNKNOWN,磐田,札幌,,0,D,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False,1,False

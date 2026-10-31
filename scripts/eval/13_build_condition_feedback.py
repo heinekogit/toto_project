@@ -35,7 +35,9 @@ def flag(value):
 def analyze_row(row):
     pred = json.loads(row['prediction_payload_json'])
     buy = json.loads(row['buyplan_payload_json'])
-    probabilities = [number(buy.get(k)) for k in ['p_draw', 'p_home', 'p_away']]
+    # v2 stores the actual purchase probabilities under next_prob_*.
+    keys = ['next_prob_draw', 'next_prob_home', 'next_prob_away'] if any(k in buy for k in ['next_prob_draw', 'next_prob_home', 'next_prob_away']) else ['p_draw', 'p_home', 'p_away']
+    probabilities = [number(buy.get(k)) for k in keys]
     if any(p is None or not 0 <= p <= 1 for p in probabilities) or abs(sum(probabilities) - 1) > .001:
         raise ValueError(f"invalid purchase probabilities: {row['round_id']} / {row['match_no']}")
     result = int(row['actual_result'])

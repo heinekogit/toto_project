@@ -1,0 +1,266 @@
+{
+  "filter_version": "draw_filter_score_plus_legacy_structure_v2",
+  "status": "diagnostic; probabilities and raw prediction unchanged",
+  "uses_legacy_d_class_as_input": true,
+  "legacy_input_scope": "lab_basis_hint only: trap rejection and split_side cover; never D-core",
+  "changes_probabilities": false,
+  "changes_raw_prediction": false,
+  "all_rows": {
+    "rows": 101,
+    "actual_draws": 19,
+    "actionable_draw_candidates": 6,
+    "actionable_true_draws": 2,
+    "actionable_precision": 0.3333333333333333,
+    "actionable_recall": 0.10526315789473684,
+    "fallback_side_accuracy_on_decided_matches": 0.5121951219512195,
+    "counterfactual_core_as_primary": {
+      "changed_matches": 2,
+      "rescue": 1,
+      "harm": 1,
+      "net_rescue": 0,
+      "raw_accuracy": 0.4158415841584158,
+      "filtered_accuracy": 0.4158415841584158
+    },
+    "counterfactual_core_and_cover_as_primary": {
+      "note": "diagnostic only; D-cover is intended as portfolio coverage, not primary replacement",
+      "changed_matches": 6,
+      "rescue": 2,
+      "harm": 1,
+      "net_rescue": 1,
+      "raw_accuracy": 0.4158415841584158,
+      "filtered_accuracy": 0.42574257425742573
+    },
+    "classes": {
+      "D-core": {
+        "rows": 2,
+        "actual_H": 1,
+        "actual_D": 1,
+        "actual_A": 0,
+        "draw_rate": 0.5
+      },
+      "D-cover": {
+        "rows": 4,
+        "actual_H": 3,
+        "actual_D": 1,
+        "actual_A": 0,
+        "draw_rate": 0.25
+      },
+      "D-reject": {
+        "rows": 35,
+        "actual_H": 17,
+        "actual_D": 6,
+        "actual_A": 12,
+        "draw_rate": 0.17142857142857143
+      },
+      "D-uncertain": {
+        "rows": 60,
+        "actual_H": 28,
+        "actual_D": 11,
+        "actual_A": 21,
+        "draw_rate": 0.18333333333333332
+      }
+    }
+  },
+  "prematch_proven_rows": {
+    "rows": 49,
+    "actual_draws": 9,
+    "actionable_draw_candidates": 2,
+    "actionable_true_draws": 1,
+    "actionable_precision": 0.5,
+    "actionable_recall": 0.1111111111111111,
+    "fallback_side_accuracy_on_decided_matches": 0.55,
+    "counterfactual_core_as_primary": {
+      "changed_matches": 2,
+      "rescue": 1,
+      "harm": 1,
+      "net_rescue": 0,
+      "raw_accuracy": 0.4489795918367347,
+      "filtered_accuracy": 0.4489795918367347
+    },
+    "counterfactual_core_and_cover_as_primary": {
+      "note": "diagnostic only; D-cover is intended as portfolio coverage, not primary replacement",
+      "changed_matches": 2,
+      "rescue": 1,
+      "harm": 1,
+      "net_rescue": 0,
+      "raw_accuracy": 0.4489795918367347,
+      "filtered_accuracy": 0.4489795918367347
+    },
+    "classes": {
+      "D-core": {
+        "rows": 2,
+        "actual_H": 1,
+        "actual_D": 1,
+        "actual_A": 0,
+        "draw_rate": 0.5
+      },
+      "D-reject": {
+        "rows": 7,
+        "actual_H": 2,
+        "actual_D": 0,
+        "actual_A": 5,
+        "draw_rate": 0.0
+      },
+      "D-uncertain": {
+        "rows": 40,
+        "actual_H": 18,
+        "actual_D": 8,
+        "actual_A": 14,
+        "draw_rate": 0.2
+      }
+    }
+  },
+  "prematch_draw_probability_calibration": [
+    {
+      "bin": "(-0.001, 0.22]",
+      "rows": 2,
+      "mean_predicted_draw_probability": 0.21264123725626954,
+      "actual_draws": 0,
+      "actual_draw_rate": 0.0
+    },
+    {
+      "bin": "(0.22, 0.24]",
+      "rows": 15,
+      "mean_predicted_draw_probability": 0.2309931266219946,
+      "actual_draws": 1,
+      "actual_draw_rate": 0.06666666666666667
+    },
+    {
+      "bin": "(0.24, 0.26]",
+      "rows": 18,
+      "mean_predicted_draw_probability": 0.24885931585602572,
+      "actual_draws": 3,
+      "actual_draw_rate": 0.16666666666666666
+    },
+    {
+      "bin": "(0.26, 0.28]",
+      "rows": 10,
+      "mean_predicted_draw_probability": 0.269342867340152,
+      "actual_draws": 4,
+      "actual_draw_rate": 0.4
+    },
+    {
+      "bin": "(0.28, 1.0]",
+      "rows": 4,
+      "mean_predicted_draw_probability": 0.2953939160728299,
+      "actual_draws": 1,
+      "actual_draw_rate": 0.25
+    }
+  ],
+  "legacy_strata_diagnostic_only": {
+    "match_purchase_type": {
+      "away_reversal_watch": {
+        "rows": 3,
+        "actual_draws": 0,
+        "actual_draw_rate": 0.0,
+        "mean_new_draw_probability": 0.24985285358926265
+      },
+      "chaos_flat": {
+        "rows": 1,
+        "actual_draws": 0,
+        "actual_draw_rate": 0.0,
+        "mean_new_draw_probability": 0.2485405097358606
+      },
+      "chaos_side_watch": {
+        "rows": 12,
+        "actual_draws": 2,
+        "actual_draw_rate": 0.16666666666666666,
+        "mean_new_draw_probability": 0.25310309724735297
+      },
+      "draw_trap": {
+        "rows": 2,
+        "actual_draws": 0,
+        "actual_draw_rate": 0.0,
+        "mean_new_draw_probability": 0.23630231081201342
+      },
+      "home_reversal_watch": {
+        "rows": 2,
+        "actual_draws": 1,
+        "actual_draw_rate": 0.5,
+        "mean_new_draw_probability": 0.2477153684260779
+      },
+      "j1_draw_rescue_watch": {
+        "rows": 1,
+        "actual_draws": 0,
+        "actual_draw_rate": 0.0,
+        "mean_new_draw_probability": 0.2474082401236855
+      },
+      "j1_false_draw_watch": {
+        "rows": 23,
+        "actual_draws": 6,
+        "actual_draw_rate": 0.2608695652173913,
+        "mean_new_draw_probability": 0.2455824805949341
+      },
+      "j2_directional_stall": {
+        "rows": 1,
+        "actual_draws": 0,
+        "actual_draw_rate": 0.0,
+        "mean_new_draw_probability": 0.2997236092087029
+      },
+      "j2_draw_trap": {
+        "rows": 2,
+        "actual_draws": 0,
+        "actual_draw_rate": 0.0,
+        "mean_new_draw_probability": 0.25015357024226026
+      },
+      "j2_false_draw_watch": {
+        "rows": 2,
+        "actual_draws": 0,
+        "actual_draw_rate": 0.0,
+        "mean_new_draw_probability": 0.27272187874765
+      }
+    },
+    "draw_purchase_tier": {
+      "cut": {
+        "rows": 5,
+        "actual_draws": 0,
+        "actual_draw_rate": 0.0,
+        "mean_new_draw_probability": 0.24429045436888158
+      },
+      "rescue": {
+        "rows": 1,
+        "actual_draws": 0,
+        "actual_draw_rate": 0.0,
+        "mean_new_draw_probability": 0.2474082401236855
+      },
+      "side": {
+        "rows": 18,
+        "actual_draws": 3,
+        "actual_draw_rate": 0.16666666666666666,
+        "mean_new_draw_probability": 0.25455278187760455
+      },
+      "watch": {
+        "rows": 25,
+        "actual_draws": 6,
+        "actual_draw_rate": 0.24,
+        "mean_new_draw_probability": 0.24775363244715137
+      }
+    },
+    "lab_basis_hint": {
+      "basis_balanced": {
+        "rows": 35,
+        "actual_draws": 5,
+        "actual_draw_rate": 0.14285714285714285,
+        "mean_new_draw_probability": 0.2481055801907689
+      },
+      "draw_compressed": {
+        "rows": 1,
+        "actual_draws": 0,
+        "actual_draw_rate": 0.0,
+        "mean_new_draw_probability": 0.2757317172522637
+      },
+      "flat_draw_trap": {
+        "rows": 2,
+        "actual_draws": 0,
+        "actual_draw_rate": 0.0,
+        "mean_new_draw_probability": 0.26214951622047983
+      },
+      "split_side": {
+        "rows": 11,
+        "actual_draws": 4,
+        "actual_draw_rate": 0.36363636363636365,
+        "mean_new_draw_probability": 0.25099321277942055
+      }
+    }
+  }
+}

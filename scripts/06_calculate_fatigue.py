@@ -251,20 +251,26 @@ def load_acl_team_events(path):
         print(f"[WARN] ACL日程の必須列不足: missing={missing} path={path}")
         return empty_events
 
-    out = df.copy().dropna(how="all")
+    if "status" not in df.columns:
+        raise ValueError("ACL日程に status 列がありません。実施確認済みの試合だけを疲労に使ってください")
+    out = df[df["status"].astype(str).str.strip().str.lower().eq("confirmed")].copy()
+    if out.empty:
+        return empty_events
+    if "source" not in out.columns or out["source"].isna().any() or out["source"].astype(str).str.strip().eq("").any():
+        raise ValueError("確認済みACL試合には source が必要です")
     out["team"] = out["team"].astype(str).str.strip()
     out["datetime"] = pd.to_datetime(out["match_date"], errors="coerce")
-    # The prediction stage applies the ACL grade once. Here the ACL row exists
-    # only to shorten rest time and record the additional fixture.
-    out["event_load"] = 0.0
+    # An ACL appearance is an ordinary extra fixture. Travel uses the same
+    # distance weight as league travel; no tournament-specific grade is added.
+    out["event_load"] = pd.to_numeric(out["distance_km"], errors="coerce").fillna(0.0) * TRAVEL_DISTANCE_WEIGHT
     out = out.dropna(subset=["datetime"])
     out = out[out["team"].ne("")]
     if out.empty:
         return empty_events
     # 日付だけの入力を正午に寄せ、同日のリーグ戦より前の公式戦イベントとして扱う。
     out["datetime"] = out["datetime"].dt.normalize() + pd.to_timedelta(12, unit="h")
-    out["event_type"] = "acl_event"
-    out = out[["datetime", "team", "event_type", "event_load"]].drop_duplicates().sort_values("datetime", kind="mergesort")
+    out["event_type"] = out["competition"]
+    out = out[["datetime", "team", "event_type", "event_load", "status", "source"]].drop_duplicates().sort_values("datetime", kind="mergesort")
     print(f"[INFO] ACLイベントを読込: rows={len(out)} path={path}")
     return out.reset_index(drop=True)
 
@@ -465,7 +471,10 @@ def main():
     acl_team_events_df = load_acl_team_events(ACL_SCHEDULE_CSV)
     confirmed_cup_events = load_confirmed_cup_events(DATA_DIR)
     supplemental_events = load_external_team_events(EXTERNAL_MATCH_EVENTS_CSV)
-    extra_frames = [f for f in [confirmed_cup_events, supplemental_events] if not f.empty]
+    emperor_path = os.path.join(DATA_DIR, f"emperor_cup_events_{SEASON_YEAR}.csv")
+    emperor_events = load_external_team_events(emperor_path)
+    print(f"[EMPEROR_CUP] confirmed_team_events={len(emperor_events)} path={emperor_path}")
+    extra_frames = [f for f in [confirmed_cup_events, emperor_events, supplemental_events] if not f.empty]
     if extra_frames:
         acl_team_events_df = pd.concat([acl_team_events_df] + extra_frames, ignore_index=True)
         acl_team_events_df['team'] = acl_team_events_df.team.map(canonical_team_name)

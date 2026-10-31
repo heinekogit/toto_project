@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-02-22T16:19:02",
+  "generated_at": "2026-10-31T10:24:58",
   "robots_url": "https://www.jleague.jp/robots.txt",
   "club_top_url": "https://www.jleague.jp/club/",
   "ajax_player_url": "https://www.jleague.jp/club/ajax_player/",
@@ -8,14 +8,22 @@
   "requested_clubs": 60,
   "success_clubs": 60,
   "failed_clubs": 0,
-  "rows": 1960,
+  "rows": 2313,
   "warnings": [],
   "results": [
     {
       "club_key": "kashima",
       "club_name": "鹿島アントラーズ",
       "ok": true,
-      "row_count": 33,
+      "row_count": 38,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "mito",
+      "club_name": "水戸ホーリーホック",
+      "ok": true,
+      "row_count": 36,
       "warning": "",
       "error": ""
     },
@@ -23,7 +31,15 @@
       "club_key": "urawa",
       "club_name": "浦和レッズ",
       "ok": true,
-      "row_count": 32,
+      "row_count": 52,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "chiba",
+      "club_name": "ジェフユナイテッド千葉",
+      "ok": true,
+      "row_count": 39,
       "warning": "",
       "error": ""
     },
@@ -31,7 +47,15 @@
       "club_key": "kashiwa",
       "club_name": "柏レイソル",
       "ok": true,
-      "row_count": 37,
+      "row_count": 42,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "ftokyo",
+      "club_name": "ＦＣ東京",
+      "ok": true,
+      "row_count": 52,
       "warning": "",
       "error": ""
     },
@@ -39,13 +63,29 @@
       "club_key": "tokyov",
       "club_name": "東京ヴェルディ",
       "ok": true,
-      "row_count": 33,
+      "row_count": 57,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "machida",
+      "club_name": "ＦＣ町田ゼルビア",
+      "ok": true,
+      "row_count": 30,
       "warning": "",
       "error": ""
     },
     {
       "club_key": "kawasakif",
       "club_name": "川崎フロンターレ",
+      "ok": true,
+      "row_count": 58,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "yokohamafm",
+      "club_name": "横浜Ｆ・マリノス",
       "ok": true,
       "row_count": 35,
       "warning": "",
@@ -55,79 +95,7 @@
       "club_key": "shimizu",
       "club_name": "清水エスパルス",
       "ok": true,
-      "row_count": 36,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "kyoto",
-      "club_name": "京都サンガF.C.",
-      "ok": true,
-      "row_count": 32,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "cosaka",
-      "club_name": "セレッソ大阪",
-      "ok": true,
-      "row_count": 33,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "okayama",
-      "club_name": "ファジアーノ岡山",
-      "ok": true,
-      "row_count": 35,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "fukuoka",
-      "club_name": "アビスパ福岡",
-      "ok": true,
-      "row_count": 37,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "mito",
-      "club_name": "水戸ホーリーホック",
-      "ok": true,
-      "row_count": 37,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "chiba",
-      "club_name": "ジェフユナイテッド千葉",
-      "ok": true,
-      "row_count": 34,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "ftokyo",
-      "club_name": "ＦＣ東京",
-      "ok": true,
-      "row_count": 40,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "machida",
-      "club_name": "ＦＣ町田ゼルビア",
-      "ok": true,
-      "row_count": 33,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "yokohamafm",
-      "club_name": "横浜Ｆ・マリノス",
-      "ok": true,
-      "row_count": 33,
+      "row_count": 59,
       "warning": "",
       "error": ""
     },
@@ -135,7 +103,15 @@
       "club_key": "nagoya",
       "club_name": "名古屋グランパス",
       "ok": true,
-      "row_count": 36,
+      "row_count": 51,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "kyoto",
+      "club_name": "京都サンガF.C.",
+      "ok": true,
+      "row_count": 39,
       "warning": "",
       "error": ""
     },
@@ -143,7 +119,15 @@
       "club_key": "gosaka",
       "club_name": "ガンバ大阪",
       "ok": true,
-      "row_count": 36,
+      "row_count": 61,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "cosaka",
+      "club_name": "セレッソ大阪",
+      "ok": true,
+      "row_count": 30,
       "warning": "",
       "error": ""
     },
@@ -151,7 +135,15 @@
       "club_key": "kobe",
       "club_name": "ヴィッセル神戸",
       "ok": true,
-      "row_count": 42,
+      "row_count": 55,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "okayama",
+      "club_name": "ファジアーノ岡山",
+      "ok": true,
+      "row_count": 53,
       "warning": "",
       "error": ""
     },
@@ -159,7 +151,15 @@
       "club_key": "hiroshima",
       "club_name": "サンフレッチェ広島",
       "ok": true,
-      "row_count": 34,
+      "row_count": 31,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "fukuoka",
+      "club_name": "アビスパ福岡",
+      "ok": true,
+      "row_count": 39,
       "warning": "",
       "error": ""
     },
@@ -167,7 +167,7 @@
       "club_key": "nagasaki",
       "club_name": "Ｖ・ファーレン長崎",
       "ok": true,
-      "row_count": 36,
+      "row_count": 59,
       "warning": "",
       "error": ""
     },
@@ -175,79 +175,7 @@
       "club_key": "sapporo",
       "club_name": "北海道コンサドーレ札幌",
       "ok": true,
-      "row_count": 33,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "sendai",
-      "club_name": "ベガルタ仙台",
-      "ok": true,
-      "row_count": 33,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "yamagata",
-      "club_name": "モンテディオ山形",
-      "ok": true,
-      "row_count": 31,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "tochigic",
-      "club_name": "栃木シティ",
-      "ok": true,
-      "row_count": 29,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "yokohamafc",
-      "club_name": "横浜ＦＣ",
-      "ok": true,
-      "row_count": 30,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "kofu",
-      "club_name": "ヴァンフォーレ甲府",
-      "ok": true,
-      "row_count": 31,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "toyama",
-      "club_name": "カターレ富山",
-      "ok": true,
-      "row_count": 35,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "fujieda",
-      "club_name": "藤枝ＭＹＦＣ",
-      "ok": true,
-      "row_count": 32,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "imabari",
-      "club_name": "ＦＣ今治",
-      "ok": true,
-      "row_count": 31,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "oita",
-      "club_name": "大分トリニータ",
-      "ok": true,
-      "row_count": 34,
+      "row_count": 38,
       "warning": "",
       "error": ""
     },
@@ -255,7 +183,15 @@
       "club_key": "hachinohe",
       "club_name": "ヴァンラーレ八戸",
       "ok": true,
-      "row_count": 27,
+      "row_count": 29,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "sendai",
+      "club_name": "ベガルタ仙台",
+      "ok": true,
+      "row_count": 36,
       "warning": "",
       "error": ""
     },
@@ -263,15 +199,31 @@
       "club_key": "akita",
       "club_name": "ブラウブリッツ秋田",
       "ok": true,
-      "row_count": 27,
+      "row_count": 32,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "yamagata",
+      "club_name": "モンテディオ山形",
+      "ok": true,
+      "row_count": 34,
       "warning": "",
       "error": ""
     },
     {
       "club_key": "iwaki",
-      "club_name": "いわきＦＣ",
+      "club_name": "iwaki",
       "ok": true,
-      "row_count": 31,
+      "row_count": 32,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "tochigic",
+      "club_name": "栃木シティ",
+      "ok": true,
+      "row_count": 30,
       "warning": "",
       "error": ""
     },
@@ -279,7 +231,15 @@
       "club_key": "omiya",
       "club_name": "ＲＢ大宮アルディージャ",
       "ok": true,
-      "row_count": 37,
+      "row_count": 40,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "yokohamafc",
+      "club_name": "横浜ＦＣ",
+      "ok": true,
+      "row_count": 35,
       "warning": "",
       "error": ""
     },
@@ -287,7 +247,15 @@
       "club_key": "shonan",
       "club_name": "湘南ベルマーレ",
       "ok": true,
-      "row_count": 34,
+      "row_count": 35,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "kofu",
+      "club_name": "ヴァンフォーレ甲府",
+      "ok": true,
+      "row_count": 39,
       "warning": "",
       "error": ""
     },
@@ -295,13 +263,29 @@
       "club_key": "niigata",
       "club_name": "アルビレックス新潟",
       "ok": true,
-      "row_count": 32,
+      "row_count": 33,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "toyama",
+      "club_name": "カターレ富山",
+      "ok": true,
+      "row_count": 33,
       "warning": "",
       "error": ""
     },
     {
       "club_key": "iwata",
       "club_name": "ジュビロ磐田",
+      "ok": true,
+      "row_count": 72,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "fujieda",
+      "club_name": "藤枝ＭＹＦＣ",
       "ok": true,
       "row_count": 33,
       "warning": "",
@@ -316,10 +300,26 @@
       "error": ""
     },
     {
+      "club_key": "imabari",
+      "club_name": "ＦＣ今治",
+      "ok": true,
+      "row_count": 36,
+      "warning": "",
+      "error": ""
+    },
+    {
       "club_key": "tosu",
       "club_name": "サガン鳥栖",
       "ok": true,
-      "row_count": 35,
+      "row_count": 34,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "oita",
+      "club_name": "大分トリニータ",
+      "ok": true,
+      "row_count": 34,
       "warning": "",
       "error": ""
     },
@@ -327,7 +327,7 @@
       "club_key": "miyazaki",
       "club_name": "テゲバジャーロ宮崎",
       "ok": true,
-      "row_count": 34,
+      "row_count": 30,
       "warning": "",
       "error": ""
     },
@@ -335,15 +335,31 @@
       "club_key": "fukushima",
       "club_name": "福島ユナイテッドＦＣ",
       "ok": true,
-      "row_count": 29,
+      "row_count": 31,
       "warning": "",
       "error": ""
     },
     {
-      "club_key": "kusatsu",
-      "club_name": "ザスパ群馬",
+      "club_key": "tochigi",
+      "club_name": "栃木ＳＣ",
       "ok": true,
       "row_count": 37,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "gunma",
+      "club_name": "ザスパ群馬",
+      "ok": true,
+      "row_count": 38,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "sagamihara",
+      "club_name": "ＳＣ相模原",
+      "ok": true,
+      "row_count": 28,
       "warning": "",
       "error": ""
     },
@@ -351,7 +367,15 @@
       "club_key": "matsumoto",
       "club_name": "松本山雅ＦＣ",
       "ok": true,
-      "row_count": 29,
+      "row_count": 33,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "nagano",
+      "club_name": "ＡＣ長野パルセイロ",
+      "ok": true,
+      "row_count": 32,
       "warning": "",
       "error": ""
     },
@@ -364,82 +388,18 @@
       "error": ""
     },
     {
-      "club_key": "shiga",
-      "club_name": "レイラック滋賀ＦＣ",
-      "ok": true,
-      "row_count": 35,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "nara",
-      "club_name": "奈良クラブ",
-      "ok": true,
-      "row_count": 30,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "yamaguchi",
-      "club_name": "レノファ山口ＦＣ",
-      "ok": true,
-      "row_count": 33,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "ehime",
-      "club_name": "愛媛ＦＣ",
-      "ok": true,
-      "row_count": 32,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "kitakyushu",
-      "club_name": "ギラヴァンツ北九州",
-      "ok": true,
-      "row_count": 31,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "kagoshima",
-      "club_name": "鹿児島ユナイテッドＦＣ",
-      "ok": true,
-      "row_count": 25,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "tochigi",
-      "club_name": "栃木ＳＣ",
-      "ok": true,
-      "row_count": 29,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "sagamihara",
-      "club_name": "ＳＣ相模原",
-      "ok": true,
-      "row_count": 23,
-      "warning": "",
-      "error": ""
-    },
-    {
-      "club_key": "nagano",
-      "club_name": "ＡＣ長野パルセイロ",
-      "ok": true,
-      "row_count": 31,
-      "warning": "",
-      "error": ""
-    },
-    {
       "club_key": "gifu",
       "club_name": "ＦＣ岐阜",
       "ok": true,
-      "row_count": 30,
+      "row_count": 36,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "shiga",
+      "club_name": "レイラック滋賀ＦＣ",
+      "ok": true,
+      "row_count": 39,
       "warning": "",
       "error": ""
     },
@@ -447,7 +407,15 @@
       "club_key": "fosaka",
       "club_name": "ＦＣ大阪",
       "ok": true,
-      "row_count": 39,
+      "row_count": 40,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "nara",
+      "club_name": "奈良クラブ",
+      "ok": true,
+      "row_count": 33,
       "warning": "",
       "error": ""
     },
@@ -455,7 +423,15 @@
       "club_key": "tottori",
       "club_name": "ガイナーレ鳥取",
       "ok": true,
-      "row_count": 31,
+      "row_count": 35,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "yamaguchi",
+      "club_name": "レノファ山口ＦＣ",
+      "ok": true,
+      "row_count": 37,
       "warning": "",
       "error": ""
     },
@@ -463,7 +439,15 @@
       "club_key": "sanuki",
       "club_name": "カマタマーレ讃岐",
       "ok": true,
-      "row_count": 33,
+      "row_count": 31,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "ehime",
+      "club_name": "愛媛ＦＣ",
+      "ok": true,
+      "row_count": 35,
       "warning": "",
       "error": ""
     },
@@ -471,7 +455,15 @@
       "club_key": "kochi",
       "club_name": "高知ユナイテッドＳＣ",
       "ok": true,
-      "row_count": 29,
+      "row_count": 33,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "kitakyushu",
+      "club_name": "ギラヴァンツ北九州",
+      "ok": true,
+      "row_count": 35,
       "warning": "",
       "error": ""
     },
@@ -479,7 +471,15 @@
       "club_key": "kumamoto",
       "club_name": "ロアッソ熊本",
       "ok": true,
-      "row_count": 29,
+      "row_count": 34,
+      "warning": "",
+      "error": ""
+    },
+    {
+      "club_key": "kagoshima",
+      "club_name": "鹿児島ユナイテッドＦＣ",
+      "ok": true,
+      "row_count": 33,
       "warning": "",
       "error": ""
     },

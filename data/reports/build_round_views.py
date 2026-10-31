@@ -21,7 +21,7 @@ PRED_DESC_MAP = {
     "stadium": "スタジアム",
     "home_team": "ホーム",
     "away_team": "アウェイ",
-    "predicted_result": "採用予測: 画面・buyplanで使う最終採用票（後段override反映後の最終値）",
+    "predicted_result": "従来予測の採用結果（画面表示用）。現行BuyPlanの配券確率はnext_prob_*を使用",
     "predicted_result_main": "本線予測: 勝敗確率のargmaxで決める基準予測",
     "predicted_result_type_a": "予想02旧互換列: 旧type_aの保持用",
     "predicted_result_type_b": "legacy: 旧派生予測B",
@@ -713,9 +713,12 @@ def _team_key_series(s):
 def _fill_if_missing(df, col, values):
     if col not in df.columns:
         return
-    m = df[col].isna()
+    m = df[col].isna() & values.notna()
     if m.any():
-        df.loc[m, col] = values.loc[m]
+        # CSV columns containing only blanks are inferred as float64. Replacing
+        # the Series lets pandas choose a compatible dtype for text/bool fills;
+        # assigning through .loc would require an unsafe in-place dtype change.
+        df[col] = df[col].fillna(values)
 
 
 def _merge_prediction_supplement(out_df, supp_df):

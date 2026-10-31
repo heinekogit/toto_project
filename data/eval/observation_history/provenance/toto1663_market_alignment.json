@@ -1,0 +1,14 @@
+{
+  "round_id": "toto1663",
+  "accumulated_at": "2026-10-18T20:05:02+09:00",
+  "sources": {
+    "pdf": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/toto1663.pdf",
+      "sha256": "3ebfb421a8f0b5c3a9c79868431e6abaf01842eaf8113463622d379612cb69b2"
+    },
+    "actual": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1663/actual_results.csv",
+      "sha256": "66acdca40a2dd07b92cb69653355cb8fb0a4332da73ba98e65245b378f1eaf83"
+    }
+  }
+}

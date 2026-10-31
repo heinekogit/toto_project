@@ -1,0 +1,36 @@
+{
+  "train_rounds": [
+    1644,
+    1645,
+    1647,
+    1648,
+    1649,
+    1650,
+    1653,
+    1654
+  ],
+  "validation_rounds": [
+    1660,
+    1663,
+    1664
+  ],
+  "train_rows": 101,
+  "validation_rows": 39,
+  "fatigue_weight": 0.25,
+  "weather_weight": 0.25,
+  "max_mix": 0.25,
+  "baseline": {
+    "logloss": 1.0671643050027095,
+    "brier": 0.6433068990782975,
+    "accuracy": 0.48717948717948717
+  },
+  "candidate": {
+    "logloss": 1.065350924459683,
+    "brier": 0.6427874292145338,
+    "accuracy": 0.48717948717948717
+  },
+  "mean_validation_mix": 0.19492307692307692,
+  "max_validation_mix": 0.25,
+  "delta_logloss": -0.0018133805430264882,
+  "status": "held-out validation of monotone uncertainty calibration"
+}

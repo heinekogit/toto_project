@@ -1,0 +1,34 @@
+棚卸しを行いました。検証システムの土台は既にあります。 開催回別の採点、確率のLog loss・Brier score、履歴の蓄積、人が読めるHTMLまで存在します。一方、それぞれが別の経路で作られており、「当時の試合前予測」か「後日の再計算」かを統一して判定・表示する仕組みが不足しています。
+今回は調査のみです。コード・データは変更していません。
+1. 既存資産
+資産・現状	役割と入力 → 出力	実行・対象範囲	再利用方針
+[run_evaluate_round.sh](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/run_evaluate_round.sh)・手動の一括経路	購入時点のファイルと実結果 → 採点、履歴、複数レポート	SEASON_YEAR=2027 ROUND=totoXXXX ./scripts/run_evaluate_round.sh。手順書から呼ぶ	中核として再利用。結果確定後の入口にできる
+[00_snapshot_purchase.py](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/eval/00_snapshot_purchase.py)・利用中	purchase_reference の予測・券・manifest → ハッシュ付き開催回スナップショット	上記一括経路で、保存先がない場合に実行。既存スナップショットは上書きせず停止	再利用。ただし試合後に初めて保存しても、試合前予測の証明にはならない
+[archive_buyplan_observation.py](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/archive_buyplan_observation.py)・別系統の履歴	予測・券・生成manifest → 時刻付きの上書きしない履歴	[run_buyplan_observation.sh](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/run_buyplan_observation.sh)から呼ぶ。2027シーズンで10開催回の履歴ディレクトリを確認	保存時点の証跡として有用。上記スナップショットとの役割整理が必要
+[01_export_actual_results.py](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/eval/01_export_actual_results.py)・利用中	J1/J2結果CSVなど → actual_results.csv。未確定は PENDING 等で区別	一括経路から呼ぶ	結果取得・対戦照合を再利用
+[02_score_buyplan.py](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/eval/02_score_buyplan.py)・利用中	保存券＋実結果 → 候補01〜10のevaluation.csv、累積candidate_history.csv	一括経路から呼ぶ。未確定試合があれば累積履歴更新を保留	採点に再利用。重複券・枚数配分などの構造診断は別途整理が必要
+[04_accumulate_observations.py](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/eval/04_accumulate_observations.py)・利用中	予測＋券＋実結果 → [試合別履歴](/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/observation_history/matches.csv)、開催回要約、入力ハッシュ	一括経路から呼ぶ。round_id＋match_noで再実行時に置換	集計の基礎として再利用。開催回要約には3分類Log loss・Brier scoreが実装済み
+[05_build_observation_report.py](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/eval/05_build_observation_report.py)・利用中	試合別履歴 → J1/J2別・開催回別などのCSVと[Markdownレポート](/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/observation_history/reports/new_season_validation.md)	一括経路の末尾で更新	累積集計を再利用。現在の中心出力はMarkdownで、希望するHTML群への整理が必要
+[20_build_growth_report.py](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/eval/20_build_growth_report.py)・利用中	保存券＋実結果 → [開催回別・累積HTML](/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/growth_validation/index.html)、JSON、CSV	一括経路から呼ぶ。保存済み18開催回のレコードを確認	HTMLの土台として再利用。旧版を含むため版・データ種別の表示が重要
+[audit_probability_calibration.py](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/next_model/audit_probability_calibration.py)・個別調査	保存された確率＋実結果 → [校正レポート](/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/next_probability_calibration/report.md)、確率帯別CSV	手動実行。主集計62試合、参考全体114試合	評価式と表示を再利用。ただし固定された過去入力を読むため、そのまま毎開催回の入口にはできない
+[compare_v24_ac.py](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/next_model/compare_v24_ac.py)、[compare_v24_random.py](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/next_model/compare_v24_random.py)・実験用	過去11開催回の予測・結果 → A/C・ランダム方式比較CSV	手動の方式比較。正式版の継続評価ではない	実験記録として保持。常設の正式版評価に混ぜない
+[11_build_fatigue_qc.py](/Users/dev_tomo/Desktop/tt_prj_restart/scripts/eval/11_build_fatigue_qc.py)など・分散した入力品質検査	疲労CSV・日程等 → [疲労QCのHTML](/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/fatigue_qc/j1_2026_fatigue_qc.html)、CSV。予測実行ログにも欠場・天候の参照先が出る	週次・試合直前バッチ内で実行	検査自体を再利用し、開催回の検証画面へ結果と採用日時を集約する候補
+[build_round_views.py](/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/build_round_views.py)、[build_dashboard.py](/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/build_dashboard.py)・表示用	リーグ別予測など → 節別CSV・HTML、ダッシュボード	手順書では予想後に手動実行	表示の導線として再利用。ただし節別画面は検証用の固定履歴とは別物
+
+
+run_evaluate_round.sh は手順書から実行する構成です。リポジトリ内では、開催回の結果確定を検知して自動起動する設定は確認できませんでした。 外部の定期実行設定の有無までは、この棚卸しでは断定していません。
+2. 保存データの範囲と問題
+- [開催回別評価データ](/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/)には、実結果と13試合の券が揃う18開催回を確認しました。うち新シーズンの[試合別累積履歴](/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/observation_history/matches.csv)は12開催回・153試合です。toto1649のみ10試合、ほか11回は各13試合です。153試合すべてにH/D/A確率があります。
+- [過去再計算の予測](/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/next_model/validation_v2/lab_xg_v0/predictions.csv)は101試合です。既存の校正レポートは、そのうち試合前入力の証跡がある49試合とtoto1660の13試合を主集計にしています。ただし、試合前入力からの後日再計算は、当時保存した運用予測と同一ではありません。
+- [評価用スナップショット](/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1665/snapshot/)の作成時刻が対象試合より後の開催回もあります。保存時刻だけで予測生成時刻を判断できないため、元の予測ファイルや生成manifestとの照合が必要です。
+- 現在の[正式版生成manifest](/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/manifest.json)はtoto1668・v2.4で、入力ハッシュ、確率指紋、乱数シード、枚数配分を保持しています。一方、調査時点ではtoto1668の購入観測アーカイブは見つかりませんでした。v2.4の実結果による継続評価はこれからです。
+- 実結果CSVには実スコアと OK／PENDING 等の状態があります。確認したファイルには結果の取得日時を示す専用列はありません。観測履歴の蓄積日時はありますが、結果確定日時の代用にはできません。
+3. 整備計画案
+大きな構成変更に入る前に、次の順序が安全です。
+1. 記録の種類を確定する。 既存の各開催回について「試合前保存」「後日再計算」「実験」を、根拠となるファイル・時刻・ハッシュとともに台帳化する。証明できないものは「不明」のまま残す。
+2. 既存の二つの保存経路を整理する。 購入直後の上書きしないアーカイブと、試合後評価用スナップショットの関係を定義する。試合後評価の再実行が、試合前の原本を変えないことを確認する。
+3. 評価項目を共通化する。 04_accumulate_observations.py のLog loss・Brier、02_score_buyplan.py の採点、20_build_growth_report.py のHTMLを活用する。版・データ種別・対象件数・未確定件数を必ず併記する。
+4. 入力品質を開催回に結び付ける。 天候、欠場、疲労、ACLなどについて、「取得できたか」と「実際に採用されたか」、採用時点を分けて表示する。今回のACLのような「CSVにはあるが計算から除外」を見つけられる形にする。
+5. HTMLの入口を整える。 開催回一覧から、開催回別の「入力品質→予測確率→購入券→実結果」、累積の推移、研究テーマへ移動できる構成を提案する。既存HTMLを再利用し、同じ表や指標を作り直さない。
+6. 研究テーマ001を登録する。 既存の「1位と2位の差」の予備調査とは区別し、指定どおりH/A差とD確率を別々に評価する計画を記録する。係数調整はまだ行わない。
+実装前に決める必要がある点は、同一開催回で試合前予測を複数回保存したとき、どれを「運用評価の基準版」とするかです。購入に使った版を基準にする案が自然ですが、過去履歴との整合を確認してから確定するのがよいと考えます。

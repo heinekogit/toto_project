@@ -1,0 +1,258 @@
+{
+  "rows": 101,
+  "numeric_chance_columns": 40,
+  "invalid_or_missing_numeric_cells": 0,
+  "correlations": {
+    "expected_for_xg_home": 0.8551384608097535,
+    "expected_for_xg_vs_build_rate_home": 0.8174882150272716,
+    "expected_against_xg_home": 0.8018133958659741,
+    "expected_against_xg_vs_allowed_build_rate_home": 0.7241841239950967,
+    "expected_for_xg_away": 0.8158757631744248,
+    "expected_for_xg_vs_build_rate_away": 0.8135206294672733,
+    "expected_against_xg_away": 0.8511435640223504,
+    "expected_against_xg_vs_allowed_build_rate_away": 0.8339463064062304
+  },
+  "field_summaries": {
+    "flab_chance_attack_count_home": {
+      "non_null": 101,
+      "min": 92.0,
+      "mean": 113.33465346534655,
+      "max": 133.6
+    },
+    "flab_chance_attack_count_away": {
+      "non_null": 101,
+      "min": 93.0,
+      "mean": 113.3108910891089,
+      "max": 140.0
+    },
+    "flab_chance_shots_home": {
+      "non_null": 101,
+      "min": 6.3,
+      "mean": 12.860396039603964,
+      "max": 22.5
+    },
+    "flab_chance_shots_away": {
+      "non_null": 101,
+      "min": 6.0,
+      "mean": 13.093069306930692,
+      "max": 22.0
+    },
+    "flab_chance_allowed_shots_home": {
+      "non_null": 101,
+      "min": 4.5,
+      "mean": 13.18910891089109,
+      "max": 27.0
+    },
+    "flab_chance_allowed_shots_away": {
+      "non_null": 101,
+      "min": 4.7,
+      "mean": 13.241584158415842,
+      "max": 23.0
+    },
+    "flab_chance_shot_conversion_home": {
+      "non_null": 101,
+      "min": 0.0,
+      "mean": 9.7009900990099,
+      "max": 21.7
+    },
+    "flab_chance_shot_conversion_away": {
+      "non_null": 101,
+      "min": 0.0,
+      "mean": 11.248514851485147,
+      "max": 36.4
+    },
+    "flab_chance_attack_count_rank_home": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 10.801980198019802,
+      "max": 33.0
+    },
+    "flab_chance_attack_count_rank_away": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 10.425742574257425,
+      "max": 36.0
+    },
+    "flab_chance_shots_rank_home": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 11.217821782178218,
+      "max": 35.0
+    },
+    "flab_chance_shots_rank_away": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 10.752475247524753,
+      "max": 26.0
+    },
+    "flab_chance_build_rate_home": {
+      "non_null": 101,
+      "min": 5.8,
+      "mean": 11.400990099009901,
+      "max": 18.8
+    },
+    "flab_chance_build_rate_rank_home": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 11.316831683168317,
+      "max": 31.0
+    },
+    "flab_chance_build_rate_away": {
+      "non_null": 101,
+      "min": 5.3,
+      "mean": 11.576237623762374,
+      "max": 18.2
+    },
+    "flab_chance_build_rate_rank_away": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 11.089108910891088,
+      "max": 28.0
+    },
+    "flab_chance_goals_home": {
+      "non_null": 101,
+      "min": 0.0,
+      "mean": 1.2663366336633664,
+      "max": 4.0
+    },
+    "flab_chance_goals_rank_home": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 11.247524752475247,
+      "max": 35.0
+    },
+    "flab_chance_goals_away": {
+      "non_null": 101,
+      "min": 0.0,
+      "mean": 1.476237623762376,
+      "max": 5.0
+    },
+    "flab_chance_goals_rank_away": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 9.603960396039604,
+      "max": 35.0
+    },
+    "flab_chance_shot_conversion_rank_home": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 12.168316831683168,
+      "max": 37.0
+    },
+    "flab_chance_shot_conversion_rank_away": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 10.554455445544555,
+      "max": 38.0
+    },
+    "flab_chance_allowed_attack_count_home": {
+      "non_null": 101,
+      "min": 93.0,
+      "mean": 113.26237623762374,
+      "max": 136.0
+    },
+    "flab_chance_allowed_attack_count_rank_home": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 10.950495049504951,
+      "max": 38.0
+    },
+    "flab_chance_allowed_attack_count_away": {
+      "non_null": 101,
+      "min": 94.0,
+      "mean": 113.45742574257426,
+      "max": 135.5
+    },
+    "flab_chance_allowed_attack_count_rank_away": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 11.138613861386139,
+      "max": 30.0
+    },
+    "flab_chance_allowed_shots_rank_home": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 11.049504950495049,
+      "max": 37.0
+    },
+    "flab_chance_allowed_shots_rank_away": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 10.732673267326733,
+      "max": 36.0
+    },
+    "flab_chance_allowed_build_rate_home": {
+      "non_null": 101,
+      "min": 3.9,
+      "mean": 11.687128712871289,
+      "max": 20.6
+    },
+    "flab_chance_allowed_build_rate_rank_home": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 11.306930693069306,
+      "max": 37.0
+    },
+    "flab_chance_allowed_build_rate_away": {
+      "non_null": 101,
+      "min": 4.1,
+      "mean": 11.708910891089108,
+      "max": 18.8
+    },
+    "flab_chance_allowed_build_rate_rank_away": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 10.92079207920792,
+      "max": 33.0
+    },
+    "flab_chance_allowed_goals_home": {
+      "non_null": 101,
+      "min": 0.0,
+      "mean": 1.5029702970297028,
+      "max": 4.0
+    },
+    "flab_chance_allowed_goals_rank_home": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 10.227722772277227,
+      "max": 23.0
+    },
+    "flab_chance_allowed_goals_away": {
+      "non_null": 101,
+      "min": 0.0,
+      "mean": 1.400990099009901,
+      "max": 5.0
+    },
+    "flab_chance_allowed_goals_rank_away": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 9.623762376237623,
+      "max": 34.0
+    },
+    "flab_chance_allowed_shot_conversion_home": {
+      "non_null": 101,
+      "min": 0.0,
+      "mean": 11.694059405940592,
+      "max": 36.4
+    },
+    "flab_chance_allowed_shot_conversion_rank_home": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 11.415841584158416,
+      "max": 26.0
+    },
+    "flab_chance_allowed_shot_conversion_away": {
+      "non_null": 101,
+      "min": 0.0,
+      "mean": 10.46831683168317,
+      "max": 31.3
+    },
+    "flab_chance_allowed_shot_conversion_rank_away": {
+      "non_null": 101,
+      "min": 1.0,
+      "mean": 10.425742574257425,
+      "max": 27.0
+    }
+  },
+  "interpretation": "shots/build rates are highly correlated with xG; do not count them as independent additive evidence"
+}

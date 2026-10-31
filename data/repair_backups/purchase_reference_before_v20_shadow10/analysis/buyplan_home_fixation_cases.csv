@@ -1,0 +1,7 @@
+scenario,match_no,from_stage,to_stage,delta_best,delta_second,delta_third,dominant_symbol,dominant_count
+experimental,3,after_ticket_generation,after_draw_distribution,1,0,0,H,2
+lock_strict,6,after_ticket_generation,after_draw_distribution,1,-1,0,H,2
+lock_strict,7,after_ticket_generation,after_draw_distribution,1,-1,0,H,3
+lock_strict,9,after_ticket_generation,after_draw_distribution,1,-1,0,H,3
+prob_faithful,3,after_ticket_generation,after_draw_distribution,1,0,-1,H,5
+prob_faithful,13,after_unique_repair,after_final_range,1,-1,0,H,4

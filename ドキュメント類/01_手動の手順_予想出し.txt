@@ -56,11 +56,13 @@ file:///Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_matchday_report.htm
 ・toto公式の予想をPDFでバックアップ保存しておく。
 ・purchase_reference に predictions.csv を置き換え配置
 
-① 既存の予測CSVから対象節を抽出し、次の buyplan.py に渡す準備処理
-./scripts/.venv/bin/python scripts/build_purchase_reference_predictions.py \
-  --season 2026 \
+① 既存の予測CSVから対象節を抽出し、BuyPlan v2.0に渡す準備処理
+./scripts/.venv/bin/python scripts/run_buyplan_engine.py \
+  --in data/purchase_reference/predictions.csv \
+  --outdir data/purchase_reference \
+  --round totoXXXX \
   --logical-season 2027 \
-  --round 5
+  --toto-order-csv data/manual/toto節リスト.csv
            ↑
         節番号を変える
 
@@ -70,27 +72,66 @@ file:///Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_matchday_report.htm
 ./scripts/.venv/bin/python scripts/build_purchase_reference_predictions.py \
   --season 2026 \
   --logical-season 2027 \
-  --j1-round 8 \
-  --j2-round 7
+  --j1-round 11 \
+  --j2-round 12
 ※ --season は予測CSVの実年、--logical-season は toto節リスト上のseason。
 
-② buyplanのhtml出力まで
-./scripts/.venv/bin/python buyplan.py \
+② buyplanのhtml出力まで（v2.4正式版）
+./scripts/.venv/bin/python scripts/run_buyplan_engine.py \
+  --engine next \
   --in data/purchase_reference/predictions.csv \
   --outdir data/purchase_reference \
+  --round toto1664 \
+  --logical-season 2027 \
   --toto-order-csv data/manual/toto節リスト.csv
+
+           - --round toto1654を毎回変更
+           - --logical-season 2027をシーズンに応じて変更
+           - buyplan.pyの直接実行は旧版検証時だけ
+           - 通常運用はrun_buyplan_engine.pyを使う（--engine省略時もnext）
+           - 得点・xGとFootball LABからλを計算し、攻撃の欠場は自チームλの減少、守備の欠場は相手λの増加として後付けし、得点分布からH/D/Aを作る。さらに疲労・天候の不確実性補正を適用したnext_prob_home/draw/awayで配券する。欠場前はnext_prob_pre_absence_*、不確実性補正前はnext_prob_pre_uncertainty_*。現係数での保存済み試合比較は悪化しており、係数調整の課題として記録済み。
+
+【2026-10-03追加：生成前の事前チェック】
+通常コマンドで自動実行され、失敗時は既存のBuyPlanを更新しない。
+・対象13試合の対戦カードとtoto節リストの開催日を照合。
+・開催日時が実行時点より後、7日以内であることを確認。
+・stats_asof / flab_snapshot_date が未来日でなく、取得から7日以内であることを確認。
+・基礎得失点・xG・LAB xGが欠損、非数値、無限大、0以下なら停止。
+  現行モデルは0以下を代替値へ置換するため、正当な0も現時点では要確認として停止する。
+・LAB取得日は更新版11_prediction_01.pyが比較CSVの取得日付きファイル名から引き継ぐ。
+  過去の予測CSVには列がないため、LAB取得後に予測とpurchase_referenceを再生成する。
+・確認だけ行う場合は上の生成コマンドに --check-only を追加（ファイル出力なし）。
+・鮮度の上限を意図的に変更する場合のみ --max-age-days 日数 を指定。指定値は生成記録に保存。
+・logical-seasonはtoto節リストの区分。2027区分でも実開催が2026年の場合があるため、
+  暦年との単純一致は要求せず、指定区分と実開催日時をそれぞれ検証する。
+・欠場、天候、疲労の更新済み判定は今回の事前チェック対象外。
+
+
+・同時に10口ずつ検証用シャドーA（11～20）、B（21～30）、C（31～40）も自動生成される。
+  data/purchase_reference/shadow_buyplan.html
+  data/purchase_reference/shadow_buyplan_b.html
+  data/purchase_reference/shadow_buyplan_c.html
+※シャドー候補は購入対象外。正式v2.4候補01～10は各試合の最大剰余枚数から残数比例で抽選し、開催回・予測確率に結び付くシードを生成manifestに記録する。候補00は生成しない。シャドー生成は正式候補を変更しない。
+※Cは採用数自由・Dカバー型の仮設定。現行next_prob_*（欠場・疲労・天候補正込み）を起点に、Cだけ本命側ACL疲労差×H/A差×低得点期待のD試験補正を加える。
+  試験補正のD対数オッズ係数は0.5。正式版の確率には反映しない。補正前後のD確率はCの生成manifestに保存する。
+  探索用D倍率1.0/1.5/2.0/3.0、モデル抽選5000通り、D本数中央値の券を4口、中央値より1～2本多い券を2口、Dあり2口、自由2口。
+  係数と設定は生成manifestに保存し、実結果を見た後から変更しない。
 
 ③ 購入内容を最終確認した後、評価・採点用スナップショットを保存
 ※同じtoto回では原則1回だけ。保存後にbuyplanを変更しない。
+※生成条件はbuyplan_engine_manifest.json、保存情報はmanifest.jsonとして別々に保存する。
+※生成後の入力・出力変更、生成回・シーズンの不一致、必須ファイル不足は保存を停止する。
+※過去の保存済みsnapshotは変更しない。生成manifestが既に上書きされた過去分は自動復元しない。
+
 ./scripts/.venv/bin/python scripts/eval/00_snapshot_purchase.py \
-  --round toto1654 \
+  --round toto1663 \
   --srcdir data/purchase_reference \
   --logical-season 2027 \
   --prediction-season 2026
            ↑
         toto回番号を変える
 
-③-2  現行版とは別に、購入可能なシャドー候補2案を生成
+③-2  ＜v1旧版検証専用＞旧シャドー候補2案が必要な場合のみ実行
 ※ purchase_reference が対象toto回の13試合になってから実行する。別回なら安全停止する。
 ./scripts/.venv/bin/python scripts/eval/18_build_shadow_buyplan_candidates.py \
   --round toto1654 \
@@ -106,7 +147,8 @@ file:///Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_matchday_report.htm
 ./scripts/.venv/bin/python scripts/archive_buyplan_observation.py \
   --logical-season 2027 \
   --prediction-season 2026 \
-  --round 7 \
+  --round 11 \
+  --engine next \
   --label purchased
            ↑
         節番号を変える（J1の代表節として。J2節数が違っていても問題なし）
@@ -120,15 +162,26 @@ file:///Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_matchday_report.htm
 
 
 ■ 的中結果検証（Jリーグ公式サイト更新後）  ==================================================================
-SEASON_YEAR=2027 ROUND=toto1654 ./scripts/run_evaluate_round.sh
+SEASON_YEAR=2027 ROUND=toto1663 ./scripts/run_evaluate_round.sh
                            ↑
                     toto節番号を変える
 
 
-＜新シーズン移行期の補足処理＞
+■ v2系の結果検証・蓄積化
+==================================================================
+SEASON_YEAR=2027 ROUND=toto1660 ./scripts/run_evaluate_round.sh
 
-＜新シーズンでのアップデート用検証蓄積処理＞
-/Users/dev_tomo/Desktop/tt_prj_restart/scripts/eval/OBSERVATION_HISTORY.md
+結果取得済みで、表示・検証だけ更新する場合はこちら
+ROUND=toto1660 ./scripts/run_validate_round.sh
+
+開催別の検証HTML
+/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/growth_validation.html
+
+累積検証HTML
+/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/growth_validation/index.html)
+
+
+
 
 
 
@@ -136,7 +189,7 @@ SEASON_YEAR=2027 ROUND=toto1654 ./scripts/run_evaluate_round.sh
 ＜以下、バックアップ＞ ================================================
 ==============================================================
 
-● buyplanテスト（シミュレーション）  ======================================================================
+● 旧版v1 buyplanテスト（比較・シミュレーション専用）  ====================================================
 前節の購入情報を保存する  
 シミュレーションをする（終わった最新節）ためにsnapshotにする。
 ROUND=round11 SEASON_YEAR=2026 ./scripts/run_evaluate_round.sh

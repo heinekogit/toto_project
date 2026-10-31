@@ -1,0 +1,8 @@
+{
+  "status": "retrospective preview; not purchased",
+  "source_sha256": "b20040116f63cdf8d4d8d9e292e6c5aa3be67ef3b87618a3e3a74ebbb38ee9d7",
+  "official_generator": "relative_draw_graded_v23",
+  "shadow_a": "probability_allocation_ge10_v1",
+  "shadow_b": "anchor_graded_shadow",
+  "original_snapshot_changed": false
+}

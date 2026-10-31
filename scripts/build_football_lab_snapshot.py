@@ -269,7 +269,7 @@ AGI_KAGI_TABLE_MAPPINGS = {
 
 
 def normalize_text(value):
-    return unicodedata.normalize("NFKC", str(value or "")).strip()
+    return unicodedata.normalize("NFKC", "" if value is None else str(value)).strip()
 
 
 def canonical_team_name(value):
@@ -525,8 +525,10 @@ def extract_team_tables(html_text, meta):
         section_title = find_preceding_section_title(section_matches, match.start())
         if section_title in {"Data Menu", "Team", "Player", "Comparison", "All Style", "順位表"}:
             section_title = meta["page_label"]
+        # Keep empty header cells. Football LAB's chance tables alternate
+        # ``metric value`` and ``(rank)`` columns; removing empty rank headers
+        # shifts every metric after the first onto the preceding rank value.
         headers = [clean_header(v) for v in re.findall(r"<th[^>]*>(.*?)</th>", match.group(2), re.S)]
-        headers = [h for h in headers if h]
         tbody_match = re.search(r"<tbody>(.*?)</tbody>", match.group(2), re.S)
         if not tbody_match:
             continue
@@ -554,13 +556,17 @@ def extract_team_tables(html_text, meta):
                     values.append(cell_text)
             if not team_name:
                 continue
+            # ``values`` begins immediately after the team-name cell, whereas
+            # ``headers`` also contains the leading emblem/name cells. Align
+            # from the right so the stored header positions match the values.
+            aligned_headers = headers[-len(values):] if values else []
             team_tables.append({
                 **meta,
                 "section_title": section_title,
                 "table_index": idx,
                 "team_name": team_name,
                 "team_key": normalize_team_key(team_name),
-                "headers_json": json.dumps(headers, ensure_ascii=False),
+                "headers_json": json.dumps(aligned_headers, ensure_ascii=False),
                 "values_json": json.dumps(values, ensure_ascii=False),
             })
     return team_tables
@@ -620,7 +626,40 @@ def build_wide_metrics(table_rows, chart_rows):
         for idx, col in mapped_pairs:
             if idx < len(values):
                 entry[col] = maybe_float(values[idx])
+                # Chance tables put the league rank in the unnamed cell
+                # directly following each metric. Preserve it separately.
+                if (
+                    row["section_title"] in {"チャンス構築率", "被チャンス構築率"}
+                    and idx + 1 < len(values)
+                    and idx + 1 < len(headers)
+                    and not clean_header(headers[idx + 1])
+                ):
+                    rank_match = re.fullmatch(r"\((\d+)位\)", normalize_text(values[idx + 1]))
+                    if rank_match:
+                        entry[f"{col}_rank"] = int(rank_match.group(1))
     return list(wide.values())
+
+
+def validate_chance_metrics(team_metrics):
+    """Fail closed if a parsed chance value is missing or contains rank text."""
+    required = tuple(WIDE_TABLE_MAPPINGS["チャンス構築率"].values()) + tuple(
+        WIDE_TABLE_MAPPINGS["被チャンス構築率"].values()
+    )
+    failures = []
+    for row in team_metrics:
+        # The wide collection can also contain player rows from other pages.
+        # Only rows originating from a chance team table carry these fields.
+        if not any(column in row for column in required):
+            continue
+        for column in required:
+            value = row.get(column)
+            if not isinstance(value, (int, float)):
+                failures.append(f"{row.get('team_name', '?')}:{column}={value!r}")
+    if failures:
+        raise RuntimeError(
+            "Football LAB chance metric parse failed (numeric value required): "
+            + ", ".join(failures[:12])
+        )
 
 
 def read_prediction_rows(prediction_csv):
@@ -719,6 +758,12 @@ def process_league_dir(league_dir, prediction_csv=None):
         table_rows.extend(extract_team_tables(html_text, meta))
 
     wide_metrics = build_wide_metrics(table_rows, chart_rows)
+    chance_source_present = any(
+        row.get("section_title") in {"チャンス構築率", "被チャンス構築率"}
+        for row in table_rows
+    )
+    if chance_source_present:
+        validate_chance_metrics(wide_metrics)
     league_for_filter = wide_metrics[0]["league"] if wide_metrics else fallback_league
     season_for_filter = wide_metrics[0]["season"] if wide_metrics else ""
     wide_metrics = filter_team_metrics(wide_metrics, league_for_filter, season_for_filter)

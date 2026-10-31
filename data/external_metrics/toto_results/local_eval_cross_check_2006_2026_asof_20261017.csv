@@ -1,0 +1,16 @@
+﻿round_id,external_code,local_eval_code,status,local_eval_file,external_source_url
+toto1609,0012200001122,0012200001122,match,data/eval/toto_rounds/toto1609/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1610,2112222010120,2112222010120,match,data/eval/toto_rounds/toto1610/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1613,1010022022220,1010022022220,match,data/eval/toto_rounds/toto1613/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1614,1121111000020,1121111000020,match,data/eval/toto_rounds/toto1614/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1616,1202120111212,1202120111212,match,data/eval/toto_rounds/toto1616/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1619,2100102121100,2102101020111,mismatch,data/eval/toto_rounds/toto1619/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1644,2122110111111,2122110111111,match,data/eval/toto_rounds/toto1644/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1645,1202101202200,1202101202200,match,data/eval/toto_rounds/toto1645/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1647,1012011211211,1012011211211,match,data/eval/toto_rounds/toto1647/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1648,0212101112111,0212101112111,match,data/eval/toto_rounds/toto1648/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1649,2112211000211,2112211000211,match,data/eval/toto_rounds/toto1649/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1650,0212121101122,0212121101122,match,data/eval/toto_rounds/toto1650/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1653,2120110211221,2120110211221,match,data/eval/toto_rounds/toto1653/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1654,2112101222012,2112101222012,match,data/eval/toto_rounds/toto1654/actual_results.csv,https://totomark.info/toto/year/2026/
+toto1660,0110222211221,0110222211221,match,data/eval/toto_rounds/toto1660/actual_results.csv,https://totomark.info/toto/year/2026/

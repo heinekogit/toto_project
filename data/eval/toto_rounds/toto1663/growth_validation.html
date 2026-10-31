@@ -1,0 +1,291 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>toto1663 開催別検証</title><style>body{font-family:system-ui,sans-serif;margin:0;background:#f4f6fa;color:#172033}
+main{max-width:1150px;margin:auto;padding:28px}h1{font-size:26px}h2{margin-top:30px;font-size:20px}
+.card{background:white;border:1px solid #dce2eb;border-radius:10px;padding:18px;margin:14px 0;overflow:auto}
+.note{background:#fff6dc;padding:14px;border-left:4px solid #d69c27}table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:9px;border-bottom:1px solid #e0e5ee;text-align:left;white-space:nowrap}th{background:#edf2f8}
+a{color:#175ea8}.muted{color:#53657a}</style><main><h1>toto1663 開催別検証</h1><p><a href="../../growth_validation/index.html">累積検証一覧へ</a> · <a href="buyplan_scored.html">従来の採点表</a></p><p>保存時の正式版：<b>v2.2</b> ／ 確定 13/13試合 ／ 未確定 0試合</p><p class="note">予測の精度と券配置の効果を分けて評価します。平均的中率は当せん確率・収益率ではありません。単一開催だけで優劣は確定しません。</p><h2>1. 購入案の成績</h2><div class="card"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>対象</th>
+      <th>口数</th>
+      <th>最高的中数</th>
+      <th>平均的中数</th>
+      <th>平均的中率</th>
+      <th>10以上の口</th>
+      <th>11以上</th>
+      <th>12以上</th>
+      <th>13的中</th>
+      <th>D採用枠</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>正式 v2.2</td>
+      <td>10</td>
+      <td>9</td>
+      <td>5.3</td>
+      <td>40.8%</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>33</td>
+    </tr>
+    <tr>
+      <td>シャドー v2.0</td>
+      <td>10</td>
+      <td>8</td>
+      <td>6.8</td>
+      <td>52.3%</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table></div><div class="card"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>口</th>
+      <th>的中数</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ticket01</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>ticket02</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>ticket03</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>ticket04</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>ticket05</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>ticket06</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>ticket07</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <td>ticket08</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>ticket09</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>ticket10</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table></div><h3>シャドー各口</h3><div class="card"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>口</th>
+      <th>的中数</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ticket11</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>ticket12</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>ticket13</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>ticket14</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>ticket15</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <td>ticket16</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>ticket17</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>ticket18</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>ticket19</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>ticket20</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table></div><h2>2. 予測確率そのものの精度</h2><p>確率を評価できる 13試合中、最有力結果は 8的中（61.5%）。確率の誤差（Brier）は 0.563。小さいほど良く、一律1/3なら0.667です。</p><div class="card"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>結果</th>
+      <th>平均予測確率</th>
+      <th>実際の割合</th>
+      <th>実数</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>H</td>
+      <td>38.9%</td>
+      <td>38.5%</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>D</td>
+      <td>25.2%</td>
+      <td>23.1%</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>A</td>
+      <td>36.0%</td>
+      <td>38.5%</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table></div><h2>3. 試合ごとの配分と結果</h2><div class="card"><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>No.</th>
+      <th>対戦</th>
+      <th>実結果</th>
+      <th>確率 H/D/A</th>
+      <th>採用 H/D/A</th>
+      <th>的中した口数</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>清水－G大阪</td>
+      <td>D</td>
+      <td>43% / 26% / 31%</td>
+      <td>4 / 3 / 3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>千葉－横浜ＦM</td>
+      <td>D</td>
+      <td>27% / 26% / 47%</td>
+      <td>3 / 3 / 4</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>東京V－ＦＣ東京</td>
+      <td>A</td>
+      <td>18% / 25% / 57%</td>
+      <td>2 / 2 / 6</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>C大阪－川崎F</td>
+      <td>A</td>
+      <td>26% / 24% / 50%</td>
+      <td>3 / 2 / 5</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>鹿島－長崎</td>
+      <td>H</td>
+      <td>49% / 24% / 27%</td>
+      <td>5 / 2 / 3</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>広島－京都</td>
+      <td>H</td>
+      <td>63% / 21% / 16%</td>
+      <td>6 / 2 / 2</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>水戸－浦和</td>
+      <td>A</td>
+      <td>37% / 25% / 39%</td>
+      <td>4 / 2 / 4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>岡山－神戸</td>
+      <td>A</td>
+      <td>33% / 27% / 40%</td>
+      <td>3 / 3 / 4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>町田－福岡</td>
+      <td>H</td>
+      <td>47% / 25% / 28%</td>
+      <td>4 / 3 / 3</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>柏－名古屋</td>
+      <td>A</td>
+      <td>47% / 24% / 29%</td>
+      <td>5 / 2 / 3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>札幌－秋田</td>
+      <td>H</td>
+      <td>34% / 27% / 39%</td>
+      <td>3 / 3 / 4</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>12</td>
+      <td>大分－新潟</td>
+      <td>H</td>
+      <td>39% / 28% / 33%</td>
+      <td>4 / 3 / 3</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>今治－八戸</td>
+      <td>D</td>
+      <td>42% / 26% / 32%</td>
+      <td>4 / 3 / 3</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table></div><h2>4. 今回の読み方</h2><p>実結果は H5・D3・A5。正式版の最高は9的中です。</p><p>実際にDだった全試合を同時にDとして持つ正式券は1口でした。これは配置の検証材料であり、結果を見て券を作り直す指示ではありません。</p><p>モデルやBuyPlanを自動変更しません。CSV・JSONに保存した試合前確率、券、実結果、版、元ファイルのハッシュを次の分析に使います。</p><p><a href="growth_validation.json">この開催の検証JSON</a> · <a href="growth_matches.csv">再分析用CSV</a></p></main></html>

@@ -5,6 +5,7 @@ import json
 import os
 import shutil
 import sys
+import tempfile
 from datetime import datetime
 
 
@@ -42,55 +43,83 @@ def main():
     srcdir = args.srcdir
 
     required = ["predictions.csv", "buyplan.csv"]
-    optional = ["buyplan.html", "predictions_buyplan_context.csv"]
+    optional = [
+        "buyplan.html", "predictions_buyplan_context.csv",
+        "next_predictions.csv", "shadow_buyplan.csv", "shadow_buyplan.html",
+        "shadow_buyplan_b.csv", "shadow_buyplan_b.html", "manifest.json",
+        "shadow_buyplan_c.csv", "shadow_buyplan_c.html",
+    ]
 
-    os.makedirs(os.path.dirname(outdir), exist_ok=True)
     if os.path.exists(outdir):
         raise RuntimeError(f"snapshot出力先が既に存在します（安全停止）: {outdir}")
-    os.makedirs(outdir, exist_ok=False)
-
-    copied = []
     for fn in required:
-        src = os.path.join(srcdir, fn)
-        dst = os.path.join(outdir, fn)
-        if not os.path.exists(src):
-            raise FileNotFoundError(f"必要ファイルが見つかりません: {src}")
-        if os.path.exists(dst):
-            raise RuntimeError(f"出力先に同名ファイルが既に存在: {dst}")
-        shutil.copy2(src, dst)
-        copied.append(dst)
-
-    for fn in optional:
-        src = os.path.join(srcdir, fn)
-        dst = os.path.join(outdir, fn)
-        if os.path.exists(src):
-            if os.path.exists(dst):
-                raise RuntimeError(f"出力先に同名ファイルが既に存在: {dst}")
-            shutil.copy2(src, dst)
-            copied.append(dst)
-
-    manifest = {
-        "schema_version": 1,
-        "created_at": datetime.now().astimezone().isoformat(timespec="seconds"),
-        "round_id": round_id,
-        "logical_season": str(args.logical_season).strip(),
-        "prediction_season": str(args.prediction_season).strip(),
-        "j1_source": os.path.abspath(args.j1_source) if args.j1_source else "",
-        "j2_source": os.path.abspath(args.j2_source) if args.j2_source else "",
-        "football_lab_snapshot": str(args.football_lab_snapshot).strip(),
-        "files": {
-            os.path.basename(path): {
-                "size": os.path.getsize(path),
-                "sha256": sha256_file(path),
-            }
-            for path in copied
-        },
-    }
-    manifest_path = os.path.join(outdir, "manifest.json")
-    with open(manifest_path, "w", encoding="utf-8") as f:
-        json.dump(manifest, f, ensure_ascii=False, indent=2)
-        f.write("\n")
-    copied.append(manifest_path)
+        if not os.path.isfile(os.path.join(srcdir, fn)):
+            raise FileNotFoundError(f"必要ファイルが見つかりません: {fn}")
+    engine_path = os.path.join(srcdir, "manifest.json")
+    if os.path.isfile(os.path.join(srcdir, "next_predictions.csv")) and not os.path.isfile(engine_path):
+        raise FileNotFoundError("v2生成manifest.jsonがありません。BuyPlanを再生成してください")
+    if os.path.isfile(engine_path):
+        with open(engine_path, encoding="utf-8") as f:
+            engine = json.load(f)
+        if engine.get("round_id") != round_id:
+            raise ValueError("生成manifestのtoto回が保存対象と一致しません")
+        if args.logical_season and str(engine.get("logical_season")) != args.logical_season:
+            raise ValueError("生成manifestのシーズンが保存対象と一致しません")
+        if engine.get("input_sha256") != sha256_file(os.path.join(srcdir, "predictions.csv")):
+            raise ValueError("生成後にpredictions.csvが変更されています")
+        for name, expected in engine.get("output_sha256", {}).items():
+            if name not in required + optional:
+                raise ValueError(f"未知の生成ファイル: {name}")
+            source = os.path.join(srcdir, name)
+            if not os.path.isfile(source) or sha256_file(source) != expected:
+                raise ValueError(f"生成後にファイルが変更・削除されています: {name}")
+        if engine.get("production_switched"):
+            required += ["next_predictions.csv", "shadow_buyplan.csv", "shadow_buyplan.html"]
+            if engine.get("official_version") in {"v2.3", "v2.4"}:
+                required += ["shadow_buyplan_b.csv", "shadow_buyplan_b.html"]
+            if "shadow_c_observation" in engine:
+                required += ["shadow_buyplan_c.csv", "shadow_buyplan_c.html"]
+            for fn in required:
+                if not os.path.isfile(os.path.join(srcdir, fn)):
+                    raise FileNotFoundError(f"必要ファイルが見つかりません: {fn}")
+    parent = os.path.dirname(os.path.abspath(outdir))
+    os.makedirs(parent, exist_ok=True)
+    copied = []
+    with tempfile.TemporaryDirectory(prefix=".snapshot-", dir=parent) as stage:
+        for fn in dict.fromkeys(required + optional):
+            source = os.path.join(srcdir, fn)
+            if not os.path.isfile(source):
+                continue
+            name = "buyplan_engine_manifest.json" if fn == "manifest.json" else fn
+            shutil.copy2(source, os.path.join(stage, name))
+            copied.append(name)
+        manifest = {
+            "schema_version": 2,
+            "created_at": datetime.now().astimezone().isoformat(timespec="seconds"),
+            "round_id": round_id,
+            "logical_season": str(args.logical_season).strip(),
+            "prediction_season": str(args.prediction_season).strip(),
+            "j1_source": os.path.abspath(args.j1_source) if args.j1_source else "",
+            "j2_source": os.path.abspath(args.j2_source) if args.j2_source else "",
+            "football_lab_snapshot": str(args.football_lab_snapshot).strip(),
+            "files": {
+                name: {"size": os.path.getsize(os.path.join(stage, name)),
+                       "sha256": sha256_file(os.path.join(stage, name))}
+                for name in copied
+            },
+        }
+        with open(os.path.join(stage, "manifest.json"), "w", encoding="utf-8") as f:
+            json.dump(manifest, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+        # Reserve the final directory exclusively; no existing snapshot is replaced.
+        os.mkdir(outdir)
+        try:
+            for name in copied + ["manifest.json"]:
+                os.replace(os.path.join(stage, name), os.path.join(outdir, name))
+        except Exception:
+            shutil.rmtree(outdir)
+            raise
+    copied = [os.path.join(outdir, name) for name in copied + ["manifest.json"]]
 
     print(f"[OK] snapshot saved: {outdir}")
     for p in copied:

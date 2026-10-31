@@ -14,6 +14,7 @@ import json
 import math
 import os
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -22,6 +23,8 @@ import pandas as pd
 
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT_DIR / "scripts"))
+from jleague_team_names import canonical_team_name
 DEFAULT_OUT_DIR = ROOT_DIR / "data" / "eval" / "observation_history"
 TICKET_RE = re.compile(r"^(?:ticket|候補)\s*0*(10|[1-9])$", re.IGNORECASE)
 RESULT_LABEL = {0: "D", 1: "H", 2: "A"}
@@ -94,21 +97,30 @@ def _ticket_columns(df: pd.DataFrame) -> list[str]:
 
 
 def _join_prediction(buy: pd.Series, predictions: pd.DataFrame) -> pd.Series:
+    required = {"home_team", "away_team"}
+    if not required.issubset(predictions.columns):
+        raise RuntimeError("prediction inputs missing home_team/away_team")
+    home = canonical_team_name(buy.get("home_team", ""))
+    away = canonical_team_name(buy.get("away_team", ""))
+    hit = predictions[
+        predictions["home_team"].map(canonical_team_name).eq(home)
+        & predictions["away_team"].map(canonical_team_name).eq(away)
+    ]
+    # Match numbers are local to a round; never use a number alone to identify
+    # a fixture. Keep home/away direction and known date/league constraints.
+    if "league" in hit and _first(buy, ["league"]) is not None:
+        hit = hit[hit["league"].astype(str).str.lower().eq(str(buy["league"]).lower())]
+    date = pd.to_datetime(buy.get("datetime"), errors="coerce")
+    if pd.notna(date) and "datetime" in hit:
+        hit = hit[pd.to_datetime(hit["datetime"], errors="coerce").dt.normalize().eq(date.normalize())]
     match_no = _number(buy.get("match_no"))
     if match_no is not None and "match_no" in predictions.columns:
-        nums = pd.to_numeric(predictions["match_no"], errors="coerce")
-        hit = predictions[nums == int(match_no)]
-        if len(hit) == 1:
-            return hit.iloc[0]
-
-    required = {"home_team", "away_team"}
-    if required.issubset(predictions.columns):
-        hit = predictions[
-            predictions["home_team"].astype(str).str.strip().eq(str(buy.get("home_team", "")).strip())
-            & predictions["away_team"].astype(str).str.strip().eq(str(buy.get("away_team", "")).strip())
-        ]
-        if len(hit) == 1:
-            return hit.iloc[0]
+        nums = pd.to_numeric(hit["match_no"], errors="coerce")
+        numbered = hit[nums == int(match_no)]
+        if len(numbered) == 1:
+            return numbered.iloc[0]
+    if len(hit) == 1:
+        return hit.iloc[0]
     raise RuntimeError(
         "prediction row could not be matched uniquely: "
         f"match_no={buy.get('match_no')} {buy.get('home_team')}-{buy.get('away_team')}"

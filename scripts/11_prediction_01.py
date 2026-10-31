@@ -19,11 +19,11 @@
 import os
 import sys
 import math
-from acl_schedule import normalize_acl_schedule
-from bisect import bisect_left
 import pandas as pd
 import numpy as np
 from fatigue_merge import add_fatigue_time_aliases, validate_prediction_fatigue
+from football_lab_merge import merge_football_lab_fixtures
+from uncertainty_calibration import apply_to_frame as apply_uncertainty_calibration
 _PROJECT_ROOT_FOR_IMPORTS = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if _PROJECT_ROOT_FOR_IMPORTS not in sys.path:
     sys.path.insert(0, _PROJECT_ROOT_FOR_IMPORTS)
@@ -340,6 +340,10 @@ def _load_football_lab_compare_bundle(league):
         part["__flab_mtime"] = float(os.path.getmtime(path))
         part["__flab_priority"] = int(priority)
         part["__flab_source"] = os.path.basename(path)
+        part["flab_source_csv"] = os.path.basename(path)
+        snapshot_match = re.search(r"_football_lab_compare_(\d{8})_", os.path.basename(path))
+        part["flab_snapshot_date"] = snapshot_match.group(1) if snapshot_match else ""
+
         frames.append(part)
 
     if not frames:
@@ -360,6 +364,52 @@ def _load_football_lab_compare_bundle(league):
     return merged.copy()
 
 
+_FOOTBALL_LAB_REQUIRED_CHANCE_BASES = (
+    "flab_chance_attack_count", "flab_chance_shots", "flab_chance_build_rate",
+    "flab_chance_goals", "flab_chance_shot_conversion",
+    "flab_chance_allowed_attack_count", "flab_chance_allowed_shots",
+    "flab_chance_allowed_build_rate", "flab_chance_allowed_goals",
+    "flab_chance_allowed_shot_conversion",
+)
+
+
+def _validate_merged_football_lab_chance(df, league, scope):
+    """Do not continue with missing or rank-shifted chance metrics."""
+    required = [
+        f"{base}_{side}"
+        for base in _FOOTBALL_LAB_REQUIRED_CHANCE_BASES
+        for side in ("home", "away")
+    ]
+    any_flab = [column for column in df.columns if column.startswith("flab_")]
+    if not any_flab:
+        return
+    missing_columns = [column for column in required if column not in df.columns]
+    present = [column for column in required if column in df.columns]
+    failures = []
+    if missing_columns:
+        failures.append(f"missing_columns={missing_columns[:8]}")
+    if present:
+        numeric = df[present].apply(pd.to_numeric, errors="coerce")
+        bad = numeric.isna()
+        if bad.any(axis=None):
+            examples = []
+            for row_index, column_index in zip(*bad.to_numpy().nonzero()):
+                row = df.iloc[row_index]
+                column = present[column_index]
+                examples.append(
+                    f"match_id={row.get('match_id', '?')}:{column}={row.get(column)!r}"
+                )
+                if len(examples) >= 8:
+                    break
+            failures.append("invalid_or_missing_values=" + ", ".join(examples))
+    if failures:
+        raise RuntimeError(
+            "[FOOTBALL_LAB][FATAL] chance metrics are incomplete or malformed; "
+            "rebuild the Football LAB snapshot before prediction. "
+            f"league={league} scope={scope} " + " ".join(failures)
+        )
+
+
 def merge_football_lab_compare(df, league, scope):
     if df is None or df.empty or ("match_id" not in df.columns):
         return df
@@ -373,7 +423,18 @@ def merge_football_lab_compare(df, league, scope):
     if drop_cols:
         out = out.drop(columns=drop_cols, errors="ignore")
     before = set(out.columns)
-    out = out.merge(compare[["match_id"] + flab_cols], on="match_id", how="left", validate="one_to_one")
+    out = merge_football_lab_fixtures(out, compare[["match_id"] + flab_cols])
+    counts = out["flab_match_method"].value_counts().to_dict()
+    print(f"[FOOTBALL_LAB][MATCH] league={league} scope={scope} methods={counts}")
+    unmatched = out["flab_match_method"].eq("unmatched")
+    if unmatched.any():
+        raise RuntimeError(
+            f"[FOOTBALL_LAB][MATCH] league={league} scope={scope} "
+            f"unmatched={int(unmatched.sum())}/{len(out)} "
+            f"match_ids={out.loc[unmatched, 'match_id'].head(8).tolist()}; "
+            "check comparison fixture coverage/date/team identity (kickoff tolerance=10 minutes)"
+        )
+    _validate_merged_football_lab_chance(out, league, scope)
     merged_cols = [c for c in flab_cols if c not in before]
     available_rows = 0
     if merged_cols:
@@ -725,6 +786,13 @@ team_management_master_csv = pick_non_empty_csv_path(
     required_cols=["team_name"],
 )
 absence_impact_csv, absence_asof_key = resolve_absence_impact_csv()
+if os.environ.get("ABSENCE_REQUIRE_EXACT_ASOF", "0") == "1":
+    required_absence_asof = _asof_key(ABSENCE_ASOF_DATE)
+    if not required_absence_asof or absence_asof_key != required_absence_asof:
+        raise RuntimeError(
+            f"当日更新の欠場影響snapshotがありません: required={required_absence_asof}, "
+            f"selected={absence_asof_key or absence_impact_csv}"
+        )
 team_motivation_csv = pick_non_empty_csv_path(
     [
         os.path.join(DATA_DIR, f"{LEAGUE}_{SEASON_YEAR}_motivation.csv"),
@@ -742,31 +810,6 @@ if not os.path.exists(team_fatigue_scores_csv):
 if not os.path.exists(team_fatigue_scores_csv):
     team_fatigue_scores_csv = os.path.join(DATA_DIR, "team_fatigue_scores.csv")
 acl_schedule_csv = os.environ.get("ACL_SCHEDULE_CSV", os.path.join(MANUAL_DIR, "acl_schedule.csv"))
-ACL_EFFECTIVE_DAYS = _get_env_int("ACL_EFFECTIVE_DAYS", 5)
-ACL_DEBUG = _env_flag("ACL_DEBUG", 0)
-ACL_FATIGUE_MULTIPLIER = float(os.environ.get("ACL_FATIGUE_MULTIPLIER", "1.45"))
-ACL_FATIGUE_SHORT_REST_BONUS = float(os.environ.get("ACL_FATIGUE_SHORT_REST_BONUS", "0.25"))
-ACL_FATIGUE_TRAVEL_AWAY_BONUS = float(os.environ.get("ACL_FATIGUE_TRAVEL_AWAY_BONUS", "0.20"))
-ACL_AWAY_TRAVEL_TYPES = {
-    "away",
-    "international_away",
-    "overseas",
-    "short",
-    "medium",
-    "long_away",
-    "long",
-    "long_haul",
-}
-ACL_SECOND_WINDOW_DAYS = _get_env_int("ACL_SECOND_WINDOW_DAYS", 14)
-ACL_SECOND_WINDOW_DECAY = float(os.environ.get("ACL_SECOND_WINDOW_DECAY", "0.85"))
-ACL_DRAW_MIN_FATIGUE = float(os.environ.get("ACL_DRAW_MIN_FATIGUE", "5.0"))
-ACL_DRAW_EDGE_BASE = float(os.environ.get("ACL_DRAW_EDGE_BASE", "0.025"))
-ACL_DRAW_EDGE_PER_FATIGUE = float(os.environ.get("ACL_DRAW_EDGE_PER_FATIGUE", "0.005"))
-ACL_DRAW_EDGE_CAP = float(os.environ.get("ACL_DRAW_EDGE_CAP", "0.120"))
-ACL_DRAW_DRAWRISK_BONUS = float(os.environ.get("ACL_DRAW_DRAWRISK_BONUS", "0.015"))
-ACL_DRAW_WEATHER_BONUS_SCALE = float(os.environ.get("ACL_DRAW_WEATHER_BONUS_SCALE", "0.012"))
-ACL_DRAW_SECOND_WINDOW_BONUS = float(os.environ.get("ACL_DRAW_SECOND_WINDOW_BONUS", "0.000"))
-
 # 天候キャッシュは as-of 付きsnapshotを優先し、なければ従来ファイルへフォールバック
 weather_cache_csv, weather_asof_key = resolve_weather_cache_csv()
 J2_ALLOWED_TEAMS_CSV = os.environ.get(
@@ -1526,8 +1569,9 @@ def _predict_hda_multinom_probs(elo_diff_for_prob, feat_overrides=None):
     return (float(arr[0]), float(arr[1]), float(arr[2])), feat_values
 
 
-def _extend_multinom_feat_values(feat_values, row, home_advantage_diff, absence_effective, home_fatigue_score, away_fatigue_score):
+def _extend_multinom_feat_values(feat_values, row, home_advantage_diff, absence_effective):
     ext = dict(feat_values)
+    requested = set(HDA_MODEL_BUNDLE.get("feature_names", [])) if HDA_MODEL_BUNDLE is not None else set()
     if LEAGUE == "j1":
         scaled_home_advantage_diff = 0.0
     else:
@@ -1552,19 +1596,13 @@ def _extend_multinom_feat_values(feat_values, row, home_advantage_diff, absence_
         rank_gap = float(home_rank - away_rank)
         ext["rank_gap_abs"] = abs(rank_gap)
         ext["rank_gap"] = rank_gap
-    if absence_effective is not None:
+    if absence_effective is not None and requested.intersection({"absence_effective_total_diff", "absence_effective_total_diff_abs"}):
         abs_home = pd.to_numeric(absence_effective.get("absence_effective_total_home"), errors="coerce")
         abs_away = pd.to_numeric(absence_effective.get("absence_effective_total_away"), errors="coerce")
         if pd.notna(abs_home) and pd.notna(abs_away):
             absence_diff = float(abs_home - abs_away)
             ext["absence_effective_total_diff_abs"] = abs(absence_diff)
             ext["absence_effective_total_diff"] = absence_diff
-    home_fatigue = pd.to_numeric(home_fatigue_score, errors="coerce")
-    away_fatigue = pd.to_numeric(away_fatigue_score, errors="coerce")
-    if pd.notna(home_fatigue) and pd.notna(away_fatigue):
-        fatigue_diff = float(home_fatigue - away_fatigue)
-        ext["fatigue_diff_abs"] = abs(fatigue_diff)
-        ext["fatigue_diff"] = fatigue_diff
     home_gc = pd.to_numeric(row.get("stats_1試合平均失点数_home"), errors="coerce")
     away_gc = pd.to_numeric(row.get("stats_1試合平均失点数_away"), errors="coerce")
     if pd.notna(home_gc) and pd.notna(away_gc):
@@ -4326,10 +4364,6 @@ def _compute_match_type_pressures(row):
     pa = float(pd.to_numeric(row.get("prob_away_win"), errors="coerce"))
     home_fatigue = float(pd.to_numeric(row.get("home_total_fatigue_score"), errors="coerce"))
     away_fatigue = float(pd.to_numeric(row.get("away_total_fatigue_score"), errors="coerce"))
-    home_acl_fatigue = float(pd.to_numeric(row.get("home_acl_fatigue"), errors="coerce"))
-    away_acl_fatigue = float(pd.to_numeric(row.get("away_acl_fatigue"), errors="coerce"))
-    home_acl_days_since = float(pd.to_numeric(row.get("home_acl_days_since"), errors="coerce"))
-    away_acl_days_since = float(pd.to_numeric(row.get("away_acl_days_since"), errors="coerce"))
     home_absence = float(pd.to_numeric(row.get("absence_effective_total_home"), errors="coerce"))
     away_absence = float(pd.to_numeric(row.get("absence_effective_total_away"), errors="coerce"))
     derby_match = bool(row.get("derby_match", False))
@@ -4364,22 +4398,6 @@ def _compute_match_type_pressures(row):
     structural_delta = home_strength - away_strength
     home_adverse_score = max(home_fatigue - away_fatigue, 0.0) * 0.12 + home_absence * 8.0 + weather_penalty
     away_adverse_score = max(away_fatigue - home_fatigue, 0.0) * 0.12 + away_absence * 8.0 + weather_penalty
-    home_acl_draw_pressure = 0.0
-    away_acl_draw_pressure = 0.0
-    if math.isfinite(home_acl_fatigue) and home_acl_fatigue >= ACL_DRAW_MIN_FATIGUE:
-        home_acl_draw_pressure = min(
-            ACL_DRAW_EDGE_BASE + (home_acl_fatigue * ACL_DRAW_EDGE_PER_FATIGUE),
-            ACL_DRAW_EDGE_CAP,
-        )
-        if math.isfinite(home_acl_days_since) and int(effective_days := ACL_EFFECTIVE_DAYS) < home_acl_days_since <= int(ACL_SECOND_WINDOW_DAYS):
-            home_acl_draw_pressure = min(home_acl_draw_pressure + ACL_DRAW_SECOND_WINDOW_BONUS, ACL_DRAW_EDGE_CAP)
-    if math.isfinite(away_acl_fatigue) and away_acl_fatigue >= ACL_DRAW_MIN_FATIGUE:
-        away_acl_draw_pressure = min(
-            ACL_DRAW_EDGE_BASE + (away_acl_fatigue * ACL_DRAW_EDGE_PER_FATIGUE),
-            ACL_DRAW_EDGE_CAP,
-        )
-        if math.isfinite(away_acl_days_since) and int(effective_days := ACL_EFFECTIVE_DAYS) < away_acl_days_since <= int(ACL_SECOND_WINDOW_DAYS):
-            away_acl_draw_pressure = min(away_acl_draw_pressure + ACL_DRAW_SECOND_WINDOW_BONUS, ACL_DRAW_EDGE_CAP)
     title_pressure = (
         (0.18 if bool(row.get("match_type_title_race_home", False)) else 0.0)
         + (0.18 if bool(row.get("match_type_title_race_away", False)) else 0.0)
@@ -4403,13 +4421,11 @@ def _compute_match_type_pressures(row):
         + (0.10 * motivation_score)
     )
     fatigue_load = _safe_mean([home_fatigue, away_fatigue], default=4.0)
-    acl_load = _safe_mean([home_acl_fatigue, away_acl_fatigue], default=0.0)
     absence_load = _safe_mean([home_absence, away_absence], default=0.05)
     focus_stability_score = _clip01(
         1.0
         - (
             0.35 * _clip01(fatigue_load / 10.0)
-            + 0.20 * _clip01(acl_load / 8.0)
             + 0.25 * _clip01(absence_load / 0.18)
             + 0.20 * _clip01(weather_penalty / 1.70)
         )
@@ -4423,10 +4439,6 @@ def _compute_match_type_pressures(row):
         "prob_away": pa,
         "home_fatigue": home_fatigue,
         "away_fatigue": away_fatigue,
-        "home_acl_fatigue": home_acl_fatigue,
-        "away_acl_fatigue": away_acl_fatigue,
-        "home_acl_days_since": home_acl_days_since,
-        "away_acl_days_since": away_acl_days_since,
         "home_absence": home_absence,
         "away_absence": away_absence,
         "draw_gap": float(pd.to_numeric(row.get("draw_gap"), errors="coerce")),
@@ -4439,8 +4451,6 @@ def _compute_match_type_pressures(row):
         "away_relegation_risk": bool(row.get("match_type_relegation_risk_away", False)),
         "home_adverse_score": home_adverse_score,
         "away_adverse_score": away_adverse_score,
-        "home_acl_draw_pressure": home_acl_draw_pressure,
-        "away_acl_draw_pressure": away_acl_draw_pressure,
         "weather_penalty": weather_penalty,
         "derby_match": derby_match,
         "derby_intensity": derby_intensity,
@@ -9358,8 +9368,6 @@ def compute_probabilities_and_result(
             row=row if row is not None else pd.Series(dtype="object"),
             home_advantage_diff=home_advantage_diff,
             absence_effective=absence_effective if absence_effective is not None else {},
-            home_fatigue_score=home_fatigue_score,
-            away_fatigue_score=away_fatigue_score,
         )
         (prob_home_win, prob_draw, prob_away_win), model_feats = _predict_hda_multinom_probs(
             model_input_diff,
@@ -11226,7 +11234,7 @@ def _absence_uncertainty_weeks(expected_weeks):
     return 4.0
 
 
-def _absence_date_factor(match_date, start_date, expected_return_date, expected_weeks):
+def _absence_date_factor(match_date, start_date, expected_return_date, expected_weeks, absence_type=""):
     match_ts = pd.to_datetime(match_date, errors="coerce")
     start_ts = pd.to_datetime(start_date, errors="coerce")
     return_ts = pd.to_datetime(expected_return_date, errors="coerce")
@@ -11237,6 +11245,10 @@ def _absence_date_factor(match_date, start_date, expected_return_date, expected_
     return_ts = return_ts.normalize()
     if match_ts < start_ts:
         return 0.0
+    # A card suspension ends on the listed return date; injury estimates retain
+    # their uncertainty window around that date.
+    if str(absence_type).strip().lower() == "card":
+        return 1.0 if match_ts < return_ts else 0.0
 
     duration_weeks = _safe_float_value(expected_weeks, 0.0)
     if duration_weeks <= 0:
@@ -11362,7 +11374,8 @@ def load_absence_impact_team_round_map(absence_csv_path, match_frames):
         for _, fixture in team_fixtures.iterrows():
             if pd.notna(r["start_date"]) and pd.notna(r["expected_return_date"]):
                 factor = _absence_date_factor(
-                    fixture["match_date"], r["start_date"], r["expected_return_date"], r["expected_weeks"]
+                    fixture["match_date"], r["start_date"], r["expected_return_date"], r["expected_weeks"],
+                    r.get("absence_type", ""),
                 )
             elif pd.notna(r["round_start"]):
                 start_r = int(r["round_start"])
@@ -12148,128 +12161,16 @@ def drop_internal_output_columns(df):
     return out
 
 
-def load_acl_events(path):
-    required_cols = ["match_date", "team", "fatigue_grade"]
-    if not path or not os.path.exists(path):
-        print(f"[ACL] schedule csv not found: {path}")
-        return pd.DataFrame(columns=required_cols)
-
-    out = normalize_acl_schedule(path)
-    out["_team_key"] = normalize_team_series(out["team"])
-    out = out.sort_values(["_team_key", "match_date"], kind="mergesort").reset_index(drop=True)
-    return out
-
-
-def build_acl_event_index(df_acl):
-    index = {}
-    if df_acl is None or df_acl.empty:
-        return index
-    for team_key, group in df_acl.groupby("_team_key", sort=False):
-        dates = group["match_date"].tolist()
-        rows = group.to_dict("records")
-        index[str(team_key)] = {"dates": dates, "rows": rows}
-    return index
-
-
-def get_latest_acl_event(team, target_date, acl_event_index):
-    if pd.isna(target_date):
-        return None
-    team_key = canonical_team_name(team)
-    payload = acl_event_index.get(team_key)
-    if not payload:
-        return None
-    dates = payload["dates"]
-    pos = bisect_left(dates, pd.Timestamp(target_date))
-    if pos <= 0:
-        return None
-    return payload["rows"][pos - 1]
-
-
-def get_acl_fatigue(team, target_date, acl_event_index, effective_days):
-    event = get_latest_acl_event(team, target_date, acl_event_index)
-    if not event:
-        return {
-            "acl_fatigue": 0.0,
-            "acl_last_date": pd.NaT,
-            "acl_days_since": pd.NA,
-            "acl_travel_type": "",
-        }
-
-    target_ts = pd.Timestamp(target_date)
-    event_ts = pd.Timestamp(event["match_date"])
-    days_since = (target_ts.normalize() - event_ts.normalize()).days
-    if days_since > int(ACL_SECOND_WINDOW_DAYS):
-        return {
-            "acl_fatigue": 0.0,
-            "acl_last_date": pd.NaT,
-            "acl_days_since": pd.NA,
-            "acl_travel_type": "",
-        }
-    fatigue_value = 0.0
-    if 1 <= days_since <= int(effective_days):
-        fatigue_value = float(event.get("fatigue_grade", 0.0) or 0.0)
-        fatigue_value *= ACL_FATIGUE_MULTIPLIER
-        if days_since <= 3:
-            fatigue_value *= (1.0 + ACL_FATIGUE_SHORT_REST_BONUS)
-        travel_type = str(event.get("travel_type", "") or "").strip().lower()
-        if travel_type in ACL_AWAY_TRAVEL_TYPES:
-            fatigue_value *= (1.0 + ACL_FATIGUE_TRAVEL_AWAY_BONUS)
-    elif int(effective_days) < days_since <= int(ACL_SECOND_WINDOW_DAYS):
-        fatigue_value = float(event.get("fatigue_grade", 0.0) or 0.0)
-        fatigue_value *= ACL_FATIGUE_MULTIPLIER
-        travel_type = str(event.get("travel_type", "") or "").strip().lower()
-        if travel_type in ACL_AWAY_TRAVEL_TYPES:
-            fatigue_value *= (1.0 + ACL_FATIGUE_TRAVEL_AWAY_BONUS)
-        fatigue_value *= ACL_SECOND_WINDOW_DECAY
-
-    return {
-        "acl_fatigue": fatigue_value,
-        "acl_last_date": event_ts,
-        "acl_days_since": days_since,
-        "acl_travel_type": event.get("travel_type", "") or "",
-    }
-
-
-def attach_acl_fatigue_to_matches(df_matches, acl_event_index, effective_days, stage_label="matches"):
+def use_generic_fatigue_only(df_matches):
+    """Keep legacy audit columns while using the single general fatigue score."""
     out = df_matches.copy()
-    if "datetime" not in out.columns:
-        out["home_acl_fatigue"] = 0.0
-        out["away_acl_fatigue"] = 0.0
-        out["home_total_fatigue_score"] = pd.to_numeric(out.get("home_fatigue_score"), errors="coerce").fillna(0.0)
-        out["away_total_fatigue_score"] = pd.to_numeric(out.get("away_fatigue_score"), errors="coerce").fillna(0.0)
-        return out
-
-    out["datetime"] = pd.to_datetime(out["datetime"], errors="coerce")
-    home_infos = out.apply(
-        lambda row: get_acl_fatigue(row.get("home_team"), row.get("datetime"), acl_event_index, effective_days),
-        axis=1,
-    )
-    away_infos = out.apply(
-        lambda row: get_acl_fatigue(row.get("away_team"), row.get("datetime"), acl_event_index, effective_days),
-        axis=1,
-    )
-
-    out["home_acl_fatigue"] = home_infos.map(lambda x: x["acl_fatigue"]).astype(float)
-    out["away_acl_fatigue"] = away_infos.map(lambda x: x["acl_fatigue"]).astype(float)
-    out["home_acl_last_date"] = home_infos.map(lambda x: x["acl_last_date"])
-    out["away_acl_last_date"] = away_infos.map(lambda x: x["acl_last_date"])
-    out["home_acl_days_since"] = home_infos.map(lambda x: x["acl_days_since"])
-    out["away_acl_days_since"] = away_infos.map(lambda x: x["acl_days_since"])
-    out["home_acl_travel_type"] = home_infos.map(lambda x: x["acl_travel_type"])
-    out["away_acl_travel_type"] = away_infos.map(lambda x: x["acl_travel_type"])
-
-    base_home = pd.to_numeric(out.get("home_fatigue_score"), errors="coerce").fillna(0.0)
-    base_away = pd.to_numeric(out.get("away_fatigue_score"), errors="coerce").fillna(0.0)
-    out["home_total_fatigue_score"] = base_home + out["home_acl_fatigue"]
-    out["away_total_fatigue_score"] = base_away + out["away_acl_fatigue"]
-
-    if ACL_DEBUG:
-        applied = int(((out["home_acl_fatigue"] > 0) | (out["away_acl_fatigue"] > 0)).sum())
-        print(
-            f"[ACL_DEBUG] stage={stage_label} rows={len(out)} applied={applied} "
-            f"effective_days={effective_days}"
-        )
+    for side in ("home", "away"):
+        out[f"{side}_acl_fatigue"] = 0.0
+        out[f"{side}_total_fatigue_score"] = pd.to_numeric(
+            out.get(f"{side}_fatigue_score"), errors="coerce"
+        ).fillna(0.0)
     return out
+
 
 # 外部スタッツデータをマージする関数
 def merge_external_stats(
@@ -12519,34 +12420,12 @@ except Exception as e:
     print(f"エラー: 疲労度のマージ中にエラーが発生しました: {e}")
     raise
 
-# ACL疲労イベント（直前1試合のみ有効）を通常疲労に加算
-try:
-    acl_events_df = load_acl_events(acl_schedule_csv)
-    acl_event_index = build_acl_event_index(acl_events_df)
-    df_2025_future = attach_acl_fatigue_to_matches(
-        df_2025_future,
-        acl_event_index,
-        ACL_EFFECTIVE_DAYS,
-        stage_label="future",
-    )
-    df_2025_finished = attach_acl_fatigue_to_matches(
-        df_2025_finished,
-        acl_event_index,
-        ACL_EFFECTIVE_DAYS,
-        stage_label="finished",
-    )
-    if not acl_events_df.empty:
-        print(
-            f"[ACL] loaded={len(acl_events_df)} path={acl_schedule_csv} "
-            f"effective_days={ACL_EFFECTIVE_DAYS}"
-        )
-    report_missing_rates(df_2025_future, "after_acl_future")
-    report_missing_rates(df_2025_finished, "after_acl_finished")
-except FileNotFoundError:
-    print(f"[ACL] schedule csv not found: {acl_schedule_csv}")
-except Exception as e:
-    print(f"エラー: ACL疲労の付与中にエラーが発生しました: {e}")
-    raise
+# ACLの実施済み試合は06_calculate_fatigue.pyの通常経路に統合済み。
+# ここでは大会名による追加倍率を掛けない。
+df_2025_future = use_generic_fatigue_only(df_2025_future)
+df_2025_finished = use_generic_fatigue_only(df_2025_finished)
+report_missing_rates(df_2025_future, "after_acl_future")
+report_missing_rates(df_2025_finished, "after_acl_finished")
 
 # 天候キャッシュ（match_idキー）をマージ
 if os.path.exists(weather_cache_csv) or os.path.isdir(WEATHER_SNAPSHOT_DIR):
@@ -12932,6 +12811,17 @@ df_pred = add_main_prediction_columns(df_pred)
 df_pred = enforce_final_elo_sign_monotonic(df_pred, "PRED_POST_BLEND")
 df_pred = apply_main_prediction_result(df_pred, "PRED_FINAL")
 df_pred = apply_connected_prediction_overrides(df_pred, LEAGUE, "PRED_FINAL")
+with open(os.path.join(DATA_DIR, "models", "uncertainty_calibration_v1.json"), encoding="utf-8") as _uncertainty_file:
+    _uncertainty_config = json.load(_uncertainty_file)
+df_pred = apply_uncertainty_calibration(
+    df_pred,
+    fatigue_weight=float(_uncertainty_config["fatigue_weight"]),
+    weather_weight=float(_uncertainty_config["weather_weight"]),
+    max_mix=float(_uncertainty_config["max_mix"]),
+)
+print(f"[UNCERTAINTY_CALIBRATION:PRED] version={_uncertainty_config['version']} "
+      f"mean_mix={df_pred['uncertainty_calibration_mix'].mean():.4f} "
+      f"weather_known={int(df_pred['uncertainty_weather_known'].sum())}/{len(df_pred)}")
 df_pred = add_buyplan_purchase_context(df_pred)
 log_draw_tweak_audit(df_pred, "PRED")
 log_decision_rule_once()
@@ -13293,6 +13183,12 @@ df_backtest = add_main_prediction_columns(df_backtest)
 df_backtest = enforce_final_elo_sign_monotonic(df_backtest, "BACKTEST_POST_BLEND")
 df_backtest = apply_main_prediction_result(df_backtest, "BACKTEST_FINAL")
 df_backtest = apply_connected_prediction_overrides(df_backtest, LEAGUE, "BACKTEST_FINAL")
+df_backtest = apply_uncertainty_calibration(
+    df_backtest,
+    fatigue_weight=float(_uncertainty_config["fatigue_weight"]),
+    weather_weight=float(_uncertainty_config["weather_weight"]),
+    max_mix=float(_uncertainty_config["max_mix"]),
+)
 df_backtest = add_buyplan_purchase_context(df_backtest)
 if "actual_result" in df_backtest.columns and "predicted_result" in df_backtest.columns:
     df_backtest["is_correct"] = (
@@ -13425,7 +13321,6 @@ try:
         "j1_target_d_range_raw": J1_TARGET_D_RANGE_RAW,
         "j2_target_d_range_raw": J2_TARGET_D_RANGE_RAW,
         "acl_schedule_csv": acl_schedule_csv if os.path.exists(acl_schedule_csv) else None,
-        "acl_effective_days": int(ACL_EFFECTIVE_DAYS),
         "pred_rows": int(len(df_pred)) if "df_pred" in globals() else 0,
         "hfa_apply_count": {
             "applied": int(HFA_APPLY_COUNTER["applied"]),
@@ -13507,7 +13402,6 @@ def build_report():
         "GOAL_SCALING_FACTOR": GOAL_SCALING_FACTOR,
         "FATIGUE_GOAL_SCALING": FATIGUE_GOAL_SCALING,
         "AWAY_PROB_MULTIPLIER": AWAY_PROB_MULTIPLIER,
-        "ACL_EFFECTIVE_DAYS": ACL_EFFECTIVE_DAYS,
         "ENABLE_ROUND_TYPE_DRAW_CONTROL": int(ENABLE_ROUND_TYPE_DRAW_CONTROL),
         "ROUND_TYPE_DRAW_REL_THRESHOLD": ROUND_TYPE_DRAW_REL_THRESHOLD,
         "ROUND_TYPE_DRAW_SHARE_THRESHOLD": ROUND_TYPE_DRAW_SHARE_THRESHOLD,

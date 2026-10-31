@@ -1,0 +1,52 @@
+{
+  "schema_version": 2,
+  "created_at": "2026-10-21T22:38:17+09:00",
+  "round_id": "toto1664",
+  "logical_season": "2027",
+  "prediction_season": "2026",
+  "j1_source": "",
+  "j2_source": "",
+  "football_lab_snapshot": "",
+  "files": {
+    "predictions.csv": {
+      "size": 183914,
+      "sha256": "baa2c6fa43791f27c95c9da614e3af138a4209708303404fab9746e64d431596"
+    },
+    "buyplan.csv": {
+      "size": 1614,
+      "sha256": "4d26e4cb3a101997a20c9cd77de770d37d78df7ae880a5af62294e53fda0241d"
+    },
+    "next_predictions.csv": {
+      "size": 136113,
+      "sha256": "75580295a3107b14620efebeb2c9b7911c90ed889a99c1942595ccd58331dc18"
+    },
+    "shadow_buyplan.csv": {
+      "size": 1614,
+      "sha256": "bc5f714e2be01a221089c2ec33a109515eb3c228c158ed23063748d65b60dd7d"
+    },
+    "shadow_buyplan.html": {
+      "size": 4599,
+      "sha256": "487a67f08eb94d1a562e1bd6557527e095ec0a4b69afb25e91049e273901d63a"
+    },
+    "shadow_buyplan_b.csv": {
+      "size": 1614,
+      "sha256": "29f30f00a9ef336b43e84c56c017797736bdc926d5bfc51fa87c51a906ea5ad2"
+    },
+    "shadow_buyplan_b.html": {
+      "size": 4610,
+      "sha256": "53572ebb884c5172f4379d7e48b292842f54673529a7fc02e71afcf6aac6420c"
+    },
+    "buyplan.html": {
+      "size": 8032,
+      "sha256": "24777ce09fc6b5731610d0b99aac4873e1d7a62b19099271591eb8ea12410f6d"
+    },
+    "predictions_buyplan_context.csv": {
+      "size": 39833,
+      "sha256": "66899bc15769f6a6883e7a90458db000cbf471244585892c96e424aec748e8fd"
+    },
+    "buyplan_engine_manifest.json": {
+      "size": 31906,
+      "sha256": "19c7e42d97d5198258b800b004ba52af918fe6c400dad6579493872cdbb3b002"
+    }
+  }
+}

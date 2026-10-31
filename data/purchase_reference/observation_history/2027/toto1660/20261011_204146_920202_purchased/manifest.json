@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-11T20:41:46+09:00",
+  "logical_season": "2027",
+  "prediction_season": "2026",
+  "league_round": 9,
+  "toto_round_id": "toto1660",
+  "label": "purchased",
+  "prediction_rows": 18,
+  "buyplan_matches": 13,
+  "draw_counts": {
+    "ticket01": 3,
+    "ticket02": 4,
+    "ticket03": 3,
+    "ticket04": 3,
+    "ticket05": 3,
+    "ticket06": 3,
+    "ticket07": 4,
+    "ticket08": 5,
+    "ticket09": 3,
+    "ticket10": 2
+  },
+  "draw_total": 33,
+  "matches": [
+    {
+      "match_no": 1,
+      "home_team": "C大阪",
+      "away_team": "横浜ＦM"
+    },
+    {
+      "match_no": 2,
+      "home_team": "ＦＣ東京",
+      "away_team": "浦和"
+    },
+    {
+      "match_no": 3,
+      "home_team": "福岡",
+      "away_team": "岡山"
+    },
+    {
+      "match_no": 4,
+      "home_team": "千葉",
+      "away_team": "長崎"
+    },
+    {
+      "match_no": 5,
+      "home_team": "水戸",
+      "away_team": "清水"
+    },
+    {
+      "match_no": 6,
+      "home_team": "京都",
+      "away_team": "町田"
+    },
+    {
+      "match_no": 7,
+      "home_team": "東京V",
+      "away_team": "広島"
+    },
+    {
+      "match_no": 8,
+      "home_team": "川崎F",
+      "away_team": "名古屋"
+    },
+    {
+      "match_no": 9,
+      "home_team": "甲府",
+      "away_team": "栃木C"
+    },
+    {
+      "match_no": 10,
+      "home_team": "鳥栖",
+      "away_team": "藤枝"
+    },
+    {
+      "match_no": 11,
+      "home_team": "徳島",
+      "away_team": "今治"
+    },
+    {
+      "match_no": 12,
+      "home_team": "山形",
+      "away_team": "仙台"
+    },
+    {
+      "match_no": 13,
+      "home_team": "いわき",
+      "away_team": "秋田"
+    }
+  ],
+  "buyplan_engine": "next",
+  "buyplan_script": {
+    "path": "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/next_model/run_next_buyplan.py",
+    "sha256": "57ea6153c286ea2bf959eabe224f59fa0fc3fb850e28f77b2877bfa3cb930c81"
+  },
+  "files": {
+    "predictions.csv": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions.csv",
+      "size": 168964,
+      "sha256": "381e29215915e2a3e5741a2478b7459932895a594ee580ff0aaa3d5caa28a615"
+    },
+    "predictions_buyplan_context.csv": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_buyplan_context.csv",
+      "size": 36215,
+      "sha256": "e4ff7cc980425f6c309cf4672370b550e6011d848ce16d618f10c84ee56c1d0c"
+    },
+    "buyplan.csv": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan.csv",
+      "size": 1622,
+      "sha256": "b84de9da75d6e140a30188b6c7e313ed35365a386b948948c4370054a30b2a3f"
+    },
+    "buyplan.html": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan.html",
+      "size": 4547,
+      "sha256": "ba77f5b90223fd539f494625cb2153e6a002374bdbd3130e02c937f0d6342c10"
+    },
+    "next_predictions.csv": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/next_predictions.csv",
+      "size": 136364,
+      "sha256": "10a971e5783138a46d7018c18dec4ed2c27a7c936554c7bfa018d5ce118e6455"
+    },
+    "shadow_buyplan.csv": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_buyplan.csv",
+      "size": 1622,
+      "sha256": "5b7c8e739de591fda4dd19bd1c4477da404b2b837dd56b31b8cf6a1ce9e0d7d0"
+    },
+    "shadow_buyplan.html": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_buyplan.html",
+      "size": 4639,
+      "sha256": "1331744b6d20c9746e583600e73c5a7173722bdd858f77f08025ac6d173fc93b"
+    },
+    "buyplan_engine_manifest.json": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/manifest.json",
+      "size": 14318,
+      "sha256": "8653279e65cf255795eb190eafe60572e5497005baf8ecc5ad883887d963caff"
+    },
+    "buyplan_toto_diff.csv": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_toto_diff.csv",
+      "size": 642,
+      "sha256": "71c0293a5c582636fa7ef24571a6d62633e827f160375cace8e3c2df4c482974"
+    }
+  }
+}

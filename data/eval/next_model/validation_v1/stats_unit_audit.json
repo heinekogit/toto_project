@@ -1,0 +1,28 @@
+{
+  "conclusion": "stats_ゴール期待値 and stats_被ゴール期待値 are treated as cumulative; stats_1試合平均被ゴール期待値 is per-game. Rounded cumulative/per-game xGA is used only to reconstruct games played inside the same frozen snapshot row.",
+  "rows": 101,
+  "sides": {
+    "home": {
+      "valid_rows": 101,
+      "ratio_min": 1.0,
+      "ratio_median": 4.181818181818181,
+      "ratio_max": 20.0,
+      "integer_rounding_error_max": 0.5,
+      "rows_with_rounding_error_le_0_55": 101,
+      "derived_attack_xg_per_game_min": 0.4,
+      "derived_attack_xg_per_game_mean": 1.3314796893223155,
+      "derived_attack_xg_per_game_max": 3.0
+    },
+    "away": {
+      "valid_rows": 101,
+      "ratio_min": 1.0,
+      "ratio_median": 4.222222222222222,
+      "ratio_max": 20.0,
+      "integer_rounding_error_max": 0.5,
+      "rows_with_rounding_error_le_0_55": 101,
+      "derived_attack_xg_per_game_min": 0.5,
+      "derived_attack_xg_per_game_mean": 1.3360404311107805,
+      "derived_attack_xg_per_game_max": 2.6
+    }
+  }
+}

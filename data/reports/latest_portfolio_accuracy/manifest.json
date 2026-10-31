@@ -1,0 +1,12 @@
+{
+  "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/next_model/validation_v2/lab_xg_v0/predictions.csv",
+  "sha256": "d0ff83234fcacc8fa72dbe0b54186828b79f8e56eb30c0ff7fa379d548cf6cf0",
+  "mode": "retrospective regeneration, not live operating results",
+  "exclusions": [
+    {
+      "round_id": "toto1649",
+      "rows": 10,
+      "reason": "incomplete 13-match predictions/results"
+    }
+  ]
+}

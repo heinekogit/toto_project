@@ -13,6 +13,8 @@ WEATHER_SNAPSHOT_DIR="${WEATHER_SNAPSHOT_DIR:-$ROOT_DIR/data/weather_snapshots}"
 STADIUMS_FILE="${STADIUMS_FILE:-$ROOT_DIR/data/manual/stadiums.csv}"
 ABSENCES_CSV="${ABSENCES_CSV:-$ROOT_DIR/data/manual/欠場管理リスト.csv}"
 PLAYERS_CSV="${PLAYERS_CSV:-$ROOT_DIR/data/manual/jleague_club_players.csv}"
+PLAYERS_SUMMARY_JSON="${PLAYERS_SUMMARY_JSON:-$ROOT_DIR/data/manual/jleague_club_players_summary.json}"
+PLAYER_FETCH_SLEEP_SEC="${PLAYER_FETCH_SLEEP_SEC:-1.5}"
 ABSENCE_OUT_DIR="${ABSENCE_OUT_DIR:-$ROOT_DIR/data/manual}"
 ABSENCE_SNAPSHOT_DIR="${ABSENCE_SNAPSHOT_DIR:-$ROOT_DIR/data/absence_snapshots}"
 GENERATE_LOG_HTML="${GENERATE_LOG_HTML:-1}"
@@ -63,6 +65,7 @@ run_step_safe () {
     OK_STEPS=$((OK_STEPS + 1))
     echo "[INFO] ${step_name} : success"
     echo "[RESULT] ${step_name} : OK"
+    return 0
   else
     local rc=$?
     FAILED_STEPS=$((FAILED_STEPS + 1))
@@ -70,6 +73,7 @@ run_step_safe () {
     echo "[ERROR] ${step_name} : failed (exit=${rc})"
     echo "[WARN] ${step_name} : 続行します"
     echo "[RESULT] ${step_name} : ERROR"
+    return "$rc"
   fi
 }
 
@@ -89,14 +93,29 @@ if [[ "$preflight_ok" -eq 0 ]]; then
   exit 1
 fi
 
-# 欠場影響を先に更新（予測特徴量で利用）
+# 欠場影響を先に更新（予測特徴量で利用）。名簿取得失敗時は古い名簿で続行しない。
+describe_step "fetch_jleague_club_players.py" "公式選手名簿を全クラブ取得"
+run_step_safe "fetch_jleague_club_players.py" "$PYTHON" "$ROOT_DIR/scripts/fetch_jleague_club_players.py" \
+  --out "$PLAYERS_CSV" --summary-out "$PLAYERS_SUMMARY_JSON" \
+  --min-clubs 60 --sleep-sec "$PLAYER_FETCH_SLEEP_SEC" || exit 1
 if [[ -f "$ABSENCES_CSV" && -f "$PLAYERS_CSV" ]]; then
   describe_step "build_absence_impact.py" "欠場管理CSVと選手マスタから欠場影響CSVを更新"
   run_step_safe "build_absence_impact.py" "$PYTHON" "$ROOT_DIR/scripts/build_absence_impact.py" \
     "$ABSENCES_CSV" "$PLAYERS_CSV" --out-dir "$ABSENCE_OUT_DIR" --season "$SEASON_YEAR" \
-    --asof-date "$STATS_ASOF_DATE" --snapshot-dir "$ABSENCE_SNAPSHOT_DIR"
+    --asof-date "$STATS_ASOF_DATE" --snapshot-dir "$ABSENCE_SNAPSHOT_DIR" \
+    --max-player-age-days 1 --reject-active-unmatched || exit 1
 else
-  echo "[WARN] build_absence_impact.py をスキップ: 入力CSV不足 (absences=$ABSENCES_CSV players=$PLAYERS_CSV)"
+  echo "[ERROR] build_absence_impact.py 入力CSV不足 (absences=$ABSENCES_CSV players=$PLAYERS_CSV)"
+  exit 1
+fi
+
+describe_step "update_emperor_cup.py" "JFA公式の天皇杯終了試合を更新（疲労計算用）"
+# Stop on failure rather than silently calculate with stale cup results.
+cup_failed_before="$FAILED_STEPS"
+run_step_safe "update_emperor_cup.py" "$PYTHON" "$ROOT_DIR/scripts/update_emperor_cup.py" --season "$SEASON_YEAR"
+if [[ "$FAILED_STEPS" -gt "$cup_failed_before" ]]; then
+  echo "[ERROR] 天皇杯の更新に失敗しました。週次処理を停止します。"
+  exit 1
 fi
 
 for LEAGUE in $LEAGUES; do
@@ -147,7 +166,7 @@ for LEAGUE in $LEAGUES; do
     fi
   fi
   describe_step "11_prediction_01.py" "予測CSVを更新（節タイプ補正は無効化）"
-  run_step_safe "11_prediction_01.py" ENABLE_ROUND_TYPE_DRAW_CONTROL="0" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" STATS_ASOF_DATE="$STATS_ASOF_DATE" "$PYTHON" "$ROOT_DIR/scripts/11_prediction_01.py" || exit 1
+  run_step_safe "11_prediction_01.py" ENABLE_ROUND_TYPE_DRAW_CONTROL="0" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" STATS_ASOF_DATE="$STATS_ASOF_DATE" ABSENCE_ASOF_DATE="$STATS_ASOF_DATE" ABSENCE_SNAPSHOT_DIR="$ABSENCE_SNAPSHOT_DIR" ABSENCE_REQUIRE_EXACT_ASOF="1" "$PYTHON" "$ROOT_DIR/scripts/11_prediction_01.py" || exit 1
 done
 
 if [[ "$FAILED_STEPS" -gt 0 ]]; then

@@ -1,0 +1,283 @@
+{
+  "generator": "probability_allocation_v1",
+  "fixed_symbol_ratio_used": false,
+  "world_forcing_used": false,
+  "target_draw_count_used": false,
+  "candidate_pool_size": 0,
+  "max_same_picks": null,
+  "minimum_pairwise_hamming_distance": 7,
+  "joint_probability_floor_ratio": null,
+  "coverage_objective": "preserve_probability_allocations_then_diversify",
+  "ticket_log_probabilities": [
+    -14.344271493674691,
+    -13.396199272905559,
+    -13.312464035741783,
+    -12.547647866471051,
+    -12.927449996059297,
+    -13.352098010863502,
+    -13.0352975732809,
+    -13.916724928946799,
+    -12.7707645169408,
+    -13.518496518451386
+  ],
+  "ticket_joint_probabilities": [
+    5.89334741100442e-07,
+    1.5209137188270638e-06,
+    1.653751795602146e-06,
+    3.553250049234682e-06,
+    2.4304114448913883e-06,
+    1.5894889462295319e-06,
+    2.1819369351599614e-06,
+    9.037392766420679e-07,
+    2.8426765087578114e-06,
+    1.3458341941719757e-06
+  ],
+  "pairwise_same_pick_min": 2,
+  "pairwise_same_pick_mean": 4.177777777777778,
+  "pairwise_same_pick_max": 6,
+  "total_draw_cells": 32,
+  "marginals": [
+    {
+      "match_no": 1,
+      "home_team": "鹿島",
+      "away_team": "福岡",
+      "count_H": 3,
+      "count_D": 3,
+      "count_A": 4,
+      "expected_H": 3.460053227894917,
+      "expected_D": 2.5750601132481172,
+      "expected_A": 3.9648866588569645,
+      "draw_filter_class": "D-cover"
+    },
+    {
+      "match_no": 2,
+      "home_team": "岡山",
+      "away_team": "東京Ｖ",
+      "count_H": 5,
+      "count_D": 3,
+      "count_A": 2,
+      "expected_H": 5.297400328737639,
+      "expected_D": 2.5506000351509126,
+      "expected_A": 2.151999636111448,
+      "draw_filter_class": "D-uncertain"
+    },
+    {
+      "match_no": 3,
+      "home_team": "名古屋",
+      "away_team": "Ｇ大阪",
+      "count_H": 3,
+      "count_D": 2,
+      "count_A": 5,
+      "expected_H": 2.924337518668838,
+      "expected_D": 2.326449988742393,
+      "expected_A": 4.749212492588769,
+      "draw_filter_class": "D-uncertain"
+    },
+    {
+      "match_no": 4,
+      "home_team": "京都",
+      "away_team": "水戸",
+      "count_H": 3,
+      "count_D": 2,
+      "count_A": 5,
+      "expected_H": 2.865477155460592,
+      "expected_D": 2.359120074365118,
+      "expected_A": 4.775402770174289,
+      "draw_filter_class": "D-uncertain"
+    },
+    {
+      "match_no": 5,
+      "home_team": "広島",
+      "away_team": "川崎Ｆ",
+      "count_H": 7,
+      "count_D": 2,
+      "count_A": 1,
+      "expected_H": 6.718651694465015,
+      "expected_D": 1.9177720843212969,
+      "expected_A": 1.363576221213688,
+      "draw_filter_class": "D-reject"
+    },
+    {
+      "match_no": 6,
+      "home_team": "Ｃ大阪",
+      "away_team": "清水",
+      "count_H": 2,
+      "count_D": 2,
+      "count_A": 6,
+      "expected_H": 1.828357924528572,
+      "expected_D": 2.619888949802796,
+      "expected_A": 5.5517531256686325,
+      "draw_filter_class": "D-uncertain"
+    },
+    {
+      "match_no": 7,
+      "home_team": "横浜FM",
+      "away_team": "神戸",
+      "count_H": 3,
+      "count_D": 2,
+      "count_A": 5,
+      "expected_H": 2.7774161191442244,
+      "expected_D": 2.33189484025018,
+      "expected_A": 4.8906890406055945,
+      "draw_filter_class": "D-uncertain"
+    },
+    {
+      "match_no": 8,
+      "home_team": "札幌",
+      "away_team": "大宮",
+      "count_H": 3,
+      "count_D": 3,
+      "count_A": 4,
+      "expected_H": 3.219433647174614,
+      "expected_D": 2.6341753076820966,
+      "expected_A": 4.146391045143289,
+      "draw_filter_class": "D-reject"
+    },
+    {
+      "match_no": 9,
+      "home_team": "山形",
+      "away_team": "横浜FC",
+      "count_H": 3,
+      "count_D": 3,
+      "count_A": 4,
+      "expected_H": 2.90365049554676,
+      "expected_D": 2.6847902116422078,
+      "expected_A": 4.411559292811031,
+      "draw_filter_class": "D-reject"
+    },
+    {
+      "match_no": 10,
+      "home_team": "磐田",
+      "away_team": "徳島",
+      "count_H": 4,
+      "count_D": 3,
+      "count_A": 3,
+      "expected_H": 4.255108805988394,
+      "expected_D": 2.55822507697758,
+      "expected_A": 3.186666117034026,
+      "draw_filter_class": "D-reject"
+    },
+    {
+      "match_no": 11,
+      "home_team": "八戸",
+      "away_team": "仙台",
+      "count_H": 2,
+      "count_D": 2,
+      "count_A": 6,
+      "expected_H": 1.7424076235236998,
+      "expected_D": 2.195910774066755,
+      "expected_A": 6.061681602409546,
+      "draw_filter_class": "D-reject"
+    },
+    {
+      "match_no": 12,
+      "home_team": "新潟",
+      "away_team": "藤枝",
+      "count_H": 3,
+      "count_D": 2,
+      "count_A": 5,
+      "expected_H": 2.65343759565557,
+      "expected_D": 2.611655766720069,
+      "expected_A": 4.734906637624362,
+      "draw_filter_class": "D-reject"
+    },
+    {
+      "match_no": 13,
+      "home_team": "秋田",
+      "away_team": "甲府",
+      "count_H": 2,
+      "count_D": 3,
+      "count_A": 5,
+      "expected_H": 2.658966493266463,
+      "expected_D": 2.764052056509728,
+      "expected_A": 4.576981450223808,
+      "draw_filter_class": "D-reject"
+    }
+  ],
+  "allocation": {
+    "generator": "probability_allocation_v1",
+    "seed": 20261010,
+    "trials": 2000,
+    "allocation_HDA": [
+      [
+        3,
+        3,
+        4
+      ],
+      [
+        5,
+        3,
+        2
+      ],
+      [
+        3,
+        2,
+        5
+      ],
+      [
+        3,
+        2,
+        5
+      ],
+      [
+        7,
+        2,
+        1
+      ],
+      [
+        2,
+        2,
+        6
+      ],
+      [
+        3,
+        2,
+        5
+      ],
+      [
+        3,
+        3,
+        4
+      ],
+      [
+        3,
+        3,
+        4
+      ],
+      [
+        4,
+        3,
+        3
+      ],
+      [
+        2,
+        2,
+        6
+      ],
+      [
+        3,
+        2,
+        5
+      ],
+      [
+        2,
+        3,
+        5
+      ]
+    ],
+    "totals_HDA": [
+      43,
+      32,
+      55
+    ],
+    "expected_totals_HDA": [
+      43.30469863005529,
+      32.12959527947925,
+      54.565706090465454
+    ],
+    "minimum_pairwise_hamming_distance": 7,
+    "diversity_constraint_satisfied": true,
+    "probability_floor_used": false,
+    "fixed_draw_ratio_used": false
+  }
+}

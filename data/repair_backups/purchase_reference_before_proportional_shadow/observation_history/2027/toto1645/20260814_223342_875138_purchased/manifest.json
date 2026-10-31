@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-08-14T22:33:42+09:00",
+  "logical_season": "2027",
+  "prediction_season": "2026",
+  "league_round": 2,
+  "toto_round_id": "toto1645",
+  "label": "purchased",
+  "prediction_rows": 19,
+  "buyplan_matches": 13,
+  "draw_counts": {
+    "ticket01": 3,
+    "ticket02": 3,
+    "ticket03": 4,
+    "ticket04": 0,
+    "ticket05": 1,
+    "ticket06": 2,
+    "ticket07": 0,
+    "ticket08": 5,
+    "ticket09": 1,
+    "ticket10": 3
+  },
+  "draw_total": 22,
+  "matches": [
+    {
+      "match_no": 1,
+      "home_team": "鹿島",
+      "away_team": "名古屋"
+    },
+    {
+      "match_no": 2,
+      "home_team": "清水",
+      "away_team": "横浜FM"
+    },
+    {
+      "match_no": 3,
+      "home_team": "神戸",
+      "away_team": "FC東京"
+    },
+    {
+      "match_no": 4,
+      "home_team": "千葉",
+      "away_team": "町田"
+    },
+    {
+      "match_no": 5,
+      "home_team": "福岡",
+      "away_team": "Ｃ大阪"
+    },
+    {
+      "match_no": 6,
+      "home_team": "水戸",
+      "away_team": "Ｇ大阪"
+    },
+    {
+      "match_no": 7,
+      "home_team": "岡山",
+      "away_team": "長崎"
+    },
+    {
+      "match_no": 8,
+      "home_team": "浦和",
+      "away_team": "広島"
+    },
+    {
+      "match_no": 9,
+      "home_team": "川崎Ｆ",
+      "away_team": "京都"
+    },
+    {
+      "match_no": 10,
+      "home_team": "秋田",
+      "away_team": "富山"
+    },
+    {
+      "match_no": 11,
+      "home_team": "今治",
+      "away_team": "大宮"
+    },
+    {
+      "match_no": 12,
+      "home_team": "仙台",
+      "away_team": "大分"
+    },
+    {
+      "match_no": 13,
+      "home_team": "甲府",
+      "away_team": "宮崎"
+    }
+  ],
+  "buyplan_script": {
+    "path": "/Users/dev_tomo/Desktop/tt_prj_restart/buyplan.py",
+    "sha256": "12b53e62d2f0255261091fefe8f9a746940ae30aae4831f670109ec4a9c4dbe2"
+  },
+  "files": {
+    "predictions.csv": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions.csv",
+      "size": 150209,
+      "sha256": "856cb601fe2058a99e8123077ead427c07faf14cd146c0b764985e8d320b8863"
+    },
+    "predictions_buyplan_context.csv": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_buyplan_context.csv",
+      "size": 37766,
+      "sha256": "93002417ebed24dae4ebc1887b224adb927bf398bcfd5051746135cf121bef2e"
+    },
+    "buyplan.csv": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan.csv",
+      "size": 25550,
+      "sha256": "3dd8e8b10df826b0413b4416e87e5817bf3c0adaca15054d5b57709e5a6979dd"
+    },
+    "buyplan.html": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan.html",
+      "size": 24201,
+      "sha256": "27e30a0083f74e5dfb4141c58bce221654e85fad73612e82baa0bf70f0367192"
+    },
+    "buyplan_toto_diff.csv": {
+      "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_toto_diff.csv",
+      "size": 642,
+      "sha256": "713f940ad6cfd3d9b9c35bd9096ee5e91d9b85551879ae1214ceaa3cd2b183f0"
+    }
+  }
+}

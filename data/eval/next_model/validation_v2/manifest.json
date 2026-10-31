@@ -1,0 +1,152 @@
+{
+  "schema_version": 2,
+  "created_at": "2026-09-21T12:27:23+09:00",
+  "parent": "data/eval/next_model/validation_v1/matches.csv",
+  "rows": 101,
+  "purpose": "validation v1 plus correctly parsed historical Football LAB chance metrics",
+  "round_snapshot_mapping": {
+    "toto1644": "20260530",
+    "toto1645": "20260813",
+    "toto1647": "20260821",
+    "toto1648": "20260827",
+    "toto1649": "20260901",
+    "toto1650": "20260905",
+    "toto1653": "20260912",
+    "toto1654": "20260919"
+  },
+  "columns_added_or_replaced": [
+    "flab_chance_allowed_attack_count_away",
+    "flab_chance_allowed_attack_count_home",
+    "flab_chance_allowed_attack_count_rank_away",
+    "flab_chance_allowed_attack_count_rank_home",
+    "flab_chance_allowed_build_rate_away",
+    "flab_chance_allowed_build_rate_home",
+    "flab_chance_allowed_build_rate_rank_away",
+    "flab_chance_allowed_build_rate_rank_home",
+    "flab_chance_allowed_goals_away",
+    "flab_chance_allowed_goals_home",
+    "flab_chance_allowed_goals_rank_away",
+    "flab_chance_allowed_goals_rank_home",
+    "flab_chance_allowed_shot_conversion_away",
+    "flab_chance_allowed_shot_conversion_home",
+    "flab_chance_allowed_shot_conversion_rank_away",
+    "flab_chance_allowed_shot_conversion_rank_home",
+    "flab_chance_allowed_shots_away",
+    "flab_chance_allowed_shots_home",
+    "flab_chance_allowed_shots_rank_away",
+    "flab_chance_allowed_shots_rank_home",
+    "flab_chance_attack_count_away",
+    "flab_chance_attack_count_home",
+    "flab_chance_attack_count_rank_away",
+    "flab_chance_attack_count_rank_home",
+    "flab_chance_build_rate_away",
+    "flab_chance_build_rate_home",
+    "flab_chance_build_rate_rank_away",
+    "flab_chance_build_rate_rank_home",
+    "flab_chance_goals_away",
+    "flab_chance_goals_home",
+    "flab_chance_goals_rank_away",
+    "flab_chance_goals_rank_home",
+    "flab_chance_shot_conversion_away",
+    "flab_chance_shot_conversion_home",
+    "flab_chance_shot_conversion_rank_away",
+    "flab_chance_shot_conversion_rank_home",
+    "flab_chance_shots_away",
+    "flab_chance_shots_home",
+    "flab_chance_shots_rank_away",
+    "flab_chance_shots_rank_home",
+    "flab_chance_snapshot_date"
+  ],
+  "sources": {
+    "20260530_j1": {
+      "path": "external_contents/20260530/j1/チャンス構築率.html",
+      "sha256": "3e302d055f7de8a8456bc9df157b5a737de20eab804505a696ec692970c6b369",
+      "page_asof": "20260525",
+      "teams": 20
+    },
+    "20260530_j2": {
+      "path": "external_contents/20260530/j2/チャンス構築率.html",
+      "sha256": "64c3a33d5787f14167a12f2c069c02d690f7d92b5f8c9d7dce0b73a0a9074895",
+      "page_asof": "20260526",
+      "teams": 20
+    },
+    "20260813_j1": {
+      "path": "external_contents/20260813/j1/チャンス構築率.html",
+      "sha256": "c5c18034f5fa586083b24d9c8bee9f09b7bfdbabb70a17385f16d2199cebe3d2",
+      "page_asof": "20260810",
+      "teams": 20
+    },
+    "20260813_j2": {
+      "path": "external_contents/20260813/j2/チャンス構築率.html",
+      "sha256": "c061a730113d0e58bb6446eb750f626e23927dc16b12f343b41ef23bdadeaeed",
+      "page_asof": "20260811",
+      "teams": 20
+    },
+    "20260821_j1": {
+      "path": "external_contents/20260821/j1/チャンス構築率.html",
+      "sha256": "f417b57fc3f1ec25a2b138e0b817a3327dab16c629cae864aff76fef09089f56",
+      "page_asof": "20260816",
+      "teams": 20
+    },
+    "20260821_j2": {
+      "path": "external_contents/20260821/j2/チャンス構築率.html",
+      "sha256": "22828c3aa6a7d3ee3dba90518e6f615f9c4b7a3003b2775c51e86d81986319ea",
+      "page_asof": "20260818",
+      "teams": 20
+    },
+    "20260827_j1": {
+      "path": "external_contents/20260827/j1/チャンス構築率.html",
+      "sha256": "7a1715df5a50a4ea3176ae10bbefa0ee597591b26f625a7b92f9f1f74ae2733b",
+      "page_asof": "20260824",
+      "teams": 20
+    },
+    "20260827_j2": {
+      "path": "external_contents/20260827/j2/チャンス構築率.html",
+      "sha256": "31a6a171002fa5eee77f7d0763073791a3ebe8e2cc997e9b7727c51f09225e06",
+      "page_asof": "20260824",
+      "teams": 20
+    },
+    "20260901_j1": {
+      "path": "external_contents/20260901/j1/チャンス構築率.html",
+      "sha256": "2d4051fb6ed1c4efa557f9ddd0de77cee351d879d98b77b1b030babf4349a2e3",
+      "page_asof": "20260830",
+      "teams": 20
+    },
+    "20260905_j1": {
+      "path": "external_contents/20260905/j1/チャンス構築率.html",
+      "sha256": "90cc0566c9c52f962a96d22d7c5f86e22e7d215f3c76d28d5641f2076e23e911",
+      "page_asof": "20260903",
+      "teams": 20
+    },
+    "20260905_j2": {
+      "path": "external_contents/20260905/j2/チャンス構築率.html",
+      "sha256": "e8a6646c245a8f6f7f098be2474c1637a89b08f6db016f29d9704d05d460b502",
+      "page_asof": "20260831",
+      "teams": 20
+    },
+    "20260912_j1": {
+      "path": "external_contents/20260912/j1/チャンス構築率.html",
+      "sha256": "deb978d87d398338a0fd304ec5c9b7458d6510e7cd29d2f1fcc154b51106aa60",
+      "page_asof": "20260907",
+      "teams": 20
+    },
+    "20260912_j2": {
+      "path": "external_contents/20260912/j2/チャンス構築率.html",
+      "sha256": "8cda815cbfdce90a9c50c4ea555b824554978a2e172bfeacfd8c4babcf5bf62d",
+      "page_asof": "20260908",
+      "teams": 20
+    },
+    "20260919_j1": {
+      "path": "external_contents/20260919/j1/チャンス構築率.html",
+      "sha256": "e67448e65ee9e94ee5e31a685752de3923a4a99d683745a4d3a235d59a881416",
+      "page_asof": "20260914",
+      "teams": 20
+    },
+    "20260919_j2": {
+      "path": "external_contents/20260919/j2/チャンス構築率.html",
+      "sha256": "5edca1f0dcac63208bc6dbbdbe9c933ee6eda950e87166178399edaff675ac9a",
+      "page_asof": "20260915",
+      "teams": 20
+    }
+  }
+}

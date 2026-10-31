@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [[ "${ALLOW_LEGACY_CAUTION:-}" != "1" ]]; then
+  echo "ERROR: このスクリプトはv1系の検証専用です。実行する場合は ALLOW_LEGACY_CAUTION=1 を指定してください。" >&2
+  exit 2
+fi
+
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PYTHON="${PYTHON:-$ROOT_DIR/scripts/.venv/bin/python}"
 
@@ -15,7 +20,7 @@ OUTPUT_NAME="${OUTPUT_NAME:-buyplan_caution}"
 HISTORY_DIR="${HISTORY_DIR:-$OUTDIR/history_caution}"
 STAMP="$(date +%Y%m%d_%H%M%S)"
 
-echo "==> buyplan_caution"
+echo "==> legacy buyplan_caution (verification only)"
 echo "PYTHON=$PYTHON"
 echo "IN_CSV=$IN_CSV"
 echo "OUTDIR=$OUTDIR"

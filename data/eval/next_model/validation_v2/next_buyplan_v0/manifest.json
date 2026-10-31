@@ -1,0 +1,23 @@
+{
+  "status": "next official BuyPlan under development; not connected to production",
+  "input": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/next_model/validation_v2/lab_xg_v0/predictions.csv",
+  "rounds_built": [
+    "toto1644",
+    "toto1645",
+    "toto1647",
+    "toto1648",
+    "toto1650",
+    "toto1653",
+    "toto1654"
+  ],
+  "excluded_rounds": [
+    {
+      "round_id": "toto1649",
+      "rows": 10,
+      "reason": "incomplete frozen prediction population"
+    }
+  ],
+  "fixed_symbol_ratio_used": false,
+  "world_forcing_used": false,
+  "target_draw_count_used": false
+}

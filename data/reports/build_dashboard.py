@@ -1,6 +1,8 @@
+import csv
 import os
 import re
 from datetime import datetime
+from html import escape
 
 
 REPORT_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -9,18 +11,73 @@ HTML_DIR = os.path.join(REPORT_DIR, "html")
 
 
 def _extract_round_num(label):
-    m = re.search(r"第(\d+)節", label)
-    return int(m.group(1)) if m else 9999
+    m = re.search(r"第([0-9０-９]+)節", label)
+    return int(m.group(1).translate(str.maketrans("０１２３４５６７８９", "0123456789"))) if m else 9999
 
 
 def _extract_battle_num(label):
-    m = re.search(r"第(\d+)戦", label)
-    return int(m.group(1)) if m else 9999
+    m = re.search(r"第([0-9０-９]+)戦", label)
+    return int(m.group(1).translate(str.maketrans("０１２３４５６７８９", "0123456789"))) if m else 9999
 
 
 def _extract_day_num(label):
-    m = re.search(r"第(\d+)日", label)
-    return int(m.group(1)) if m else 9999
+    m = re.search(r"第([0-9０-９]+)日", label)
+    return int(m.group(1).translate(str.maketrans("０１２３４５６７８９", "0123456789"))) if m else 9999
+
+
+def _season_label(year):
+    if year == "2026_2027":
+        return "2026/27"
+    if year == "2026_special":
+        return "2026 特殊期"
+    return str(year).replace("_", "/")
+
+
+def _prediction_display(opt, include_season=True):
+    league, year, round_label, _, _ = opt
+    parts = []
+    if include_season:
+        parts.append(_season_label(year))
+    if league != "ALL":
+        parts.append(league)
+    parts.append(round_label)
+    return " ".join(parts)
+
+
+def _round_order(opt):
+    return (
+        _extract_round_num(opt[2]),
+        _extract_battle_num(opt[2]),
+        _extract_day_num(opt[2]),
+        opt[2],
+    )
+
+
+def _next_round_numbers(operation_season):
+    """Return the nearest not-yet-played round for each operational league."""
+    today = datetime.now().date()
+    rounds = set()
+    for league in ("j1", "j2"):
+        path = os.path.join(ROOT_DIR, f"{league}_{operation_season}_predictions.csv")
+        if not os.path.isfile(path):
+            continue
+        candidates = []
+        try:
+            with open(path, encoding="utf-8-sig", newline="") as handle:
+                for row in csv.DictReader(handle):
+                    raw_date = str(row.get("datetime", "")).strip()[:10]
+                    try:
+                        match_date = datetime.strptime(raw_date, "%Y-%m-%d").date()
+                    except ValueError:
+                        continue
+                    round_no = _extract_round_num(str(row.get("節", "")))
+                    if match_date >= today and round_no != 9999:
+                        candidates.append((match_date, round_no))
+        except OSError:
+            continue
+        if candidates:
+            rounds.add(min(candidates)[1])
+    return rounds
 
 
 def _parse_round_file_meta(filename, prefix):
@@ -191,110 +248,132 @@ def build_dashboard():
     latest_pred = latest_pred_opt[4] if latest_pred_opt else None
     latest_back = latest_back_opt[4] if latest_back_opt else None
     latest_back_toto = all_back_toto_links[-1] if all_back_toto_links else None
+    current_prediction_year = latest_pred_opt[1] if latest_pred_opt else None
+    current_pred_links = [opt for opt in round_pred_links if opt[1] == current_prediction_year]
+    archive_pred_links = [opt for opt in round_pred_links if opt[1] != current_prediction_year]
+    current_pred_links.sort(key=_round_order, reverse=True)
+    archive_pred_links.sort(key=lambda opt: (str(opt[1]), _round_order(opt)), reverse=True)
+    current_season_label = _season_label(current_prediction_year) if current_prediction_year else "未検出"
+    next_round_numbers = _next_round_numbers(operation_season)
+    first_active_round = min(next_round_numbers) if next_round_numbers else None
+    near_pred_links = [
+        opt for opt in current_pred_links
+        if first_active_round is not None and first_active_round <= _extract_round_num(opt[2]) <= first_active_round + 2
+    ]
+    future_pred_links = [
+        opt for opt in current_pred_links
+        if first_active_round is not None and _extract_round_num(opt[2]) > first_active_round + 2
+    ]
+    past_pred_links = [
+        opt for opt in current_pred_links
+        if first_active_round is None or _extract_round_num(opt[2]) < first_active_round
+    ]
+    near_pred_links.sort(key=_round_order)
+    future_pred_links.sort(key=_round_order)
+    past_pred_links.sort(key=_round_order, reverse=True)
+    if near_pred_links:
+        latest_pred = near_pred_links[0][4]
     html = []
     html.append("<!doctype html>")
     html.append("<html lang='ja'>")
     html.append("<head>")
     html.append("<meta charset='utf-8'>")
-    html.append("<title>作業管理ページ</title>")
+    html.append("<title>v2.0 予想・運用ダッシュボード</title>")
     html.append("<style>")
-    html.append("body{font-family:system-ui, -apple-system, sans-serif; margin:24px;}")
-    html.append(".box{border:2px solid #333; padding:16px; margin-bottom:16px;}")
-    html.append(".row{margin:8px 0;}")
+    html.append("body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:#f3f6fa;color:#172033;}")
+    html.append("main{max-width:1180px;margin:auto;padding:24px;}")
+    html.append(".box{background:#fff;border:1px solid #d6dee8;border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:0 2px 8px #1720330d;}")
+    html.append(".hero{background:#172f4f;color:#fff;border:0}.hero .muted{color:#c9d8ea;}")
+    html.append(".grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}")
+    html.append(".row{margin:9px 0;}")
     html.append(".label{font-weight:600; margin-right:8px;}")
-    html.append("a{color:#1a73e8; text-decoration:none;}")
+    html.append("a{color:#1769aa;text-decoration:none;font-weight:600}.hero a{color:#fff}")
+    html.append("select{min-width:320px;max-width:100%;padding:9px;border:1px solid #9facbb;border-radius:7px;background:#fff}")
+    html.append("button,.button{display:inline-block;padding:9px 13px;border:0;border-radius:7px;background:#1769aa;color:#fff;cursor:pointer;margin-left:5px}")
+    html.append("code{white-space:normal}.muted{color:#617184}.warning{border-left:5px solid #d99000;background:#fff8e8;padding:12px}")
+    html.append("details{margin-top:10px}summary{cursor:pointer;font-weight:700;padding:5px 0}")
+    html.append("@media(max-width:640px){main{padding:12px}select{min-width:0;width:100%;margin-bottom:8px}button{margin-left:0;margin-right:4px}}")
     html.append("</style>")
     html.append("</head>")
-    html.append("<body>")
-    html.append("<h2>作業管理ページ</h2>")
-    html.append(f"<div class='row'>更新: {now}</div>")
-
-    html.append("<div class='box'>")
-    html.append("<div class='row'><span class='label'>準備</span>週次バッチ起動: <code>/scripts/run_batch_weekly.sh</code></div>")
-    html.append("<div class='row'><span class='label'>準備</span>試合直前バッチ: <code>/scripts/run_batch_matchday.sh</code></div>")
-    html.append(f"<div class='row'><span class='label'>対象シーズン</span>{operation_season} / {operation_leagues.upper()}</div>")
-    html.append(f"<div class='row'><span class='label'>手動実行(ログ保存)</span><code>SEASON_YEAR={operation_season} LEAGUES='{operation_leagues}' ./scripts/run_batch_weekly.sh 2>&1 | tee logs/run_batch_weekly.log</code></div>")
-    html.append(f"<div class='row'><span class='label'>手動実行(ログ保存)</span><code>SEASON_YEAR={operation_season} LEAGUES='{operation_leagues}' ./scripts/run_batch_matchday.sh 2>&1 | tee logs/run_batch_matchday.log</code></div>")
-    html.append("<div class='row'><span class='label'>ログ確認</span><code>tail -n 80 logs/run_batch_weekly.log</code> / <code>tail -n 80 logs/run_batch_matchday.log</code></div>")
-    html.append(f"<div class='row'><span class='label'>結果確認</span><code>tail -n 20 j1_{operation_season}_predictions.csv</code> / <code>tail -n 20 j2_{operation_season}_predictions.csv</code></div>")
-    html.append(f"<div class='row'><span class='label'>品質確認</span><code>ls data/reports/merge_qc/j1_{operation_season}</code> / <code>ls data/reports/merge_qc/j2_{operation_season}</code></div>")
+    html.append("<body><main>")
+    html.append("<div class='box hero'>")
+    html.append("<h1>v2.0 予想・運用ダッシュボード</h1>")
+    html.append(f"<div class='row'>現行予想シーズン: <b>{escape(current_season_label)}</b></div>")
+    html.append(f"<div class='row muted'>生成: {now} / 予想本体とBuyPlanの確認、前向き検証の入口</div>")
     html.append("</div>")
 
-    html.append("<div class='box'>")
-    html.append("<div class='row'><span class='label'>予想</span>入力: 節 / リーグ / 年</div>")
-    html.append("</div>")
-
-    html.append("<div class='box'>")
-    html.append("<div class='row'><span class='label'>予想レポート</span><a href='html/predictions_view.html'>結果予想レポート</a></div>")
-    html.append("<div class='row'><span class='label'>解析内訳</span><a href='html/report_view.html'>解析内訳等レポート</a></div>")
-    html.append("<div class='row'><span class='label'>バックテスト</span><a href='html/backtest_view.html'>バックテスト</a></div>")
-    html.append("<div class='row'><span class='label'>最新表示</span>")
+    html.append("<div class='grid'>")
+    html.append("<section class='box'><h2>現在の予想</h2>")
     if latest_pred:
-        html.append(f"<a href='html/{latest_pred}'>最新の予想を開く</a>")
+        html.append(f"<div class='row'><a class='button' href='html/{escape(latest_pred)}'>直近の予想を開く</a></div>")
     else:
-        html.append("最新予想なし")
-    html.append(" / ")
-    if latest_back:
-        html.append(f"<a href='html/{latest_back}'>最新のバックテストを開く</a>")
-    else:
-        html.append("最新バックテストなし")
-    html.append(" / ")
-    if latest_back_toto:
-        html.append(f"<a href='html/{latest_back_toto}'>最新のtoto回バックテストを開く</a>")
-    else:
-        html.append("最新toto回バックテストなし")
-    html.append(" <button onclick='reloadNoCache()'>再読込(キャッシュ回避)</button></div>")
+        html.append("<div class='row'>最新予想なし</div>")
+    html.append("<div class='row'><a href='html/predictions_view.html'>予想一覧レポート</a></div>")
+    html.append("<div class='row'><a href='html/report_view.html'>解析内訳レポート</a></div>")
+    html.append("<button onclick='reloadNoCache()'>再読込</button></section>")
+    html.append("<section class='box'><h2>BuyPlan v2.0</h2>")
+    html.append("<div class='row'>正式版の購入候補とD分類を確認します。</div>")
+    html.append("<div class='row'><a class='button' href='../purchase_reference/buyplan.html'>buyplan.htmlを開く</a></div>")
+    html.append("<div class='row muted'>対象toto13試合が一致しない場合は生成時に安全停止します。</div></section>")
     html.append("</div>")
 
-    html.append("<div class='box'>")
-    html.append("<div class='row'><span class='label'>節別リンク</span>以下から節別HTMLを選択</div>")
-
-    html.append("<div class='row'><span class='label'>予想</span>")
-    if round_pred_links:
-        html.append("<select id='predRound'>")
-        html.append("<option value=''>選択してください</option>")
-        for _, _, _, display, f in round_pred_links:
-            html.append(f"<option value='html/{f}'>{display}</option>")
-        html.append("</select>")
-        html.append("<button onclick=\"openRound('predRound')\">表示</button>")
+    html.append("<section class='box'>")
+    html.append(f"<h2>現行シーズンの節別予想 <small class='muted'>{escape(current_season_label)}</small></h2>")
+    html.append("<div class='row'>")
+    if current_pred_links:
+        html.append("<select id='predRound'><option value=''>予想節を選択</option>")
+        for group_label, options in (("直近・次の3節", near_pred_links), ("今後の日程", future_pred_links), ("終了した節", past_pred_links)):
+            if not options:
+                continue
+            html.append(f"<optgroup label='{group_label}'>")
+            for opt in options:
+                round_no = _extract_round_num(opt[2])
+                marker = " ◀ 次回対象" if round_no in next_round_numbers else ""
+                label = _prediction_display(opt, include_season=False) + marker
+                html.append(f"<option value='html/{escape(opt[4])}'>{escape(label)}</option>")
+            html.append("</optgroup>")
+        html.append("</select><button onclick=\"openRound('predRound')\">表示</button>")
         html.append("<button onclick=\"downloadPredRoundCsv()\">buyplan用CSV出力</button>")
     else:
         html.append("（未生成）")
-    html.append("</div>")
+    html.append("</div><div class='row muted'>新しい節から表示します。CSV出力は選択節だけを含みます。</div></section>")
 
-    html.append("<div class='row'><span class='label'>バックテスト</span>")
+    html.append("<section class='box'><h2>v2.0の前向き検証</h2>")
+    html.append("<div class='warning'>v1の過去バックテストとv2.0は予測方式が異なるため、直接比較しません。v2.0は正式運用後の固定保存データで評価します。</div>")
+    html.append("<div class='row muted'>記録対象: 候補01、10候補平均、最高的中、portfolio cover、H/D/A確率品質、D分類、入力欠損。</div></section>")
+
+    html.append("<section class='box'><h2>過去資料・v1開発履歴</h2>")
+    html.append("<div class='warning'>以下は開発経過と原因調査用です。現行v2.0の通常運用には使用しません。</div>")
+    html.append("<details><summary>過去シーズンの予想を開く</summary><div class='row'>")
+    if archive_pred_links:
+        html.append("<select id='archivePredRound'><option value=''>過去の予想を選択</option>")
+        for opt in archive_pred_links:
+            html.append(f"<option value='html/{escape(opt[4])}'>{escape(_prediction_display(opt))}</option>")
+        html.append("</select><button onclick=\"openRound('archivePredRound')\">表示</button>")
+    else:
+        html.append("（過去予想なし）")
+    html.append("</div></details>")
+    html.append("<details><summary>v1バックテストを開く</summary>")
+    html.append("<div class='row'><a href='html/backtest_view.html'>v1バックテスト一覧</a></div>")
     if round_back_links:
-        html.append("<select id='backRound'>")
-        html.append("<option value=''>選択してください</option>")
+        html.append("<div class='row'><select id='backRound'><option value=''>節別v1バックテスト</option>")
         for _, _, _, display, f in round_back_links:
-            html.append(f"<option value='html/{f}'>{display}</option>")
-        html.append("</select>")
-        html.append("<button onclick=\"openRound('backRound')\">表示</button>")
-    else:
-        html.append("（未生成）")
-    html.append("</div>")
-
-    html.append("<div class='row'><span class='label'>toto回BT</span>")
+            html.append(f"<option value='html/{escape(f)}'>{escape(display)}</option>")
+        html.append("</select><button onclick=\"openRound('backRound')\">表示</button></div>")
     if round_back_toto_links:
-        html.append("<select id='backTotoRound'>")
-        html.append("<option value=''>選択してください</option>")
+        html.append("<div class='row'><select id='backTotoRound'><option value=''>toto回v1バックテスト</option>")
         for f, display in round_back_toto_links:
-            html.append(f"<option value='html/{f}'>{display}</option>")
-        html.append("</select>")
-        html.append("<button onclick=\"openRound('backTotoRound')\">表示</button>")
-    else:
-        html.append("（未生成）")
-    html.append("</div>")
-    html.append("</div>")
+            html.append(f"<option value='html/{escape(f)}'>{escape(display)}</option>")
+        html.append("</select><button onclick=\"openRound('backTotoRound')\">表示</button></div>")
+    html.append("</details></section>")
 
-    html.append("<div class='box'>")
-    html.append("<div class='row'><span class='label'>メモ</span>予想CSV出力は選択した節だけを含む buyplan 用CSV</div>")
-    html.append("<div class='row'><span class='label'>メモ</span>各レポートHTMLは下記スクリプトで更新</div>")
+    html.append("<details class='box'><summary>保守・再生成コマンド</summary>")
     html.append("<div class='row'><code>python data/reports/view_predictions.py</code></div>")
     html.append("<div class='row'><code>python data/reports/view_report_json.py</code></div>")
-    html.append("<div class='row'><code>python data/reports/view_backtest.py</code></div>")
     html.append("<div class='row'><code>python data/reports/build_round_views.py</code></div>")
-    html.append("</div>")
+    html.append(f"<div class='row'><code>SEASON_YEAR={operation_season} LEAGUES='{escape(operation_leagues)}' ./scripts/run_batch_weekly.sh</code></div>")
+    html.append(f"<div class='row'><code>SEASON_YEAR={operation_season} LEAGUES='{escape(operation_leagues)}' ./scripts/run_batch_matchday.sh</code></div>")
+    html.append("</details>")
 
     html.append("<script>")
     html.append("function openRound(selectId){")
@@ -322,7 +401,7 @@ def build_dashboard():
     html.append("  window.location.href = u.toString();")
     html.append("}")
     html.append("</script>")
-    html.append("</body></html>")
+    html.append("</main></body></html>")
 
     out_path = os.path.join(REPORT_DIR, "index.html")
     with open(out_path, "w", encoding="utf-8") as f:

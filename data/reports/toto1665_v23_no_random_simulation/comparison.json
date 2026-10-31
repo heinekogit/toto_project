@@ -1,0 +1,35 @@
+{
+  "round": "toto1665",
+  "source_next_predictions": "data/purchase_reference/next_predictions.csv",
+  "source_sha256": "4037a7f331a223d96858f6c2f47108d6bd1b1493df3006dd9142cc440a440fee",
+  "purchased_html_sha256_unchanged": "2159686d8482997876bf7542f763e975abef38525d245813e6726c50da3ab3e2",
+  "same_match_symbol_counts": true,
+  "common_ticket_count": 0,
+  "purchased_draws_by_ticket": [
+    2,
+    1,
+    3,
+    1,
+    3,
+    5,
+    3,
+    5,
+    5,
+    8
+  ],
+  "simulation_draws_by_ticket": [
+    4,
+    1,
+    4,
+    5,
+    2,
+    3,
+    6,
+    3,
+    3,
+    5
+  ],
+  "simulation_model_13hit_mass": 9.757476662906362e-06,
+  "allocation_algorithm": "deterministic_v23",
+  "placement_algorithm": "deterministic_best_improvement"
+}

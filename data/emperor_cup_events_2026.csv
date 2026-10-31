@@ -1,0 +1,145 @@
+﻿datetime,team,competition,source,status,match_id,opponent,stadium,round,home_score,away_score,extra_time_minutes,match_duration_minutes
+2026-08-19 18:30:00,アトレチコ鈴鹿,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m1.html,confirmed,emperor_cup_2026_1,FC BASARA HYOGO,三重交通Gスポーツの杜鈴鹿サッカー・ラグビー場メインG,１回戦,1,1,30,120
+2026-08-19 18:30:00,FC BASARA HYOGO,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m1.html,confirmed,emperor_cup_2026_1,アトレチコ鈴鹿,三重交通Gスポーツの杜鈴鹿サッカー・ラグビー場メインG,１回戦,1,1,30,120
+2026-08-19 19:00:00,鳥取,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m2.html,confirmed,emperor_cup_2026_2,ロアッソ熊本,Ａｘｉｓバードスタジアム,１回戦,2,2,30,120
+2026-08-19 19:00:00,ロアッソ熊本,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m2.html,confirmed,emperor_cup_2026_2,鳥取,Ａｘｉｓバードスタジアム,１回戦,2,2,30,120
+2026-08-19 19:00:00,東北学院大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m3.html,confirmed,emperor_cup_2026_3,ザスパ群馬,ユアテックスタジアム仙台,１回戦,1,3,0,90
+2026-08-19 19:00:00,ザスパ群馬,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m3.html,confirmed,emperor_cup_2026_3,東北学院大学,ユアテックスタジアム仙台,１回戦,1,3,0,90
+2026-08-19 19:00:00,栃木SC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m4.html,confirmed,emperor_cup_2026_4,ブリオベッカ浦安・市川,カンセキスタジアムとちぎ,１回戦,2,0,0,90
+2026-08-19 19:00:00,ブリオベッカ浦安・市川,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m4.html,confirmed,emperor_cup_2026_4,栃木SC,カンセキスタジアムとちぎ,１回戦,2,0,0,90
+2026-08-19 19:00:00,レイラック滋賀FC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m5.html,confirmed,emperor_cup_2026_5,JAPANサッカーカレッジ,平和堂ＨＡＴＯスタジアム,１回戦,2,1,0,90
+2026-08-19 19:00:00,JAPANサッカーカレッジ,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m5.html,confirmed,emperor_cup_2026_5,レイラック滋賀FC,平和堂ＨＡＴＯスタジアム,１回戦,2,1,0,90
+2026-08-19 18:30:00,FC徳島,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m6.html,confirmed,emperor_cup_2026_6,川副クラブ,鳴門･大塚スポーツパークポカリスエットスタジアム,１回戦,1,0,0,90
+2026-08-19 18:30:00,川副クラブ,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m6.html,confirmed,emperor_cup_2026_6,FC徳島,鳴門･大塚スポーツパークポカリスエットスタジアム,１回戦,1,0,0,90
+2026-08-19 19:00:00,ギラヴァンツ北九州,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m7.html,confirmed,emperor_cup_2026_7,沖縄SV,ミクニワールドスタジアム北九州,１回戦,1,2,30,120
+2026-08-19 19:00:00,沖縄SV,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m7.html,confirmed,emperor_cup_2026_7,ギラヴァンツ北九州,ミクニワールドスタジアム北九州,１回戦,1,2,30,120
+2026-08-19 18:00:00,ベルガロッソいわみ,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m8.html,confirmed,emperor_cup_2026_8,長崎国際大学,広島県みよし運動公園陸上競技場,１回戦,2,0,0,90
+2026-08-19 18:00:00,長崎国際大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m8.html,confirmed,emperor_cup_2026_8,ベルガロッソいわみ,広島県みよし運動公園陸上競技場,１回戦,2,0,0,90
+2026-08-19 17:00:00,アルテリーヴォ和歌山,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m9.html,confirmed,emperor_cup_2026_9,アスルクラロ沼津,和歌山県紀三井寺公園陸上競技場,１回戦,0,6,0,90
+2026-08-19 17:00:00,アスルクラロ沼津,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m9.html,confirmed,emperor_cup_2026_9,アルテリーヴォ和歌山,和歌山県紀三井寺公園陸上競技場,１回戦,0,6,0,90
+2026-08-19 19:00:00,ヴェロスクロノス都農,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m10.html,confirmed,emperor_cup_2026_10,カマタマーレ讃岐,いちご宮崎新富サッカー場,１回戦,3,1,30,120
+2026-08-19 19:00:00,カマタマーレ讃岐,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m10.html,confirmed,emperor_cup_2026_10,ヴェロスクロノス都農,いちご宮崎新富サッカー場,１回戦,3,1,30,120
+2026-08-19 19:00:00,ヴェルスパ大分,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m11.html,confirmed,emperor_cup_2026_11,高知ユナイテッドSC,クラサスドーム大分,１回戦,3,0,0,90
+2026-08-19 19:00:00,高知ユナイテッドSC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m11.html,confirmed,emperor_cup_2026_11,ヴェルスパ大分,クラサスドーム大分,１回戦,3,0,0,90
+2026-08-19 19:00:00,流通経済大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m12.html,confirmed,emperor_cup_2026_12,クリアソン新宿,ケーズデンキスタジアム水戸,１回戦,1,2,30,120
+2026-08-19 19:00:00,クリアソン新宿,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m12.html,confirmed,emperor_cup_2026_12,流通経済大学,ケーズデンキスタジアム水戸,１回戦,1,2,30,120
+2026-08-19 19:00:00,専修大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m13.html,confirmed,emperor_cup_2026_13,筑波大学,レモンガススタジアム平塚,１回戦,2,1,0,90
+2026-08-19 19:00:00,筑波大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m13.html,confirmed,emperor_cup_2026_13,専修大学,レモンガススタジアム平塚,１回戦,2,1,0,90
+2026-08-19 19:00:00,福島ユナイテッドFC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m14.html,confirmed,emperor_cup_2026_14,大山サッカークラブ,とうほう・みんなのスタジアム,１回戦,7,0,0,90
+2026-08-19 19:00:00,大山サッカークラブ,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m14.html,confirmed,emperor_cup_2026_14,福島ユナイテッドFC,とうほう・みんなのスタジアム,１回戦,7,0,0,90
+2026-08-19 19:00:00,金沢星稜大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m15.html,confirmed,emperor_cup_2026_15,京都産業大学,石川県西部緑地公園陸上競技場,１回戦,1,4,0,90
+2026-08-19 19:00:00,京都産業大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m15.html,confirmed,emperor_cup_2026_15,金沢星稜大学,石川県西部緑地公園陸上競技場,１回戦,1,4,0,90
+2026-08-19 19:00:00,山梨学院大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m16.html,confirmed,emperor_cup_2026_16,東京国際大学FC,ＪＩＴ リサイクルインク スタジアム,１回戦,1,0,0,90
+2026-08-19 19:00:00,東京国際大学FC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m16.html,confirmed,emperor_cup_2026_16,山梨学院大学,ＪＩＴ リサイクルインク スタジアム,１回戦,1,0,0,90
+2026-08-19 18:30:00,FC岐阜,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m17.html,confirmed,emperor_cup_2026_17,富山新庄クラブ,岐阜メモリアルセンターヒマラヤスタジアム岐阜,１回戦,3,1,0,90
+2026-08-19 18:30:00,富山新庄クラブ,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m17.html,confirmed,emperor_cup_2026_17,FC岐阜,岐阜メモリアルセンターヒマラヤスタジアム岐阜,１回戦,3,1,0,90
+2026-08-19 19:00:00,鹿児島ユナイテッドFC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m18.html,confirmed,emperor_cup_2026_18,レノファ山口FC,白波スタジアム,１回戦,2,1,0,90
+2026-08-19 19:00:00,レノファ山口FC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m18.html,confirmed,emperor_cup_2026_18,鹿児島ユナイテッドFC,白波スタジアム,１回戦,2,1,0,90
+2026-08-19 18:30:00,SRC広島,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m19.html,confirmed,emperor_cup_2026_19,FCマルヤス岡崎,エディオンピースウイング広島,１回戦,1,6,0,90
+2026-08-19 18:30:00,FCマルヤス岡崎,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m19.html,confirmed,emperor_cup_2026_19,SRC広島,エディオンピースウイング広島,１回戦,1,6,0,90
+2026-08-19 19:00:00,奈良クラブ,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m20.html,confirmed,emperor_cup_2026_20,FC大阪,ロートフィールド奈良,１回戦,1,4,0,90
+2026-08-19 19:00:00,FC大阪,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m20.html,confirmed,emperor_cup_2026_20,奈良クラブ,ロートフィールド奈良,１回戦,1,4,0,90
+2026-08-19 19:00:00,愛媛,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m21.html,confirmed,emperor_cup_2026_21,環太平洋大学,ニンジニアスタジアム,１回戦,2,1,0,90
+2026-08-19 19:00:00,環太平洋大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m21.html,confirmed,emperor_cup_2026_21,愛媛,ニンジニアスタジアム,１回戦,2,1,0,90
+2026-08-19 18:30:00,いわてグルージャ盛岡,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m22.html,confirmed,emperor_cup_2026_22,札幌大学,いわぎんスタジアム,１回戦,1,0,0,90
+2026-08-19 18:30:00,札幌大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m22.html,confirmed,emperor_cup_2026_22,いわてグルージャ盛岡,いわぎんスタジアム,１回戦,1,0,0,90
+2026-08-19 19:00:00,AC長野パルセイロ,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m23.html,confirmed,emperor_cup_2026_23,福井ユナイテッドFC,サンプロ アルウィン,１回戦,2,1,0,90
+2026-08-19 19:00:00,福井ユナイテッドFC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m23.html,confirmed,emperor_cup_2026_23,AC長野パルセイロ,サンプロ アルウィン,１回戦,2,1,0,90
+2026-08-19 18:00:00,ラインメール青森,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m24.html,confirmed,emperor_cup_2026_24,秋田大学,カクヒログループ アスレチックスタジアム,１回戦,15,0,0,90
+2026-08-19 18:00:00,秋田大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m24.html,confirmed,emperor_cup_2026_24,ラインメール青森,カクヒログループ アスレチックスタジアム,１回戦,15,0,0,90
+2026-08-26 19:00:00,鹿島,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m25.html,confirmed,emperor_cup_2026_25,アトレチコ鈴鹿,メルカリスタジアム,２回戦,3,0,0,90
+2026-08-26 19:00:00,アトレチコ鈴鹿,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m25.html,confirmed,emperor_cup_2026_25,鹿島,メルカリスタジアム,２回戦,3,0,0,90
+2026-08-26 19:00:00,札幌,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m26.html,confirmed,emperor_cup_2026_26,甲府,大和ハウス プレミストドーム,２回戦,1,3,0,90
+2026-08-26 19:00:00,甲府,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m26.html,confirmed,emperor_cup_2026_26,札幌,大和ハウス プレミストドーム,２回戦,1,3,0,90
+2026-08-26 18:30:00,名古屋,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m27.html,confirmed,emperor_cup_2026_27,鳥取,豊田スタジアム,２回戦,1,3,0,90
+2026-08-26 18:30:00,鳥取,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m27.html,confirmed,emperor_cup_2026_27,名古屋,豊田スタジアム,２回戦,1,3,0,90
+2026-08-26 18:30:00,東京V,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m28.html,confirmed,emperor_cup_2026_28,ザスパ群馬,味の素フィールド西が丘,２回戦,4,1,0,90
+2026-08-26 18:30:00,ザスパ群馬,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m28.html,confirmed,emperor_cup_2026_28,東京V,味の素フィールド西が丘,２回戦,4,1,0,90
+2026-08-26 19:00:00,川崎F,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m29.html,confirmed,emperor_cup_2026_29,栃木SC,Uvanceとどろきスタジアム by Fujitsu,２回戦,3,1,0,90
+2026-08-26 19:00:00,栃木SC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m29.html,confirmed,emperor_cup_2026_29,川崎F,Uvanceとどろきスタジアム by Fujitsu,２回戦,3,1,0,90
+2026-08-26 19:00:00,磐田,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m30.html,confirmed,emperor_cup_2026_30,宮崎,ヤマハスタジアム（磐田）,２回戦,0,1,30,120
+2026-08-26 19:00:00,宮崎,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m30.html,confirmed,emperor_cup_2026_30,磐田,ヤマハスタジアム（磐田）,２回戦,0,1,30,120
+2026-08-26 19:00:00,G大阪,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m31.html,confirmed,emperor_cup_2026_31,レイラック滋賀FC,パナソニック スタジアム 吹田,２回戦,2,0,0,90
+2026-08-26 19:00:00,レイラック滋賀FC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m31.html,confirmed,emperor_cup_2026_31,G大阪,パナソニック スタジアム 吹田,２回戦,2,0,0,90
+2026-08-26 18:30:00,徳島,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m32.html,confirmed,emperor_cup_2026_32,FC徳島,鳴門･大塚スポーツパークポカリスエットスタジアム,２回戦,3,0,0,90
+2026-08-26 18:30:00,FC徳島,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m32.html,confirmed,emperor_cup_2026_32,徳島,鳴門･大塚スポーツパークポカリスエットスタジアム,２回戦,3,0,0,90
+2026-08-26 18:30:00,広島,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m33.html,confirmed,emperor_cup_2026_33,沖縄SV,福山通運ローズスタジアム,２回戦,4,1,0,90
+2026-08-26 18:30:00,沖縄SV,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m33.html,confirmed,emperor_cup_2026_33,広島,福山通運ローズスタジアム,２回戦,4,1,0,90
+2026-08-26 19:00:00,いわき,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m34.html,confirmed,emperor_cup_2026_34,大分,ハワイアンズスタジアムいわき,２回戦,2,0,30,120
+2026-08-26 19:00:00,大分,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m34.html,confirmed,emperor_cup_2026_34,いわき,ハワイアンズスタジアムいわき,２回戦,2,0,30,120
+2026-08-26 19:00:00,岡山,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m35.html,confirmed,emperor_cup_2026_35,ベルガロッソいわみ,ＪＦＥ晴れの国スタジアム,２回戦,3,0,0,90
+2026-08-26 19:00:00,ベルガロッソいわみ,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m35.html,confirmed,emperor_cup_2026_35,岡山,ＪＦＥ晴れの国スタジアム,２回戦,3,0,0,90
+2026-08-26 19:00:00,千葉,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m36.html,confirmed,emperor_cup_2026_36,アスルクラロ沼津,フクダ電子アリーナ,２回戦,1,1,30,120
+2026-08-26 19:00:00,アスルクラロ沼津,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m36.html,confirmed,emperor_cup_2026_36,千葉,フクダ電子アリーナ,２回戦,1,1,30,120
+2026-08-26 19:00:00,神戸,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m37.html,confirmed,emperor_cup_2026_37,ヴェロスクロノス都農,ノエビアスタジアム神戸,２回戦,2,1,0,90
+2026-08-26 19:00:00,ヴェロスクロノス都農,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m37.html,confirmed,emperor_cup_2026_37,神戸,ノエビアスタジアム神戸,２回戦,2,1,0,90
+2026-08-26 19:00:00,鳥栖,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m38.html,confirmed,emperor_cup_2026_38,富山,駅前不動産スタジアム,２回戦,4,0,0,90
+2026-08-26 19:00:00,富山,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m38.html,confirmed,emperor_cup_2026_38,鳥栖,駅前不動産スタジアム,２回戦,4,0,0,90
+2026-08-26 20:05:00,福岡,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m39.html,confirmed,emperor_cup_2026_39,ヴェルスパ大分,ベスト電器スタジアム,２回戦,0,0,30,120
+2026-08-26 20:05:00,ヴェルスパ大分,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m39.html,confirmed,emperor_cup_2026_39,福岡,ベスト電器スタジアム,２回戦,0,0,30,120
+2026-08-26 18:30:00,横浜FC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m40.html,confirmed,emperor_cup_2026_40,クリアソン新宿,ニッパツ三ツ沢球技場,２回戦,3,1,0,90
+2026-08-26 18:30:00,クリアソン新宿,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m40.html,confirmed,emperor_cup_2026_40,横浜FC,ニッパツ三ツ沢球技場,２回戦,3,1,0,90
+2026-08-26 19:00:00,柏,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m41.html,confirmed,emperor_cup_2026_41,専修大学,三協フロンテア柏スタジアム,２回戦,2,1,0,90
+2026-08-26 19:00:00,専修大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m41.html,confirmed,emperor_cup_2026_41,柏,三協フロンテア柏スタジアム,２回戦,2,1,0,90
+2026-08-26 19:00:00,今治,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m42.html,confirmed,emperor_cup_2026_42,秋田,アシックス里山スタジアム,２回戦,4,1,0,90
+2026-08-26 19:00:00,秋田,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m42.html,confirmed,emperor_cup_2026_42,今治,アシックス里山スタジアム,２回戦,4,1,0,90
+2026-08-26 19:00:00,横浜FM,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m43.html,confirmed,emperor_cup_2026_43,福島ユナイテッドFC,日産スタジアム,２回戦,1,0,0,90
+2026-08-26 19:00:00,福島ユナイテッドFC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m43.html,confirmed,emperor_cup_2026_43,横浜FM,日産スタジアム,２回戦,1,0,0,90
+2026-08-26 19:00:00,水戸,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m44.html,confirmed,emperor_cup_2026_44,京都産業大学,ケーズデンキスタジアム水戸,２回戦,0,2,0,90
+2026-08-26 19:00:00,京都産業大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m44.html,confirmed,emperor_cup_2026_44,水戸,ケーズデンキスタジアム水戸,２回戦,0,2,0,90
+2026-08-26 19:00:00,浦和,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m45.html,confirmed,emperor_cup_2026_45,山梨学院大学,浦和駒場スタジアム,２回戦,3,0,0,90
+2026-08-26 19:00:00,山梨学院大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m45.html,confirmed,emperor_cup_2026_45,浦和,浦和駒場スタジアム,２回戦,3,0,0,90
+2026-08-26 19:00:00,大宮,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m46.html,confirmed,emperor_cup_2026_46,八戸,ＮＡＣＫ５スタジアム大宮,２回戦,2,0,0,90
+2026-08-26 19:00:00,八戸,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m46.html,confirmed,emperor_cup_2026_46,大宮,ＮＡＣＫ５スタジアム大宮,２回戦,2,0,0,90
+2026-08-26 18:30:00,C大阪,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m47.html,confirmed,emperor_cup_2026_47,FC岐阜,YANMAR HANASAKA STADIUM,２回戦,3,1,0,90
+2026-08-26 18:30:00,FC岐阜,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m47.html,confirmed,emperor_cup_2026_47,C大阪,YANMAR HANASAKA STADIUM,２回戦,3,1,0,90
+2026-08-26 19:00:00,新潟,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m48.html,confirmed,emperor_cup_2026_48,鹿児島ユナイテッドFC,デンカビッグスワンスタジアム,２回戦,0,4,0,90
+2026-08-26 19:00:00,鹿児島ユナイテッドFC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m48.html,confirmed,emperor_cup_2026_48,新潟,デンカビッグスワンスタジアム,２回戦,0,4,0,90
+2026-08-26 19:00:00,京都,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m49.html,confirmed,emperor_cup_2026_49,FCマルヤス岡崎,たけびしスタジアム京都,２回戦,1,0,0,90
+2026-08-26 19:00:00,FCマルヤス岡崎,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m49.html,confirmed,emperor_cup_2026_49,京都,たけびしスタジアム京都,２回戦,1,0,0,90
+2026-08-26 19:00:00,山形,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m50.html,confirmed,emperor_cup_2026_50,藤枝,ＮＤソフトスタジアム山形,２回戦,3,5,30,120
+2026-08-26 19:00:00,藤枝,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m50.html,confirmed,emperor_cup_2026_50,山形,ＮＤソフトスタジアム山形,２回戦,3,5,30,120
+2026-08-26 19:00:00,清水,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m51.html,confirmed,emperor_cup_2026_51,FC大阪,ＩＡＩスタジアム日本平,２回戦,2,1,30,120
+2026-08-26 19:00:00,FC大阪,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m51.html,confirmed,emperor_cup_2026_51,清水,ＩＡＩスタジアム日本平,２回戦,2,1,30,120
+2026-08-26 19:00:00,長崎,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m52.html,confirmed,emperor_cup_2026_52,愛媛,PEACE STADIUM Connected by SoftBank,２回戦,3,2,0,90
+2026-08-26 19:00:00,愛媛,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m52.html,confirmed,emperor_cup_2026_52,長崎,PEACE STADIUM Connected by SoftBank,２回戦,3,2,0,90
+2026-08-26 18:30:00,町田,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m53.html,confirmed,emperor_cup_2026_53,いわてグルージャ盛岡,町田ＧＩＯＮスタジアム,２回戦,3,0,0,90
+2026-08-26 18:30:00,いわてグルージャ盛岡,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m53.html,confirmed,emperor_cup_2026_53,町田,町田ＧＩＯＮスタジアム,２回戦,3,0,0,90
+2026-08-26 19:00:00,仙台,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m54.html,confirmed,emperor_cup_2026_54,栃木C,ユアテックスタジアム仙台,２回戦,1,2,0,90
+2026-08-26 19:00:00,栃木C,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m54.html,confirmed,emperor_cup_2026_54,仙台,ユアテックスタジアム仙台,２回戦,1,2,0,90
+2026-08-26 19:00:00,FC東京,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m55.html,confirmed,emperor_cup_2026_55,AC長野パルセイロ,味の素スタジアム,２回戦,6,0,0,90
+2026-08-26 19:00:00,AC長野パルセイロ,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m55.html,confirmed,emperor_cup_2026_55,FC東京,味の素スタジアム,２回戦,6,0,0,90
+2026-08-26 19:00:00,湘南,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m56.html,confirmed,emperor_cup_2026_56,ラインメール青森,レモンガススタジアム平塚,２回戦,1,0,0,90
+2026-08-26 19:00:00,ラインメール青森,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m56.html,confirmed,emperor_cup_2026_56,湘南,レモンガススタジアム平塚,２回戦,1,0,0,90
+2026-09-23 17:00:00,鹿島,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m57.html,confirmed,emperor_cup_2026_57,甲府,メルカリスタジアム,３回戦,3,1,0,90
+2026-09-23 17:00:00,甲府,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m57.html,confirmed,emperor_cup_2026_57,鹿島,メルカリスタジアム,３回戦,3,1,0,90
+2026-10-07 19:00:00,鳥取,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m58.html,confirmed,emperor_cup_2026_58,東京V,味の素スタジアム,３回戦,0,0,30,120
+2026-10-07 19:00:00,東京V,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m58.html,confirmed,emperor_cup_2026_58,鳥取,味の素スタジアム,３回戦,0,0,30,120
+2026-10-07 19:00:00,川崎F,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m59.html,confirmed,emperor_cup_2026_59,宮崎,いちご宮崎新富サッカー場,３回戦,2,0,0,90
+2026-10-07 19:00:00,宮崎,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m59.html,confirmed,emperor_cup_2026_59,川崎F,いちご宮崎新富サッカー場,３回戦,2,0,0,90
+2026-09-23 17:00:00,G大阪,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m60.html,confirmed,emperor_cup_2026_60,徳島,パナソニック スタジアム 吹田,３回戦,5,0,0,90
+2026-09-23 17:00:00,徳島,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m60.html,confirmed,emperor_cup_2026_60,G大阪,パナソニック スタジアム 吹田,３回戦,5,0,0,90
+2026-10-07 18:30:00,広島,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m61.html,confirmed,emperor_cup_2026_61,いわき,ハワイアンズスタジアムいわき,３回戦,4,0,0,90
+2026-10-07 18:30:00,いわき,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m61.html,confirmed,emperor_cup_2026_61,広島,ハワイアンズスタジアムいわき,３回戦,4,0,0,90
+2026-10-07 19:00:00,岡山,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m62.html,confirmed,emperor_cup_2026_62,千葉,フクダ電子アリーナ,３回戦,1,0,0,90
+2026-10-07 19:00:00,千葉,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m62.html,confirmed,emperor_cup_2026_62,岡山,フクダ電子アリーナ,３回戦,1,0,0,90
+2026-09-23 17:00:00,神戸,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m63.html,confirmed,emperor_cup_2026_63,鳥栖,ノエビアスタジアム神戸,３回戦,1,0,0,90
+2026-09-23 17:00:00,鳥栖,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m63.html,confirmed,emperor_cup_2026_63,神戸,ノエビアスタジアム神戸,３回戦,1,0,0,90
+2026-10-07 18:30:00,福岡,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m64.html,confirmed,emperor_cup_2026_64,横浜FC,ニッパツ三ツ沢球技場,３回戦,0,1,0,90
+2026-10-07 18:30:00,横浜FC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m64.html,confirmed,emperor_cup_2026_64,福岡,ニッパツ三ツ沢球技場,３回戦,0,1,0,90
+2026-09-23 17:00:00,柏,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m65.html,confirmed,emperor_cup_2026_65,今治,三協フロンテア柏スタジアム,３回戦,4,0,0,90
+2026-09-23 17:00:00,今治,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m65.html,confirmed,emperor_cup_2026_65,柏,三協フロンテア柏スタジアム,３回戦,4,0,0,90
+2026-10-07 19:00:00,横浜FM,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m66.html,confirmed,emperor_cup_2026_66,京都産業大学,日産スタジアム,３回戦,2,1,0,90
+2026-10-07 19:00:00,京都産業大学,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m66.html,confirmed,emperor_cup_2026_66,横浜FM,日産スタジアム,３回戦,2,1,0,90
+2026-10-07 18:00:00,浦和,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m67.html,confirmed,emperor_cup_2026_67,大宮,ＮＡＣＫ５スタジアム大宮,３回戦,3,2,0,90
+2026-10-07 18:00:00,大宮,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m67.html,confirmed,emperor_cup_2026_67,浦和,ＮＡＣＫ５スタジアム大宮,３回戦,3,2,0,90
+2026-10-07 18:30:00,C大阪,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m68.html,confirmed,emperor_cup_2026_68,鹿児島ユナイテッドFC,YANMAR HANASAKA STADIUM,３回戦,2,0,0,90
+2026-10-07 18:30:00,鹿児島ユナイテッドFC,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m68.html,confirmed,emperor_cup_2026_68,C大阪,YANMAR HANASAKA STADIUM,３回戦,2,0,0,90
+2026-09-23 17:00:00,京都,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m69.html,confirmed,emperor_cup_2026_69,藤枝,サンガスタジアム by KYOCERA,３回戦,1,0,0,90
+2026-09-23 17:00:00,藤枝,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m69.html,confirmed,emperor_cup_2026_69,京都,サンガスタジアム by KYOCERA,３回戦,1,0,0,90
+2026-10-07 19:00:00,清水,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m70.html,confirmed,emperor_cup_2026_70,長崎,ＩＡＩスタジアム日本平,３回戦,2,1,30,120
+2026-10-07 19:00:00,長崎,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m70.html,confirmed,emperor_cup_2026_70,清水,ＩＡＩスタジアム日本平,３回戦,2,1,30,120
+2026-09-23 17:00:00,町田,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m71.html,confirmed,emperor_cup_2026_71,栃木C,町田ＧＩＯＮスタジアム,３回戦,2,1,0,90
+2026-09-23 17:00:00,栃木C,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m71.html,confirmed,emperor_cup_2026_71,町田,町田ＧＩＯＮスタジアム,３回戦,2,1,0,90
+2026-10-07 19:00:00,FC東京,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m72.html,confirmed,emperor_cup_2026_72,湘南,レモンガススタジアム平塚,３回戦,4,0,0,90
+2026-10-07 19:00:00,湘南,emperor_cup,https://www.jfa.jp/match/emperorscup_2026/match_page/m72.html,confirmed,emperor_cup_2026_72,FC東京,レモンガススタジアム平塚,３回戦,4,0,0,90

@@ -163,7 +163,7 @@ def _norm_key(v: object) -> str:
 
 def _player_key(v: object) -> str:
     # 同一選手の異体字表記を統一。所属・シーズンの照合条件は維持する。
-    return _norm_key(v).replace("﨑", "崎")
+    return _norm_key(v).replace("﨑", "崎").replace("髙", "高")
 
 
 def canonical_team_name(v: object) -> str:
@@ -323,6 +323,37 @@ def load_players(path: Path, default_season: Optional[int]) -> pd.DataFrame:
     out["team_key"] = out["team"].map(_norm_key)
     out["player_key"] = out["player_name"].map(_player_key)
     return out
+
+
+def check_player_master_freshness(path: Path, asof_date: str, max_age_days: int) -> None:
+    """Reject a mixed or stale roster before calculating production impacts."""
+    if max_age_days < 0:
+        raise ValueError("max_player_age_days must be nonnegative")
+    source = pd.read_csv(path, encoding="utf-8-sig", usecols=["club_key", "fetched_at"])
+    if source.empty or source["club_key"].isna().any():
+        raise ValueError("選手マスタのクラブ情報が欠損しています")
+    timestamps = pd.to_datetime(source["fetched_at"], errors="coerce")
+    if timestamps.isna().any():
+        raise ValueError("選手マスタの取得日時が欠損・不正です")
+    asof = pd.Timestamp(asof_date or datetime.now().date()).normalize()
+    days = (asof - timestamps.dt.normalize()).dt.days
+    stale = source.loc[(days < 0) | (days > max_age_days), "club_key"].unique().tolist()
+    if stale:
+        raise ValueError(f"選手マスタが期限外です（許容{max_age_days}日）: {sorted(stale)}")
+
+
+def check_active_unmatched(impacts: pd.DataFrame, asof_date: str, lookahead_days: int = 7) -> None:
+    """Do not silently discard an absence relevant to an upcoming prediction."""
+    asof = pd.Timestamp(asof_date or datetime.now().date()).normalize()
+    start = pd.to_datetime(impacts["start_date"], errors="coerce")
+    returned = pd.to_datetime(impacts["expected_return_date"], errors="coerce")
+    relevant = (start.isna() | (start <= asof + pd.Timedelta(days=lookahead_days))) & (
+        returned.isna() | (returned >= asof)
+    )
+    missing = impacts.loc[impacts["match_status"].eq("not_found") & relevant]
+    if not missing.empty:
+        names = ", ".join(f"{row.team}:{row.player_name}" for row in missing.itertuples())
+        raise ValueError(f"予想対象期間の欠場選手が名簿に未照合です: {names}")
 
 
 def match_player(
@@ -505,6 +536,10 @@ def main() -> None:
     parser.add_argument("players_csv", help="選手マスタCSV")
     parser.add_argument("--out-dir", default="data/manual", help="出力ディレクトリ")
     parser.add_argument("--season", type=int, default=None, help="players側にseason列が無い場合の既定値")
+    parser.add_argument("--max-player-age-days", type=int, default=None,
+                        help="本番用: 全クラブの選手マスタ取得日を検査する。未指定なら過去再現を許可")
+    parser.add_argument("--reject-active-unmatched", action="store_true",
+                        help="予想対象期間の欠場選手を名簿に照合できない場合は停止する")
     parser.add_argument(
         "--asof-date",
         default=os.environ.get("ABSENCE_ASOF_DATE", ""),
@@ -522,9 +557,13 @@ def main() -> None:
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    if args.max_player_age_days is not None:
+        check_player_master_freshness(players_path, args.asof_date, args.max_player_age_days)
     absences = load_absences(abs_path)
     players = load_players(players_path, args.season)
     impacts = build_impacts(absences, players)
+    if args.reject_active_unmatched:
+        check_active_unmatched(impacts, args.asof_date)
     summary = build_team_summary(impacts, players)
 
     out_abs = out_dir / "absences_with_impact.csv"

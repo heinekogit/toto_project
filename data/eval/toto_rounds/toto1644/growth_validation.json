@@ -1,0 +1,416 @@
+{
+  "round_id": "toto1644",
+  "version": "版不明（旧保存形式）",
+  "strategy": "unknown",
+  "resolved": 13,
+  "pending": 0,
+  "model_version": "不明",
+  "actual_counts": {
+    "H": 9,
+    "D": 1,
+    "A": 3
+  },
+  "official": {
+    "ticket_count": 10,
+    "ticket_names": [
+      "ticket01",
+      "ticket02",
+      "ticket03",
+      "ticket04",
+      "ticket05",
+      "ticket06",
+      "ticket07",
+      "ticket08",
+      "ticket09",
+      "ticket10"
+    ],
+    "ticket_hits": [
+      5,
+      3,
+      6,
+      6,
+      6,
+      7,
+      6,
+      5,
+      6,
+      3
+    ],
+    "best_hits": 7,
+    "mean_hits": 5.3,
+    "accuracy": 0.4076923076923077,
+    "draw_cells": 39,
+    "ge10": 0,
+    "ge11": 0,
+    "ge12": 0,
+    "ge13": 0,
+    "draw_pair_coverage": 2
+  },
+  "shadow": null,
+  "shadow_version": "未保存",
+  "model": {
+    "matches": 13,
+    "top_hits": 1,
+    "top_accuracy": 0.07692307692307693,
+    "brier": 0.7398114519873069,
+    "outcome_rows": [
+      {
+        "結果": "H",
+        "平均予測確率": "28.0%",
+        "実際の割合": "69.2%",
+        "実数": 9
+      },
+      {
+        "結果": "D",
+        "平均予測確率": "41.2%",
+        "実際の割合": "7.7%",
+        "実数": 1
+      },
+      {
+        "結果": "A",
+        "平均予測確率": "30.7%",
+        "実際の割合": "23.1%",
+        "実数": 3
+      }
+    ]
+  },
+  "records": [
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 1,
+      "home_team": "FC東京",
+      "away_team": "町田",
+      "result": "A",
+      "probabilities": [
+        0.2764152367898828,
+        0.4056720177973505,
+        0.3179127454127666
+      ],
+      "picks": [
+        "D",
+        "D",
+        "D",
+        "A",
+        "A",
+        "D",
+        "A",
+        "A",
+        "A",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 2,
+      "home_team": "Ｃ大阪",
+      "away_team": "岡山",
+      "result": "H",
+      "probabilities": [
+        0.2742605159118379,
+        0.4526225581961235,
+        0.2731169258920385
+      ],
+      "picks": [
+        "H",
+        "D",
+        "D",
+        "D",
+        "H",
+        "H",
+        "H",
+        "D",
+        "H",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 3,
+      "home_team": "名古屋",
+      "away_team": "清水",
+      "result": "A",
+      "probabilities": [
+        0.2738858240040727,
+        0.4732502092020575,
+        0.2528639667938697
+      ],
+      "picks": [
+        "H",
+        "H",
+        "A",
+        "H",
+        "H",
+        "H",
+        "D",
+        "D",
+        "D",
+        "D"
+      ]
+    },
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 4,
+      "home_team": "福岡",
+      "away_team": "神戸",
+      "result": "A",
+      "probabilities": [
+        0.2318576017334336,
+        0.416492238077268,
+        0.3516501601892984
+      ],
+      "picks": [
+        "A",
+        "D",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A",
+        "D",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 5,
+      "home_team": "広島",
+      "away_team": "千葉",
+      "result": "H",
+      "probabilities": [
+        0.2939619430950441,
+        0.4127503555989714,
+        0.2932877013059844
+      ],
+      "picks": [
+        "D",
+        "H",
+        "D",
+        "H",
+        "H",
+        "D",
+        "H",
+        "D",
+        "H",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 6,
+      "home_team": "柏",
+      "away_team": "水戸",
+      "result": "H",
+      "probabilities": [
+        0.310037150980589,
+        0.3950283689525294,
+        0.2949344800668815
+      ],
+      "picks": [
+        "D",
+        "H",
+        "D",
+        "H",
+        "A",
+        "H",
+        "A",
+        "D",
+        "H",
+        "D"
+      ]
+    },
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 7,
+      "home_team": "東京Ｖ",
+      "away_team": "川崎Ｆ",
+      "result": "D",
+      "probabilities": [
+        0.250907981849621,
+        0.4184400590420674,
+        0.3306519591083116
+      ],
+      "picks": [
+        "H",
+        "A",
+        "D",
+        "A",
+        "A",
+        "D",
+        "A",
+        "A",
+        "H",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 8,
+      "home_team": "長崎",
+      "away_team": "京都",
+      "result": "H",
+      "probabilities": [
+        0.2561400555130233,
+        0.4197207097734716,
+        0.3241392347135049
+      ],
+      "picks": [
+        "D",
+        "A",
+        "D",
+        "A",
+        "A",
+        "D",
+        "A",
+        "D",
+        "A",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 9,
+      "home_team": "札幌",
+      "away_team": "徳島",
+      "result": "H",
+      "probabilities": [
+        0.2390351790277933,
+        0.3917516078063465,
+        0.36921321316586
+      ],
+      "picks": [
+        "A",
+        "A",
+        "A",
+        "D",
+        "D",
+        "A",
+        "A",
+        "A",
+        "A",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 10,
+      "home_team": "藤枝",
+      "away_team": "仙台",
+      "result": "H",
+      "probabilities": [
+        0.207031228504477,
+        0.3733817536180445,
+        0.4195870178774784
+      ],
+      "picks": [
+        "A",
+        "A",
+        "A",
+        "A",
+        "D",
+        "A",
+        "D",
+        "A",
+        "A",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 11,
+      "home_team": "八戸",
+      "away_team": "富山",
+      "result": "H",
+      "probabilities": [
+        0.3655666488869322,
+        0.3935069036667356,
+        0.2409264474463323
+      ],
+      "picks": [
+        "H",
+        "D",
+        "H",
+        "H",
+        "H",
+        "H",
+        "D",
+        "H",
+        "H",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 12,
+      "home_team": "山形",
+      "away_team": "栃木Ｃ",
+      "result": "H",
+      "probabilities": [
+        0.3287572429185111,
+        0.4001466174058848,
+        0.2710961396756039
+      ],
+      "picks": [
+        "H",
+        "D",
+        "H",
+        "H",
+        "D",
+        "H",
+        "H",
+        "H",
+        "H",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1644",
+      "version": "版不明（旧保存形式）",
+      "match_no": 13,
+      "home_team": "いわき",
+      "away_team": "今治",
+      "result": "H",
+      "probabilities": [
+        0.3383016126768411,
+        0.408067657119918,
+        0.2536307302032407
+      ],
+      "picks": [
+        "H",
+        "H",
+        "H",
+        "D",
+        "H",
+        "H",
+        "H",
+        "H",
+        "D",
+        "D"
+      ]
+    }
+  ],
+  "sources": {
+    "buyplan": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1644/snapshot/buyplan.csv",
+      "sha256": "f8c19c7d3bdee42eb389cd22d7725280848cfc00c2ce6ef7100f912480f58833"
+    },
+    "actual": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1644/actual_results.csv",
+      "sha256": "3a9f3ef607fdc9e0e9d945f81f9e7c9f7d1d717d3d77edfa9f4e958628fce429"
+    }
+  },
+  "created_at": "2026-10-12T11:10:06.714363+09:00",
+  "comparison_fair": false
+}

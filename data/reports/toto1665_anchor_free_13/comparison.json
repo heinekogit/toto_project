@@ -1,0 +1,52 @@
+{
+  "round_id": "toto1665",
+  "status": "simulation only; not a purchase instruction",
+  "forecast_sha256": "4037a7f331a223d96858f6c2f47108d6bd1b1493df3006dd9142cc440a440fee",
+  "official_sha256": "831cc112c5471d54509a8dbb883f69bac0eaef78c62770fd74fca440e0c81ff1",
+  "method": "unchanged next_prob_*; top joint and model-sampled candidates; greedy 13-hit mean and lower-decile probability under expected-goal uncertainty; minimum pairwise Hamming distance 2",
+  "top_candidates": 3000,
+  "sampled_candidates": 5000,
+  "unique_candidates": 7911,
+  "model_scenarios": 128,
+  "lambda_log_sd_provisional": 0.15,
+  "seed": 16650013,
+  "anchor_stored_symbols": [
+    1,
+    1,
+    2,
+    1,
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "model_probability_no_draw_in_round": 0.01565755459921577,
+  "simulation": {
+    "baseline_prob_any_13": 9.910103898199873e-05,
+    "ensemble_mean_prob_any_13": 9.911764026394754e-05,
+    "ensemble_p10_prob_any_13": 5.935951491748202e-05,
+    "draws_per_ticket": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "tickets_with_any_draw": 0
+  },
+  "official_v23": {
+    "baseline_prob_any_13": 1.0395346570049592e-05,
+    "ensemble_mean_prob_any_13": 1.0546581678147205e-05,
+    "ensemble_p10_prob_any_13": 9.033279635835593e-06
+  }
+}

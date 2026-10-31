@@ -1,0 +1,37 @@
+{
+  "configs": [
+    [
+      "current50",
+      0.5,
+      0
+    ],
+    [
+      "coverage25",
+      0.25,
+      0
+    ],
+    [
+      "balanced25",
+      0.25,
+      1
+    ],
+    [
+      "hybrid5_25",
+      0.25,
+      5
+    ]
+  ],
+  "candidate_limit": 5000,
+  "minimum_hamming_distance": 2,
+  "diminishing_gain": "sum p(symbol)/(existing count + 1)",
+  "hybrid_seed": "first 5 current50 tickets",
+  "source": "data/eval/next_model/validation_v2/lab_xg_v0/predictions.csv",
+  "source_sha256": "d0ff83234fcacc8fa72dbe0b54186828b79f8e56eb30c0ff7fa379d548cf6cf0",
+  "exclusions": [
+    {
+      "round_id": "toto1649",
+      "rows": 10
+    }
+  ],
+  "production_changed": false
+}

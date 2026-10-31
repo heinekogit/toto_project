@@ -1,0 +1,9 @@
+﻿group,method,rounds,A_wins,C_wins,ties,mean_best_hits,zero_draw_tickets,duplicate_pairs,shared_unique_tickets,candidate00_matches,ge10_rounds,ge10_rate,ge11_rounds,ge11_rate,ge12_rounds,ge12_rate,eq13_rounds,eq13_rate
+all,A,11,5,2,4,7.2727272727272725,37,4,12,15,0,0.0,0,0.0,0,0.0,0,0.0
+all,C,11,5,2,4,7.090909090909091,32,44,12,11,0,0.0,0,0.0,0,0.0,0,0.0
+recalculated,A,7,4,2,1,7.285714285714286,24,1,7,8,0,0.0,0,0.0,0,0.0,0,0.0
+recalculated,C,7,4,2,1,7.142857142857143,17,27,7,7,0,0.0,0,0.0,0,0.0,0,0.0
+operational,A,4,1,0,3,7.25,13,3,5,7,0,0.0,0,0.0,0,0.0,0,0.0
+operational,C,4,1,0,3,7.0,15,17,5,4,0,0.0,0,0.0,0,0.0,0,0.0
+prematch_confirmed,A,7,2,2,3,7.0,23,3,8,10,0,0.0,0,0.0,0,0.0,0,0.0
+prematch_confirmed,C,7,2,2,3,7.285714285714286,21,32,8,7,0,0.0,0,0.0,0,0.0,0,0.0

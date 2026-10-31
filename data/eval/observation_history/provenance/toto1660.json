@@ -1,0 +1,19 @@
+{
+  "round_id": "toto1660",
+  "accumulated_at": "2026-10-12T14:13:48+09:00",
+  "rows": 13,
+  "sources": {
+    "predictions": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/snapshot/predictions.csv",
+      "sha256": "381e29215915e2a3e5741a2478b7459932895a594ee580ff0aaa3d5caa28a615"
+    },
+    "buyplan": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/snapshot/buyplan.csv",
+      "sha256": "b84de9da75d6e140a30188b6c7e313ed35365a386b948948c4370054a30b2a3f"
+    },
+    "actual": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/actual_results.csv",
+      "sha256": "09c9369b9258c8b3b39b0c6bbd2b42df2bd4a7f29144dade06dd14607e612077"
+    }
+  }
+}

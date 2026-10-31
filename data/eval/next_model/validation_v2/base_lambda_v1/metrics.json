@@ -1,0 +1,73 @@
+{
+  "model_version": "base_lambda_xg_rate_matchup_v1",
+  "draw_filter_version": "draw_filter_observation_v0",
+  "status": "diagnostic baseline; not production-ready",
+  "draw_filter_changes_probabilities": false,
+  "draw_filter_changes_raw_prediction": false,
+  "lab_features_used": false,
+  "lab_features": [],
+  "lab_adjustment_weight": null,
+  "lab_weight_selection": null,
+  "xg_features_used": true,
+  "xg_unit_treatment": "cumulative attack xG divided by games reconstructed from cumulative/per-game xGA",
+  "all_rows": {
+    "next_lab_free": {
+      "rows": 101,
+      "accuracy": 0.42574257425742573,
+      "brier": 0.6564056926811137,
+      "log_loss": 1.0839599771350692,
+      "predicted_draws": 0,
+      "actual_draws": 19,
+      "draw_precision": NaN,
+      "draw_recall": 0.0
+    },
+    "current_final": {
+      "rows": 101,
+      "accuracy": 0.27722772277227725,
+      "brier": 0.6777847703583776,
+      "log_loss": 1.1174277909922032,
+      "predicted_draws": 61,
+      "actual_draws": 19,
+      "draw_precision": 0.18032786885245902,
+      "draw_recall": 0.5789473684210527
+    }
+  },
+  "prematch_proven_rows": {
+    "next_lab_free": {
+      "rows": 49,
+      "accuracy": 0.4489795918367347,
+      "brier": 0.6396957584964599,
+      "log_loss": 1.0624645707871392,
+      "predicted_draws": 0,
+      "actual_draws": 9,
+      "draw_precision": NaN,
+      "draw_recall": 0.0
+    },
+    "current_final": {
+      "rows": 49,
+      "accuracy": 0.2653061224489796,
+      "brier": 0.6918177727746123,
+      "log_loss": 1.137968077163124,
+      "predicted_draws": 31,
+      "actual_draws": 9,
+      "draw_precision": 0.1935483870967742,
+      "draw_recall": 0.6666666666666666
+    }
+  },
+  "draw_class_counts": {
+    "not_applicable": 95,
+    "D-cover": 6
+  },
+  "draw_class_actuals": {
+    "D-cover": {
+      "D": 2,
+      "A": 2,
+      "H": 2
+    },
+    "not_applicable": {
+      "H": 47,
+      "A": 31,
+      "D": 17
+    }
+  }
+}

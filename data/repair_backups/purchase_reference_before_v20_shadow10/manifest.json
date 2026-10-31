@@ -1,0 +1,424 @@
+{
+  "status": "BuyPlan v2.0 official production output",
+  "round_id": "toto1660",
+  "logical_season": 2027,
+  "created_at": "2026-10-10T10:48:19+09:00",
+  "input": "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions.csv",
+  "input_sha256": "381e29215915e2a3e5741a2478b7459932895a594ee580ff0aaa3d5caa28a615",
+  "toto_order": "/Users/dev_tomo/Desktop/tt_prj_restart/data/manual/toto節リスト.csv",
+  "generator": {
+    "generator": "probability_allocation_v1",
+    "fixed_symbol_ratio_used": false,
+    "world_forcing_used": false,
+    "target_draw_count_used": false,
+    "candidate_pool_size": 0,
+    "max_same_picks": null,
+    "minimum_pairwise_hamming_distance": 7,
+    "joint_probability_floor_ratio": null,
+    "coverage_objective": "preserve_probability_allocations_then_diversify",
+    "ticket_log_probabilities": [
+      -13.89960583925267,
+      -14.612441913002977,
+      -12.9217729770088,
+      -13.684537479945966,
+      -13.096609722078156,
+      -13.999472691969006,
+      -13.84357788737336,
+      -13.38017754592693,
+      -13.789229929403927,
+      -12.7061055099204
+    ],
+    "ticket_joint_probabilities": [
+      9.193436556738591e-07,
+      4.5070991291606025e-07,
+      2.444248175494743e-06,
+      1.1399370915333689e-06,
+      2.0521762919736124e-06,
+      8.319673065003194e-07,
+      9.72322898671098e-07,
+      1.5454776359226285e-06,
+      1.026629009473419e-06,
+      3.03255363389946e-06
+    ],
+    "pairwise_same_pick_min": 1,
+    "pairwise_same_pick_mean": 3.9555555555555557,
+    "pairwise_same_pick_max": 6,
+    "total_draw_cells": 33,
+    "marginals": [
+      {
+        "match_no": 1,
+        "home_team": "C大阪",
+        "away_team": "横浜ＦM",
+        "count_H": 3,
+        "count_D": 2,
+        "count_A": 5,
+        "expected_H": 2.941966697154773,
+        "expected_D": 2.5429859403027493,
+        "expected_A": 4.515047362542478,
+        "draw_filter_class": "D-uncertain"
+      },
+      {
+        "match_no": 2,
+        "home_team": "ＦＣ東京",
+        "away_team": "浦和",
+        "count_H": 5,
+        "count_D": 2,
+        "count_A": 3,
+        "expected_H": 4.716057460109246,
+        "expected_D": 2.3818756680894655,
+        "expected_A": 2.9020668718012894,
+        "draw_filter_class": "D-uncertain"
+      },
+      {
+        "match_no": 3,
+        "home_team": "福岡",
+        "away_team": "岡山",
+        "count_H": 3,
+        "count_D": 3,
+        "count_A": 4,
+        "expected_H": 2.9777638926144996,
+        "expected_D": 2.6833385027336085,
+        "expected_A": 4.3388976046518914,
+        "draw_filter_class": "D-uncertain"
+      },
+      {
+        "match_no": 4,
+        "home_team": "千葉",
+        "away_team": "長崎",
+        "count_H": 3,
+        "count_D": 3,
+        "count_A": 4,
+        "expected_H": 3.0582936421180005,
+        "expected_D": 2.5697970206879788,
+        "expected_A": 4.371909337194022,
+        "draw_filter_class": "D-uncertain"
+      },
+      {
+        "match_no": 5,
+        "home_team": "水戸",
+        "away_team": "清水",
+        "count_H": 3,
+        "count_D": 3,
+        "count_A": 4,
+        "expected_H": 3.5786333895834033,
+        "expected_D": 2.626586204636776,
+        "expected_A": 3.794780405779823,
+        "draw_filter_class": "D-cover"
+      },
+      {
+        "match_no": 6,
+        "home_team": "京都",
+        "away_team": "町田",
+        "count_H": 3,
+        "count_D": 2,
+        "count_A": 5,
+        "expected_H": 2.3878583280553056,
+        "expected_D": 2.2572864543130273,
+        "expected_A": 5.354855217631666,
+        "draw_filter_class": "D-uncertain"
+      },
+      {
+        "match_no": 7,
+        "home_team": "東京V",
+        "away_team": "広島",
+        "count_H": 1,
+        "count_D": 2,
+        "count_A": 7,
+        "expected_H": 1.3121921415990878,
+        "expected_D": 2.0663011785366616,
+        "expected_A": 6.621506679864249,
+        "draw_filter_class": "D-reject"
+      },
+      {
+        "match_no": 8,
+        "home_team": "川崎F",
+        "away_team": "名古屋",
+        "count_H": 5,
+        "count_D": 2,
+        "count_A": 3,
+        "expected_H": 4.813137250674298,
+        "expected_D": 2.356607144887242,
+        "expected_A": 2.8302556044384604,
+        "draw_filter_class": "D-uncertain"
+      },
+      {
+        "match_no": 9,
+        "home_team": "甲府",
+        "away_team": "栃木C",
+        "count_H": 3,
+        "count_D": 2,
+        "count_A": 5,
+        "expected_H": 2.9121782277913653,
+        "expected_D": 2.4777142291857475,
+        "expected_A": 4.610107543022886,
+        "draw_filter_class": "D-reject"
+      },
+      {
+        "match_no": 10,
+        "home_team": "鳥栖",
+        "away_team": "藤枝",
+        "count_H": 4,
+        "count_D": 3,
+        "count_A": 3,
+        "expected_H": 3.8037303022070534,
+        "expected_D": 2.792277041196249,
+        "expected_A": 3.403992656596697,
+        "draw_filter_class": "D-uncertain"
+      },
+      {
+        "match_no": 11,
+        "home_team": "徳島",
+        "away_team": "今治",
+        "count_H": 4,
+        "count_D": 3,
+        "count_A": 3,
+        "expected_H": 3.80777427312869,
+        "expected_D": 2.713953732776386,
+        "expected_A": 3.478271994094925,
+        "draw_filter_class": "D-reject"
+      },
+      {
+        "match_no": 12,
+        "home_team": "山形",
+        "away_team": "仙台",
+        "count_H": 2,
+        "count_D": 3,
+        "count_A": 5,
+        "expected_H": 2.631050001094942,
+        "expected_D": 2.6338429043202765,
+        "expected_A": 4.735107094584782,
+        "draw_filter_class": "D-uncertain"
+      },
+      {
+        "match_no": 13,
+        "home_team": "いわき",
+        "away_team": "秋田",
+        "count_H": 3,
+        "count_D": 3,
+        "count_A": 4,
+        "expected_H": 3.375909396283516,
+        "expected_D": 2.626180397465192,
+        "expected_A": 3.997910206251291,
+        "draw_filter_class": "D-reject"
+      }
+    ],
+    "allocation": {
+      "generator": "probability_allocation_v1",
+      "seed": 20261010,
+      "trials": 2000,
+      "allocation_HDA": [
+        [
+          3,
+          2,
+          5
+        ],
+        [
+          5,
+          2,
+          3
+        ],
+        [
+          3,
+          3,
+          4
+        ],
+        [
+          3,
+          3,
+          4
+        ],
+        [
+          3,
+          3,
+          4
+        ],
+        [
+          3,
+          2,
+          5
+        ],
+        [
+          1,
+          2,
+          7
+        ],
+        [
+          5,
+          2,
+          3
+        ],
+        [
+          3,
+          2,
+          5
+        ],
+        [
+          4,
+          3,
+          3
+        ],
+        [
+          4,
+          3,
+          3
+        ],
+        [
+          2,
+          3,
+          5
+        ],
+        [
+          3,
+          3,
+          4
+        ]
+      ],
+      "totals_HDA": [
+        42,
+        33,
+        55
+      ],
+      "expected_totals_HDA": [
+        42.31654500241418,
+        32.72874641913136,
+        54.954708578454465
+      ],
+      "minimum_pairwise_hamming_distance": 7,
+      "diversity_constraint_satisfied": true,
+      "probability_floor_used": false,
+      "fixed_draw_ratio_used": false
+    }
+  },
+  "shadow_observation": {
+    "status": "non-purchase shadow observation",
+    "generator": "probability_allocation_v1",
+    "official_ticket_count": 10,
+    "shadow_ticket_count": 5,
+    "official_tickets_unchanged": true,
+    "shadow_probability_floor_ratio": null,
+    "allocation": {
+      "generator": "probability_allocation_v1",
+      "seed": 20261011,
+      "trials": 2000,
+      "allocation_HDA": [
+        [
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          1,
+          2
+        ],
+        [
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          2
+        ],
+        [
+          1,
+          1,
+          3
+        ],
+        [
+          1,
+          1,
+          3
+        ],
+        [
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          1,
+          2
+        ],
+        [
+          1,
+          2,
+          2
+        ],
+        [
+          2,
+          1,
+          2
+        ]
+      ],
+      "totals_HDA": [
+        21,
+        16,
+        28
+      ],
+      "expected_totals_HDA": [
+        21.15827250120709,
+        16.36437320956568,
+        27.477354289227232
+      ],
+      "minimum_pairwise_hamming_distance": 6,
+      "diversity_constraint_satisfied": true,
+      "probability_floor_used": false,
+      "fixed_draw_ratio_used": false
+    },
+    "minimum_pairwise_hamming_distance": 6,
+    "shadow_ticket_joint_probabilities": [
+      8.850255836263605e-07,
+      6.756467271948456e-07,
+      1.5850761396235183e-06,
+      1.1978937827902e-06,
+      7.599222947774453e-07
+    ]
+  },
+  "production_switched": true,
+  "preflight": {
+    "status": "passed",
+    "round_id": "toto1660",
+    "checked_at": "2026-10-10T10:48:19.223978+09:00",
+    "max_age_days": 7,
+    "matches": 13,
+    "source_dates": {
+      "stats_asof": [
+        "2026-10-10"
+      ],
+      "flab_snapshot_date": [
+        "2026-10-10"
+      ]
+    },
+    "checks": [
+      "kickoff_in_next_7_days",
+      "order_match_date",
+      "source_freshness",
+      "positive_finite_model_inputs"
+    ]
+  },
+  "output_sha256": {
+    "next_predictions.csv": "10a971e5783138a46d7018c18dec4ed2c27a7c936554c7bfa018d5ce118e6455",
+    "buyplan.csv": "b84de9da75d6e140a30188b6c7e313ed35365a386b948948c4370054a30b2a3f",
+    "buyplan.html": "24780fa4df351985839fefa92730bbaacdb5e639f2cf8906c7d23e7d3a7d8af4",
+    "shadow_buyplan.csv": "5bb939839e16b7f8bc101af131a4369b82b784f581dc80103fdd1e8a4c6469e3",
+    "shadow_buyplan.html": "d16cbc867e1a3ad84ff120f62c8fe759e1eef3f4db22d780591920520923e5fc"
+  },
+  "toto_order_sha256": "b4a1233c9143c1e4637abfe7ebd9e9e418e0db2d99f3ed4fec88c639f85c1560"
+}

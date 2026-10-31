@@ -1,0 +1,88 @@
+{
+  "version": "next_correction_history_v1",
+  "purpose": "Fit and validate existing absence and fatigue/weather corrections; no production weights changed",
+  "forecast_source": "recomputed with current build_next_probabilities from frozen prematch predictions",
+  "split": {
+    "fit_rounds": [
+      "toto1649",
+      "toto1650",
+      "toto1653",
+      "toto1654"
+    ],
+    "validation_rounds": [
+      "toto1660",
+      "toto1663",
+      "toto1664"
+    ]
+  },
+  "rows": 88,
+  "fit_rows": 49,
+  "validation_rows": 39,
+  "weather_known_rows": 88,
+  "absence_both_known_rows": 59,
+  "sources": {
+    "toto1649": {
+      "prematch_snapshot_created_at": "2026-09-02T08:54:43+09:00",
+      "predictions": "data/eval/toto_rounds/toto1649/snapshot/predictions.csv",
+      "predictions_sha256": "1b77c6288ec2addb639100823846db1f0764209079cd525bb28f063beecb0481",
+      "actual_results": "data/eval/toto_rounds/toto1649/actual_results.csv",
+      "actual_results_sha256": "200117b90c53d9e44eef8060747191835f3f6d84ae1cb5da0e8cdbf953a4e781",
+      "matched_matches": 10,
+      "excluded_unmatched_results": 3
+    },
+    "toto1650": {
+      "prematch_snapshot_created_at": "2026-09-05T13:05:42+09:00",
+      "predictions": "data/eval/toto_rounds/toto1650/snapshot/predictions.csv",
+      "predictions_sha256": "0491f3ab07b352c68a6bf913def84406005ecde2922667ded9d44ed20956b825",
+      "actual_results": "data/eval/toto_rounds/toto1650/actual_results.csv",
+      "actual_results_sha256": "8a7b8850544867c359f9c9b16a4e98e6d11ff4b6d14b3a7c897fe106c8f64a6a",
+      "matched_matches": 13,
+      "excluded_unmatched_results": 0
+    },
+    "toto1653": {
+      "prematch_snapshot_created_at": "2026-09-12T11:26:11+09:00",
+      "predictions": "data/eval/toto_rounds/toto1653/snapshot/predictions.csv",
+      "predictions_sha256": "263b69376a143e6d479e7ee9710f6399fdf4433af9e8de9fa4fde8abad03c88a",
+      "actual_results": "data/eval/toto_rounds/toto1653/actual_results.csv",
+      "actual_results_sha256": "28404053874b5d6b826375113e698a4accd9cd168981f6be8f8e348b76b22fe6",
+      "matched_matches": 13,
+      "excluded_unmatched_results": 0
+    },
+    "toto1654": {
+      "prematch_snapshot_created_at": "2026-09-19T14:38:34+09:00",
+      "predictions": "data/eval/toto_rounds/toto1654/snapshot/predictions.csv",
+      "predictions_sha256": "b10b42d461040cce3985f883dcdb424d424c897e5fd2ac02958745d13cc01f89",
+      "actual_results": "data/eval/toto_rounds/toto1654/actual_results.csv",
+      "actual_results_sha256": "b117f00b443dcc3882a22454dfc312e44756a410db02d933c287acd2faffb667",
+      "matched_matches": 13,
+      "excluded_unmatched_results": 0
+    },
+    "toto1660": {
+      "prematch_snapshot_created_at": "2026-10-11T20:40:58+09:00",
+      "predictions": "data/eval/toto_rounds/toto1660/snapshot/predictions.csv",
+      "predictions_sha256": "381e29215915e2a3e5741a2478b7459932895a594ee580ff0aaa3d5caa28a615",
+      "actual_results": "data/eval/toto_rounds/toto1660/actual_results.csv",
+      "actual_results_sha256": "09c9369b9258c8b3b39b0c6bbd2b42df2bd4a7f29144dade06dd14607e612077",
+      "matched_matches": 13,
+      "excluded_unmatched_results": 0
+    },
+    "toto1663": {
+      "prematch_snapshot_created_at": "2026-10-17T09:55:08+09:00",
+      "predictions": "data/eval/toto_rounds/toto1663/snapshot/predictions.csv",
+      "predictions_sha256": "dbf811962778718cb1663b07289994f2cd0f616a45d9668b1d113512801afeda",
+      "actual_results": "data/eval/toto_rounds/toto1663/actual_results.csv",
+      "actual_results_sha256": "66acdca40a2dd07b92cb69653355cb8fb0a4332da73ba98e65245b378f1eaf83",
+      "matched_matches": 13,
+      "excluded_unmatched_results": 0
+    },
+    "toto1664": {
+      "prematch_snapshot_created_at": "2026-10-21T22:38:17+09:00",
+      "predictions": "data/eval/toto_rounds/toto1664/snapshot/predictions.csv",
+      "predictions_sha256": "baa2c6fa43791f27c95c9da614e3af138a4209708303404fab9746e64d431596",
+      "actual_results": "data/eval/toto_rounds/toto1664/actual_results.csv",
+      "actual_results_sha256": "8c2ea7d153a988d37ed08521dc03f77033b247cf241f119b551eca9fd7e0283e",
+      "matched_matches": 13,
+      "excluded_unmatched_results": 0
+    }
+  }
+}

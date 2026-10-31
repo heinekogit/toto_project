@@ -1,0 +1,51 @@
+{
+  "round_id": "toto1665",
+  "status": "simulation only; not purchase advice",
+  "forecast_sha256": "4037a7f331a223d96858f6c2f47108d6bd1b1493df3006dd9142cc440a440fee",
+  "official_sha256": "831cc112c5471d54509a8dbb883f69bac0eaef78c62770fd74fca440e0c81ff1",
+  "seed": 16650032,
+  "runs": 256,
+  "safety_cap_tickets": 100,
+  "sampling": "independent per-match categorical draw from unchanged next_prob_HDA; discard duplicate whole tickets",
+  "stopping": "cumulative model probability of any exact 13-hit ticket reaches 1x, 2x or 3x official v2.3; targets are illustrative",
+  "official_v23_tickets": 10,
+  "official_v23_model_prob_any_13": 1.039534657004959e-05,
+  "targets": [
+    {
+      "目標": "正式v2.3の1倍",
+      "目標13的中確率": "0.00104%",
+      "例の必要口数": 11,
+      "例の到達確率": "0.00108%",
+      "例のD入り券": 11,
+      "256回の到達率": "100.0%",
+      "到達時口数の中央値": "10",
+      "到達時口数の10–90%": "7–13"
+    },
+    {
+      "目標": "正式v2.3の2倍",
+      "目標13的中確率": "0.00208%",
+      "例の必要口数": 24,
+      "例の到達確率": "0.00211%",
+      "例のD入り券": 24,
+      "256回の到達率": "100.0%",
+      "到達時口数の中央値": "19",
+      "到達時口数の10–90%": "14–24"
+    },
+    {
+      "目標": "正式v2.3の3倍",
+      "目標13的中確率": "0.00312%",
+      "例の必要口数": 34,
+      "例の到達確率": "0.00321%",
+      "例のD入り券": 33,
+      "256回の到達率": "100.0%",
+      "到達時口数の中央値": "29",
+      "到達時口数の10–90%": "23–34"
+    }
+  ],
+  "example_reached": [
+    11,
+    24,
+    34
+  ],
+  "model_probability_no_draw_in_round": 0.01565755459921577
+}

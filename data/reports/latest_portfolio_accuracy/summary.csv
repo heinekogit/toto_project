@@ -1,0 +1,7 @@
+population,group,rounds,tickets,accuracy,average_best_hits,shadow_improved_rounds,tickets_ge10,tickets_ge11,tickets_ge12,tickets_ge13
+prematch_proven,combined,3,45,0.37094017094017095,7.666666666666667,2,0,0,0,0
+prematch_proven,official,3,30,0.36666666666666664,6.666666666666667,2,0,0,0,0
+prematch_proven,shadow,3,15,0.37948717948717947,7.333333333333333,2,0,0,0,0
+all_complete_reference,combined,7,105,0.3619047619047619,7.857142857142857,3,0,0,0,0
+all_complete_reference,official,7,70,0.3626373626373626,7.285714285714286,3,0,0,0,0
+all_complete_reference,shadow,7,35,0.36043956043956044,7.142857142857143,3,0,0,0,0

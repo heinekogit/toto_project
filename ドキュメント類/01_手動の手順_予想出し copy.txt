@@ -1,0 +1,244 @@
+■ 事前  ================================================================================　
+
+・欠場情報（ケガ・カード）入力・CSV出力
+・ACL情報の入力・CSV出力
+・toto_節リスト入力・CSV出力
+
+▼ LABデータ準備 -------------------------------------------------------
+① LABデータ保存・検証機データ出力（日付とシーズンを替える）
+  （［external _contents］以下に、LABデータのhtml保存）
+  （2026はFootball LAB上の2026/27シーズン。保存前にタイトルを自動検査する）
+./scripts/.venv/bin/python scripts/fetch_football_lab_html.py \
+  --season-year 2026
+
+（Football LAB側がリーグ別に更新途中の場合）
+./scripts/.venv/bin/python scripts/fetch_football_lab_html.py \
+  --season-year 2026 \
+  --league j1
+
+./scripts/.venv/bin/python scripts/fetch_football_lab_html.py \
+  --season-year 2026 \
+  --league j2
+
+② 保存済みのFootball LAB HTMLを解析して、チーム指標を予測CSVの各対戦へ付加する処理
+  （html → 予測CSV結合） 
+　　①の出力時、ターミナルのコマンド部分に、
+      [NEXT] Football LAB snapshot生成コマンド:
+   としてコマンドが生成・表示される。それをコピーして利用 
+
+
+※取得indexにerrorがあるリーグはsnapshot化が安全停止する。
+  2026-08-11時点ではJ1は2026/27を取得済み。J2はFootball LAB側の一部未公開により旧Labを継続使用。
+
+■ 予想作成  ================================================================================
+# 1) 週次バッチ（2026/J1+J2）
+# 今回は2026-10-31の代替欠場CSVを、復帰・解除を反映した正本として使用する。
+# 旧CSVの行を補充・合算しない。次回以降は使用するCSVを改めて確認する。
+ABSENCES_CSV=data/manual/temporary_absense/absence-ledger-partial-20261031.csv SEASON_YEAR=2026 LEAGUES='j1 j2' ./scripts/run_batch_weekly.sh 2>&1 | tee logs/run_batch_weekly.log
+
+# 2) 試合直前バッチ（2026/J1+J2）
+ABSENCES_CSV=data/manual/temporary_absense/absence-ledger-partial-20261031.csv SEASON_YEAR=2026 LEAGUES='j1 j2' ./scripts/run_batch_matchday.sh 2>&1 | tee logs/run_batch_matchday.log
+
+# 3) 節別ビュー再生成
+./scripts/.venv/bin/python data/reports/build_round_views.py
+
+# 4) ダッシュボード再生成
+./scripts/.venv/bin/python data/reports/build_dashboard.py
+
+---------------------------
+1) 終了後のエラーチェック
+file:///Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_weekly_report.html
+file:///Users/dev_tomo/Desktop/tt_prj_restart/logs/run_batch_matchday_report.html
+---------------------------
+
+# 5) predictions.csvを出力してDLより、所定の場所（data 以下 purchase_reference内）に差替で配置
+
+
+■ buyplan（購入候補）の作成  ========================================================================
+・toto公式の予想をPDFでバックアップ保存しておく。
+・purchase_reference に predictions.csv を置き換え配置
+
+① 既存の予測CSVから対象節を抽出し、BuyPlan v2.0に渡す準備処理
+./scripts/.venv/bin/python scripts/run_buyplan_engine.py \
+  --in data/purchase_reference/predictions.csv \
+  --outdir data/purchase_reference \
+  --round totoXXXX \
+  --logical-season 2027 \
+  --toto-order-csv data/manual/toto節リスト.csv
+           ↑
+        節番号を変える
+
+・（要注意！）
+もし、J1/J2 で対象節が異なる開催回は、リーグ別に指定する方式を取る
+（補足：# 5) predictions.csvを出力・・・の、DLに出力するpredictions.csvは使わない）
+./scripts/.venv/bin/python scripts/build_purchase_reference_predictions.py \
+  --season 2026 \
+  --logical-season 2027 \
+  --j1-round 13 \
+  --j2-round 14
+        ※ --season は予測CSVの実年、--logical-season は toto節リスト上のseason。
+
+② buyplanのhtml出力まで（v2.0正式版）
+./scripts/.venv/bin/python scripts/run_buyplan_engine.py \
+  --engine next \
+  --in data/purchase_reference/predictions.csv \
+  --outdir data/purchase_reference \
+  --round toto1668 \
+  --logical-season 2027 \
+  --toto-order-csv data/manual/toto節リスト.csv
+
+           - --round toto1654を毎回変更
+           - --logical-season 2027をシーズンに応じて変更
+           - buyplan.pyの直接実行は旧版検証時だけ
+           - 通常運用はrun_buyplan_engine.pyを使う（--engine省略時もnext）
+
+【2026-10-03追加：生成前の事前チェック】
+通常コマンドで自動実行され、失敗時は既存のBuyPlanを更新しない。
+・対象13試合の対戦カードとtoto節リストの開催日を照合。
+・開催日時が実行時点より後、7日以内であることを確認。
+・stats_asof / flab_snapshot_date が未来日でなく、取得から7日以内であることを確認。
+・基礎得失点・xG・LAB xGが欠損、非数値、無限大、0以下なら停止。
+  現行モデルは0以下を代替値へ置換するため、正当な0も現時点では要確認として停止する。
+・LAB取得日は更新版11_prediction_01.pyが比較CSVの取得日付きファイル名から引き継ぐ。
+  過去の予測CSVには列がないため、LAB取得後に予測とpurchase_referenceを再生成する。
+・確認だけ行う場合は上の生成コマンドに --check-only を追加（ファイル出力なし）。
+・鮮度の上限を意図的に変更する場合のみ --max-age-days 日数 を指定。指定値は生成記録に保存。
+・logical-seasonはtoto節リストの区分。2027区分でも実開催が2026年の場合があるため、
+  暦年との単純一致は要求せず、指定区分と実開催日時をそれぞれ検証する。
+・欠場、天候、疲労の更新済み判定は今回の事前チェック対象外。
+
+
+・同時に検証用シャドー候補11～15も自動生成される。
+  data/purchase_reference/shadow_buyplan.html
+※シャドー候補は購入対象外。正式候補01～10は変更されない。
+※候補11～15は候補01比35％以上、候補間は最低2試合差。10toto開催回は条件を変えず検証する。
+
+③ 購入内容を最終確認した後、評価・採点用スナップショットを保存
+※同じtoto回では原則1回だけ。保存後にbuyplanを変更しない。
+※生成条件はbuyplan_engine_manifest.json、保存情報はmanifest.jsonとして別々に保存する。
+※生成後の入力・出力変更、生成回・シーズンの不一致、必須ファイル不足は保存を停止する。
+※過去の保存済みsnapshotは変更しない。生成manifestが既に上書きされた過去分は自動復元しない。
+
+./scripts/.venv/bin/python scripts/eval/00_snapshot_purchase.py \
+  --round toto1668 \
+  --srcdir data/purchase_reference \
+  --logical-season 2027 \
+  --prediction-season 2026
+           ↑
+        toto回番号を変える
+
+③-2  ＜v1旧版検証専用＞旧シャドー候補2案が必要な場合のみ実行
+※ purchase_reference が対象toto回の13試合になってから実行する。別回なら安全停止する。
+./scripts/.venv/bin/python scripts/eval/18_build_shadow_buyplan_candidates.py \
+  --round toto1654 \
+  --logical-season 2027 \
+  --prediction-season 2026 \
+  --asof 2026-09-19
+           ↑
+        toto回番号と、実行日を変える
+出力：data/eval/shadow_buyplans/toto1654/20260919/index.html
+
+④ buyplanの検証データを保存（NO=の番号は節番号）
+    手順書：/Users/dev_tomo/Desktop/tt_prj_restart/ドキュメント類/01_手動の手順_予想出し.txt
+./scripts/.venv/bin/python scripts/archive_buyplan_observation.py \
+  --logical-season 2027 \
+  --prediction-season 2026 \
+  --round 12 \
+  --engine next \
+  --label purchased
+           ↑
+        節番号を変える（J1の代表節として。J2節数が違っていても問題なし）
+
+
+シャドー版表示  疲労度の修正反映版
+/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/travel_fatigue_shadow/toto1649_travel_fatigue_shadow.html
+
+シャドー版表示  カップ戦ローテーション仮説
+/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/cup_rotation_shadow/toto1649/cup_rotation_shadow.html
+
+
+■ 的中結果検証（Jリーグ公式サイト更新後）  ==================================================================
+SEASON_YEAR=2027 ROUND=toto1665 ./scripts/run_evaluate_round.sh
+                           ↑
+                    toto節番号を変える
+
+
+■ v2系の結果検証・蓄積化
+==================================================================
+SEASON_YEAR=2027 ROUND=toto1660 ./scripts/run_evaluate_round.sh
+
+結果取得済みで、表示・検証だけ更新する場合はこちら
+ROUND=toto1660 ./scripts/run_validate_round.sh
+
+開催別の検証HTML
+/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/growth_validation.html
+
+累積検証HTML
+/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/growth_validation/index.html)
+
+
+
+
+
+
+==============================================================
+＜以下、バックアップ＞ ================================================
+==============================================================
+
+● 旧版v1 buyplanテスト（比較・シミュレーション専用）  ====================================================
+前節の購入情報を保存する  
+シミュレーションをする（終わった最新節）ためにsnapshotにする。
+ROUND=round11 SEASON_YEAR=2026 ./scripts/run_evaluate_round.sh
+
+その後、シミュレーション画面を生成
+./scripts/.venv/bin/python buyplan.py \
+  --in data/purchase_reference/predictions.csv \
+  --outdir data/purchase_reference \
+  --actual-csv data/eval/rounds/round17/actual_results.csv
+
+./scripts/.venv/bin/python scripts/build_buyplan_backtest.py
+./scripts/.venv/bin/python scripts/build_buyplan_simulation_index.py
+
+round数を終わった最新節の数に替えて使用。
+ROUND=round12 SEASON_YEAR=2026 ./scripts/run_evaluate_round.sh
+./scripts/.venv/bin/python scripts/build_buyplan_backtest.py --round round12
+./scripts/.venv/bin/python scripts/build_buyplan_simulation_index.py
+
+
+
+
+
+■ 検証データ作成  ================================================================================-
+
+＜廃止＞  ----------------------------------------------------------------------------
+
+
+■ 検証機用データ用意  =========================================================================
+・事前
+  ［external _contents］以下に、LABデータのhtml保存
+
+・スクリプト ---------------------------
+# 1) LABデータから比較CSVを作る
+./venv/bin/python scripts/build_football_lab_snapshot.py \
+  --league-dir /Users/dev_tomo/Desktop/tt_prj_restart/external_contents/20260404/j1 \
+  --prediction-csv /Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions.csv
+
+./venv/bin/python scripts/build_football_lab_snapshot.py \
+  --league-dir /Users/dev_tomo/Desktop/tt_prj_restart/external_contents/20260404/j2 \
+  --prediction-csv /Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions.csv
+
+# 2) J1/J2 の trial_flags を作る
+./venv/bin/python scripts/build_football_lab_trial_flags.py \
+  --compare-csv /Users/dev_tomo/Desktop/tt_prj_restart/data/external_metrics/predictions_football_lab_compare_20260404_j1.csv
+
+./venv/bin/python scripts/build_football_lab_trial_flags.py \
+  --compare-csv /Users/dev_tomo/Desktop/tt_prj_restart/data/external_metrics/predictions_football_lab_compare_20260404_j2.csv
+
+
+
+
+buyplan_caution 版の出力 ---------------------------------------------
+./scripts/run_buyplan_caution.sh
+    ↓
+履歴もバックアップされる
+data/purchase_reference/history_caution/YYYYMMDD_HHMMSS_buyplan_caution.html

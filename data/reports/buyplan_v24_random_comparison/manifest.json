@@ -1,0 +1,37 @@
+{
+  "method": "uniform permutation of each match's fixed H/D/A multiset",
+  "equivalent_sampling": "sequential probability = remaining symbol count / remaining candidates",
+  "base_seed": 24000000,
+  "repetitions_per_round": 1000,
+  "seed_formula": "base_seed + round_index * 1000 + zero_based_repetition",
+  "round_order": [
+    "toto1644",
+    "toto1645",
+    "toto1647",
+    "toto1648",
+    "toto1650",
+    "toto1653",
+    "toto1654",
+    "toto1660",
+    "toto1663",
+    "toto1664",
+    "toto1665"
+  ],
+  "random_generator": "Python random.Random MT19937; shuffle",
+  "outcome_selection": "all 1000 sets included; no best-seed selection",
+  "source_sha256": {
+    "data/reports/buyplan_v24_ac_comparison/round_summary.csv": "cd65ec5a31ea5faf50332f4754415980af683a1a10a630f51c2b6f2f8b371dc9",
+    "data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv": "10a971e5783138a46d7018c18dec4ed2c27a7c936554c7bfa018d5ce118e6455",
+    "data/eval/toto_rounds/toto1660/actual_results.csv": "09c9369b9258c8b3b39b0c6bbd2b42df2bd4a7f29144dade06dd14607e612077",
+    "data/eval/toto_rounds/toto1660/snapshot/buyplan_engine_manifest.json": "8653279e65cf255795eb190eafe60572e5497005baf8ecc5ad883887d963caff",
+    "data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv": "b20040116f63cdf8d4d8d9e292e6c5aa3be67ef3b87618a3e3a74ebbb38ee9d7",
+    "data/eval/toto_rounds/toto1663/actual_results.csv": "66acdca40a2dd07b92cb69653355cb8fb0a4332da73ba98e65245b378f1eaf83",
+    "data/eval/toto_rounds/toto1663/snapshot/buyplan_engine_manifest.json": "c6f44cd0a9d084537ad3fac00ddfc50db2bb949339c095d76fdc1ea7efa0a9e4",
+    "data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv": "75580295a3107b14620efebeb2c9b7911c90ed889a99c1942595ccd58331dc18",
+    "data/eval/toto_rounds/toto1664/actual_results.csv": "8c2ea7d153a988d37ed08521dc03f77033b247cf241f119b551eca9fd7e0283e",
+    "data/eval/toto_rounds/toto1664/snapshot/buyplan_engine_manifest.json": "19c7e42d97d5198258b800b004ba52af918fe6c400dad6579493872cdbb3b002",
+    "data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv": "4037a7f331a223d96858f6c2f47108d6bd1b1493df3006dd9142cc440a440fee",
+    "data/eval/toto_rounds/toto1665/actual_results.csv": "0866e72e9a03001fd65f8e89664fe84a91d22b1ea2cbbab0c93488f832c2f0c3",
+    "data/eval/toto_rounds/toto1665/snapshot/buyplan_engine_manifest.json": "e17fc9146455e3979455d44da52ec2113021685bca1f29ecdb292ead1fc15936"
+  }
+}

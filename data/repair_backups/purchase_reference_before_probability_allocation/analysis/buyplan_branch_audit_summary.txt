@@ -1,0 +1,4 @@
+home_bias_strongest_scenario=prob_faithful
+H_increase_peak_transition=after_ticket_generation->after_draw_distribution dH=9
+A_drop_peak_transition=after_ticket_generation->after_draw_distribution dA=-3
+exp_third_ratio_final=0.0000

@@ -1,0 +1,16 @@
+scenario,stage,total_best,total_second,total_third,total_other,total,best_ratio,second_ratio,third_ratio
+experimental,after_ticket_generation,24,1,0,1,26,0.923077,0.038462,0.0
+experimental,after_draw_distribution,24,2,0,0,26,0.923077,0.076923,0.0
+experimental,after_same_symbol_cap,24,2,0,0,26,0.923077,0.076923,0.0
+experimental,after_unique_repair,24,2,0,0,26,0.923077,0.076923,0.0
+experimental,after_final_range,24,2,0,0,26,0.923077,0.076923,0.0
+lock_strict,after_ticket_generation,29,10,0,0,39,0.74359,0.25641,0.0
+lock_strict,after_draw_distribution,33,6,0,0,39,0.846154,0.153846,0.0
+lock_strict,after_same_symbol_cap,33,6,0,0,39,0.846154,0.153846,0.0
+lock_strict,after_unique_repair,33,6,0,0,39,0.846154,0.153846,0.0
+lock_strict,after_final_range,33,6,0,0,39,0.846154,0.153846,0.0
+prob_faithful,after_ticket_generation,52,10,3,0,65,0.8,0.153846,0.046154
+prob_faithful,after_draw_distribution,49,16,0,0,65,0.753846,0.246154,0.0
+prob_faithful,after_same_symbol_cap,49,16,0,0,65,0.753846,0.246154,0.0
+prob_faithful,after_unique_repair,48,17,0,0,65,0.738462,0.261538,0.0
+prob_faithful,after_final_range,49,16,0,0,65,0.753846,0.246154,0.0

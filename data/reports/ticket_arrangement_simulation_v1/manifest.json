@@ -1,0 +1,22 @@
+{
+  "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/next_probability_calibration/matches.csv",
+  "sha256": "1894e720f03f7150551df0711bc481f2144bf3231264351124b4e93230338360",
+  "optimization_steps": 2000,
+  "optimization_outcomes": {
+    "10": 12000,
+    "11": 60000,
+    "12": "exact",
+    "13": "exact"
+  },
+  "evaluation_outcomes": 100000,
+  "all_match_probabilities_independent": true,
+  "actual_results_used_for_optimization": false,
+  "production_changed": false,
+  "exclusions": [
+    {
+      "round_id": "toto1649",
+      "matches": 10
+    }
+  ],
+  "search": "deterministic greedy within-match swaps; no global optimality guarantee"
+}

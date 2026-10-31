@@ -1,0 +1,36 @@
+{
+  "asof_date": "2026-10-17",
+  "source_name": "totomark year-by-year toto results",
+  "source_index_url": "https://totomark.info/toto/",
+  "source_type": "independent third-party results index",
+  "source_years": [
+    2006,
+    2026
+  ],
+  "raw_file": "data/external_metrics/toto_results/observed_results_2006_2026_asof_20261017.csv",
+  "raw_sha256": "96551a9c44ee9cd9002faf87d0760cf997e92116643d5243e002feb41408266c",
+  "round_statistics_file": "data/external_metrics/toto_results/round_statistics_2006_2026_asof_20261017.csv",
+  "result_count_distribution_file": "data/external_metrics/toto_results/result_count_distribution_2006_2026_asof_20261017.csv",
+  "year_summary_file": "data/external_metrics/toto_results/year_summary_2006_2026_asof_20261017.csv",
+  "local_eval_cross_check_file": "data/external_metrics/toto_results/local_eval_cross_check_2006_2026_asof_20261017.csv",
+  "local_eval_cross_check": {
+    "match": 14,
+    "mismatch": 1
+  },
+  "listed_rounds": 913,
+  "complete_13_rounds": 866,
+  "excluded_cancelled_rounds": 47,
+  "zero_rounds": {
+    "H": 1,
+    "D": 16,
+    "A": 5
+  },
+  "inclusion_rule": "Only complete 13-character results made of 1, 0, and 2 enter frequency denominators; ＊ marks cancelled/unresolved matches.",
+  "result_code_legend": {
+    "1": "home win",
+    "0": "draw or other",
+    "2": "away win",
+    "＊": "cancelled/unresolved"
+  },
+  "scope_note": "Includes domestic and overseas toto rounds; result_year is the year of the source results index."
+}

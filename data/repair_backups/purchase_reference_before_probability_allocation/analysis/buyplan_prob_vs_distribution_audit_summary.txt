@@ -1,0 +1,4 @@
+1) prob_faithful initial third_count_total = 3
+2) third loss main stage = after_ticket_generation->after_draw_distribution; away loss main stage = after_ticket_generation->after_draw_distribution
+3) draw_distribution increases H = true (largest scenario=prob_faithful delta_H=7)
+4) tentative main culprit = draw_distribution (prob_faithful has initial third, but major disappearance occurs at draw_distribution stage)

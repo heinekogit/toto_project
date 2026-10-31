@@ -1,0 +1,14 @@
+{
+  "inputs": {
+    "data/eval/toto_rounds/toto1663/snapshot/buyplan.csv": "bb81be4a6cdc5c68929df96bfcceaee48c0344c245a38cdb03cc999574544e89",
+    "data/eval/toto_rounds/toto1663/actual_results.csv": "66acdca40a2dd07b92cb69653355cb8fb0a4332da73ba98e65245b378f1eaf83",
+    "data/reports/anchor_arrangement_v1/current_saved_graded.csv": "35d52c4414616a3e9b5d1cf78456ac0299a10bd56125838466d2f3beff10267c",
+    "data/purchase_reference/draw_spread_mild/toto1663/buyplan_draw_spread_mild.csv": "3a641d4c73fdf56d689fb1879b85176a4a7b8acee1d39b58669e740dddc8a1d9"
+  },
+  "strength": 0.25,
+  "chosen_before_scoring_this_simulation": true,
+  "retrospective_after_round_result_known": true,
+  "production_changed": false,
+  "same_allocations": true,
+  "evaluation": "exact enumeration of all 3^13 outcomes under original independent-match probabilities"
+}

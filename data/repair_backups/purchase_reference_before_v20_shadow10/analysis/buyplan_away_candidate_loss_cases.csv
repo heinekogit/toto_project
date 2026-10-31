@@ -1,0 +1,4 @@
+scenario,match_no,away_rank,from_stage,to_stage,A_before,A_after,dominant_symbol_to,decision_reason
+prob_faithful,3,third,after_ticket_generation,after_draw_distribution,1,0,H,BALANCE_DRAW
+prob_faithful,11,third,after_ticket_generation,after_draw_distribution,1,0,D,BALANCE_DRAW
+prob_faithful,13,third,after_ticket_generation,after_draw_distribution,1,0,H,BALANCE_DRAW

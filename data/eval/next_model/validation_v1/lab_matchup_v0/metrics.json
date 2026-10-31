@@ -1,0 +1,76 @@
+{
+  "model_version": "lab_xg_matchup_logblend_v0",
+  "draw_filter_version": "draw_filter_observation_v0",
+  "status": "diagnostic baseline; not production-ready",
+  "draw_filter_changes_probabilities": false,
+  "draw_filter_changes_raw_prediction": false,
+  "lab_features_used": true,
+  "lab_features": [
+    "expected_for_xg",
+    "expected_against_xg"
+  ],
+  "lab_adjustment_weight": 0.25,
+  "lab_weight_selection": "a-priori diagnostic; not outcome-fitted",
+  "xg_features_used": true,
+  "xg_unit_treatment": "cumulative attack xG divided by games reconstructed from cumulative/per-game xGA",
+  "all_rows": {
+    "next_lab_matchup": {
+      "rows": 101,
+      "accuracy": 0.4158415841584158,
+      "brier": 0.65022314282127,
+      "log_loss": 1.07489652169378,
+      "predicted_draws": 0,
+      "actual_draws": 19,
+      "draw_precision": NaN,
+      "draw_recall": 0.0
+    },
+    "current_final": {
+      "rows": 101,
+      "accuracy": 0.27722772277227725,
+      "brier": 0.6777847703583776,
+      "log_loss": 1.1174277909922032,
+      "predicted_draws": 61,
+      "actual_draws": 19,
+      "draw_precision": 0.18032786885245902,
+      "draw_recall": 0.5789473684210527
+    }
+  },
+  "prematch_proven_rows": {
+    "next_lab_matchup": {
+      "rows": 49,
+      "accuracy": 0.4489795918367347,
+      "brier": 0.6365779524005262,
+      "log_loss": 1.0573320204790917,
+      "predicted_draws": 0,
+      "actual_draws": 9,
+      "draw_precision": NaN,
+      "draw_recall": 0.0
+    },
+    "current_final": {
+      "rows": 49,
+      "accuracy": 0.2653061224489796,
+      "brier": 0.6918177727746123,
+      "log_loss": 1.137968077163124,
+      "predicted_draws": 31,
+      "actual_draws": 9,
+      "draw_precision": 0.1935483870967742,
+      "draw_recall": 0.6666666666666666
+    }
+  },
+  "draw_class_counts": {
+    "not_applicable": 96,
+    "D-cover": 5
+  },
+  "draw_class_actuals": {
+    "D-cover": {
+      "D": 2,
+      "H": 2,
+      "A": 1
+    },
+    "not_applicable": {
+      "H": 47,
+      "A": 32,
+      "D": 17
+    }
+  }
+}
