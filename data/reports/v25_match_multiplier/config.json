@@ -1,0 +1,17 @@
+{
+  "reference_sha256": "e0bca9e6b17b005f78f2a6c2b37c1b6c43dc7e737f10f2d0eb15d89f86c9e852",
+  "base_coefficient_bounds": [
+    0.85,
+    1.2
+  ],
+  "multipliers": [
+    1.0,
+    1.1,
+    1.2
+  ],
+  "final_coefficient_bound": null,
+  "final_coefficient_policy": "multiply clipped base K; no post-multiplier clipping",
+  "official_modified": false,
+  "standard_shadow_modified": false,
+  "model_probability_source": "saved next_predictions; independent match outcomes"
+}

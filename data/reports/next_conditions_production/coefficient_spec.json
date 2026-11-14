@@ -1,0 +1,30 @@
+{
+  "train_rounds": [
+    1660,
+    1663,
+    1664,
+    1665
+  ],
+  "evaluation_rounds": [
+    1668,
+    1670
+  ],
+  "models": [
+    "saved_lambda",
+    "bias_only",
+    "bias_plus_fatigue",
+    "bias_plus_short_rest",
+    "bias_plus_travel"
+  ],
+  "penalty": 1.0,
+  "bounds": [
+    -2,
+    2
+  ],
+  "status": "reused historical sample; temporal holdout is NOT new independent validation",
+  "assumptions": "Poisson offsets; common attack and opposing defensive-concession coefficients; H/A intercepts",
+  "fatigue_scale": 16,
+  "travel_load_scale": 16,
+  "rest_feature": "max(0,96-rest_hours)/96",
+  "production_adoption": false
+}

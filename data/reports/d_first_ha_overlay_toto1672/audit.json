@@ -1,0 +1,17 @@
+{
+  "forecast_sha256": "056a93e7ce2cc49da9cb9403eaf1149c3a7f026bedd95bc30f355fdaaf314efc",
+  "prior_portfolio_sha256": "62bdd5a09ab08e699adcd334bc865f3a21133028c35605cd8df14a5041e9ee04",
+  "buyplan_research_version": "v4.2",
+  "status": "provisional_comparison_baseline_not_formal",
+  "D_masks_unchanged": true,
+  "D_total": 34,
+  "HA_top10_count": 10,
+  "HA_reverse_matches_covered": 7,
+  "HA_reverse_cells": 11,
+  "P13_previous": 4.393949662145015e-05,
+  "P13_overlay": 3.837407594684264e-05,
+  "pairing": "exact binary assignment: maximize distinct HA-reverse matches, then reverse cells, then P13",
+  "actual_results_used": false,
+  "production_changed": false,
+  "research_only": true
+}

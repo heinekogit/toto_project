@@ -6,9 +6,9 @@ prediction本体には未接続。確定結果に対するcounterfactual評価�
 
 | policy | 変更 | Hへ/Aへ | rescue | harm | net | 変更精度 | 的中率 before → after |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| false_draw_only | 62 | 27/35 | 30 | 15 | +15 | 48.4% | 34.6% → 44.4% |
-| false_draw_plus_trap | 80 | 38/42 | 42 | 19 | +23 | 52.5% | 34.6% → 49.7% |
-| topology_guard | 80 | 38/42 | 42 | 20 | +22 | 52.5% | 34.6% → 49.0% |
+| false_draw_only | 76 | 38/38 | 37 | 18 | +19 | 48.7% | 34.1% → 44.7% |
+| false_draw_plus_trap | 98 | 51/47 | 51 | 22 | +29 | 52.0% | 34.1% → 50.3% |
+| topology_guard | 99 | 51/48 | 51 | 24 | +27 | 51.5% | 34.1% → 49.2% |
 
 ## 節別
 
@@ -50,6 +50,12 @@ prediction本体には未接続。確定結果に対するcounterfactual評価�
 | toto1665 | false_draw_only | 8 | 3 | 3 | +0 | 46.2% → 46.2% |
 | toto1665 | false_draw_plus_trap | 10 | 4 | 4 | +0 | 46.2% → 46.2% |
 | toto1665 | topology_guard | 9 | 3 | 4 | -1 | 46.2% → 38.5% |
+| toto1668 | false_draw_only | 6 | 4 | 0 | +4 | 23.1% → 53.8% |
+| toto1668 | false_draw_plus_trap | 8 | 5 | 0 | +5 | 23.1% → 61.5% |
+| toto1668 | topology_guard | 8 | 5 | 0 | +5 | 23.1% → 61.5% |
+| toto1670 | false_draw_only | 8 | 3 | 3 | +0 | 38.5% → 38.5% |
+| toto1670 | false_draw_plus_trap | 10 | 4 | 3 | +1 | 38.5% → 46.2% |
+| toto1670 | topology_guard | 11 | 4 | 4 | +0 | 38.5% → 38.5% |
 
 ## policy定義
 

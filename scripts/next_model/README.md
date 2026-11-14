@@ -1,5 +1,9 @@
 # Next score-model workspace
 
+## New BuyPlan research direction
+
+The base research policy is [BuyPlan v4.0](../../BUYPLAN_V4_0.md). The latest generated research portfolio is [BuyPlan v4.2, a provisional comparison baseline](../../BUYPLAN_V4_2.md), not an adopted or purchase-ready version. It keeps sampled D placements and overlays ten H/A patterns; later ideas should be compared with that frozen result. Its objective remains at least one exact 13-match ticket among ten distinct tickets. The old v3.0 four-double / top-four-D proposal is abandoned and retained only as historical evidence. Phase 4-A and Phase 4-B are research stages, not BuyPlan version numbers. The currently running BuyPlan program is labelled v2.4; its fixed allocation is not a design premise for v4.0/v4.2. Historical sections below describe the versions and experiments that existed at their own dates; they are not the current research specification.
+
 ## Shared prematch conditions
 
 `forecast_pipeline.py` produces the single `next_prob_home/draw/away` forecast
@@ -222,8 +226,9 @@ symbol allocation; draw cells remain an unconstrained output.
 ## Production-shaped acceptance interface
 
 `run_next_buyplan.py` accepts the ordinary prediction CSV plus an explicit
-toto round/order, fails closed unless all 13 pairs match, copies the prediction
-system's final H/D/A probabilities, and writes `next_predictions.csv`, `buyplan.csv`,
+toto round/order, fails closed unless all 13 pairs match, removes the older
+`prob_final_*`/`prob_main_*` forecasts and labels at the BuyPlan boundary,
+recomputes `next_prob_home/draw/away` from the score model, and writes `next_predictions.csv`, `buyplan.csv`,
 `buyplan.html`, and a manifest. `scripts/run_buyplan_engine.py` is the explicit
 engine switch. Its `next` route now produces v2.4; the legacy route remains
 available only by explicitly passing `--engine legacy`.
@@ -237,6 +242,10 @@ Example:
 
 The official run also writes shadow A/B/C CSV and HTML files with non-purchase
 tickets 11--40. They remain separate from official tickets 01--10.
+It also writes `shadow_condition_s_buyplan.html` and `.csv`: a research display
+of the unchanged official v2.4 tickets 01--10 with each match's frozen condition-S
+flag. This is not a v4.0 ticket generator. The observation archive copies both
+files when present.
 
 ## Live preflight (2026-10-03)
 
@@ -295,3 +304,9 @@ comparison_plan, audit = rearrange_buyplan(plan, mode="balanced")
 10券全体のモデル確率は変わりません。生成記録には旧インデックスとの対応を
 `ticket_original_indices` として保存し、HTMLに各候補の確率とD本数を表示します。
 既に保存した開催回のsnapshotは番号を変えません。
+
+## 追加チームスタイルの前向き観測運用
+
+LAB取得・正式予測生成・結果更新の既存入口から、指標と予測の固定保存、結果結合、過去分での学習、後続試合での評価を実行します。2026-11-03に正式予測への統合を有効化しました。未学習時は補正ゼロ、学習済み補正は次の正式予測に反映します。
+仕様・保存先・再実行方法は [STYLE_SHADOW.md](STYLE_SHADOW.md) を参照。
+運用状態は `data/style_shadow/reports/index.html`（予想・検証ダッシュボードからリンク）で確認できます。

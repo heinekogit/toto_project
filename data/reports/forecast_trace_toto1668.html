@@ -1,0 +1,260 @@
+<!doctype html><html lang='ja'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
+    <title>toto1668 予想計算の検証</title><style>
+    body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:#f3f6fa;color:#172033}main{max-width:1200px;margin:auto;padding:24px}
+    a{color:#1769aa}.card,details{background:#fff;border:1px solid #d6dee8;border-radius:10px;padding:15px;margin:12px 0}
+    .flag{border-left:5px solid #d99000}summary{cursor:pointer;display:flex;justify-content:space-between;gap:12px;font-weight:700}.detail-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+    table{border-collapse:collapse;width:100%;font-size:14px}th,td{padding:7px;border-bottom:1px solid #e0e5ee;text-align:left}th{background:#edf2f8}.steps{margin-top:14px}.note{background:#fff6dc;border-left:4px solid #d99000;padding:12px}
+    @media(max-width:600px){main{padding:12px}summary{display:block}}
+    </style><main><p><a href='index.html'>← レポート一覧</a></p><h1>toto1668 予想計算の検証</h1>
+    <div class='card'><p>保存済みの試合前予測を、当時の値のまま表示します。実結果は採点時に後から照合しました。オレンジ線は確率1位と実結果が違った試合です。</p>
+    <p>見出しの「代表スコア」は、保存済みの最終λから計算した、予想H/D/Aに一致する中で最も確率の高い得点組です。括弧内の確率はそのスコア単独の発生確率であり、予想H/D/A全体の確率ではありません。保存データに独立したスコア予想列があるわけではありません。</p>
+    <p><b>読み方:</b> チーム単独の攻撃指標と、その試合の予想得点λを分けて表示します。基礎λ＝√(自チーム攻撃指標 × 相手守備指標)。Football LABと欠場補正後のλから得点分布を計算し、疲労・天候による確率調整を経て最終H/D/A確率を得ます。</p></div>
+    <p class='note'>このページは検証画面の試作です。将来の試合では平均値の対象試合数、突出値と退場情報の有無、補正前後のλ差、実スコアとのずれを継続して表示する設計です。過去の保存値に新補正を遡及適用しません。</p>
+    <details class='match'><summary><span>No.1 岡山－FC東京</span><span>予想 A（代表0–1、11.5%） ／ 実結果 A（0–4）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 岡山 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.30 / 1.18</td></tr>
+        <tr><th>攻撃指標</th><td>1.242 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>0.70 / 1.00</td></tr>
+        <tr><th>相手の守備指標</th><td>0.850 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.027 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー FC東京 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>2.30 / 1.94</td></tr>
+        <tr><th>攻撃指標</th><td>2.118 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.40 / 1.00</td></tr>
+        <tr><th>相手の守備指標</th><td>1.200 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.594 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>1.027</td><td>1.594</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>1.044</td><td>1.528</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>1.060</td><td>1.532</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 26.3% ／ D 25.6% ／ A 48.2%。</p>
+        <p>疲労・天候による確率調整率 20.0% → 最終 <code>next_prob_*</code>: H 27.7% ／ D 27.1% ／ A 45.2%。実スコア 0–4。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><details class='match'><summary><span>No.2 水戸－広島</span><span>予想 A（代表0–1、13.0%） ／ 実結果 A（0–3）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 水戸 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.00 / 0.98</td></tr>
+        <tr><th>攻撃指標</th><td>0.992 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>0.80 / 0.70</td></tr>
+        <tr><th>相手の守備指標</th><td>0.750 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>0.862 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー 広島 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>2.40 / 2.04</td></tr>
+        <tr><th>攻撃指標</th><td>2.219 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.80 / 1.60</td></tr>
+        <tr><th>相手の守備指標</th><td>1.700 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.942 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>0.862</td><td>1.942</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>0.868</td><td>1.929</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>0.747</td><td>1.974</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 13.3% ／ D 20.5% ／ A 66.2%。</p>
+        <p>疲労・天候による確率調整率 24.6% → 最終 <code>next_prob_*</code>: H 18.2% ／ D 23.7% ／ A 58.1%。実スコア 0–3。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><details class='match'><summary><span>No.3 神戸－名古屋</span><span>予想 H（代表1–0、10.3%） ／ 実結果 H（3–1）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 神戸 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.50 / 1.57</td></tr>
+        <tr><th>攻撃指標</th><td>1.538 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.50 / 1.30</td></tr>
+        <tr><th>相手の守備指標</th><td>1.400 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.467 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー 名古屋 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.20 / 1.33</td></tr>
+        <tr><th>攻撃指標</th><td>1.265 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>0.90 / 1.20</td></tr>
+        <tr><th>相手の守備指標</th><td>1.050 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.153 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>1.467</td><td>1.153</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>1.467</td><td>1.196</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>1.491</td><td>1.177</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 44.4% ／ D 25.6% ／ A 29.9%。</p>
+        <p>疲労・天候による確率調整率 16.6% → 最終 <code>next_prob_*</code>: H 42.6% ／ D 26.9% ／ A 30.5%。実スコア 3–1。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><details class='match'><summary><span>No.4 鹿島－C大阪</span><span>予想 H（代表2–1、9.5%） ／ 実結果 H（4–1）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 鹿島 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>2.10 / 1.75</td></tr>
+        <tr><th>攻撃指標</th><td>1.925 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.60 / 1.60</td></tr>
+        <tr><th>相手の守備指標</th><td>1.600 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.755 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー C大阪 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.00 / 1.21</td></tr>
+        <tr><th>攻撃指標</th><td>1.104 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.80 / 1.10</td></tr>
+        <tr><th>相手の守備指標</th><td>1.450 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.265 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>1.755</td><td>1.265</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>1.739</td><td>1.237</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>1.739</td><td>1.237</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 49.2% ／ D 23.6% ／ A 27.2%。</p>
+        <p>疲労・天候による確率調整率 19.1% → 最終 <code>next_prob_*</code>: H 46.2% ／ D 25.4% ／ A 28.4%。実スコア 4–1。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><details class='match'><summary><span>No.5 柏－浦和</span><span>予想 H（代表2–1、8.5%） ／ 実結果 H（4–0）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 柏 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>2.10 / 1.33</td></tr>
+        <tr><th>攻撃指標</th><td>1.715 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.90 / 1.20</td></tr>
+        <tr><th>相手の守備指標</th><td>1.550 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.631 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー 浦和 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.80 / 1.38</td></tr>
+        <tr><th>攻撃指標</th><td>1.587 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.60 / 1.30</td></tr>
+        <tr><th>相手の守備指標</th><td>1.450 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.517 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>1.631</td><td>1.517</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>1.548</td><td>1.480</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>1.548</td><td>1.501</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 39.0% ／ D 24.1% ／ A 36.9%。</p>
+        <p>疲労・天候による確率調整率 25.0% → 最終 <code>next_prob_*</code>: H 37.6% ／ D 26.4% ／ A 36.0%。実スコア 4–0。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><details class='match'><summary><span>No.6 京都－清水</span><span>予想 H（代表1–0、9.4%） ／ 実結果 H（2–0）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 京都 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.30 / 1.05</td></tr>
+        <tr><th>攻撃指標</th><td>1.175 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.70 / 1.40</td></tr>
+        <tr><th>相手の守備指標</th><td>1.550 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.350 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー 清水 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>0.80 / 1.05</td></tr>
+        <tr><th>攻撃指標</th><td>0.927 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.90 / 1.60</td></tr>
+        <tr><th>相手の守備指標</th><td>1.750 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.274 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>1.350</td><td>1.274</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>1.324</td><td>1.301</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>1.324</td><td>1.317</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 37.1% ／ D 26.1% ／ A 36.8%。</p>
+        <p>疲労・天候による確率調整率 16.4% → 最終 <code>next_prob_*</code>: H 36.5% ／ D 27.3% ／ A 36.2%。実スコア 2–0。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><details class='match flag'><summary><span>No.7 千葉－福岡</span><span>予想 A（代表0–1、10.3%） ／ 実結果 H（3–0）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 千葉 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.00 / 1.06</td></tr>
+        <tr><th>攻撃指標</th><td>1.029 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.80 / 1.20</td></tr>
+        <tr><th>相手の守備指標</th><td>1.500 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.242 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー 福岡 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.10 / 1.15</td></tr>
+        <tr><th>攻撃指標</th><td>1.125 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>2.00 / 1.50</td></tr>
+        <tr><th>相手の守備指標</th><td>1.750 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.403 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>1.242</td><td>1.403</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>1.216</td><td>1.384</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>1.216</td><td>1.391</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 32.8% ／ D 26.2% ／ A 41.0%。</p>
+        <p>疲労・天候による確率調整率 25.0% → 最終 <code>next_prob_*</code>: H 32.9% ／ D 28.0% ／ A 39.1%。実スコア 3–0。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><details class='match flag'><summary><span>No.8 長崎－東京V</span><span>予想 H（代表1–0、11.8%） ／ 実結果 A（1–2）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 長崎 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.30 / 1.01</td></tr>
+        <tr><th>攻撃指標</th><td>1.154 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.80 / 1.70</td></tr>
+        <tr><th>相手の守備指標</th><td>1.750 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.421 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー 東京V の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>0.80 / 0.79</td></tr>
+        <tr><th>攻撃指標</th><td>0.796 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.60 / 1.40</td></tr>
+        <tr><th>相手の守備指標</th><td>1.500 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.093 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>1.421</td><td>1.093</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>1.394</td><td>1.099</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>1.399</td><td>1.072</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 44.4% ／ D 26.7% ／ A 28.8%。</p>
+        <p>疲労・天候による確率調整率 25.0% → 最終 <code>next_prob_*</code>: H 41.7% ／ D 28.4% ／ A 29.9%。実スコア 1–2。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><details class='match flag'><summary><span>No.9 町田－G大阪</span><span>予想 H（代表1–0、11.3%） ／ 実結果 D（0–0）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 町田 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>2.50 / 1.42</td></tr>
+        <tr><th>攻撃指標</th><td>1.962 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.80 / 1.50</td></tr>
+        <tr><th>相手の守備指標</th><td>1.650 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.799 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー G大阪 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.20 / 1.09</td></tr>
+        <tr><th>攻撃指標</th><td>1.146 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>0.80 / 1.00</td></tr>
+        <tr><th>相手の守備指標</th><td>0.900 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.016 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>1.799</td><td>1.016</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>1.738</td><td>1.043</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>1.760</td><td>0.989</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 55.5% ／ D 23.4% ／ A 21.1%。</p>
+        <p>疲労・天候による確率調整率 25.0% → 最終 <code>next_prob_*</code>: H 49.9% ／ D 25.9% ／ A 24.2%。実スコア 0–0。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><details class='match flag'><summary><span>No.10 横浜FM－川崎F</span><span>予想 A（代表0–1、8.8%） ／ 実結果 H（4–2）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 横浜FM の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.30 / 1.26</td></tr>
+        <tr><th>攻撃指標</th><td>1.279 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.50 / 1.30</td></tr>
+        <tr><th>相手の守備指標</th><td>1.400 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.338 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー 川崎F の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>2.10 / 1.49</td></tr>
+        <tr><th>攻撃指標</th><td>1.796 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.00 / 1.40</td></tr>
+        <tr><th>相手の守備指標</th><td>1.200 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.468 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>1.338</td><td>1.468</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>1.335</td><td>1.479</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>1.337</td><td>1.479</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 34.2% ／ D 25.1% ／ A 40.6%。</p>
+        <p>疲労・天候による確率調整率 17.0% → 最終 <code>next_prob_*</code>: H 34.1% ／ D 26.5% ／ A 39.4%。実スコア 4–2。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><details class='match flag'><summary><span>No.11 仙台－大宮</span><span>予想 H（代表1–0、10.7%） ／ 実結果 A（1–2）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 仙台 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.70 / 1.62</td></tr>
+        <tr><th>攻撃指標</th><td>1.662 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.20 / 1.10</td></tr>
+        <tr><th>相手の守備指標</th><td>1.150 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.382 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー 大宮 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.80 / 1.66</td></tr>
+        <tr><th>攻撃指標</th><td>1.731 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>0.80 / 0.80</td></tr>
+        <tr><th>相手の守備指標</th><td>0.800 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.177 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>1.382</td><td>1.177</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>1.378</td><td>1.173</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>1.393</td><td>1.173</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 42.0% ／ D 26.4% ／ A 31.6%。</p>
+        <p>疲労・天候による確率調整率 20.5% → 最終 <code>next_prob_*</code>: H 40.2% ／ D 27.8% ／ A 32.0%。実スコア 1–2。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><details class='match'><summary><span>No.12 新潟－富山</span><span>予想 A（代表0–1、10.8%） ／ 実結果 A（2–3）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 新潟 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.50 / 1.05</td></tr>
+        <tr><th>攻撃指標</th><td>1.275 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>0.90 / 1.00</td></tr>
+        <tr><th>相手の守備指標</th><td>0.950 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.101 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー 富山 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.80 / 1.67</td></tr>
+        <tr><th>攻撃指標</th><td>1.736 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.60 / 1.30</td></tr>
+        <tr><th>相手の守備指標</th><td>1.450 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.586 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>1.101</td><td>1.586</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>1.097</td><td>1.585</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>1.097</td><td>1.585</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 26.3% ／ D 25.0% ／ A 48.6%。</p>
+        <p>疲労・天候による確率調整率 25.0% → 最終 <code>next_prob_*</code>: H 28.1% ／ D 27.1% ／ A 44.8%。実スコア 2–3。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><details class='match flag'><summary><span>No.13 宮崎－大分</span><span>予想 A（代表0–1、10.9%） ／ 実結果 H（2–0）</span></summary>
+        <div class='detail-grid'><div><h3>ホーム 宮崎 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.50 / 1.27</td></tr>
+        <tr><th>攻撃指標</th><td>1.386 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>0.80 / 1.10</td></tr>
+        <tr><th>相手の守備指標</th><td>0.950 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.147 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div>
+        <div><h3>アウェー 大分 の得点計算</h3><table>
+        <tr><th>チームの平均得点 / 平均xG</th><td>1.30 / 1.13</td></tr>
+        <tr><th>攻撃指標</th><td>1.214 = 上の2値の平均</td></tr>
+        <tr><th>相手の平均失点 / 平均被xG</th><td>1.20 / 1.20</td></tr>
+        <tr><th>相手の守備指標</th><td>1.200 = 上の2値の平均</td></tr>
+        <tr><th>基礎λ</th><td>1.207 ≈ √(攻撃指標 × 相手守備指標)</td></tr></table></div></div>
+        <table class='steps'><tr><th>段階</th><th>H得点λ</th><th>A得点λ</th><th>意味</th></tr>
+        <tr><td>基礎</td><td>1.147</td><td>1.207</td><td>平均得点・xGと相手守備指標</td></tr>
+        <tr><td>Football LAB後</td><td>1.179</td><td>1.216</td><td>Football LAB補正</td></tr>
+        <tr><td>欠場補正後</td><td>1.198</td><td>1.201</td><td>得点分布の入力</td></tr>
+        <tr><th>得失点率の補正</th><td colspan='3'>この保存時点では未適用。現在の補正を結果に遡って混ぜていません。</td></tr></table>
+        <p>得点分布の確率: H 36.1% ／ D 27.7% ／ A 36.2%。</p>
+        <p>疲労・天候による確率調整率 24.6% → 最終 <code>next_prob_*</code>: H 35.4% ／ D 29.1% ／ A 35.5%。実スコア 2–0。従来の <code>prob_final_*</code> はこの計算に使いません。</p></details><p><a href='../eval/toto_rounds/toto1668/growth_validation.html'>開催全体の検証へ</a></p></main></html>

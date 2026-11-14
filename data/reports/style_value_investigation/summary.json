@@ -1,0 +1,30 @@
+{
+  "overview_pairs": 140,
+  "unique_full_row_candidates": 137,
+  "unresolved_full_rows": [
+    {
+      "team": "広島",
+      "style": "ハイプレッシング",
+      "precise_index": 39.4,
+      "overview_rate": 49.3,
+      "matching_variants": 2
+    },
+    {
+      "team": "福岡",
+      "style": "カウンタープレス",
+      "precise_index": 46.4,
+      "overview_rate": 44.7,
+      "matching_variants": 2
+    },
+    {
+      "team": "柏",
+      "style": "ラインブレイクラン",
+      "precise_index": 62.9,
+      "overview_rate": 10.5,
+      "matching_variants": 2
+    }
+  ],
+  "high_block_overview_matches_final_chart": 20,
+  "historical_asof_resolved": false,
+  "production_adopted": false
+}

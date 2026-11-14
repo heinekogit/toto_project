@@ -78,9 +78,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <th>away_external_load_unknown</th>
 <th>home_external_events_json</th>
 <th>away_external_events_json</th>
+<th>home_fatigue_status</th>
+<th>away_fatigue_status</th>
 <th>home_acl_fatigue</th>
+<th>home_acl_fatigue_status</th>
 <th>home_total_fatigue_score</th>
 <th>away_acl_fatigue</th>
+<th>away_acl_fatigue_status</th>
 <th>away_total_fatigue_score</th>
 <th>datetime_weather</th>
 <th>stadium_weather</th>
@@ -732,6 +736,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <th>decision_reason_detail</th>
 <th>uncertainty_calibration_version</th>
 <th>uncertainty_fatigue_signal</th>
+<th>uncertainty_fatigue_known</th>
 <th>uncertainty_weather_signal</th>
 <th>uncertainty_weather_known</th>
 <th>uncertainty_calibration_mix</th>
@@ -876,6 +881,10 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td>Football LAB試験理由</td>
 <td>ホーム得点（予測時は空）</td>
 <td>アウェイ得点（予測時は空）</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -1665,6 +1674,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>legacy: 旧派生予測B</td>
 <td>legacy: 旧派生予測C</td>
 <td>legacy: 旧派生予測B記号</td>
@@ -1731,9 +1741,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>4.68</td>
 <td>0.0</td>
+<td></td>
 <td>6.78</td>
 <td>2026-05-24 14:00:00</td>
 <td>ＮＤスタ</td>
@@ -2392,6 +2406,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>j2_draw_trap</td>
 <td>stall_draw_bias</td>
 <td>low</td>
@@ -2557,9 +2572,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>3.82</td>
 <td>0.0</td>
+<td></td>
 <td>6.42</td>
 <td>2026-05-24 14:00:00</td>
 <td>鳴門大塚</td>
@@ -3218,6 +3237,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>draw_trap</td>
 <td>weak_draw_side_bias</td>
 <td>high</td>
@@ -3383,9 +3403,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>3.9</td>
 <td>0.0</td>
+<td></td>
 <td>7.03</td>
 <td>2026-05-24 14:00:00</td>
 <td>ソユスタ</td>
@@ -4044,6 +4068,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>away_reversal_watch</td>
 <td>home_overread</td>
 <td>low</td>
@@ -4209,9 +4234,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>3.66</td>
 <td>0.0</td>
+<td></td>
 <td>8.5</td>
 <td>2026-05-23 14:03:00</td>
 <td>藤枝サ</td>
@@ -4870,6 +4899,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>j2_draw_trap</td>
 <td>stall_draw_bias</td>
 <td>low</td>
@@ -5035,9 +5065,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>2.33</td>
 <td>0.0</td>
+<td></td>
 <td>6.81</td>
 <td>2026-05-23 14:00:00</td>
 <td>プレド</td>
@@ -5696,6 +5730,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>j2_false_draw_watch</td>
 <td>draw_live_j2</td>
 <td>low</td>
@@ -5861,9 +5896,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>3.88</td>
 <td>0.0</td>
+<td></td>
 <td>8.41</td>
 <td>2026-05-23 14:00:00</td>
 <td>ユアスタ</td>
@@ -6513,6 +6552,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td>adopt=BASE; final=H; w=(0.815,0.128,0.057); c=(0.638,0.737,0.471); labels=(H,D,H)</td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>

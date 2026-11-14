@@ -1,0 +1,17 @@
+{
+  "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase12/match_structure_78.csv",
+  "source_sha256": "7633f1a0105178e6e540b9a816ebca2564cda107f841d24e3fe7b4a20a770b15",
+  "matches": 78,
+  "scenarios_per_match": 17,
+  "scenario_rows": 1326,
+  "adjacency_rows": 26520,
+  "skipped": 0,
+  "delta_values": [
+    0.1,
+    0.2
+  ],
+  "mix_applied": false,
+  "result_used": false,
+  "forecast_changed": false,
+  "buyplan_changed": false
+}

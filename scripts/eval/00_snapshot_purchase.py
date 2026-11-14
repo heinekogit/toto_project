@@ -48,6 +48,8 @@ def main():
         "next_predictions.csv", "shadow_buyplan.csv", "shadow_buyplan.html",
         "shadow_buyplan_b.csv", "shadow_buyplan_b.html", "manifest.json",
         "shadow_buyplan_c.csv", "shadow_buyplan_c.html",
+        "shadow_condition_s_buyplan.csv", "shadow_condition_s_buyplan.html",
+        'shadow_buyplan_v25.csv', 'shadow_buyplan_v25.html', 'shadow_v25_features.csv', 'shadow_v25_candidates.csv', 'shadow_v25_audit.json', 'shadow_v25_reference.json',
     ]
 
     if os.path.exists(outdir):
@@ -79,6 +81,8 @@ def main():
                 required += ["shadow_buyplan_b.csv", "shadow_buyplan_b.html"]
             if "shadow_c_observation" in engine:
                 required += ["shadow_buyplan_c.csv", "shadow_buyplan_c.html"]
+            if "shadow_v25_observation" in engine:
+                required += ['shadow_buyplan_v25.csv', 'shadow_buyplan_v25.html', 'shadow_v25_features.csv', 'shadow_v25_candidates.csv', 'shadow_v25_audit.json', 'shadow_v25_reference.json']
             for fn in required:
                 if not os.path.isfile(os.path.join(srcdir, fn)):
                     raise FileNotFoundError(f"必要ファイルが見つかりません: {fn}")

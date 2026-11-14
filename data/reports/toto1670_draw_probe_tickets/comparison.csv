@@ -1,0 +1,5 @@
+mode,P_any13,D_total,D_counts,tickets_without_D,actual_best,actual_any13,duplicate_pairs
+raw_P_D,5.9579475284080105e-05,0,0/0/0/0/0/0/0/0/0/0,10,,,0
+P_D_only,5.9579475284080105e-05,0,0/0/0/0/0/0/0/0/0/0,10,,,0
+P_D_plus_Q,5.9579475284080105e-05,0,0/0/0/0/0/0/0/0/0/0,10,,,0
+P_D_plus_score_structure,5.9579475284080105e-05,0,0/0/0/0/0/0/0/0/0/0,10,,,0

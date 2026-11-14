@@ -474,6 +474,19 @@ def scrape_match_results():
             raise RuntimeError("CSV書き込み後の行数が0件です。")
 
         print(f"SUCCESS: 試合結果データを {OUTPUT_CSV_PATH} に保存しました。 rows={len(df_written)}")
+        try:
+            sys.path.insert(0, os.path.join(os.path.dirname(__file__), "next_model"))
+            from style_observation import refresh
+            _, observation = refresh()
+            print("[STYLE] 結果結合・前向き評価:", observation["completed_matches"], "試合")
+        except Exception as error:
+            print("[WARN] 追加スタイルの結果結合に失敗（結果CSVは保存済み）:", repr(error))
+        try:
+            from forecast_registry import sync_league_results
+            registry = sync_league_results(OUTPUT_CSV_PATH)
+            print("[FORECAST_REGISTRY] 結果照合:", registry)
+        except Exception as error:
+            print("[FORECAST_REGISTRY][ERROR] 結果登録に失敗（結果CSVは保存済み）:", repr(error))
         return len(df_written)
     finally:
         time.sleep(1)

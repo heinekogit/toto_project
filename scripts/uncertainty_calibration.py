@@ -39,7 +39,8 @@ def adjust(probabilities, fatigue, weather, fatigue_weight, weather_weight, max_
 
 def apply_to_frame(frame, fatigue_weight, weather_weight, max_mix=0.25,
                    probability_prefix="prob_final", audit_prefix="uncertainty",
-                   rain_signal=0.35, heavy_rain_signal=1.0, strong_wind_signal=0.65):
+                   rain_signal=0.35, heavy_rain_signal=1.0, strong_wind_signal=0.65,
+                   hold_missing_fatigue=False):
     """Apply once after other probability fusion, preserving model components."""
     out = frame.copy()
     if out.empty:
@@ -54,7 +55,8 @@ def apply_to_frame(frame, fatigue_weight, weather_weight, max_mix=0.25,
     if missing:
         raise ValueError(f"uncertainty inputs missing: {missing}")
     fatigue_inputs = out[["home_total_fatigue_score", "away_total_fatigue_score"]].apply(pd.to_numeric, errors="coerce")
-    if fatigue_inputs.isna().any().any():
+    fatigue_known = fatigue_inputs.notna().all(axis=1)
+    if not hold_missing_fatigue and not fatigue_known.all():
         raise ValueError("unknown fatigue cannot be treated as zero")
     def boolean_column(name, allow_unknown=False):
         values = out[name].astype(str).str.lower().map({"true": True, "false": False, "1": True, "0": False})
@@ -79,9 +81,12 @@ def apply_to_frame(frame, fatigue_weight, weather_weight, max_mix=0.25,
     names = ["home", "draw", "away"]
     columns = [f"{probability_prefix}_{name}" for name in names]
     before = out[columns].apply(pd.to_numeric, errors="coerce").to_numpy(dtype=float)
-    after, mix = adjust(before, fatigue, weather, fatigue_weight, weather_weight, max_mix)
+    # Hold only the missing component; do not rewrite the observed fatigue columns.
+    fatigue_effect = np.where(fatigue_known, fatigue, 0.0)
+    after, mix = adjust(before, fatigue_effect, weather, fatigue_weight, weather_weight, max_mix)
     out[f"{audit_prefix}_calibration_version"] = "fatigue_weather_uniform_v1"
     out[f"{audit_prefix}_fatigue_signal"] = fatigue
+    out[f"{audit_prefix}_fatigue_known"] = fatigue_known
     out[f"{audit_prefix}_weather_signal"] = weather
     out[f"{audit_prefix}_weather_known"] = weather_known.to_numpy(dtype=bool)
     out[mix_column] = mix

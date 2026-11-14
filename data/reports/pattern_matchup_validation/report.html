@@ -1,0 +1,399 @@
+<!doctype html><html lang='ja'><head><meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'><title>攻撃と相手守備の組み合わせ検証</title>
+    <style>body{font-family:system-ui,sans-serif;background:#f4f6f8;color:#172033;line-height:1.8;margin:0}
+    main{max-width:1150px;margin:auto;padding:24px;background:white}h1{font-size:26px}h2{margin-top:32px;font-size:21px}
+    table{border-collapse:collapse;width:100%;font-size:14px;margin:16px 0}th,td{padding:9px;border:1px solid #dce2e8;text-align:left}
+    th{background:#edf3f8}.notice{background:#fff4d8;border-left:4px solid #bd8700;padding:16px}a{color:#166298}
+    details{margin:15px 0;padding:12px;background:#f6f8fa;overflow-x:auto}summary{cursor:pointer;font-weight:600}
+    @media(max-width:650px){main{padding:12px}table{font-size:12px}th,td{padding:5px}}</style></head><body><main><p><a href='../index.html'>レポート一覧</a></p>
+    <h1>攻撃と相手守備の組み合わせを検証</h1>
+    <p>2026年11月3日 / 保存済みFootball LAB情報による追加検証</p>
+    <div class='notice'><b>結論：</b>得点・失点パターンは取得済みHTMLにあるが、従来の数値抽出では未利用だった。
+    これを対応させた相性補正を検証したところ、過去の評価だけで選ぶ手順は9期間中9期間で「追加しない」を選んだ。
+    攻撃スタイルが無効という結論ではなく、今回のパターン構成による補正には改善の証拠がない。</div>
+    <h2>取得情報で分かること・足りないこと</h2>
+    <table><tr><th>情報</th><th>現状</th><th>意味と限界</th></tr>
+    <tr><td>7種類の攻撃スタイル指数・シュート率</td><td>取得・数値化済み</td><td>攻撃の試行傾向。指数の大小は優劣を意味しない。</td></tr>
+    <tr><td>得点パターン・失点パターン</td><td>HTML取得済み。今回、検証用に数値を抽出</td><td>同じ種類の攻撃で得点した数と失点した数を対応可能。ただし被攻撃回数がなく、守備成功率ではない。</td></tr>
+    <tr><td>被xG・被シュート・守備CBP等</td><td>取得・数値化済み</td><td>守備全体の情報。カウンターやクロスへの耐性を直接示す値とは限らない。</td></tr>
+    <tr><td>ハイ／ミドルプレス、カウンタープレス、守備ブロック</td><td>取得対象外</td><td>カウンター対ハイライン、保持型対ローブロックの検証には不足。</td></tr></table>
+    <p>定義：<a href='https://www.football-lab.jp/pages/team_style'>Football LAB チームスタイル指標とは</a>、
+    <a href='https://www.football-lab.jp/summary/team_ranking/j1?year=2026&amp;data=lost'>失点パターン</a>。</p>
+    <h2>何を、どう比べたか</h2>
+    <p>J1・J2の2026/27シーズン。29組の保存情報から250試合の入力を作成した。
+    先頭60試合を初期学習に使い、その後190試合（J1 90、J2 100）を週単位で順番に評価。
+    各週の係数・縮約量・追加可否は、その週より前の試合だけで決めた。各試合の入力と正規化に、その試合以後の結果を使っていない。</p>
+    <p>試合当日以後に保存されたHTMLは使わない。特別大会の旧シーズンは除外。
+    各保存ページの得点・失点合計が、その更新日以前の実スコア合計と全チームで一致することを検査した。
+    事前情報がなかった開幕20試合は除外。原本のハッシュと採用日付を保存した。</p>
+    <p><b>比較対象は検証用のLAB xGモデル。</b>λ＝√（自チームのLAB xG × 相手のLAB被xG）。
+    現行フル予測の欠場・疲労・天候・新しい得失点補正は再現していない。
+    正式予測やBuyPlanの成績改善を直接示す検証ではない。</p>
+    <details><summary>相性の式と係数の決め方</summary>
+    <p>PKを除き、セットプレー・クロス・スルーパス等8分類の得点構成と相手の失点構成を使用。
+    小標本の偏りを抑えるため、各構成を同じ時点のリーグ構成へ縮約する。
+    相性＝log［Σ（自チームの得点割合 × 相手の失点割合 ÷ リーグの割合）］。
+    片方がリーグ平均と同じ構成なら相性は0になるため、一方の数値を単に足す式とは異なる。</p>
+    <p>平均得点の補正係数は相性1個。別にリーグ・ホーム／アウェイの基準補正4個を両比較に共通で持たせる。
+    Poisson回帰で基準λの残差を説明する。縮約量5・10・20、正則化0.1・1・10と「追加なし」を学習期間内の時系列検証で比較。
+    評価基準は得点分布の負の対数尤度。今回の190試合は既知の過去結果による探索的検証で、今後の新規試合での実証ではない。</p></details>
+    <h2>評価結果</h2><p>MAE・Log Loss・Brierは低いほど良い。</p><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>方式</th>
+      <th>試合数</th>
+      <th>得点MAE</th>
+      <th>H/D/A Log Loss</th>
+      <th>Brier</th>
+      <th>確率1位の的中率</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LAB xGのみ</td>
+      <td>190</td>
+      <td>0.9043</td>
+      <td>1.0601</td>
+      <td>0.6378</td>
+      <td>43.2%</td>
+    </tr>
+    <tr>
+      <td>＋リーグ平均補正</td>
+      <td>190</td>
+      <td>0.9240</td>
+      <td>1.0609</td>
+      <td>0.6382</td>
+      <td>43.2%</td>
+    </tr>
+    <tr>
+      <td>＋リーグ・ホーム/アウェイ補正（比較基準）</td>
+      <td>190</td>
+      <td>0.9178</td>
+      <td>1.0618</td>
+      <td>0.6397</td>
+      <td>46.3%</td>
+    </tr>
+    <tr>
+      <td>比較基準＋パターン相性を必ず追加</td>
+      <td>190</td>
+      <td>0.9181</td>
+      <td>1.0620</td>
+      <td>0.6399</td>
+      <td>46.3%</td>
+    </tr>
+    <tr>
+      <td>過去検証で相性の追加可否を選択</td>
+      <td>190</td>
+      <td>0.9178</td>
+      <td>1.0618</td>
+      <td>0.6397</td>
+      <td>46.3%</td>
+    </tr>
+  </tbody>
+</table>
+    <p>追加必須案のLog Loss差は比較基準に対して
+    +0.000215。
+    週単位再抽出の参考95%区間は[-0.000157, +0.000607]で0を含む。9期間だけなので区間も参考値である。</p>
+    <details><summary>J1とJ2を分けた結果</summary><h3>J1</h3><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>方式</th>
+      <th>試合数</th>
+      <th>得点MAE</th>
+      <th>H/D/A Log Loss</th>
+      <th>Brier</th>
+      <th>確率1位の的中率</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LAB xGのみ</td>
+      <td>90</td>
+      <td>1.0023</td>
+      <td>1.0274</td>
+      <td>0.6143</td>
+      <td>45.6%</td>
+    </tr>
+    <tr>
+      <td>＋リーグ平均補正</td>
+      <td>90</td>
+      <td>1.0045</td>
+      <td>1.0265</td>
+      <td>0.6137</td>
+      <td>45.6%</td>
+    </tr>
+    <tr>
+      <td>＋リーグ・ホーム/アウェイ補正（比較基準）</td>
+      <td>90</td>
+      <td>0.9920</td>
+      <td>1.0224</td>
+      <td>0.6114</td>
+      <td>48.9%</td>
+    </tr>
+    <tr>
+      <td>比較基準＋パターン相性を必ず追加</td>
+      <td>90</td>
+      <td>0.9925</td>
+      <td>1.0227</td>
+      <td>0.6116</td>
+      <td>48.9%</td>
+    </tr>
+    <tr>
+      <td>過去検証で相性の追加可否を選択</td>
+      <td>90</td>
+      <td>0.9920</td>
+      <td>1.0224</td>
+      <td>0.6114</td>
+      <td>48.9%</td>
+    </tr>
+  </tbody>
+</table><h3>J2</h3><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>方式</th>
+      <th>試合数</th>
+      <th>得点MAE</th>
+      <th>H/D/A Log Loss</th>
+      <th>Brier</th>
+      <th>確率1位の的中率</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LAB xGのみ</td>
+      <td>100</td>
+      <td>0.8161</td>
+      <td>1.0896</td>
+      <td>0.6589</td>
+      <td>41.0%</td>
+    </tr>
+    <tr>
+      <td>＋リーグ平均補正</td>
+      <td>100</td>
+      <td>0.8516</td>
+      <td>1.0919</td>
+      <td>0.6603</td>
+      <td>41.0%</td>
+    </tr>
+    <tr>
+      <td>＋リーグ・ホーム/アウェイ補正（比較基準）</td>
+      <td>100</td>
+      <td>0.8510</td>
+      <td>1.0973</td>
+      <td>0.6653</td>
+      <td>44.0%</td>
+    </tr>
+    <tr>
+      <td>比較基準＋パターン相性を必ず追加</td>
+      <td>100</td>
+      <td>0.8511</td>
+      <td>1.0973</td>
+      <td>0.6653</td>
+      <td>44.0%</td>
+    </tr>
+    <tr>
+      <td>過去検証で相性の追加可否を選択</td>
+      <td>100</td>
+      <td>0.8510</td>
+      <td>1.0973</td>
+      <td>0.6653</td>
+      <td>44.0%</td>
+    </tr>
+  </tbody>
+</table></details>
+    <details><summary>各週で追加を選んだか</summary><table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>評価開始週</th>
+      <th>学習試合</th>
+      <th>評価試合</th>
+      <th>過去検証の選択</th>
+      <th>追加必須案の係数</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2026-08-31</td>
+      <td>60</td>
+      <td>30</td>
+      <td>追加しない</td>
+      <td>0.00293</td>
+    </tr>
+    <tr>
+      <td>2026-09-07</td>
+      <td>90</td>
+      <td>20</td>
+      <td>追加しない</td>
+      <td>-0.00187</td>
+    </tr>
+    <tr>
+      <td>2026-09-14</td>
+      <td>110</td>
+      <td>20</td>
+      <td>追加しない</td>
+      <td>0.00163</td>
+    </tr>
+    <tr>
+      <td>2026-09-21</td>
+      <td>130</td>
+      <td>10</td>
+      <td>追加しない</td>
+      <td>0.00180</td>
+    </tr>
+    <tr>
+      <td>2026-09-28</td>
+      <td>140</td>
+      <td>10</td>
+      <td>追加しない</td>
+      <td>0.00197</td>
+    </tr>
+    <tr>
+      <td>2026-10-05</td>
+      <td>150</td>
+      <td>20</td>
+      <td>追加しない</td>
+      <td>0.00023</td>
+    </tr>
+    <tr>
+      <td>2026-10-12</td>
+      <td>170</td>
+      <td>20</td>
+      <td>追加しない</td>
+      <td>0.00001</td>
+    </tr>
+    <tr>
+      <td>2026-10-19</td>
+      <td>190</td>
+      <td>40</td>
+      <td>追加しない</td>
+      <td>0.00062</td>
+    </tr>
+    <tr>
+      <td>2026-10-26</td>
+      <td>230</td>
+      <td>20</td>
+      <td>追加しない</td>
+      <td>-0.00310</td>
+    </tr>
+  </tbody>
+</table></details>
+    <h2>No.10 横浜FM－川崎F</h2>
+    <p>実スコア4–2。使用情報は10月31日保存・10月26日更新。試合は11月1日。</p>
+    <table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>方式</th>
+      <th>得点期待値 横浜FM–川崎F</th>
+      <th>H / D / A</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>LAB xGのみ</td>
+      <td>1.325–1.512</td>
+      <td>33.3% / 25.0% / 41.7%</td>
+    </tr>
+    <tr>
+      <td>＋リーグ平均補正</td>
+      <td>1.404–1.602</td>
+      <td>33.6% / 24.1% / 42.3%</td>
+    </tr>
+    <tr>
+      <td>＋リーグ・ホーム/アウェイ補正（比較基準）</td>
+      <td>1.528–1.458</td>
+      <td>39.4% / 24.3% / 36.3%</td>
+    </tr>
+    <tr>
+      <td>比較基準＋パターン相性を必ず追加</td>
+      <td>1.527–1.459</td>
+      <td>39.3% / 24.4% / 36.3%</td>
+    </tr>
+    <tr>
+      <td>過去検証で相性の追加可否を選択</td>
+      <td>1.528–1.458</td>
+      <td>39.4% / 24.3% / 36.3%</td>
+    </tr>
+  </tbody>
+</table>
+    <p>この検証用モデルではホーム／アウェイを分けた基準補正でH優勢に変わり、パターン相性を加えた変化は小さい。
+    Hへの変化をスタイルの効果として扱ってはいけない。リーグ別の検証結果も異なるため、ホーム補正も正式採用の根拠としては未確定。</p>
+    <details><summary>相性計算の元になった得点・失点パターン</summary>
+    <table class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>パターン（PKを除く）</th>
+      <th>横浜FMの得点</th>
+      <th>川崎Fの失点</th>
+      <th>川崎Fの得点</th>
+      <th>横浜FMの失点</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>セットプレー</td>
+      <td>2</td>
+      <td>4</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>クロス</td>
+      <td>3</td>
+      <td>4</td>
+      <td>5</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>スルーパス</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>30m未満のパス</td>
+      <td>5</td>
+      <td>3</td>
+      <td>7</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>30m以上のパス</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>ドリブル</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>こぼれ球</td>
+      <td>4</td>
+      <td>2</td>
+      <td>5</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>その他</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+    <p>得点済み・失点済みの件数であり、クロスを何回受けて何回防いだかは分からない。
+    例えばクロス失点の割合だけでは、クロスに弱いのか、クロスを多く受けたのかを分離できない。</p></details>
+    <h2>ばらつきと次の判断</h2>
+    <p>比較基準の予測誤差から測ったPearson分散比は0.944（Poissonの目安1）。
+    全試合の分布を一律に広げる根拠は、この集計からは得られない。特定の相性だけ分布が広がるか、得点が連動するかは未検証。</p>
+    <p>守備位置・プレスの指標と、攻撃種類別の被試行数・被シュート率が追加検証に必要。
+    保存済みの攻撃指数だけで「相手の弱点」を作ったことにはしない。今回の相性補正は正式予測へ組み込まない。</p>
+    <p><a href='inputs.csv'>試合前入力</a> / <a href='matches.csv'>全比較結果</a> / <a href='source_audit.csv'>取得情報の監査</a> /
+    <a href='summary.json'>集計</a> / <a href='tuning.json'>学習期間内の係数選択</a> /
+    <a href='../../../scripts/next_model/validate_pattern_matchup.py'>再現スクリプト</a></p></main></body></html>

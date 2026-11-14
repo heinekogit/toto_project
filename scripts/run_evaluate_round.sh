@@ -210,4 +210,7 @@ else
     --out "$EVAL_ROOT/rounds/buyplan_scored_index.html"
 fi
 
+echo "==> update forward style observations"
+"$PYTHON" "$ROOT_DIR/scripts/next_model/style_observation.py" refresh
+
 echo "完了: $ROUND_DIR"

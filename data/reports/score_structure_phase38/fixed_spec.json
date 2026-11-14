@@ -1,0 +1,49 @@
+{
+  "version": "phase38-diagnostic-1",
+  "reversal": "actual nonD AND winner != argmax(final H,final A); ties favor H",
+  "expected": "min(H,A)/(H+A) conditional on each observed nonD match; unconditioned all78 sum min(H,A) separately",
+  "gap_bins": [
+    0,
+    0.1,
+    0.2,
+    1.0
+  ],
+  "conditional_favorite_bins": [
+    0.5,
+    0.6,
+    0.7,
+    1.0
+  ],
+  "numerical_diagnostics": [
+    "T",
+    "abs_logR",
+    "lambda_gap",
+    "P00",
+    "P11",
+    "P22plus",
+    "margin1"
+  ],
+  "splits": "each continuous feature split at whole78 prematch median, before outcome comparison; no optimizing cuts",
+  "binary_diagnostics": [
+    "S",
+    "scenario_HA_flip_10pct",
+    "xg_only_disagrees",
+    "LAB_reduces_gap",
+    "absence_reduces_gap",
+    "favorite_more_fatigued",
+    "favorite_less_rest"
+  ],
+  "calibration_bins": [
+    0,
+    0.3333333333333333,
+    0.6666666666666666,
+    1
+  ],
+  "small_bin_warning_n": 10,
+  "expected_count_interval": "exact Poisson-binomial 2.5%-97.5%, independence assumption, prediction interval not parameter CI",
+  "matched_diagnostic": "case-control only; same model_signature and favorite, conditional reverse probability gap<=.03; nearest, controls reusable",
+  "residuals": "observed goals-lambda are residuals, not observed latent lambda errors",
+  "new_coefficients": false,
+  "correction_model_trained": false,
+  "new_portfolios": false
+}

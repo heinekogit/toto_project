@@ -1,0 +1,26 @@
+{
+  "version": "research_frozen_1",
+  "condition": "P00 <= within_round_median(P00) AND P11 >= within_round_median(P11)",
+  "score_grid": "existing analyze_score_structure.score_grid; normalized independent Poisson 0..10",
+  "round_size": 13,
+  "equality": "inclusive; unrounded float64 computed with same function; no epsilon or decimal display rounding",
+  "outcomes_not_used_for_selection": true,
+  "discovery_rounds": [
+    "toto1660",
+    "toto1663",
+    "toto1664",
+    "toto1665",
+    "toto1668",
+    "toto1670"
+  ],
+  "new_thresholds_searched": 0,
+  "future_protocol": [
+    "Save all 13 prematch A lambda/model versions, source hash, features and flags before kickoff.",
+    "Do not recalculate past features from updated team data. Record model versions separately.",
+    "Accumulate every subsequent eligible complete round, not only qualifying or successful rounds.",
+    "Report D/H/A rates, expected D, individual scores, exact same PD/HA matching, and all unmatched matches.",
+    "First descriptive checkpoint at 10 new complete rounds, not a significance or success threshold. No retuning.",
+    "Keep original rule frozen even if results are unfavorable; any revision becomes a new exploratory version."
+  ],
+  "ticket_generation": false
+}

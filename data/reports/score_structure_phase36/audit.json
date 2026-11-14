@@ -1,0 +1,18 @@
+{
+  "source_sha256": "ffe5dbf9c1f4830bed6400649ff41b2db749a12b98f507dffe724dfb624019b5",
+  "forecast_A_count": 78,
+  "source_hashes_verified": true,
+  "results_loaded_after_all_plans": true,
+  "methods_and_parameters_frozen": true,
+  "all_tickets_distinct": true,
+  "configuration_count": 60,
+  "B_C_equal": true,
+  "original_data_unchanged": true,
+  "solver": "reused deterministic greedy+swap; restricted pool, not global optimal",
+  "spec_sha256": "ad495c65432e88141610c428ff163e10d144db8defa8306b6e2a6df573f28d45",
+  "code_sha256": "72d1c33822ba7c7eb37eff0ea4a03ee12bf4290280338d8ee0d455251c91e516",
+  "tests_passed": 3,
+  "ticket_rows": 600,
+  "exact_probability_mass_reconciliation": true,
+  "html_links_verified": true
+}

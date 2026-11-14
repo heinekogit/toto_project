@@ -1,0 +1,20 @@
+﻿source,type,rows,actual_scores,lambda_values,provenance
+data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv,A: original Next Model forecast,13.0,yes,yes,manifest hash and created_at before kickoff verified
+data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv,A: original Next Model forecast,13.0,yes,yes,manifest hash and created_at before kickoff verified
+data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv,A: original Next Model forecast,13.0,yes,yes,manifest hash and created_at before kickoff verified
+data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv,A: original Next Model forecast,13.0,yes,yes,manifest hash and created_at before kickoff verified
+data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv,A: original Next Model forecast,13.0,yes,yes,manifest hash and created_at before kickoff verified
+data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv,A: original Next Model forecast,13.0,yes,yes,manifest hash and created_at before kickoff verified
+data/eval/next_model/correction_history_v1/matches.csv,C: retrospective recomputation,88.0,yes,yes,original inputs frozen; lambdas recomputed later by current pipeline
+data/eval/next_model/validation_v2/matches.csv,legacy validation population,101.0,yes,no,"not added to A: legacy/no lambda, mutable copy, or post-match generation"
+data/reports/next_probability_calibration/matches.csv,legacy probability calibration population,114.0,separate or unknown,no,"not added to A: legacy/no lambda, mutable copy, or post-match generation"
+data/purchase_reference/next_predictions.csv,current working copy,13.0,separate or unknown,yes,"not added to A: legacy/no lambda, mutable copy, or post-match generation"
+data/eval/next_model/integration/toto1654/next_predictions.csv,post-match integration output,13.0,separate or unknown,yes,"not added to A: legacy/no lambda, mutable copy, or post-match generation"
+data/purchase_reference/observation_history/2027/toto1660/20261011_204146_920202_purchased/next_predictions.csv,purchased archive duplicate,13.0,separate,yes,same round forecast already represented in A; not an independent match
+data/purchase_reference/observation_history/2027/toto1664/20261021_223753_674468_purchased/next_predictions.csv,purchased archive duplicate,13.0,separate,yes,same round forecast already represented in A; not an independent match
+data/purchase_reference/observation_history/2027/toto1665/20261025_194213_594799_purchased/next_predictions.csv,purchased archive duplicate,13.0,separate,yes,same round forecast already represented in A; not an independent match
+data/purchase_reference/observation_history/2027/toto1665/20261025_194331_015837_purchased/next_predictions.csv,purchased archive duplicate,13.0,separate,yes,same round forecast already represented in A; not an independent match
+data/repair_backups/purchase_reference_before_probability_allocation/next_predictions.csv,D: repair backup with unverified creation time,13.0,separate,yes,"historical copy, no matching original forecast manifest in this folder; not counted as A"
+data/repair_backups/purchase_reference_before_proportional_shadow/next_predictions.csv,D: repair backup with unverified creation time,13.0,separate,yes,"historical copy, no matching original forecast manifest in this folder; not counted as A"
+data/repair_backups/purchase_reference_before_v20_shadow10/next_predictions.csv,D: repair backup with unverified creation time,13.0,separate,yes,"historical copy, no matching original forecast manifest in this folder; not counted as A"
+data/selenium_profile/**/*.db,browser profile database,,no,no,not a prediction database

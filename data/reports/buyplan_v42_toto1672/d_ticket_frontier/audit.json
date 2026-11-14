@@ -1,0 +1,18 @@
+{
+  "round": "toto1672",
+  "source_sha256": "056a93e7ce2cc49da9cb9403eaf1149c3a7f026bedd95bc30f355fdaaf314efc",
+  "fixed_HDA_probabilities": true,
+  "probability_correction": false,
+  "actual_results_used": false,
+  "condition": "exactly k of 10 tickets contain at least one D",
+  "D_total_unrestricted": true,
+  "per_match_D_unrestricted": true,
+  "per_ticket_D_unrestricted": true,
+  "search_space": 1594323,
+  "optimization": "exact category top-k selection with deterministic base-3 tie break",
+  "historical_reference": "Phase 4-B stage 3 used the same exact category enumeration for six archived rounds",
+  "d_scoop_predictive_improvement_claim": false,
+  "first_D_ticket_rank": 20,
+  "P_any_D": 0.979903674019491,
+  "expected_D": 3.373735271043339
+}

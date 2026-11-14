@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 from datetime import datetime
@@ -56,6 +57,15 @@ def select_round(predictions: pd.DataFrame, order: pd.DataFrame, round_id: str) 
     if len(selected) != 13:
         raise ValueError(f"{round_id}: selected prediction rows != 13")
     return selected.drop(columns=["__key"], errors="ignore")
+
+
+def strip_legacy_forecast_outputs(selected: pd.DataFrame) -> pd.DataFrame:
+    """Keep raw features while excluding the previous H/D/A forecast from next."""
+    prefixes = ("prob_final_", "prob_main_", "prob_blend_", "prob_elo_", "prob_lab_", "predicted_result")
+    labels = {"prob_home_win", "prob_draw", "prob_away_win",
+              "rank1_symbol", "rank2_symbol", "rank3_symbol"}
+    drop = [column for column in selected if column.startswith(prefixes) or column in labels]
+    return selected.drop(columns=drop)
 
 
 def write_html(plan: pd.DataFrame, round_id: str, path: Path, placement_audit: dict | None = None,
@@ -183,7 +193,9 @@ def main() -> None:
     if args.check_only:
         print(json.dumps(preflight, ensure_ascii=False, indent=2))
         return
-    next_predictions = build_next_probabilities(selected)
+    next_predictions = build_next_probabilities(strip_legacy_forecast_outputs(selected))
+    from style_official import apply_official
+    next_predictions, style_deployment = apply_official(next_predictions, args.logical_season)
     fingerprint = prediction_fingerprint(next_predictions, round_id)
     seed = seed_from_fingerprint(fingerprint)
     plan, audit = build_round(next_predictions, strategy="random_remaining_v24", seed=seed)
@@ -192,6 +204,8 @@ def main() -> None:
     shadow_plan, shadow_audit = build_comparison_shadow(next_predictions)
     shadow_b_plan, shadow_b_audit = build_anchor_shadow(next_predictions)
     shadow_c_plan, shadow_c_audit = build_free_coverage_shadow(next_predictions)
+    from shadow_v25_operational import build as build_v25, write as write_v25, FILES as V25_FILES
+    v25_bundle = build_v25(next_predictions, plan)
     args.outdir.mkdir(parents=True, exist_ok=args.replace)
     next_predictions.to_csv(args.outdir / "next_predictions.csv", index=False, encoding="utf-8-sig")
     plan.to_csv(args.outdir / "buyplan.csv", index=False, encoding="utf-8-sig")
@@ -202,11 +216,30 @@ def main() -> None:
     write_shadow_html(shadow_b_plan, round_id, args.outdir / "shadow_buyplan_b.html", "B", "Anchor段階型", 21)
     shadow_c_plan.to_csv(args.outdir / "shadow_buyplan_c.csv", index=False, encoding="utf-8-sig")
     write_shadow_html(shadow_c_plan, round_id, args.outdir / "shadow_buyplan_c.html", "C", "採用数自由・Dカバー型", 31)
+    write_v25(v25_bundle, args.outdir, round_id)
+    # Independent research output. The official plan has already been written.
+    from shadow_v40_step4 import write as write_v40, FILES as V40_FILES
+    v40_audit = write_v40(next_predictions, plan, round_id, args.outdir)
+    from shadow_v41_score_neighbors import write as write_v41, FILES as V41_FILES
+    v41_audit = write_v41(next_predictions, round_id, args.outdir)
+    from shadow_v41_structural_branches import write as write_structural_branches, FILES as STRUCTURAL_BRANCH_FILES
+    structural_branch_audit = write_structural_branches(next_predictions, round_id, args.outdir)
+    condition_s_shadow_audit = None
+    try:
+        from condition_s_buyplan_shadow import write as write_condition_s_shadow
+        condition_s_shadow_audit = write_condition_s_shadow(plan, next_predictions, round_id, args.outdir)
+        print("[CONDITION_S_SHADOW] " + json.dumps(condition_s_shadow_audit, ensure_ascii=False))
+    except Exception as error:
+        for name in ("shadow_condition_s_buyplan.csv", "shadow_condition_s_buyplan.html",
+                     "current_buyplan_with_condition_s.csv", "current_buyplan_with_condition_s.html"):
+            (args.outdir / name).unlink(missing_ok=True)
+        print("[CONDITION_S_SHADOW][ERROR] 条件S表示を生成できません: " + repr(error))
     manifest = {
         "status": "BuyPlan v2.4 official production output with historical comparison shadows",
         "official_version": "v2.4",
-        "prediction_model": "base_lambda_v1 + lab_xg_v0 + absence_attack_defense_lambda_v1 + score_distribution + fatigue_weather_uniform_v1",
-        "buyplan_probability_source": "next_score_distribution_HDA + absence_attack_defense_lambda_v1 + fatigue_weather_uniform_v1",
+        "prediction_model": "base_lambda_v1 + lab_xg_v0 + absence_attack_defense_lambda_v1 + score_distribution + fatigue_weather_uniform_v1 + goal_rate_surprise_weight_v1 + style_residual_deployment_v1",
+        "goal_rate_adjustment": "goal_rate_surprise_weight_v1; symmetric goals_for/goals_against; historical red card status unavailable",
+        "buyplan_probability_source": "next_score_distribution_HDA + absence_attack_defense_lambda_v1 + fatigue_weather_uniform_v1 + goal_rate_surprise_weight_v1 + style_residual_deployment_v1",
         "round_id": round_id, "logical_season": args.logical_season,
         "created_at": datetime.now(JST).isoformat(timespec="seconds"),
         "input": str(args.input_csv.resolve()), "input_sha256": sha256(args.input_csv),
@@ -215,7 +248,13 @@ def main() -> None:
         "shadow_observation": shadow_audit,
         "shadow_b_observation": shadow_b_audit,
         "shadow_c_observation": shadow_c_audit,
+        "shadow_v25_observation": v25_bundle[3],
+        "condition_s_shadow_observation": condition_s_shadow_audit,
+        "shadow_v40_observation": v40_audit,
+        "shadow_v41_score_neighbor_observation": v41_audit,
+        "shadow_v41_structural_branch_observation": structural_branch_audit,
         "production_switched": True,
+        "style_residual_deployment": style_deployment,
         "preflight": preflight,
         "output_sha256": {name: sha256(args.outdir / name) for name in (
             "next_predictions.csv", "buyplan.csv", "buyplan.html",
@@ -224,12 +263,56 @@ def main() -> None:
             "shadow_buyplan_c.csv", "shadow_buyplan_c.html")},
         "toto_order_sha256": sha256(args.toto_order_csv),
     }
+    manifest["output_sha256"].update({name: sha256(args.outdir / name) for name in V25_FILES})
+    manifest["output_sha256"].update({name: sha256(args.outdir / name) for name in V40_FILES})
+    manifest["output_sha256"].update({name: sha256(args.outdir / name) for name in V41_FILES})
+    manifest["output_sha256"].update({name: sha256(args.outdir / name) for name in STRUCTURAL_BRANCH_FILES})
+    if condition_s_shadow_audit is not None:
+        manifest["output_sha256"].update({name: sha256(args.outdir / name) for name in
+            ("shadow_condition_s_buyplan.csv", "shadow_condition_s_buyplan.html",
+             "current_buyplan_with_condition_s.csv", "current_buyplan_with_condition_s.html")})
     (args.outdir / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
     )
     if audit["allocation"]["duplicate_pairs"]:
         print(f"警告: 完全一致する購入券があります: {audit['allocation']['duplicate_pairs']}")
+    (args.outdir / "style_observation.json").write_text(json.dumps(style_deployment, ensure_ascii=False, indent=2))
+    # Post-save observation only. Registry failure must be visible while the
+    # completed prediction and BuyPlan files remain untouched.
+    code_hash = None
+    try:
+        from forecast_registry import register_forecast
+        code_files = ("forecast_pipeline.py", "expected_goals.py", "goal_rate_adjustment.py",
+                      "lab_matchup.py", "absence_adjustment.py", "style_official.py",
+                      "run_next_buyplan.py")
+        code_hash = hashlib.sha256("".join(sha256(Path(__file__).parent / name)
+                              for name in code_files).encode()).hexdigest()
+        registered = register_forecast(args.outdir / "next_predictions.csv", args.outdir / "manifest.json",
+                                       runtime_code_hash=code_hash)
+        print("[FORECAST_REGISTRY] " + json.dumps(registered, ensure_ascii=False))
+    except Exception as error:
+        print("[FORECAST_REGISTRY][ERROR] 予測履歴登録失敗（予測・配券は生成済み）: " + repr(error))
+    try:
+        from condition_s_registry import capture
+        observed = capture(args.outdir / "next_predictions.csv", args.outdir / "manifest.json",
+                           runtime_code_hash=code_hash)
+        print("[CONDITION_S_REGISTRY] " + json.dumps(observed, ensure_ascii=False))
+    except Exception as error:
+        print("[CONDITION_S_REGISTRY][ERROR] 条件Sの試合前記録失敗（予測・配券は生成済み）: " + repr(error))
+        try:
+            from condition_s_registry import record_failure
+            record_failure("capture", repr(error), round_id=round_id,
+                           source=str((args.outdir / "next_predictions.csv").resolve()))
+        except Exception as log_error:
+            print("[CONDITION_S_REGISTRY][ERROR] 失敗履歴の記録も失敗: " + repr(log_error))
+    print("[STYLE official] " + json.dumps(style_deployment, ensure_ascii=False))
     print(args.outdir / "buyplan.html")
+    print(args.outdir / "shadow_buyplan_v25.html")
+    print(args.outdir / "shadow_buyplan_v40.html")
+    print(args.outdir / "shadow_v41_score_neighbors.html")
+    print(args.outdir / "shadow_v41_structural_branches.html")
+    if condition_s_shadow_audit is not None:
+        print(args.outdir / "current_buyplan_with_condition_s.html")
 
 
 if __name__ == "__main__":

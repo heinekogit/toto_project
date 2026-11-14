@@ -1,0 +1,12 @@
+{
+  "backfilled_forecasts": 78,
+  "backfilled_results": 78,
+  "original_numeric_exact": true,
+  "reimport_added": 0,
+  "forecast_log_unchanged_after_result_and_diagnosis": true,
+  "registry_unchanged_on_rerun": true,
+  "raw_draw_partition_valid": true,
+  "hda_normalized": true,
+  "manifest_forecast_hash_verified": true,
+  "historical_forecast_output_hashes_verified": true
+}

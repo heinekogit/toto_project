@@ -1,0 +1,4 @@
+name,lines,price_yen,p13,D_count_coverage,covered_D_counts,D_counts,min_ticket_p13,max_ticket_p13,purchase,chosen_from_saved,base_candidate,double_matches,single_D_counts,triple_match,double_match
+C95,10,1000,2.4927636771000925e-05,0.8754144258008554,0/1/2/3/4/5/10/13,0/0/0/1/2/3/4/5/10/13,6.100418158456165e-08,6.277668176058777e-06,10 single lines,True,,,,,
+3Doubles_plus_2Singles,10,1000,3.489707634602487e-05,0.8751108153252929,0/1/2/3/4/5,0/1/1/2/1/2/2/3/4/5,1.5067145028018365e-07,6.277668176058777e-06,,,1.0,"[2, 3, 8]","[4, 5]",,
+1Triple_1Double_plus_4Singles,10,1000,3.1675542218479206e-05,0.8754143647966739,0/1/2/3/4/5/10,0/1/1/2/0/1/3/4/5/10,6.486527376076672e-08,6.277668176058777e-06,,,1.0,,"[3, 4, 5, 10]",8.0,3.0

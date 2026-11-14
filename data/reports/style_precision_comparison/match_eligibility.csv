@@ -1,0 +1,271 @@
+league,datetime,home_team,away_team,eligible,reason
+j1,2026-08-07 19:26:00,横浜FM,鹿島,False,match predates first observation
+j1,2026-10-18 14:01:00,岡山,神戸,False,match predates first observation
+j1,2026-10-17 16:03:00,水戸,浦和,False,match predates first observation
+j1,2026-10-17 15:04:00,鹿島,長崎,False,match predates first observation
+j1,2026-10-17 15:03:00,Ｃ大阪,川崎Ｆ,False,match predates first observation
+j1,2026-10-17 14:03:00,東京Ｖ,FC東京,False,match predates first observation
+j1,2026-10-17 14:03:00,広島,京都,False,match predates first observation
+j1,2026-10-17 14:03:00,千葉,横浜FM,False,match predates first observation
+j1,2026-10-17 13:03:00,清水,Ｇ大阪,False,match predates first observation
+j1,2026-10-11 16:03:00,川崎Ｆ,名古屋,False,match predates first observation
+j1,2026-10-11 15:03:00,東京Ｖ,広島,False,match predates first observation
+j1,2026-10-11 15:03:00,水戸,清水,False,match predates first observation
+j1,2026-10-11 14:04:00,千葉,長崎,False,match predates first observation
+j1,2026-10-10 19:03:00,京都,町田,False,match predates first observation
+j1,2026-10-10 15:03:00,福岡,岡山,False,match predates first observation
+j1,2026-10-10 15:03:00,FC東京,浦和,False,match predates first observation
+j1,2026-10-10 14:03:00,Ｃ大阪,横浜FM,False,match predates first observation
+j1,2026-10-09 19:04:00,鹿島,Ｇ大阪,False,match predates first observation
+j1,2026-10-09 19:03:00,柏,神戸,False,match predates first observation
+j1,2026-09-20 17:03:00,Ｇ大阪,神戸,False,match predates first observation
+j1,2026-09-20 17:03:00,町田,柏,False,match predates first observation
+j1,2026-09-19 19:33:00,横浜FM,水戸,False,match predates first observation
+j1,2026-09-19 19:03:00,FC東京,名古屋,False,match predates first observation
+j1,2026-09-19 19:03:00,岡山,京都,False,match predates first observation
+j1,2026-09-19 18:33:00,浦和,東京Ｖ,False,match predates first observation
+j1,2026-09-19 18:33:00,長崎,Ｃ大阪,False,match predates first observation
+j1,2026-09-19 18:33:00,清水,千葉,False,match predates first observation
+j1,2026-09-19 18:03:00,福岡,広島,False,match predates first observation
+j1,2026-09-19 18:03:00,川崎Ｆ,鹿島,False,match predates first observation
+j1,2026-09-13 18:33:00,浦和,岡山,False,match predates first observation
+j1,2026-09-13 18:04:00,東京Ｖ,千葉,False,match predates first observation
+j1,2026-10-17 19:03:00,柏,名古屋,False,match predates first observation
+j1,2026-10-18 16:03:00,町田,福岡,False,match predates first observation
+j1,2026-09-12 19:05:00,町田,横浜FM,False,match predates first observation
+j1,2026-10-21 19:03:00,名古屋,Ｃ大阪,False,match predates first observation
+j1,2026-08-07 19:33:00,Ｇ大阪,浦和,False,match predates first observation
+j1,2026-11-01 16:03:00,町田,Ｇ大阪,False,match predates first observation
+j1,2026-11-01 14:03:00,長崎,東京Ｖ,False,match predates first observation
+j1,2026-11-01 13:03:00,横浜FM,川崎Ｆ,False,match predates first observation
+j1,2026-10-31 16:03:00,柏,浦和,False,match predates first observation
+j1,2026-10-31 15:05:00,神戸,名古屋,False,match predates first observation
+j1,2026-10-31 15:04:00,鹿島,Ｃ大阪,False,match predates first observation
+j1,2026-10-31 14:03:00,水戸,広島,False,match predates first observation
+j1,2026-10-31 14:03:00,岡山,FC東京,False,match predates first observation
+j1,2026-10-31 14:03:00,京都,清水,False,match predates first observation
+j1,2026-10-25 16:03:00,FC東京,水戸,False,match predates first observation
+j1,2026-10-25 16:03:00,川崎Ｆ,岡山,False,match predates first observation
+j1,2026-10-25 15:03:00,浦和,長崎,False,match predates first observation
+j1,2026-10-25 15:03:00,Ｃ大阪,千葉,False,match predates first observation
+j1,2026-10-25 14:03:00,名古屋,横浜FM,False,match predates first observation
+j1,2026-10-24 16:03:00,Ｇ大阪,京都,False,match predates first observation
+j1,2026-10-24 15:03:00,鹿島,柏,False,match predates first observation
+j1,2026-10-24 15:03:00,神戸,町田,False,match predates first observation
+j1,2026-10-24 15:03:00,東京Ｖ,福岡,False,match predates first observation
+j1,2026-10-24 14:03:00,広島,清水,False,match predates first observation
+j1,2026-10-21 19:33:00,浦和,千葉,False,match predates first observation
+j1,2026-10-21 19:03:00,FC東京,柏,False,match predates first observation
+j1,2026-10-21 19:03:00,横浜FM,東京Ｖ,False,match predates first observation
+j1,2026-10-21 19:03:00,福岡,Ｇ大阪,False,match predates first observation
+j1,2026-10-21 19:03:00,清水,町田,False,match predates first observation
+j1,2026-10-21 19:03:00,京都,鹿島,False,match predates first observation
+j1,2026-10-21 19:03:00,川崎Ｆ,神戸,False,match predates first observation
+j1,2026-10-21 19:03:00,岡山,水戸,False,match predates first observation
+j1,2026-10-21 19:03:00,長崎,広島,False,match predates first observation
+j1,2026-09-12 19:05:00,広島,Ｃ大阪,False,match predates first observation
+j1,2026-11-01 14:03:00,千葉,福岡,False,match predates first observation
+j1,2026-09-12 19:04:00,Ｇ大阪,FC東京,False,match predates first observation
+j1,2026-08-29 18:34:00,長崎,FC東京,False,match predates first observation
+j1,2026-08-29 18:03:00,Ｇ大阪,広島,False,match predates first observation
+j1,2026-08-29 18:03:00,水戸,町田,False,match predates first observation
+j1,2026-08-23 19:35:00,町田,浦和,False,match predates first observation
+j1,2026-08-22 19:33:00,横浜FM,神戸,False,match predates first observation
+j1,2026-08-22 19:20:00,広島,川崎Ｆ,False,match predates first observation
+j1,2026-08-22 19:03:00,京都,水戸,False,match predates first observation
+j1,2026-08-22 19:03:00,Ｃ大阪,清水,False,match predates first observation
+j1,2026-08-22 19:03:00,名古屋,Ｇ大阪,False,match predates first observation
+j1,2026-08-22 18:33:00,岡山,東京Ｖ,False,match predates first observation
+j1,2026-08-22 18:03:00,鹿島,福岡,False,match predates first observation
+j1,2026-08-21 19:34:00,FC東京,千葉,False,match predates first observation
+j1,2026-08-21 19:03:00,柏,長崎,False,match predates first observation
+j1,2026-08-15 19:04:00,千葉,町田,False,match predates first observation
+j1,2026-08-15 19:03:00,神戸,FC東京,False,match predates first observation
+j1,2026-08-15 19:03:00,浦和,広島,False,match predates first observation
+j1,2026-08-15 19:03:00,川崎Ｆ,京都,False,match predates first observation
+j1,2026-08-15 19:03:00,福岡,Ｃ大阪,False,match predates first observation
+j1,2026-08-15 19:00:00,岡山,長崎,False,match predates first observation
+j1,2026-08-15 18:34:00,清水,横浜FM,False,match predates first observation
+j1,2026-08-15 18:03:00,鹿島,名古屋,False,match predates first observation
+j1,2026-08-15 18:03:00,水戸,Ｇ大阪,False,match predates first observation
+j1,2026-08-14 19:03:00,東京Ｖ,柏,False,match predates first observation
+j1,2026-08-09 19:08:00,長崎,京都,False,match predates first observation
+j1,2026-08-09 18:04:00,東京Ｖ,川崎Ｆ,False,match predates first observation
+j1,2026-08-08 19:19:00,広島,千葉,False,match predates first observation
+j1,2026-08-08 19:05:00,FC東京,町田,False,match predates first observation
+j1,2026-08-08 19:04:00,柏,水戸,False,match predates first observation
+j1,2026-08-08 19:03:00,名古屋,清水,False,match predates first observation
+j1,2026-09-12 19:03:00,長崎,名古屋,False,match predates first observation
+j1,2026-08-29 18:33:00,清水,柏,False,match predates first observation
+j1,2026-08-08 19:04:00,福岡,神戸,False,match predates first observation
+j1,2026-08-29 19:03:00,川崎Ｆ,千葉,False,match predates first observation
+j1,2026-09-05 19:03:00,福岡,水戸,False,match predates first observation
+j1,2026-09-12 18:34:00,清水,福岡,False,match predates first observation
+j1,2026-08-29 19:03:00,京都,福岡,False,match predates first observation
+j1,2026-09-12 18:04:00,水戸,川崎Ｆ,False,match predates first observation
+j1,2026-09-11 19:04:00,神戸,鹿島,False,match predates first observation
+j1,2026-09-11 19:03:00,京都,柏,False,match predates first observation
+j1,2026-09-06 19:33:00,FC東京,京都,False,match predates first observation
+j1,2026-09-06 19:03:00,川崎Ｆ,清水,False,match predates first observation
+j1,2026-09-06 19:03:00,神戸,長崎,False,match predates first observation
+j1,2026-09-06 19:03:00,柏,横浜FM,False,match predates first observation
+j1,2026-09-06 19:03:00,Ｃ大阪,東京Ｖ,False,match predates first observation
+j1,2026-09-06 18:03:00,千葉,Ｇ大阪,False,match predates first observation
+j1,2026-09-06 18:03:00,鹿島,浦和,False,match predates first observation
+j1,2026-09-06 18:03:00,岡山,広島,False,match predates first observation
+j1,2026-09-06 18:03:00,名古屋,町田,False,match predates first observation
+j1,2026-08-08 19:03:00,Ｃ大阪,岡山,False,match predates first observation
+j1,2026-09-02 19:03:00,横浜FM,京都,False,match predates first observation
+j1,2026-09-02 19:03:00,東京Ｖ,神戸,False,match predates first observation
+j1,2026-08-29 19:03:00,神戸,Ｃ大阪,False,match predates first observation
+j1,2026-08-29 19:03:00,名古屋,岡山,False,match predates first observation
+j1,2026-09-02 19:03:00,広島,名古屋,False,match predates first observation
+j1,2026-08-29 19:03:00,浦和,横浜FM,False,match predates first observation
+j1,2026-09-02 19:03:00,長崎,Ｇ大阪,False,match predates first observation
+j1,2026-08-29 19:03:00,東京Ｖ,鹿島,False,match predates first observation
+j1,2026-09-02 19:03:00,町田,川崎Ｆ,False,match predates first observation
+j1,2026-09-02 19:03:00,Ｃ大阪,柏,False,match predates first observation
+j1,2026-09-02 19:03:00,清水,FC東京,False,match predates first observation
+j1,2026-09-02 19:03:00,千葉,岡山,False,match predates first observation
+j1,2026-09-02 19:03:00,水戸,鹿島,False,match predates first observation
+j1,2026-09-02 19:03:00,福岡,浦和,False,match predates first observation
+j2,2026-08-08 14:50:00,札幌,徳島,False,J2 has no corresponding tracking pages
+j2,2026-10-11 14:03:00,富山,宮崎,False,J2 has no corresponding tracking pages
+j2,2026-10-10 14:03:00,大宮,八戸,False,J2 has no corresponding tracking pages
+j2,2026-10-10 14:03:00,横浜FC,大分,False,J2 has no corresponding tracking pages
+j2,2026-10-10 14:04:00,徳島,今治,False,J2 has no corresponding tracking pages
+j2,2026-10-10 16:03:00,甲府,栃木Ｃ,False,J2 has no corresponding tracking pages
+j2,2026-10-10 18:03:00,磐田,札幌,False,J2 has no corresponding tracking pages
+j2,2026-10-11 13:10:00,山形,仙台,False,J2 has no corresponding tracking pages
+j2,2026-10-11 15:03:00,いわき,秋田,False,J2 has no corresponding tracking pages
+j2,2026-10-04 19:04:00,宮崎,大宮,False,J2 has no corresponding tracking pages
+j2,2026-10-11 18:04:00,湘南,新潟,False,J2 has no corresponding tracking pages
+j2,2026-10-17 14:03:00,今治,八戸,False,J2 has no corresponding tracking pages
+j2,2026-10-17 14:03:00,藤枝,山形,False,J2 has no corresponding tracking pages
+j2,2026-10-17 14:03:00,大分,新潟,False,J2 has no corresponding tracking pages
+j2,2026-10-17 14:03:00,鳥栖,大宮,False,J2 has no corresponding tracking pages
+j2,2026-10-17 14:03:00,栃木Ｃ,横浜FC,False,J2 has no corresponding tracking pages
+j2,2026-10-10 14:03:00,鳥栖,藤枝,False,J2 has no corresponding tracking pages
+j2,2026-10-04 15:03:00,仙台,磐田,False,J2 has no corresponding tracking pages
+j2,2026-09-26 17:03:00,大宮,甲府,False,J2 has no corresponding tracking pages
+j2,2026-09-26 17:04:00,徳島,栃木Ｃ,False,J2 has no corresponding tracking pages
+j2,2026-09-26 17:03:00,磐田,八戸,False,J2 has no corresponding tracking pages
+j2,2026-09-26 17:03:00,富山,横浜FC,False,J2 has no corresponding tracking pages
+j2,2026-09-26 17:03:00,宮崎,札幌,False,J2 has no corresponding tracking pages
+j2,2026-09-26 17:04:00,大分,藤枝,False,J2 has no corresponding tracking pages
+j2,2026-09-26 17:04:00,秋田,新潟,False,J2 has no corresponding tracking pages
+j2,2026-09-26 17:04:00,山形,鳥栖,False,J2 has no corresponding tracking pages
+j2,2026-10-03 14:03:00,新潟,徳島,False,J2 has no corresponding tracking pages
+j2,2026-10-04 14:03:00,秋田,鳥栖,False,J2 has no corresponding tracking pages
+j2,2026-10-03 14:03:00,藤枝,湘南,False,J2 has no corresponding tracking pages
+j2,2026-10-03 16:03:00,甲府,富山,False,J2 has no corresponding tracking pages
+j2,2026-10-03 17:03:00,大分,山形,False,J2 has no corresponding tracking pages
+j2,2026-10-03 17:03:00,栃木Ｃ,今治,False,J2 has no corresponding tracking pages
+j2,2026-10-04 13:03:00,八戸,横浜FC,False,J2 has no corresponding tracking pages
+j2,2026-10-04 13:03:00,札幌,いわき,False,J2 has no corresponding tracking pages
+j2,2026-10-17 14:03:00,札幌,秋田,False,J2 has no corresponding tracking pages
+j2,2026-10-17 14:03:00,仙台,徳島,False,J2 has no corresponding tracking pages
+j2,2026-10-17 18:03:00,富山,湘南,False,J2 has no corresponding tracking pages
+j2,2026-10-31 14:03:00,仙台,大宮,False,J2 has no corresponding tracking pages
+j2,2026-10-25 14:03:00,秋田,今治,False,J2 has no corresponding tracking pages
+j2,2026-10-25 14:04:00,山形,宮崎,False,J2 has no corresponding tracking pages
+j2,2026-10-25 15:03:00,いわき,磐田,False,J2 has no corresponding tracking pages
+j2,2026-10-31 13:03:00,札幌,湘南,False,J2 has no corresponding tracking pages
+j2,2026-10-31 14:03:00,新潟,富山,False,J2 has no corresponding tracking pages
+j2,2026-10-31 14:03:00,栃木Ｃ,いわき,False,J2 has no corresponding tracking pages
+j2,2026-10-31 14:03:00,徳島,横浜FC,False,J2 has no corresponding tracking pages
+j2,2026-10-17 19:03:00,宮崎,磐田,False,J2 has no corresponding tracking pages
+j2,2026-10-31 14:03:00,宮崎,大分,False,J2 has no corresponding tracking pages
+j2,2026-10-31 14:03:00,八戸,山形,False,J2 has no corresponding tracking pages
+j2,2026-10-31 14:03:00,磐田,鳥栖,False,J2 has no corresponding tracking pages
+j2,2026-10-31 14:08:00,今治,甲府,False,J2 has no corresponding tracking pages
+j2,2026-10-31 14:45:00,秋田,藤枝,False,J2 has no corresponding tracking pages
+j2,2026-08-08 18:33:00,八戸,富山,False,J2 has no corresponding tracking pages
+j2,2026-10-25 14:03:00,鳥栖,八戸,False,J2 has no corresponding tracking pages
+j2,2026-10-25 14:03:00,富山,札幌,False,J2 has no corresponding tracking pages
+j2,2026-10-25 14:03:00,大分,甲府,False,J2 has no corresponding tracking pages
+j2,2026-10-25 14:03:00,新潟,仙台,False,J2 has no corresponding tracking pages
+j2,2026-10-24 14:03:00,大宮,横浜FC,False,J2 has no corresponding tracking pages
+j2,2026-10-24 14:03:00,藤枝,徳島,False,J2 has no corresponding tracking pages
+j2,2026-10-21 19:03:00,新潟,鳥栖,False,J2 has no corresponding tracking pages
+j2,2026-10-21 19:03:00,湘南,いわき,False,J2 has no corresponding tracking pages
+j2,2026-10-21 19:03:00,宮崎,秋田,False,J2 has no corresponding tracking pages
+j2,2026-10-21 19:03:00,大宮,富山,False,J2 has no corresponding tracking pages
+j2,2026-10-21 19:03:00,徳島,八戸,False,J2 has no corresponding tracking pages
+j2,2026-10-21 19:03:00,磐田,大分,False,J2 has no corresponding tracking pages
+j2,2026-10-21 19:03:00,栃木Ｃ,藤枝,False,J2 has no corresponding tracking pages
+j2,2026-10-21 19:03:00,仙台,今治,False,J2 has no corresponding tracking pages
+j2,2026-10-21 19:03:00,甲府,横浜FC,False,J2 has no corresponding tracking pages
+j2,2026-10-21 13:03:00,山形,札幌,False,J2 has no corresponding tracking pages
+j2,2026-10-18 13:03:00,いわき,甲府,False,J2 has no corresponding tracking pages
+j2,2026-09-26 17:03:00,今治,湘南,False,J2 has no corresponding tracking pages
+j2,2026-10-25 18:03:00,湘南,栃木Ｃ,False,J2 has no corresponding tracking pages
+j2,2026-09-26 17:03:00,いわき,仙台,False,J2 has no corresponding tracking pages
+j2,2026-08-22 19:03:00,山形,横浜FC,False,J2 has no corresponding tracking pages
+j2,2026-08-22 15:04:00,札幌,大宮,False,J2 has no corresponding tracking pages
+j2,2026-08-22 17:03:00,八戸,仙台,False,J2 has no corresponding tracking pages
+j2,2026-08-22 18:03:00,秋田,甲府,False,J2 has no corresponding tracking pages
+j2,2026-08-22 18:33:00,富山,今治,False,J2 has no corresponding tracking pages
+j2,2026-08-22 19:03:00,新潟,藤枝,False,J2 has no corresponding tracking pages
+j2,2026-08-22 19:03:00,宮崎,湘南,False,J2 has no corresponding tracking pages
+j2,2026-08-22 19:03:00,磐田,徳島,False,J2 has no corresponding tracking pages
+j2,2026-08-16 18:03:00,横浜FC,磐田,False,J2 has no corresponding tracking pages
+j2,2026-08-22 19:05:00,大分,いわき,False,J2 has no corresponding tracking pages
+j2,2026-08-22 19:06:00,鳥栖,栃木Ｃ,False,J2 has no corresponding tracking pages
+j2,2026-08-29 18:03:00,栃木Ｃ,磐田,False,J2 has no corresponding tracking pages
+j2,2026-08-29 18:03:00,いわき,新潟,False,J2 has no corresponding tracking pages
+j2,2026-08-29 18:33:00,八戸,秋田,False,J2 has no corresponding tracking pages
+j2,2026-08-29 18:33:00,富山,藤枝,False,J2 has no corresponding tracking pages
+j2,2026-08-16 19:03:00,徳島,鳥栖,False,J2 has no corresponding tracking pages
+j2,2026-08-15 19:03:00,甲府,宮崎,False,J2 has no corresponding tracking pages
+j2,2026-08-29 19:03:00,甲府,札幌,False,J2 has no corresponding tracking pages
+j2,2026-08-09 18:07:00,いわき,今治,False,J2 has no corresponding tracking pages
+j2,2026-08-08 18:33:00,藤枝,仙台,False,J2 has no corresponding tracking pages
+j2,2026-09-20 17:04:00,栃木Ｃ,仙台,False,J2 has no corresponding tracking pages
+j2,2026-08-08 19:03:00,大宮,新潟,False,J2 has no corresponding tracking pages
+j2,2026-08-08 19:03:00,磐田,秋田,False,J2 has no corresponding tracking pages
+j2,2026-08-08 19:03:00,宮崎,横浜FC,False,J2 has no corresponding tracking pages
+j2,2026-08-08 19:05:00,大分,湘南,False,J2 has no corresponding tracking pages
+j2,2026-08-09 19:04:00,山形,栃木Ｃ,False,J2 has no corresponding tracking pages
+j2,2026-08-15 19:03:00,仙台,大分,False,J2 has no corresponding tracking pages
+j2,2026-08-15 18:03:00,秋田,富山,False,J2 has no corresponding tracking pages
+j2,2026-08-15 18:03:00,栃木Ｃ,八戸,False,J2 has no corresponding tracking pages
+j2,2026-08-15 18:33:00,藤枝,いわき,False,J2 has no corresponding tracking pages
+j2,2026-08-15 19:03:00,湘南,山形,False,J2 has no corresponding tracking pages
+j2,2026-08-15 19:03:00,新潟,札幌,False,J2 has no corresponding tracking pages
+j2,2026-08-15 19:03:00,今治,大宮,False,J2 has no corresponding tracking pages
+j2,2026-08-29 19:03:00,横浜FC,鳥栖,False,J2 has no corresponding tracking pages
+j2,2026-08-08 19:37:00,鳥栖,甲府,False,J2 has no corresponding tracking pages
+j2,2026-08-29 19:03:00,仙台,宮崎,False,J2 has no corresponding tracking pages
+j2,2026-09-19 14:04:00,札幌,大分,False,J2 has no corresponding tracking pages
+j2,2026-09-12 19:04:00,今治,鳥栖,False,J2 has no corresponding tracking pages
+j2,2026-09-12 19:05:00,宮崎,藤枝,False,J2 has no corresponding tracking pages
+j2,2026-09-12 19:05:00,甲府,磐田,False,J2 has no corresponding tracking pages
+j2,2026-09-13 18:05:00,新潟,山形,False,J2 has no corresponding tracking pages
+j2,2026-09-13 18:06:00,仙台,札幌,False,J2 has no corresponding tracking pages
+j2,2026-09-18 13:03:00,八戸,宮崎,False,J2 has no corresponding tracking pages
+j2,2026-09-19 18:33:00,藤枝,大宮,False,J2 has no corresponding tracking pages
+j2,2026-09-12 18:35:00,八戸,湘南,False,J2 has no corresponding tracking pages
+j2,2026-09-19 19:03:00,湘南,秋田,False,J2 has no corresponding tracking pages
+j2,2026-09-19 19:03:00,新潟,磐田,False,J2 has no corresponding tracking pages
+j2,2026-09-19 19:03:00,甲府,徳島,False,J2 has no corresponding tracking pages
+j2,2026-09-19 19:03:00,山形,富山,False,J2 has no corresponding tracking pages
+j2,2026-08-29 19:03:00,今治,山形,False,J2 has no corresponding tracking pages
+j2,2026-09-19 19:03:00,横浜FC,今治,False,J2 has no corresponding tracking pages
+j2,2026-09-12 19:03:00,大宮,大分,False,J2 has no corresponding tracking pages
+j2,2026-09-19 19:03:00,鳥栖,いわき,False,J2 has no corresponding tracking pages
+j2,2026-09-12 18:35:00,富山,栃木Ｃ,False,J2 has no corresponding tracking pages
+j2,2026-09-05 19:03:00,湘南,仙台,False,J2 has no corresponding tracking pages
+j2,2026-09-12 18:05:00,秋田,徳島,False,J2 has no corresponding tracking pages
+j2,2026-09-05 18:33:00,藤枝,八戸,False,J2 has no corresponding tracking pages
+j2,2026-09-05 19:03:00,徳島,いわき,False,J2 has no corresponding tracking pages
+j2,2026-08-29 19:04:00,大宮,湘南,False,J2 has no corresponding tracking pages
+j2,2026-09-05 19:03:00,山形,甲府,False,J2 has no corresponding tracking pages
+j2,2026-08-29 19:03:00,徳島,大分,False,J2 has no corresponding tracking pages
+j2,2026-09-05 19:03:00,鳥栖,宮崎,False,J2 has no corresponding tracking pages
+j2,2026-09-06 13:03:00,札幌,栃木Ｃ,False,J2 has no corresponding tracking pages
+j2,2026-09-06 19:03:00,磐田,富山,False,J2 has no corresponding tracking pages
+j2,2026-09-06 18:03:00,秋田,大宮,False,J2 has no corresponding tracking pages
+j2,2026-09-06 19:03:00,大分,今治,False,J2 has no corresponding tracking pages
+j2,2026-09-12 18:04:00,いわき,横浜FC,False,J2 has no corresponding tracking pages
+j2,2026-09-06 18:03:00,横浜FC,新潟,False,J2 has no corresponding tracking pages

@@ -1,0 +1,39 @@
+{
+  "official_integration_enabled": true,
+  "updated_at": "2026-11-14T11:26:13.572197+09:00",
+  "forecast_matches": 26,
+  "completed_matches": 13,
+  "learned_shadow_scores": {
+    "baseline": {
+      "matches": 0,
+      "goal_mae": null,
+      "log_loss": null,
+      "brier": null
+    },
+    "shadow": {
+      "matches": 0,
+      "goal_mae": null,
+      "log_loss": null,
+      "brier": null
+    }
+  },
+  "all_observation_scores": {
+    "baseline": {
+      "matches": 13,
+      "goal_mae": 0.68213110718054,
+      "log_loss": 1.064142756557032,
+      "brier": 0.6422287470018129
+    },
+    "shadow": {
+      "matches": 13,
+      "goal_mae": 0.68213110718054,
+      "log_loss": 1.064142756557032,
+      "brier": 0.6422287470018129
+    }
+  },
+  "next_model": "/Users/dev_tomo/Desktop/tt_prj_restart/data/style_shadow/models/20261114T112613188057.json",
+  "next_model_enabled": false,
+  "next_model_reason": "insufficient_prematch_training_data",
+  "note": "All-observation scores include unchanged baselines; improvement must use frozen learned-shadow predictions on later matches.",
+  "last_saved_forecast": "/Users/dev_tomo/Desktop/tt_prj_restart/data/style_shadow/forecasts/20261114T112613188057"
+}

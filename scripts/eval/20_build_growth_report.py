@@ -126,7 +126,7 @@ def analyze(round_id, round_dir):
         if cols:
             shadow=score(sf,cols);paths['shadow']=shadow_path
             sv=manifest.get('shadow_observation',{}).get('generator')
-            shadow_version={'coverage_v1':'v2.0','probability_allocation_v1':'確率配分方式','probability_allocation_ge10_v1':'A：v2.2'}.get(sv,'方式不明')
+            shadow_version={'coverage_v1':'v2.0','probability_allocation_v1':'確率配分方式','probability_allocation_ge10_v1':'A：確率配分型 v2.2'}.get(sv,'方式不明')
     shadow_b=None;shadow_b_version='未保存'
     shadow_b_path=snap/'shadow_buyplan_b.csv'
     if shadow_b_path.exists():
@@ -146,6 +146,12 @@ def analyze(round_id, round_dir):
                               'free_coverage_shadow_c_v2':'C：採用数自由・Dカバー型 v2',
                               'free_coverage_shadow_c_v3':'C：採用数自由・Dカバー型 v3',
                               'free_coverage_shadow_c_v4':'C：採用数自由・Dカバー型 v4'}.get(sv,'方式不明')
+    shadow_v25=None
+    v25_path=snap/'shadow_buyplan_v25.csv'
+    if v25_path.exists():
+        sf=pd.read_csv(v25_path);cols=ticket_columns(sf)
+        if cols:
+            shadow_v25=score(sf,cols);paths['shadow_v25']=v25_path
     valid=[r for r in records if r['result'] is not None and r['probabilities'] is not None]
     model=None
     if valid:
@@ -158,7 +164,7 @@ def analyze(round_id, round_dir):
                 model_version=manifest.get('prediction_model','base_lambda_v1 + lab_xg_v0' if strategy!='unknown' else '不明'),
                 actual_counts={s:outcomes.count(s) for s in 'HDA'},official=official,shadow=shadow,
                 shadow_version=shadow_version,shadow_b=shadow_b,shadow_b_version=shadow_b_version,
-                shadow_c=shadow_c,shadow_c_version=shadow_c_version,
+                shadow_c=shadow_c,shadow_c_version=shadow_c_version,shadow_v25=shadow_v25,
                 model=model,records=records,sources=provenance,
                 created_at=datetime.now().astimezone().isoformat(),
                 comparison_fair=shadow is not None and shadow['ticket_count']==10 and (shadow_b is None or shadow_b['ticket_count']==10) and (shadow_c is None or shadow_c['ticket_count']==10))
@@ -174,7 +180,8 @@ def render_round(report):
     rows=[]
     for label,score in [(f'正式 {r["version"]}',r['official']),(f'シャドー {r["shadow_version"]}',r['shadow']),
                         (f'シャドー {r.get("shadow_b_version", "未保存")}',r.get('shadow_b')),
-                        (f'シャドー {r.get("shadow_c_version", "未保存")}',r.get('shadow_c'))]:
+                        (f'シャドー {r.get("shadow_c_version", "未保存")}',r.get('shadow_c')),
+                        ('シャドー v2.5：試合別D係数',r.get('shadow_v25'))]:
         if score:
             rows.append({'対象':label,'口数':score['ticket_count'],'最高的中数':score['best_hits'],
                          '平均的中数':round(score['mean_hits'],2),'平均的中率':f'{score["accuracy"]:.1%}' if score['accuracy'] is not None else '未確定',
@@ -183,11 +190,13 @@ def render_round(report):
     if r['shadow'] and not r['comparison_fair']:body+='<p class="note">シャドーの口数が異なります。最高的中数を同条件の比較として扱いません。</p>'
     body+='<div class="card">'+table([{'口':name,'的中数':hits} for name,hits in zip(r['official']['ticket_names'],r['official']['ticket_hits'])])+'</div>'
     if r['shadow']:
-        body+='<h3>シャドー各口</h3><div class="card">'+table([{'口':name,'的中数':hits} for name,hits in zip(r['shadow']['ticket_names'],r['shadow']['ticket_hits'])])+'</div>'
+        body+='<h3>シャドーA：確率配分型 各口</h3><div class="card">'+table([{'口':name,'的中数':hits} for name,hits in zip(r['shadow']['ticket_names'],r['shadow']['ticket_hits'])])+'</div>'
     if r.get('shadow_b'):
-        body+='<h3>シャドーB各口</h3><div class="card">'+table([{'口':name,'的中数':hits} for name,hits in zip(r['shadow_b']['ticket_names'],r['shadow_b']['ticket_hits'])])+'</div>'
+        body+='<h3>シャドーB：Anchor段階型 各口</h3><div class="card">'+table([{'口':name,'的中数':hits} for name,hits in zip(r['shadow_b']['ticket_names'],r['shadow_b']['ticket_hits'])])+'</div>'
+    if r.get('shadow_v25'):
+        body+='<h3>v2.5：試合別D係数 各口</h3>'+table([{'口':n,'的中数':h} for n,h in zip(r['shadow_v25']['ticket_names'],r['shadow_v25']['ticket_hits'])])
     if r.get('shadow_c'):
-        body+='<h3>シャドーC各口</h3><div class="card">'+table([{'口':name,'的中数':hits} for name,hits in zip(r['shadow_c']['ticket_names'],r['shadow_c']['ticket_hits'])])+'</div>'
+        body+='<h3>シャドーC：採用数自由・Dカバー型 各口</h3><div class="card">'+table([{'口':name,'的中数':hits} for name,hits in zip(r['shadow_c']['ticket_names'],r['shadow_c']['ticket_hits'])])+'</div>'
     body+='<h2>2. 予測確率そのものの精度</h2>'
     if r['model']:
         m=r['model'];body+=f'<p>確率を評価できる {m["matches"]}試合中、最有力結果は {m["top_hits"]}的中（{m["top_accuracy"]:.1%}）。確率の誤差（Brier）は {m["brier"]:.3f}。小さいほど良く、一律1/3なら0.667です。</p><div class="card">'+table(m['outcome_rows'])+'</div>'
@@ -212,10 +221,10 @@ def render_round(report):
 def render_index(history):
     reports=[json.loads(p.read_text()) for p in sorted(history.glob('toto*.json'))]
     body='<p class="note">保存時の版で評価します。異なるモデル・BuyPlanの版をまとめて優劣を判断しません。再実行は同じ開催を更新し、二重計上しません。</p>'
-    body+='<h2>開催別の結果</h2><div class="card"><table><tr><th>開催</th><th>正式版</th><th>確定試合</th><th>最高的中</th><th>平均的中率</th><th>シャドーA版／口数</th><th>A最高</th><th>シャドーB版／口数</th><th>B最高</th><th>シャドーC版／口数</th><th>C最高</th></tr>'
+    body+='<h2>開催別の結果</h2><div class="card"><table><tr><th>開催</th><th>正式版</th><th>確定試合</th><th>最高的中</th><th>平均的中率</th><th>シャドーA版／口数</th><th>A最高</th><th>シャドーB版／口数</th><th>B最高</th><th>シャドーC版／口数</th><th>C最高</th><th>v2.5試合別D係数 最高</th></tr>'
     for r in reversed(reports):
         s=r['shadow'];b=r.get('shadow_b');c=r.get('shadow_c');o=r['official'];rate=f'{o["accuracy"]:.1%}' if o['accuracy'] is not None else '未確定'
-        body+=f'<tr><td><a href="../toto_rounds/{escape(r["round_id"])}/growth_validation.html">{escape(r["round_id"])}</a></td><td>{escape(r["version"])}</td><td>{r["resolved"]}/13</td><td>{o["best_hits"]}</td><td>{rate}</td><td>{escape(r["shadow_version"])}／{s["ticket_count"] if s else "—"}</td><td>{s["best_hits"] if s else "—"}</td><td>{escape(r.get("shadow_b_version", "未保存"))}／{b["ticket_count"] if b else "—"}</td><td>{b["best_hits"] if b else "—"}</td><td>{escape(r.get("shadow_c_version", "未保存"))}／{c["ticket_count"] if c else "—"}</td><td>{c["best_hits"] if c else "—"}</td></tr>'
+        body+=f'<tr><td><a href="../toto_rounds/{escape(r["round_id"])}/growth_validation.html">{escape(r["round_id"])}</a></td><td>{escape(r["version"])}</td><td>{r["resolved"]}/13</td><td>{o["best_hits"]}</td><td>{rate}</td><td>{escape(r["shadow_version"])}／{s["ticket_count"] if s else "—"}</td><td>{s["best_hits"] if s else "—"}</td><td>{escape(r.get("shadow_b_version", "未保存"))}／{b["ticket_count"] if b else "—"}</td><td>{b["best_hits"] if b else "—"}</td><td>{escape(r.get("shadow_c_version", "未保存"))}／{c["ticket_count"] if c else "—"}</td><td>{c["best_hits"] if c else "—"}</td><td>{r["shadow_v25"]["best_hits"] if r.get("shadow_v25") else "—"}</td></tr>'
     body+='</table></div><h2>正式版ごとの累積成績</h2><div class="card">'
     summaries=[]
     for version in sorted(set(r['version'] for r in reports)):

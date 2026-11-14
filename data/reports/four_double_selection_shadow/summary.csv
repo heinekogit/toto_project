@@ -1,0 +1,4 @@
+method,rounds,actual_D,captured_D,recall,changed_matches,capture_delta,improved_rounds,worsened_rounds
+A_PD,2,5,3,0.6,0,0,0,0
+B1_draw_composition,2,5,2,0.4,1,-1,0,1
+B2_combined,2,5,2,0.4,2,-1,0,1

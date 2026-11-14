@@ -1,0 +1,33 @@
+{
+  "input_hashes": {
+    "/Users/dev_tomo/Desktop/tt_prj_restart/BUYPLAN_V4_0.md": "82ed9b45346b37c73b458e95004a642d66590bde884c0821fbfba2fcca433c38",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase4b_stage1/report.md": "785e861baee7e17019266b08f6841c5fdf53c0ed2f37066fa774146751b13acd",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase4b_stage1/ticket_probabilities.csv": "38033731b34ce9400e411769c1ce5aa3065d8b1fe98a168f3755609640cadce6",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase4b_stage1/audit.json": "96845b9f75f691832c7e4884c9e00b5b6743fbc4aca045f95073aafe8ebcfac2",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase4b_stage2/report.md": "cc072626fe8804b72b8a8e13e2adafd0a2faa94bec1ad39e8f21340077c7e967",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase4b_stage2/scenarios.csv": "497812bf4c34e0fb53e3b1a4cb0c3e3c770d1b51f4ba56a106f940dd2957e5a6",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/forecasts.jsonl": "89e31ed28315a787ffe224cff5219cd00255e9220082b38b76281fa0dff87e3f",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/results.jsonl": "5020ee262a847a58447a34f87df99443d0163dacb4c3e1e498e47805c96018be"
+  },
+  "rounds": [
+    "toto1660",
+    "toto1663",
+    "toto1664",
+    "toto1665",
+    "toto1668",
+    "toto1670"
+  ],
+  "matches": 78,
+  "combinations": 1594323,
+  "constraint": "at least k D-containing distinct tickets, k=0..10",
+  "proof": "best m D-containing and best 10-m D-free, maximize over m>=k",
+  "tie_rule": "probability descending, then H/D/A lexicographic",
+  "all_constrained_below_unconstrained": true,
+  "archived_scenarios_reused": true,
+  "scenario_portfolios_fixed": true,
+  "result_used_for_selection": false,
+  "discarded_v30_used": false,
+  "fixed_HDA_counts_used": false,
+  "production_changed": false,
+  "originals_unchanged": true
+}

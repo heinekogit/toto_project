@@ -1,0 +1,38 @@
+{
+  "hashes": {
+    "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/next_model/forecast_pipeline.py": "d4787ea965ff6886be24608558082e54183c9a90a0fe5cb6696f07957b3a79ff",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/next_model/expected_goals.py": "0ef23bc7308529610d7ae1b1de5bf2e8a096bf35c1395add53d292108289c3c8",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/next_model/absence_adjustment.py": "59cb344c373f579d77b5a63aefe90f9f8db01afa3bbfcb5802b71cd60dc89758",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/next_model/goal_rate_adjustment.py": "6a8a53d2ae929d84a4ff9603e87b8903fa040b8fec0c85f5a5c71326391427ed",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/next_model/lab_matchup.py": "fb5981c8e7eacd2ff1b15adf8dc14138ffb4afb6ea7978c21971807b8633c855",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/next_model/run_next_buyplan.py": "045fd430e51128a6e8db9af5f1a7be98fc4cd512589f315c1668d177434d0d60",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/next_model/build_next_buyplan.py": "4aa39de1a24100abc0cfe2d25645cbdfd7bb2d3c0a34733bb9a0ce3e23ace7f0",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/06_calculate_fatigue.py": "bc7bc0a6f82ac1da82bfe4ff6540d372b47c9da4dd0baa8114fe35b164097d22",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/uncertainty_calibration.py": "d91be733d4ea578ef36395b28f01ecb4ff4c5bc15c0bf07ba205026f28f0bd8b",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/fatigue_merge.py": "14bfbcd3a0c1f52ff825a88df083d0d931a9c7f6312d27b041e975dac6a2cb6a",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/models/uncertainty_calibration_v1.json": "51c52878e063e05fac4d73f06a6112457b48328b33c71f260a671a42508e48c3",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv": "10a971e5783138a46d7018c18dec4ed2c27a7c936554c7bfa018d5ce118e6455",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv": "b20040116f63cdf8d4d8d9e292e6c5aa3be67ef3b87618a3e3a74ebbb38ee9d7",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv": "75580295a3107b14620efebeb2c9b7911c90ed889a99c1942595ccd58331dc18",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv": "4037a7f331a223d96858f6c2f47108d6bd1b1493df3006dd9142cc440a440fee",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv": "5d48fcdb521f03d261900afddc03ea8d1a6a93808654135e620431958db7537a",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv": "7efaa248066da4a9d5127b429a75d659339fe6869079e81facf335ccc0ee16bf",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/team_fatigue_scores_j1_2026.csv": "590510bb1651c90a9aad90abf44e259f625df5acfdcbd71b04e00f0ca7d14d10",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/team_fatigue_scores_j2_2026.csv": "f7d5644230d4c2993dbae5499dddbdd1614d276423f59a529b7c1e9b60ead17d"
+  },
+  "unchanged": true,
+  "original_reproduced": 78,
+  "unique_10_each": true,
+  "no_directional_fit": true,
+  "no_production_import": true,
+  "tests": {
+    "team_conditions": 10,
+    "fatigue_components": 11,
+    "next_model": 10,
+    "next_absence": 3,
+    "uncertainty": 3,
+    "run_next_buyplan": 8,
+    "total_passed": 45
+  },
+  "html_links_checked": true
+}

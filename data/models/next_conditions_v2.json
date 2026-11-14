@@ -1,0 +1,39 @@
+{
+  "version": "next_team_conditions_v2",
+  "absence_goals_per_impact": 0.25,
+  "fatigue_weight": 0.25,
+  "weather_weight": 0.25,
+  "rain_signal": 0.35,
+  "heavy_rain_signal": 1.0,
+  "strong_wind_signal": 0.65,
+  "max_mix": 0.25,
+  "effective_at": "2026-11-13T22:15:12.611528+09:00",
+  "change_reason": "Team direction lost by aggregate fatigue/weather mix; Next-specific calibration unverified. Explicit temporary disable.",
+  "mix_strength": 0.0,
+  "team_lambda": {
+    "enabled": false,
+    "calibration_status": "uncalibrated",
+    "parameters": null
+  },
+  "legacy_mix_provenance": {
+    "fit_rounds": [
+      1644,
+      1645,
+      1647,
+      1648,
+      1649,
+      1650,
+      1653,
+      1654
+    ],
+    "validation_rounds": [
+      1660,
+      1663,
+      1664
+    ],
+    "validation_logloss_baseline": 1.0671643050027095,
+    "validation_logloss_candidate": 1.065350924459683,
+    "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/observation_history/matches.csv",
+    "scope": "Old model calibration only; not validation of Next Model or team-specific coefficients"
+  }
+}

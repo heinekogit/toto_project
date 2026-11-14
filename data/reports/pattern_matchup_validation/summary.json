@@ -1,0 +1,312 @@
+{
+  "dataset_matches": 250,
+  "excluded_matches": 20,
+  "snapshot_count": 29,
+  "summaries": {
+    "calibrated_xg": {
+      "matches": 190,
+      "goal_mae": 0.9178199038141241,
+      "goal_nll": 1.4625328747177437,
+      "log_loss": 1.06178103138978,
+      "brier": 0.6397338881762543,
+      "rank1_hit": 0.4631578947368421
+    },
+    "lab_xg": {
+      "matches": 190,
+      "goal_mae": 0.9043241716143167,
+      "goal_nll": 1.4597609389524384,
+      "log_loss": 1.0601167429682907,
+      "brier": 0.6377593585231078,
+      "rank1_hit": 0.43157894736842106
+    },
+    "league_calibrated_xg": {
+      "matches": 190,
+      "goal_mae": 0.9239983361403316,
+      "goal_nll": 1.464993731052118,
+      "log_loss": 1.0609411008971368,
+      "brier": 0.6382201339381068,
+      "rank1_hit": 0.43157894736842106
+    },
+    "pattern_candidate": {
+      "matches": 190,
+      "goal_mae": 0.9181076901923437,
+      "goal_nll": 1.46274710834089,
+      "log_loss": 1.061996343127021,
+      "brier": 0.6399069618450173,
+      "rank1_hit": 0.4631578947368421
+    },
+    "pattern_matchup": {
+      "matches": 190,
+      "goal_mae": 0.9178199038141241,
+      "goal_nll": 1.4625328747177437,
+      "log_loss": 1.06178103138978,
+      "brier": 0.6397338881762543,
+      "rank1_hit": 0.4631578947368421
+    }
+  },
+  "by_league": {
+    "calibrated_xg/j1": {
+      "matches": 90,
+      "goal_mae": 0.9920294643907513,
+      "goal_nll": 1.5345582655376926,
+      "log_loss": 1.0223508097383391,
+      "brier": 0.6113574619658373,
+      "rank1_hit": 0.4888888888888889
+    },
+    "calibrated_xg/j2": {
+      "matches": 100,
+      "goal_mae": 0.8510312992951597,
+      "goal_nll": 1.39771002297979,
+      "log_loss": 1.0972682308760768,
+      "brier": 0.6652726717656294,
+      "rank1_hit": 0.44
+    },
+    "lab_xg/j1": {
+      "matches": 90,
+      "goal_mae": 1.0023063672395465,
+      "goal_nll": 1.5458048214387288,
+      "log_loss": 1.0273806087931125,
+      "brier": 0.6142559528557299,
+      "rank1_hit": 0.45555555555555555
+    },
+    "lab_xg/j2": {
+      "matches": 100,
+      "goal_mae": 0.8161401955516099,
+      "goal_nll": 1.3823214447147762,
+      "log_loss": 1.0895792637259514,
+      "brier": 0.658912423623748,
+      "rank1_hit": 0.41
+    },
+    "league_calibrated_xg/j1": {
+      "matches": 90,
+      "goal_mae": 1.0044774677037682,
+      "goal_nll": 1.5420775997507263,
+      "log_loss": 1.026535046170231,
+      "brier": 0.6136847459373229,
+      "rank1_hit": 0.45555555555555555
+    },
+    "league_calibrated_xg/j2": {
+      "matches": 100,
+      "goal_mae": 0.8515671177332383,
+      "goal_nll": 1.3956182492233702,
+      "log_loss": 1.0919065501513523,
+      "brier": 0.6603019831388122,
+      "rank1_hit": 0.41
+    },
+    "pattern_candidate/j1": {
+      "matches": 90,
+      "goal_mae": 0.9925070743690493,
+      "goal_nll": 1.5348671077533775,
+      "log_loss": 1.0227230571897272,
+      "brier": 0.6116447238024438,
+      "rank1_hit": 0.4888888888888889
+    },
+    "pattern_candidate/j2": {
+      "matches": 100,
+      "goal_mae": 0.8511482444333087,
+      "goal_nll": 1.3978391088696511,
+      "log_loss": 1.0973423004705856,
+      "brier": 0.6653429760833335,
+      "rank1_hit": 0.44
+    },
+    "pattern_matchup/j1": {
+      "matches": 90,
+      "goal_mae": 0.9920294643907513,
+      "goal_nll": 1.5345582655376926,
+      "log_loss": 1.0223508097383391,
+      "brier": 0.6113574619658373,
+      "rank1_hit": 0.4888888888888889
+    },
+    "pattern_matchup/j2": {
+      "matches": 100,
+      "goal_mae": 0.8510312992951597,
+      "goal_nll": 1.39771002297979,
+      "log_loss": 1.0972682308760768,
+      "brier": 0.6652726717656294,
+      "rank1_hit": 0.44
+    }
+  },
+  "folds": [
+    {
+      "week": "2026-08-31",
+      "train_matches": 60,
+      "test_matches": 30,
+      "prior": null,
+      "alpha": 0.0,
+      "coefficient_per_sd": 0.0,
+      "candidate_prior": 5.0,
+      "candidate_alpha": 10.0,
+      "candidate_coefficient_per_sd": 0.0029293356065496694,
+      "calibration_multipliers_j1H_j1A_j2H_j2A": [
+        1.0423036401229226,
+        1.0021314537000732,
+        1.3573450720141265,
+        1.0452733041142097
+      ],
+      "train_last_kickoff": "2026-08-29 19:04:00",
+      "test_first_kickoff": "2026-09-02 19:03:00"
+    },
+    {
+      "week": "2026-09-07",
+      "train_matches": 90,
+      "test_matches": 20,
+      "prior": null,
+      "alpha": 0.0,
+      "coefficient_per_sd": 0.0,
+      "candidate_prior": 5.0,
+      "candidate_alpha": 10.0,
+      "candidate_coefficient_per_sd": -0.0018657918605281458,
+      "calibration_multipliers_j1H_j1A_j2H_j2A": [
+        1.1098110839745163,
+        0.9561161298935072,
+        1.255754575270811,
+        0.9932756018935863
+      ],
+      "train_last_kickoff": "2026-09-06 19:33:00",
+      "test_first_kickoff": "2026-09-11 19:03:00"
+    },
+    {
+      "week": "2026-09-14",
+      "train_matches": 110,
+      "test_matches": 20,
+      "prior": null,
+      "alpha": 0.0,
+      "coefficient_per_sd": 0.0,
+      "candidate_prior": 5.0,
+      "candidate_alpha": 10.0,
+      "candidate_coefficient_per_sd": 0.0016315309534775753,
+      "calibration_multipliers_j1H_j1A_j2H_j2A": [
+        1.1200245759626921,
+        0.9405855976368637,
+        1.1943335757918718,
+        0.8833517402036021
+      ],
+      "train_last_kickoff": "2026-09-13 18:33:00",
+      "test_first_kickoff": "2026-09-18 13:03:00"
+    },
+    {
+      "week": "2026-09-21",
+      "train_matches": 130,
+      "test_matches": 10,
+      "prior": null,
+      "alpha": 0.0,
+      "coefficient_per_sd": 0.0,
+      "candidate_prior": 5.0,
+      "candidate_alpha": 10.0,
+      "candidate_coefficient_per_sd": 0.0018041343640890694,
+      "calibration_multipliers_j1H_j1A_j2H_j2A": [
+        1.1096685007000506,
+        0.9545689403787192,
+        1.1214620094210268,
+        0.9525735829246549
+      ],
+      "train_last_kickoff": "2026-09-20 17:04:00",
+      "test_first_kickoff": "2026-09-26 17:03:00"
+    },
+    {
+      "week": "2026-09-28",
+      "train_matches": 140,
+      "test_matches": 10,
+      "prior": null,
+      "alpha": 0.0,
+      "coefficient_per_sd": 0.0,
+      "candidate_prior": 5.0,
+      "candidate_alpha": 10.0,
+      "candidate_coefficient_per_sd": 0.001969529936583548,
+      "calibration_multipliers_j1H_j1A_j2H_j2A": [
+        1.1096685007000506,
+        0.9545689403787192,
+        1.1979113622166473,
+        0.985950838752494
+      ],
+      "train_last_kickoff": "2026-09-26 17:04:00",
+      "test_first_kickoff": "2026-10-03 14:03:00"
+    },
+    {
+      "week": "2026-10-05",
+      "train_matches": 150,
+      "test_matches": 20,
+      "prior": null,
+      "alpha": 0.0,
+      "coefficient_per_sd": 0.0,
+      "candidate_prior": 5.0,
+      "candidate_alpha": 10.0,
+      "candidate_coefficient_per_sd": 0.00023323082480607662,
+      "calibration_multipliers_j1H_j1A_j2H_j2A": [
+        1.1096685007000506,
+        0.9545689403787192,
+        1.1863269681881368,
+        0.9747671034489815
+      ],
+      "train_last_kickoff": "2026-10-04 19:04:00",
+      "test_first_kickoff": "2026-10-09 19:03:00"
+    },
+    {
+      "week": "2026-10-12",
+      "train_matches": 170,
+      "test_matches": 20,
+      "prior": null,
+      "alpha": 0.0,
+      "coefficient_per_sd": 0.0,
+      "candidate_prior": 5.0,
+      "candidate_alpha": 10.0,
+      "candidate_coefficient_per_sd": 6.719469249976592e-06,
+      "calibration_multipliers_j1H_j1A_j2H_j2A": [
+        1.105713834852476,
+        0.9283825605273954,
+        1.1508316669982712,
+        0.9461798554377923
+      ],
+      "train_last_kickoff": "2026-10-11 18:04:00",
+      "test_first_kickoff": "2026-10-17 13:03:00"
+    },
+    {
+      "week": "2026-10-19",
+      "train_matches": 190,
+      "test_matches": 40,
+      "prior": null,
+      "alpha": 0.0,
+      "coefficient_per_sd": 0.0,
+      "candidate_prior": 5.0,
+      "candidate_alpha": 10.0,
+      "candidate_coefficient_per_sd": 0.000615983241823545,
+      "calibration_multipliers_j1H_j1A_j2H_j2A": [
+        1.0848040197845834,
+        0.964624074585274,
+        1.1764211632011943,
+        0.9160314877660405
+      ],
+      "train_last_kickoff": "2026-10-18 16:03:00",
+      "test_first_kickoff": "2026-10-21 13:03:00"
+    },
+    {
+      "week": "2026-10-26",
+      "train_matches": 230,
+      "test_matches": 20,
+      "prior": null,
+      "alpha": 0.0,
+      "coefficient_per_sd": 0.0,
+      "candidate_prior": 5.0,
+      "candidate_alpha": 10.0,
+      "candidate_coefficient_per_sd": -0.0031011706252257534,
+      "calibration_multipliers_j1H_j1A_j2H_j2A": [
+        1.1532514492101102,
+        0.9644492382552333,
+        1.106829009101491,
+        0.9228023866909266
+      ],
+      "train_last_kickoff": "2026-10-25 18:03:00",
+      "test_first_kickoff": "2026-10-31 13:03:00"
+    }
+  ],
+  "candidate_log_loss_delta_week_bootstrap_95": [
+    -0.0001573952745562064,
+    0.0006065918612488555
+  ],
+  "source_result_hashes": {
+    "j1": "1f1f2e9a6d0812c57675903b354d38925c21bf345363b45f48f3b3e744c7cb83",
+    "j2": "838428e832face9875d464b41a13fc5ead5028c6ab6c7cdf0566f6d3d316305d"
+  },
+  "scope": "retrospective exploratory LAB-only study; same-day archives excluded; no full next_prob replay",
+  "out_of_time_pearson_dispersion": 0.9438296611931585
+}

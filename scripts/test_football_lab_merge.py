@@ -33,11 +33,19 @@ class FixtureMergeTests(unittest.TestCase):
         target = 'j1_2026_08071926_横浜FM_鹿島'
         for source in ['j1_2026_08061926_横浜FM_鹿島', 'j1_2025_08071926_横浜FM_鹿島',
                        'j2_2026_08071926_横浜FM_鹿島', 'j1_2026_08071926_鹿島_横浜FM',
-                       'j1_2026_08071915_横浜FM_鹿島', 'malformed']:
+                       'j1_2026_08071825_横浜FM_鹿島', 'malformed']:
             with self.subTest(source=source):
                 out = self.merge([target], [source])
                 self.assertEqual(out.flab_match_method.iloc[0], 'unmatched')
                 self.assertTrue(pd.isna(out.flab_chance_shots_home.iloc[0]))
+
+    def test_same_fixture_forty_five_minute_schedule_shift(self):
+        target='j2_2026_10311445_秋田_藤枝'
+        source='j2_2026_10311400_秋田_藤枝'
+        out=self.merge([target],[source])
+        self.assertEqual(out.flab_match_method.iloc[0], 'kickoff_alias')
+        self.assertEqual(out.flab_match_source_id.iloc[0],source)
+        self.assertEqual(out.flab_kickoff_delta_minutes.iloc[0],45)
 
     def test_ambiguous_match_is_rejected(self):
         with self.assertRaisesRegex(ValueError, 'ambiguous'):

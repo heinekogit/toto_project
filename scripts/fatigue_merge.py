@@ -13,11 +13,24 @@ def validate_prediction_fatigue(frame):
                 'home_rest_hours', 'away_rest_hours', 'home_external_events_json', 'away_external_events_json'}
     if not required.issubset(frame):
         raise ValueError(f'FATIGUE_INPUT: missing measurement columns {sorted(required - set(frame))}; rerun fatigue calculation')
-    bad = ~frame.fatigue_measurement_version.eq('conditions_v2') | ~frame.travel_lookup_status.eq('hit')
+    modern = frame.fatigue_measurement_version.eq('conditions_v3')
+    bad = ~frame.fatigue_measurement_version.isin(['conditions_v2', 'conditions_v3'])
     distance = pd.to_numeric(frame.away_travel_distance_km, errors='coerce')
-    bad |= distance.isna() | distance.lt(0) | distance.isin([float('inf'), float('-inf')])
+    bad |= distance.lt(0) | distance.isin([float('inf'), float('-inf')])
+    missing = distance.isna() | ~frame.travel_lookup_status.eq('hit')
+    status = frame.get('away_fatigue_status', pd.Series('', index=frame.index))
+    score = pd.to_numeric(frame.get('away_fatigue_score', pd.Series(float('nan'), index=frame.index)), errors='coerce')
+    # New data may hold a missing load; old numeric-zero representations still fail.
+    bad |= missing & ~(modern & status.eq('partial') & score.isna())
+    for side in ['home', 'away']:
+        col = side + '_fatigue_score'
+        if col in frame:
+            values = pd.to_numeric(frame[col], errors='coerce')
+            state = frame.get(side+'_fatigue_status', pd.Series('', index=frame.index))
+            bad |= values.lt(0) | values.isin([float('inf'),float('-inf')])
+            bad |= values.isna() & ~(modern & state.eq('partial'))
     if bad.any():
-        raise ValueError(f'FATIGUE_INPUT: {int(bad.sum())}/{len(frame)} missing/invalid measurements; prediction stopped')
+        raise ValueError(f'FATIGUE_INPUT: {int(bad.sum())}/{len(frame)} missing/invalid or unlabelled measurements; prediction stopped')
 
 
 def add_fatigue_time_aliases(left_df, right_df, merge_keys, tolerance_minutes=10):

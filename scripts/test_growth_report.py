@@ -43,7 +43,7 @@ class GrowthReportTests(unittest.TestCase):
             self.assertEqual(result['version'],'v2.3')
             self.assertEqual(result['shadow_b_version'],'B：Anchor段階型')
             self.assertEqual(result['shadow_b']['ticket_count'],10)
-            self.assertIn('シャドーB各口',mod.render_round(result))
+            self.assertIn('シャドーB：Anchor段階型 各口',mod.render_round(result))
 
     def test_mismatched_actual_card_rejected(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -63,7 +63,17 @@ class GrowthReportTests(unittest.TestCase):
             result=mod.analyze('toto1',root)
             self.assertEqual(result['shadow_c_version'],'C：採用数自由・Dカバー型 v1')
             self.assertEqual(result['shadow_c']['ticket_count'],10)
-            self.assertIn('シャドーC各口',mod.render_round(result))
+            self.assertIn('シャドーC：採用数自由・Dカバー型 各口',mod.render_round(result))
+
+    def test_v25_saved_shadow_is_scored(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory);self.fixture(root)
+            base=pd.read_csv(root/'snapshot/buyplan.csv')
+            base.to_csv(root/'snapshot/shadow_buyplan_v25.csv',index=False)
+            result=mod.analyze('toto1',root)
+            self.assertEqual(result['shadow_v25']['ticket_count'],10)
+            self.assertEqual(result['shadow_v25']['best_hits'],2)
+            self.assertIn('v2.5：試合別D係数',mod.render_round(result))
 
     def test_probability_schema_and_invalid_probability(self):
         self.assertEqual(mod.probabilities({'next_prob_home':.5,'next_prob_draw':.2,'next_prob_away':.3}),[.5,.2,.3])

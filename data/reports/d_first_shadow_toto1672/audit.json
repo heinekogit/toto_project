@@ -1,0 +1,18 @@
+{
+  "forecast_sha256": "056a93e7ce2cc49da9cb9403eaf1149c3a7f026bedd95bc30f355fdaaf314efc",
+  "current_seeds": 1000,
+  "historical_seeds": 300,
+  "representative_seed": 42,
+  "methods": [
+    "uniform",
+    "strength",
+    "strength_times_PD"
+  ],
+  "D_weight": "D_strength * final_P_D for method D; no probability correction",
+  "D_counts": "10 stratified quantile draws from Poisson-binomial each seed",
+  "H_A": "exact top assignments for each fixed D mask, no D removal",
+  "historical_rounds": 6,
+  "archive_prematch_class": "A",
+  "actual_results_used_for_selection": false,
+  "production_changed": false
+}

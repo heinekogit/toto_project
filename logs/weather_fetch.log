@@ -5724,3 +5724,27 @@
 2026-10-31 10:25:02,403 INFO WEATHER_FETCH: success=16 eligible_total=16 total=16 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
 2026-10-31 10:25:08,957 INFO WEATHER_TARGET_FILTER: asof=2026-10-31 lookahead_days=7 before=250 after=26
 2026-10-31 10:25:09,004 INFO WEATHER_FETCH: success=26 eligible_total=26 total=26 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-11-07 07:54:03,160 INFO WEATHER_TARGET_FILTER: asof=2026-11-07 lookahead_days=7 before=250 after=10
+2026-11-07 07:54:17,661 INFO WEATHER_FETCH: success=10 eligible_total=10 total=10 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-11-07 07:54:25,945 INFO WEATHER_TARGET_FILTER: asof=2026-11-07 lookahead_days=7 before=230 after=15
+2026-11-07 07:54:47,269 INFO WEATHER_FETCH: success=15 eligible_total=15 total=15 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-11-14 08:22:24,536 INFO WEATHER_TARGET_FILTER: asof=2026-11-14 lookahead_days=7 before=240 after=10
+2026-11-14 08:22:56,030 WARNING 取得失敗: match_id=j1_2026_11201900_鹿島_清水, stadium=メルスタ, lat=35.99217312474389, lon=140.64071506686008, err=Open-Meteo取得失敗: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+2026-11-14 08:23:27,520 WARNING 取得失敗: match_id=j1_2026_11201900_柏_千葉, stadium=三協Ｆ柏, lat=35.84902140785495, lon=139.97601829568976, err=Open-Meteo取得失敗: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+2026-11-14 08:23:58,992 WARNING 取得失敗: match_id=j1_2026_11201900_神戸_水戸, stadium=ノエスタ, lat=34.6569962029823, lon=135.17006277844857, err=Open-Meteo取得失敗: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+2026-11-14 08:24:30,463 WARNING 取得失敗: match_id=j1_2026_11211400_東京V_名古屋, stadium=味スタ, lat=35.664206155282656, lon=139.5276784515036, err=Open-Meteo取得失敗: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+2026-11-14 08:25:02,017 WARNING 取得失敗: match_id=j1_2026_11211400_町田_長崎, stadium=Ｇスタ, lat=35.59269833903571, lon=139.4395052110222, err=Open-Meteo取得失敗: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+2026-11-14 08:25:33,513 WARNING 取得失敗: match_id=j1_2026_11211400_京都_浦和, stadium=サンガＳ, lat=35.01746678668297, lon=135.5851611612701, err=Open-Meteo取得失敗: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+2026-11-14 08:26:05,005 WARNING 取得失敗: match_id=j1_2026_11211400_広島_横浜FM, stadium=Ｅピース, lat=34.40226716716296, lon=132.45706794347265, err=Open-Meteo取得失敗: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+2026-11-14 08:26:36,494 WARNING 取得失敗: match_id=j1_2026_11211500_川崎F_福岡, stadium=Ｕ等々力, lat=35.585892797514894, lon=139.6528842691062, err=Open-Meteo取得失敗: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+2026-11-14 08:27:07,979 WARNING 取得失敗: match_id=j1_2026_11211500_C大阪_FC東京, stadium=ハナサカ, lat=34.615472717803655, lon=135.51676080358234, err=Open-Meteo取得失敗: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+2026-11-14 08:27:39,508 WARNING 取得失敗: match_id=j1_2026_11211600_G大阪_岡山, stadium=パナスタ, lat=34.80287067613142, lon=135.53846087475415, err=Open-Meteo取得失敗: HTTPSConnectionPool(host='api.open-meteo.com', port=443): Read timed out. (read timeout=10)
+2026-11-14 08:27:39,509 INFO WEATHER_FETCH: success=0 eligible_total=10 total=10 success_ratio=0.000 overall_missing_ratio=1.000 threshold=1.000
+2026-11-14 08:59:56,598 INFO WEATHER_TARGET_FILTER: asof=2026-11-14 lookahead_days=7 before=4 after=4
+2026-11-14 09:00:00,740 INFO WEATHER_FETCH: success=4 eligible_total=4 total=4 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-11-14 09:00:07,593 INFO WEATHER_TARGET_FILTER: asof=2026-11-14 lookahead_days=7 before=9 after=9
+2026-11-14 09:00:16,162 INFO WEATHER_FETCH: success=9 eligible_total=9 total=9 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-11-14 09:24:25,435 INFO WEATHER_TARGET_FILTER: asof=2026-11-14 lookahead_days=7 before=4 after=4
+2026-11-14 09:24:25,448 INFO WEATHER_FETCH: success=4 eligible_total=4 total=4 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000
+2026-11-14 09:24:32,354 INFO WEATHER_TARGET_FILTER: asof=2026-11-14 lookahead_days=7 before=9 after=9
+2026-11-14 09:24:32,373 INFO WEATHER_FETCH: success=9 eligible_total=9 total=9 success_ratio=1.000 overall_missing_ratio=0.000 threshold=1.000

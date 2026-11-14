@@ -1,0 +1,107 @@
+{
+  "Q_definition": "unchanged Q=L*B from free_structural_draw experiment",
+  "median_Q_threshold_descriptive": 0.43822765659187135,
+  "pearson_Q_P_D": 0.8353353627344947,
+  "match_caliper_P_D": 0.01,
+  "source_manifest": [
+    {
+      "round": "toto1660",
+      "forecast_sha256": "10a971e5783138a46d7018c18dec4ed2c27a7c936554c7bfa018d5ce118e6455",
+      "actual_sha256": "09c9369b9258c8b3b39b0c6bbd2b42df2bd4a7f29144dade06dd14607e612077",
+      "manifest_sha256": "8653279e65cf255795eb190eafe60572e5497005baf8ecc5ad883887d963caff",
+      "generator_created_at": "2026-10-10T11:11:18+09:00",
+      "archive_created_at": "2026-10-11T20:40:58+09:00",
+      "matches": 13,
+      "prematch_matches": 13
+    },
+    {
+      "round": "toto1663",
+      "forecast_sha256": "b20040116f63cdf8d4d8d9e292e6c5aa3be67ef3b87618a3e3a74ebbb38ee9d7",
+      "actual_sha256": "66acdca40a2dd07b92cb69653355cb8fb0a4332da73ba98e65245b378f1eaf83",
+      "manifest_sha256": "c6f44cd0a9d084537ad3fac00ddfc50db2bb949339c095d76fdc1ea7efa0a9e4",
+      "generator_created_at": "2026-10-17T09:53:20+09:00",
+      "archive_created_at": "2026-10-17T09:55:08+09:00",
+      "matches": 13,
+      "prematch_matches": 13
+    },
+    {
+      "round": "toto1664",
+      "forecast_sha256": "75580295a3107b14620efebeb2c9b7911c90ed889a99c1942595ccd58331dc18",
+      "actual_sha256": "8c2ea7d153a988d37ed08521dc03f77033b247cf241f119b551eca9fd7e0283e",
+      "manifest_sha256": "19c7e42d97d5198258b800b004ba52af918fe6c400dad6579493872cdbb3b002",
+      "generator_created_at": "2026-10-21T09:14:32+09:00",
+      "archive_created_at": "2026-10-21T22:38:17+09:00",
+      "matches": 13,
+      "prematch_matches": 13
+    },
+    {
+      "round": "toto1665",
+      "forecast_sha256": "4037a7f331a223d96858f6c2f47108d6bd1b1493df3006dd9142cc440a440fee",
+      "actual_sha256": "0866e72e9a03001fd65f8e89664fe84a91d22b1ea2cbbab0c93488f832c2f0c3",
+      "manifest_sha256": "e17fc9146455e3979455d44da52ec2113021685bca1f29ecdb292ead1fc15936",
+      "generator_created_at": "2026-10-24T09:49:23+09:00",
+      "archive_created_at": "2026-10-25T19:40:56+09:00",
+      "matches": 13,
+      "prematch_matches": 13
+    },
+    {
+      "round": "toto1668",
+      "forecast_sha256": "5d48fcdb521f03d261900afddc03ea8d1a6a93808654135e620431958db7537a",
+      "actual_sha256": "db4f597c01aa37a39b2c05a9b15db909d79d72a457f38636c442089cfdcd2862",
+      "manifest_sha256": "3a0bd233a5b98004f72e846797dfee942be4e2adfd2a33e2bcf06916167cb4ea",
+      "generator_created_at": "2026-10-31T10:30:24+09:00",
+      "archive_created_at": "2026-10-31T20:15:18+09:00",
+      "matches": 13,
+      "prematch_matches": 13
+    }
+  ],
+  "temporal_fits": [
+    {
+      "test_round": "toto1665",
+      "train_rounds": [
+        "toto1660",
+        "toto1663",
+        "toto1664"
+      ],
+      "train_matches": 39,
+      "base_beta": [
+        -1.2125791969622854,
+        0.17883477595236388
+      ],
+      "Q_beta": [
+        -1.2122212651155668,
+        0.6328937894862765,
+        -0.535333819061683
+      ]
+    },
+    {
+      "test_round": "toto1668",
+      "train_rounds": [
+        "toto1660",
+        "toto1663",
+        "toto1664",
+        "toto1665"
+      ],
+      "train_matches": 52,
+      "base_beta": [
+        -1.1244989612558212,
+        0.32182474340671474
+      ],
+      "Q_beta": [
+        -1.1238727835489553,
+        0.35953018215480115,
+        -0.04939612667139121
+      ]
+    }
+  ],
+  "L2_penalty": 1.0,
+  "fitted_models_deployed": false,
+  "scope": "descriptive retrospective audit; Q was designed after historical results were known",
+  "limitations": [
+    "65 matches, five rounds; small and correlated sample",
+    "no independent prospective holdout",
+    "uncertainty formulas are descriptive",
+    "temporal probe standardization uses training data only",
+    "paired comparisons do not establish causality or calibration"
+  ]
+}

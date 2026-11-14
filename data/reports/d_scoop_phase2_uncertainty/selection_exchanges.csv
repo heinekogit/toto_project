@@ -1,0 +1,3 @@
+round,match_no,home_team,away_team,actual_symbol,actual_D,score_P_D,next_prob_draw,mix,P_D_change,rank_before,rank_after,rank_change_up_positive,A_selected,B_selected,selection_change
+toto1670,2,横浜FM,岡山,D,True,0.2712608846682993,0.285110799776685,0.223125,0.013849915108385735,4,5,-1,False,True,B_only
+toto1670,3,福岡,長崎,D,True,0.26924491771065906,0.2852670216163276,0.25,0.01602210390566855,6,4,2,True,False,A_only

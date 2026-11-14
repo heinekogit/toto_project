@@ -1,0 +1,21 @@
+{
+  "default": {
+    "draw_coefficient": 1.2,
+    "exchange_span": 4.0,
+    "stage_weight": 100.0,
+    "score_weight": 1.0,
+    "late_draw_weight": 0.03,
+    "duplicate_weight": 0.2,
+    "run_weight": 0.01,
+    "late_draw_threshold": 0.65,
+    "allowed_run": 2,
+    "max_steps": 200
+  },
+  "tested_D_coefficients": [
+    1.0,
+    1.1,
+    1.2,
+    1.4
+  ],
+  "formal_adoption": false
+}

@@ -1,0 +1,10 @@
+{
+  "data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv": "10a971e5783138a46d7018c18dec4ed2c27a7c936554c7bfa018d5ce118e6455",
+  "data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv": "5d48fcdb521f03d261900afddc03ea8d1a6a93808654135e620431958db7537a",
+  "data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv": "75580295a3107b14620efebeb2c9b7911c90ed889a99c1942595ccd58331dc18",
+  "data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv": "b20040116f63cdf8d4d8d9e292e6c5aa3be67ef3b87618a3e3a74ebbb38ee9d7",
+  "data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv": "4037a7f331a223d96858f6c2f47108d6bd1b1493df3006dd9142cc440a440fee",
+  "data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv": "7efaa248066da4a9d5127b429a75d659339fe6869079e81facf335ccc0ee16bf",
+  "scripts/next_model/run_next_buyplan.py": "045fd430e51128a6e8db9af5f1a7be98fc4cd512589f315c1668d177434d0d60",
+  "scripts/next_model/build_next_buyplan.py": "4aa39de1a24100abc0cfe2d25645cbdfd7bb2d3c0a34733bb9a0ce3e23ace7f0"
+}

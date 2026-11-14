@@ -1,0 +1,113 @@
+{
+  "mode": "v4.1 structural branch frontier; research only",
+  "forecast_probabilities_changed": false,
+  "actual_result_used": false,
+  "priority": "sum of H/A one-goal edge to adjacent-draw harmonic overlap",
+  "branch_ticket": "highest original-P ticket containing D in each ranked match",
+  "portfolio": "mandatory branch candidates for top k, then highest original-P remaining tickets",
+  "k_values": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "global_optimum_under_constraint": false,
+  "interpretation": "diagnostic frontier, not a chosen purchase portfolio",
+  "scenarios": [
+    {
+      "structural_top_k": 0,
+      "P_prob13": 0.00015011217000039353,
+      "P_loss_vs_unrestricted": 0.0,
+      "D_tickets": 0,
+      "required_D_matches": "",
+      "distinct_tickets": 10
+    },
+    {
+      "structural_top_k": 1,
+      "P_prob13": 0.00014848903331617533,
+      "P_loss_vs_unrestricted": 1.6231366842181917e-06,
+      "D_tickets": 1,
+      "required_D_matches": "7",
+      "distinct_tickets": 10
+    },
+    {
+      "structural_top_k": 2,
+      "P_prob13": 0.0001471413155793482,
+      "P_loss_vs_unrestricted": 2.9708544210453158e-06,
+      "D_tickets": 2,
+      "required_D_matches": "7;12",
+      "distinct_tickets": 10
+    },
+    {
+      "structural_top_k": 3,
+      "P_prob13": 0.00014513759258680332,
+      "P_loss_vs_unrestricted": 4.974577413590205e-06,
+      "D_tickets": 3,
+      "required_D_matches": "7;12;5",
+      "distinct_tickets": 10
+    },
+    {
+      "structural_top_k": 4,
+      "P_prob13": 0.00014254677070921722,
+      "P_loss_vs_unrestricted": 7.565399291176308e-06,
+      "D_tickets": 4,
+      "required_D_matches": "7;12;5;1",
+      "distinct_tickets": 10
+    },
+    {
+      "structural_top_k": 5,
+      "P_prob13": 0.00014020262380192697,
+      "P_loss_vs_unrestricted": 9.909546198466558e-06,
+      "D_tickets": 5,
+      "required_D_matches": "7;12;5;1;6",
+      "distinct_tickets": 10
+    },
+    {
+      "structural_top_k": 6,
+      "P_prob13": 0.00013647800467578002,
+      "P_loss_vs_unrestricted": 1.3634165324613508e-05,
+      "D_tickets": 6,
+      "required_D_matches": "7;12;5;1;6;13",
+      "distinct_tickets": 10
+    },
+    {
+      "structural_top_k": 7,
+      "P_prob13": 0.0001320761069047836,
+      "P_loss_vs_unrestricted": 1.803606309560993e-05,
+      "D_tickets": 7,
+      "required_D_matches": "7;12;5;1;6;13;8",
+      "distinct_tickets": 10
+    },
+    {
+      "structural_top_k": 8,
+      "P_prob13": 0.00012638477568543383,
+      "P_loss_vs_unrestricted": 2.3727394314959697e-05,
+      "D_tickets": 8,
+      "required_D_matches": "7;12;5;1;6;13;8;10",
+      "distinct_tickets": 10
+    },
+    {
+      "structural_top_k": 9,
+      "P_prob13": 0.00012021192351632745,
+      "P_loss_vs_unrestricted": 2.9900246484066076e-05,
+      "D_tickets": 9,
+      "required_D_matches": "7;12;5;1;6;13;8;10;11",
+      "distinct_tickets": 10
+    },
+    {
+      "structural_top_k": 10,
+      "P_prob13": 0.00011248528056971261,
+      "P_loss_vs_unrestricted": 3.7626889430680916e-05,
+      "D_tickets": 10,
+      "required_D_matches": "7;12;5;1;6;13;8;10;11;3",
+      "distinct_tickets": 10
+    }
+  ]
+}

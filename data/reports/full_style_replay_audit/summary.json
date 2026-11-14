@@ -1,0 +1,12 @@
+{
+  "snapshot": "20261103",
+  "successful_fetches": 55,
+  "total_fetches": 55,
+  "style_pages": 21,
+  "j1_fields_per_team": 105,
+  "j2_fields_per_team": 49,
+  "previous_matches": 190,
+  "previous_j1_matches": 90,
+  "full_style_replay_performed": false,
+  "reason": "No prematch tracking archive; new tracking rows conflict within each team."
+}

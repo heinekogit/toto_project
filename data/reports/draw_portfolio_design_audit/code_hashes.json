@@ -1,0 +1,10 @@
+{
+  "audit_draw_portfolio.py": "464c640d48235661a66be947cc23db705b3ed464a1d3c81c3a76e18618665b67",
+  "report_draw_portfolio_audit.py": "4433dac4ed7e3cf7980fa1517bcb369e2db26fb75b82c15facc81687c3602c12",
+  "test_audit_draw_portfolio.py": "60d44091c9727071e888b4008de99b185edcd24b2fe46f1ef626671fd5465d2c",
+  "draw_count_conditioned.py": "1de0f4efe331a024870726ee7adede2a19f1ed06a6ab8945c80b99c6f4744536",
+  "placement_score.py": "d8f14e23255a4597438893400d0d024ff660a1d2b9895f9be951e48e51815a0f",
+  "deterministic_v23.py": "b551c74f1f99f2515d929f1fb096c68f67f80d927463fcd6f9ef31026cd3c0de",
+  "random_remaining_v24.py": "4cc6aadc68a42c418bea53ffb2b18fe158950d27ac6854cb292334c35858a4f4",
+  "proportional_buyplan.py": "47afe3d00b3c7031531b34518688949b1cb9a8bd1ff6f80d31d9752169437415"
+}

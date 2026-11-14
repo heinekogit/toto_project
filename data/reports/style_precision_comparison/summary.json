@@ -1,0 +1,15 @@
+{
+  "status": "not_estimable",
+  "first_observed_date": "2026-11-03",
+  "input_values": 840,
+  "accepted_values": 833,
+  "completed_j1": 130,
+  "eligible_completed_j1": 0,
+  "style_to_lambda_model_implemented": false,
+  "new_accuracy_metrics": null,
+  "reason": [
+    "No completed matches after first observed input date",
+    "An additional-style lambda model has not yet been implemented or fitted"
+  ],
+  "production_changed": false
+}

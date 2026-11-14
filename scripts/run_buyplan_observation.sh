@@ -42,3 +42,6 @@ echo "==> immutable observation archive"
   --srcdir "$PURCHASE_DIR"
 
 echo "完了: $PURCHASE_DIR/buyplan.html"
+if [[ -f "$PURCHASE_DIR/shadow_condition_s_buyplan.html" ]]; then
+  echo "条件S注記シャドー: $PURCHASE_DIR/shadow_condition_s_buyplan.html"
+fi

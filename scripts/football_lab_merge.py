@@ -21,11 +21,12 @@ def _identity(value):
     return (league, season, stamp[:4], canonical_team_name(home), canonical_team_name(away)), when
 
 
-def merge_football_lab_fixtures(fixtures, compare, tolerance_minutes=10):
+def merge_football_lab_fixtures(fixtures, compare, tolerance_minutes=60):
     """Exact ID first; otherwise choose the uniquely nearest nearby fixture.
 
     Never synthesize metrics or borrow from a different date/season. Equally near
-    candidates and source reuse fail explicitly. Original fixture IDs survive.
+    candidates and source reuse fail explicitly. One-hour tolerance covers
+    documented schedule changes; same date and ordered teams are still required. Original fixture IDs survive.
     """
     for label, frame in [("fixtures", fixtures), ("compare", compare)]:
         if frame.match_id.isna().any() or frame.match_id.astype(str).str.strip().eq("").any() or frame.match_id.duplicated().any():

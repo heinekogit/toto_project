@@ -78,9 +78,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <th>away_external_load_unknown</th>
 <th>home_external_events_json</th>
 <th>away_external_events_json</th>
+<th>home_fatigue_status</th>
+<th>away_fatigue_status</th>
 <th>home_acl_fatigue</th>
+<th>home_acl_fatigue_status</th>
 <th>home_total_fatigue_score</th>
 <th>away_acl_fatigue</th>
+<th>away_acl_fatigue_status</th>
 <th>away_total_fatigue_score</th>
 <th>datetime_weather</th>
 <th>stadium_weather</th>
@@ -732,6 +736,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <th>decision_reason_detail</th>
 <th>uncertainty_calibration_version</th>
 <th>uncertainty_fatigue_signal</th>
+<th>uncertainty_fatigue_known</th>
 <th>uncertainty_weather_signal</th>
 <th>uncertainty_weather_known</th>
 <th>uncertainty_calibration_mix</th>
@@ -876,6 +881,10 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td>Football LAB試験理由</td>
 <td>ホーム得点（予測時は空）</td>
 <td>アウェイ得点（予測時は空）</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -1665,6 +1674,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>legacy: 旧派生予測B</td>
 <td>legacy: 旧派生予測C</td>
 <td>legacy: 旧派生予測B記号</td>
@@ -1731,9 +1741,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>2.42</td>
 <td>0.0</td>
+<td></td>
 <td>5.4</td>
 <td>2026-05-17 14:00:00</td>
 <td>クラド</td>
@@ -2437,6 +2451,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>0.0</td>
 <td></td>
 <td></td>
@@ -2557,9 +2572,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>3.46</td>
 <td>0.0</td>
+<td></td>
 <td>7.54</td>
 <td>2026-05-16 14:30:00</td>
 <td>ヤマハ</td>
@@ -3263,6 +3282,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>0.0</td>
 <td></td>
 <td></td>
@@ -3383,9 +3403,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>3.84</td>
 <td>0.0</td>
+<td></td>
 <td>7.79</td>
 <td>2026-05-16 14:00:00</td>
 <td>ＣＦＳ</td>
@@ -4089,6 +4113,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>0.0</td>
 <td></td>
 <td></td>
@@ -4209,9 +4234,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>3.39</td>
 <td>0.0</td>
+<td></td>
 <td>6.93</td>
 <td>2026-05-16 14:00:00</td>
 <td>レモンＳ</td>
@@ -4861,6 +4890,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td>NARROW_DRAW_OVERRIDE | adopt=BASE; final=D; w=(0.694,0.229,0.076); c=(0.560,0.741,0.637); labels=(A,D,D)</td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>

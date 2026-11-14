@@ -1,0 +1,238 @@
+{
+  "checked_on": "2026-11-03",
+  "latest_archive": "20261031",
+  "j1": [
+    {
+      "name": "ショートカウンター",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026",
+      "configured": true,
+      "saved_20261031": true,
+      "all_archive_named_files": 36,
+      "raw_summary_columns": [
+        "指数",
+        "ゴール率",
+        "シュート率",
+        "ドリブル使用率",
+        "ロングパス使用率",
+        "空中戦使用率",
+        "コンビネーション使用率",
+        "20km/h以上の走行平均人数",
+        "20km/h以上の走行一人当たりの平均距離"
+      ],
+      "model_columns": [
+        "flab_style_short_counter_index",
+        "flab_style_short_counter_shot_rate"
+      ],
+      "complete_team_rows": 20
+    },
+    {
+      "name": "ロングカウンター",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=22",
+      "configured": true,
+      "saved_20261031": true,
+      "all_archive_named_files": 36,
+      "raw_summary_columns": [
+        "指数",
+        "ゴール率",
+        "シュート率",
+        "ドリブル使用率",
+        "ロングパス使用率",
+        "空中戦使用率",
+        "コンビネーション使用率",
+        "20km/h以上の走行平均人数",
+        "20km/h以上の走行一人当たりの平均距離"
+      ],
+      "model_columns": [
+        "flab_style_long_counter_index",
+        "flab_style_long_counter_shot_rate"
+      ],
+      "complete_team_rows": 20
+    },
+    {
+      "name": "敵陣ポゼッション",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=23",
+      "configured": true,
+      "saved_20261031": true,
+      "all_archive_named_files": 36,
+      "raw_summary_columns": [
+        "指数",
+        "ゴール率",
+        "シュート率",
+        "ドリブル使用率",
+        "ロングパス使用率",
+        "空中戦使用率",
+        "コンビネーション使用率",
+        "20km/h以上の走行平均人数",
+        "20km/h以上の走行一人当たりの平均距離"
+      ],
+      "model_columns": [
+        "flab_style_enemy_possession_index",
+        "flab_style_enemy_possession_shot_rate"
+      ],
+      "complete_team_rows": 20
+    },
+    {
+      "name": "自陣ポゼッション",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=24",
+      "configured": true,
+      "saved_20261031": true,
+      "all_archive_named_files": 36,
+      "raw_summary_columns": [
+        "指数",
+        "ゴール率",
+        "シュート率",
+        "ドリブル使用率",
+        "ロングパス使用率",
+        "空中戦使用率",
+        "コンビネーション使用率",
+        "20km/h以上の走行平均人数",
+        "20km/h以上の走行一人当たりの平均距離"
+      ],
+      "model_columns": [
+        "flab_style_own_possession_index",
+        "flab_style_own_possession_shot_rate"
+      ],
+      "complete_team_rows": 20
+    },
+    {
+      "name": "左サイド攻撃",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=31",
+      "configured": true,
+      "saved_20261031": true,
+      "all_archive_named_files": 36,
+      "raw_summary_columns": [
+        "指数",
+        "ゴール率",
+        "シュート率",
+        "ドリブル使用率",
+        "ロングパス使用率",
+        "空中戦使用率",
+        "コンビネーション使用率",
+        "20km/h以上の走行平均人数",
+        "20km/h以上の走行一人当たりの平均距離"
+      ],
+      "model_columns": [
+        "flab_style_left_attack_index",
+        "flab_style_left_attack_shot_rate"
+      ],
+      "complete_team_rows": 20
+    },
+    {
+      "name": "中央攻撃",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=32",
+      "configured": true,
+      "saved_20261031": true,
+      "all_archive_named_files": 36,
+      "raw_summary_columns": [
+        "指数",
+        "ゴール率",
+        "シュート率",
+        "ドリブル使用率",
+        "ロングパス使用率",
+        "空中戦使用率",
+        "コンビネーション使用率",
+        "20km/h以上の走行平均人数",
+        "20km/h以上の走行一人当たりの平均距離"
+      ],
+      "model_columns": [
+        "flab_style_center_attack_index",
+        "flab_style_center_attack_shot_rate"
+      ],
+      "complete_team_rows": 20
+    },
+    {
+      "name": "右サイド攻撃",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=33",
+      "configured": true,
+      "saved_20261031": true,
+      "all_archive_named_files": 36,
+      "raw_summary_columns": [
+        "指数",
+        "ゴール率",
+        "シュート率",
+        "ドリブル使用率",
+        "ロングパス使用率",
+        "空中戦使用率",
+        "コンビネーション使用率",
+        "20km/h以上の走行平均人数",
+        "20km/h以上の走行一人当たりの平均距離"
+      ],
+      "model_columns": [
+        "flab_style_right_attack_index",
+        "flab_style_right_attack_shot_rate"
+      ],
+      "complete_team_rows": 20
+    },
+    {
+      "name": "ラインブレイクラン",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=45",
+      "configured": false,
+      "saved_20261031": false,
+      "all_archive_named_files": 0,
+      "raw_summary_columns": [],
+      "model_columns": [],
+      "complete_team_rows": 0
+    },
+    {
+      "name": "ハイプレッシング",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=66",
+      "configured": false,
+      "saved_20261031": false,
+      "all_archive_named_files": 0,
+      "raw_summary_columns": [],
+      "model_columns": [],
+      "complete_team_rows": 0
+    },
+    {
+      "name": "ミドルプレッシング",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=67",
+      "configured": false,
+      "saved_20261031": false,
+      "all_archive_named_files": 0,
+      "raw_summary_columns": [],
+      "model_columns": [],
+      "complete_team_rows": 0
+    },
+    {
+      "name": "カウンタープレス",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=69",
+      "configured": false,
+      "saved_20261031": false,
+      "all_archive_named_files": 0,
+      "raw_summary_columns": [],
+      "model_columns": [],
+      "complete_team_rows": 0
+    },
+    {
+      "name": "ハイブロック",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=81",
+      "configured": false,
+      "saved_20261031": false,
+      "all_archive_named_files": 0,
+      "raw_summary_columns": [],
+      "model_columns": [],
+      "complete_team_rows": 0
+    },
+    {
+      "name": "ミドルブロック",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=82",
+      "configured": false,
+      "saved_20261031": false,
+      "all_archive_named_files": 0,
+      "raw_summary_columns": [],
+      "model_columns": [],
+      "complete_team_rows": 0
+    },
+    {
+      "name": "ローブロック",
+      "url": "https://www.football-lab.jp/summary/team_style/j1?year=2026&data=83",
+      "configured": false,
+      "saved_20261031": false,
+      "all_archive_named_files": 0,
+      "raw_summary_columns": [],
+      "model_columns": [],
+      "complete_team_rows": 0
+    }
+  ],
+  "j2_note": "Current website menu and acquisition configuration both list seven attack styles; J1 tracking styles are not listed in the J2 menu."
+}

@@ -1,0 +1,52 @@
+{
+  "policy": "/Users/dev_tomo/Desktop/tt_prj_restart/BUYPLAN_V4_0.md",
+  "policy_sha256": "82ed9b45346b37c73b458e95004a642d66590bde884c0821fbfba2fcca433c38",
+  "rounds": [
+    "toto1660",
+    "toto1663",
+    "toto1664",
+    "toto1665",
+    "toto1668",
+    "toto1670"
+  ],
+  "matches": 78,
+  "combinations": 1594323,
+  "full_enumeration_verified_round": "toto1670",
+  "tie_rule": "joint probability descending, then H/D/A lexicographic",
+  "input_class": "prematch A only",
+  "raw_final_separate": true,
+  "old_v30_used": false,
+  "fixed_allocation_constraint": false,
+  "source_hashes": {
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/forecasts.jsonl": "89e31ed28315a787ffe224cff5219cd00255e9220082b38b76281fa0dff87e3f",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/results.jsonl": "5020ee262a847a58447a34f87df99443d0163dacb4c3e1e498e47805c96018be",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/portfolio_links.jsonl": "06732a9476c753b202c08a6e6d43098b1232ed987ea8dd77009b879646565b90",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/BUYPLAN_V4_0.md": "82ed9b45346b37c73b458e95004a642d66590bde884c0821fbfba2fcca433c38",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/snapshot/buyplan_engine_manifest.json": "8653279e65cf255795eb190eafe60572e5497005baf8ecc5ad883887d963caff",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/snapshot/buyplan.csv": "b84de9da75d6e140a30188b6c7e313ed35365a386b948948c4370054a30b2a3f",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1663/snapshot/buyplan_engine_manifest.json": "c6f44cd0a9d084537ad3fac00ddfc50db2bb949339c095d76fdc1ea7efa0a9e4",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1663/snapshot/buyplan.csv": "bb81be4a6cdc5c68929df96bfcceaee48c0344c245a38cdb03cc999574544e89",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1664/snapshot/buyplan_engine_manifest.json": "19c7e42d97d5198258b800b004ba52af918fe6c400dad6579493872cdbb3b002",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1664/snapshot/buyplan.csv": "4d26e4cb3a101997a20c9cd77de770d37d78df7ae880a5af62294e53fda0241d",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1665/snapshot/buyplan_engine_manifest.json": "e17fc9146455e3979455d44da52ec2113021685bca1f29ecdb292ead1fc15936",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1665/snapshot/buyplan.csv": "831cc112c5471d54509a8dbb883f69bac0eaef78c62770fd74fca440e0c81ff1",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1665/snapshot/shadow_buyplan_c.csv": "a8e7b1a64db764848f87d4affeb4320db24302fbf756e791733a934eb738942b",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1668/snapshot/buyplan_engine_manifest.json": "3a0bd233a5b98004f72e846797dfee942be4e2adfd2a33e2bcf06916167cb4ea",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1668/snapshot/buyplan.csv": "bf9814aa92d6ac3001572e265a749180a1b8e9d81a89670cfbfe48b360e813cb",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1668/snapshot/shadow_buyplan_c.csv": "af8e925d3b731b9e8ca004f69fa7f44f440bf0a9d23793f9cef94b2f3cc32c92",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/snapshot/buyplan_engine_manifest.json": "7d95afac6f05c1b8639e8b808d2cdac3e7e357d2e73449b190e42302ab606a1b",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/snapshot/buyplan.csv": "7be14e6ebd0cc52f24a21670536476a4718f74b1cc8c10702bc6cb9a566b0d33",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/snapshot/shadow_buyplan_c.csv": "871e88b657166610e8e6af4cd082a6be75808277082d80d1e066457f1dc06d82",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/snapshot/shadow_buyplan_v25.csv": "3ace2605e4fcc10969cd18717fc37fadf1c0b3170726f9d4355828e7c86261bd"
+  },
+  "official_versions": {
+    "toto1660": "v2.1",
+    "toto1663": "v2.2",
+    "toto1664": "v2.3",
+    "toto1665": "v2.3",
+    "toto1668": "v2.4",
+    "toto1670": "v2.4"
+  },
+  "existing_files_unchanged": true,
+  "new_algorithm_connected_to_production": false
+}

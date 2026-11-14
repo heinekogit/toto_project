@@ -1,0 +1,11 @@
+{
+  "round": "toto1672",
+  "forecast_sha256": "056a93e7ce2cc49da9cb9403eaf1149c3a7f026bedd95bc30f355fdaaf314efc",
+  "outcomes": 1594323,
+  "baseline_P13": 0.00015011217000039334,
+  "P_D_atleast2": 0.8882708823650523,
+  "fixed_saved_final_probabilities": true,
+  "actual_results_used": false,
+  "all_11x11_score_structure_unused_for_probability_adjustment": true,
+  "optimization": "exact category top-k for each threshold and count; no D count or placement constraints within categories"
+}

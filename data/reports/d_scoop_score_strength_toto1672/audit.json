@@ -1,0 +1,20 @@
+{
+  "n": 13,
+  "D_strength_above_one": 12,
+  "D_strength_equal_one": 0,
+  "D_strength_min": 0.9378932570321197,
+  "D_strength_max": 1.2955987613783992,
+  "D_strength_mean": 1.1604267979095408,
+  "D_strength_median": 1.1671026189025941,
+  "D_strength_q25": 1.1108869119010285,
+  "D_strength_q75": 1.2625793200376032,
+  "modal_D_counts": {
+    "1-1": 13
+  },
+  "outside_mass_max": 1.4990864940500614e-06,
+  "outside_mass_sum": 7.419493639915231e-06,
+  "source_sha256": "056a93e7ce2cc49da9cb9403eaf1149c3a7f026bedd95bc30f355fdaaf314efc",
+  "probabilities_are_raw_0_to_10": true,
+  "result_used": false,
+  "prediction_or_buyplan_changed": false
+}

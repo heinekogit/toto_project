@@ -154,7 +154,7 @@ if not os.path.exists(csv_prev):
     if os.path.exists(csv_prev_latest):
         csv_prev = csv_prev_latest
 prev_final_elo_csv = os.path.join(DATA_DIR, f"{LEAGUE}_{PREV_SEASON_YEAR}_final_elo.csv")
-csv_season = os.path.join(DATA_DIR, f"{LEAGUE}_{SEASON_YEAR}_upcoming.csv")
+csv_season = os.environ.get("PREDICTION_UPCOMING_CSV", os.path.join(DATA_DIR, f"{LEAGUE}_{SEASON_YEAR}_upcoming.csv"))
 csv_season_latest = os.path.join(DATA_DIR, f"{LEAGUE}_{SEASON_YEAR}_latest_results.csv")
 ENABLE_HFA_INT = _get_env_int("ENABLE_HFA", 1)
 if ENABLE_HFA_INT not in (0, 1):
@@ -314,6 +314,11 @@ def _resolve_football_lab_compare_paths(league):
         path = os.path.join(EXTERNAL_METRICS_DIR, fn)
         if os.path.isfile(path):
             paths.append(path)
+    extra = os.environ.get("FOOTBALL_LAB_COMPARE_EXTRA", "").strip()
+    if extra:
+        if not os.path.isfile(extra):
+            raise FileNotFoundError(f"FOOTBALL_LAB_COMPARE_EXTRA がありません: {extra}")
+        paths.append(extra)
     return sorted(paths, key=lambda p: (os.path.getmtime(p), os.path.basename(p)))
 
 
@@ -342,7 +347,10 @@ def _load_football_lab_compare_bundle(league):
         part["__flab_source"] = os.path.basename(path)
         part["flab_source_csv"] = os.path.basename(path)
         snapshot_match = re.search(r"_football_lab_compare_(\d{8})_", os.path.basename(path))
-        part["flab_snapshot_date"] = snapshot_match.group(1) if snapshot_match else ""
+        if snapshot_match:
+            part["flab_snapshot_date"] = snapshot_match.group(1)
+        elif "flab_snapshot_date" not in part:
+            part["flab_snapshot_date"] = ""
 
         frames.append(part)
 
@@ -432,7 +440,7 @@ def merge_football_lab_compare(df, league, scope):
             f"[FOOTBALL_LAB][MATCH] league={league} scope={scope} "
             f"unmatched={int(unmatched.sum())}/{len(out)} "
             f"match_ids={out.loc[unmatched, 'match_id'].head(8).tolist()}; "
-            "check comparison fixture coverage/date/team identity (kickoff tolerance=10 minutes)"
+            "check comparison fixture coverage/date/team identity (kickoff tolerance=60 minutes)"
         )
     _validate_merged_football_lab_chance(out, league, scope)
     merged_cols = [c for c in flab_cols if c not in before]
@@ -11605,20 +11613,16 @@ def merge_weather_cache(df, weather_cache_df, stage):
     # to a future fixture. Historical snapshots retain their recorded evidence.
     merged["weather_missing"] |= upcoming_weather & merged["weather_freshness_status"].ne("fresh")
     for col in weather_cols:
-        merged[col] = merged[col].map(lambda v: str(v).strip().lower() in {"true", "1", "1.0"} if pd.notna(v) else False)
-        merged.loc[merged["weather_missing"], col] = False
-    # False補完は「晴天」の断定ではなく、欠損時に補正を加えない中立処理。
+        merged[col] = merged[col].astype(str).str.strip().str.lower().map(
+            {"true": True, "1": True, "1.0": True, "false": False, "0": False, "0.0": False}).astype("boolean")
+        merged.loc[merged["weather_missing"], col] = pd.NA
     merged["weather_adjustment_status"] = np.where(
-        merged["weather_missing"], "unknown_no_adjustment", "available_flags"
-    )
-
-    # 数値天候の欠損は補完（欠損事実は weather_missing で保持）
-    for col, default_val in [("temperature", WEATHER_DEFAULT_TEMPERATURE), ("wind_speed", WEATHER_DEFAULT_WIND_SPEED)]:
+        merged["weather_missing"], "unknown_no_adjustment", "available_flags")
+    # Missing temperature/wind is an observation gap, not a sample median.
+    for col in ["temperature", "wind_speed"]:
         if col in merged.columns:
-            num = pd.to_numeric(merged[col], errors="coerce")
-            med = num.median(skipna=True)
-            fill_val = float(med) if pd.notna(med) else float(default_val)
-            merged[col] = num.fillna(fill_val)
+            merged[col] = pd.to_numeric(merged[col], errors="coerce")
+            merged.loc[merged["weather_missing"], col] = np.nan
 
     return merged.drop(columns=["_merge_weather"], errors="ignore")
 
@@ -12165,10 +12169,11 @@ def use_generic_fatigue_only(df_matches):
     """Keep legacy audit columns while using the single general fatigue score."""
     out = df_matches.copy()
     for side in ("home", "away"):
-        out[f"{side}_acl_fatigue"] = 0.0
+        out[f"{side}_acl_fatigue"] = np.nan
+        out[f"{side}_acl_fatigue_status"] = "included_in_general_load_not_separate"
         out[f"{side}_total_fatigue_score"] = pd.to_numeric(
             out.get(f"{side}_fatigue_score"), errors="coerce"
-        ).fillna(0.0)
+        )
     return out
 
 
@@ -12374,6 +12379,7 @@ try:
         "home_external_matches_last14d", "away_external_matches_last14d",
         "home_external_load_unknown", "away_external_load_unknown",
         "home_external_events_json", "away_external_events_json",
+        "home_fatigue_status", "away_fatigue_status",
     ]
     fatigue_cols = ["home_fatigue_score", "away_fatigue_score"] + [
         c for c in fatigue_detail_cols if c in fatigue_scores_df.columns
@@ -12454,14 +12460,14 @@ if os.path.exists(weather_cache_csv) or os.path.isdir(WEATHER_SNAPSHOT_DIR):
         raise
 else:
     print(f"天候キャッシュが見つかりません: {weather_cache_csv}")
-    df_2025_future["is_rain"] = False
-    df_2025_future["is_heavy_rain"] = False
-    df_2025_future["is_strong_wind"] = False
+    df_2025_future["is_rain"] = pd.NA
+    df_2025_future["is_heavy_rain"] = pd.NA
+    df_2025_future["is_strong_wind"] = pd.NA
     df_2025_future["weather_missing"] = True
     df_2025_future["weather_adjustment_status"] = "unknown_no_adjustment"
-    df_2025_finished["is_rain"] = False
-    df_2025_finished["is_heavy_rain"] = False
-    df_2025_finished["is_strong_wind"] = False
+    df_2025_finished["is_rain"] = pd.NA
+    df_2025_finished["is_heavy_rain"] = pd.NA
+    df_2025_finished["is_strong_wind"] = pd.NA
     df_2025_finished["weather_missing"] = True
     df_2025_finished["weather_adjustment_status"] = "unknown_no_adjustment"
 
@@ -12814,7 +12820,7 @@ df_pred = apply_connected_prediction_overrides(df_pred, LEAGUE, "PRED_FINAL")
 with open(os.path.join(DATA_DIR, "models", "uncertainty_calibration_v1.json"), encoding="utf-8") as _uncertainty_file:
     _uncertainty_config = json.load(_uncertainty_file)
 df_pred = apply_uncertainty_calibration(
-    df_pred,
+    df_pred, hold_missing_fatigue=True,
     fatigue_weight=float(_uncertainty_config["fatigue_weight"]),
     weather_weight=float(_uncertainty_config["weather_weight"]),
     max_mix=float(_uncertainty_config["max_mix"]),
@@ -13184,7 +13190,7 @@ df_backtest = enforce_final_elo_sign_monotonic(df_backtest, "BACKTEST_POST_BLEND
 df_backtest = apply_main_prediction_result(df_backtest, "BACKTEST_FINAL")
 df_backtest = apply_connected_prediction_overrides(df_backtest, LEAGUE, "BACKTEST_FINAL")
 df_backtest = apply_uncertainty_calibration(
-    df_backtest,
+    df_backtest, hold_missing_fatigue=True,
     fatigue_weight=float(_uncertainty_config["fatigue_weight"]),
     weather_weight=float(_uncertainty_config["weather_weight"]),
     max_mix=float(_uncertainty_config["max_mix"]),

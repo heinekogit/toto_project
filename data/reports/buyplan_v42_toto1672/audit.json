@@ -1,0 +1,24 @@
+{
+  "round": "toto1672",
+  "forecast_sha256": "056a93e7ce2cc49da9cb9403eaf1149c3a7f026bedd95bc30f355fdaaf314efc",
+  "history_structure_sha256": "7633f1a0105178e6e540b9a816ebca2564cda107f841d24e3fe7b4a20a770b15",
+  "history_results_sha256": "ffe5dbf9c1f4830bed6400649ff41b2db749a12b98f507dffe724dfb624019b5",
+  "training_rounds": [
+    "toto1660",
+    "toto1663",
+    "toto1664"
+  ],
+  "held_out_rounds": [
+    "toto1665",
+    "toto1668",
+    "toto1670"
+  ],
+  "historical_model_versions_differ": true,
+  "condition_S_discovered_in_same_78": true,
+  "correction_applied": false,
+  "reason": "structural feature tests are tiny, version-confounded and not prospectively validated; no reliable correction magnitude",
+  "tickets_source": "unaltered final H/D/A probabilities",
+  "p13": 0.00015011217000039334,
+  "D_tickets": 0,
+  "D_branch_candidates_retained": 13
+}

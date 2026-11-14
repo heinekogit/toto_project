@@ -1,0 +1,10 @@
+P_any13,D_total,D_counts,tickets_without_D,actual_best,actual_any13,duplicate_pairs,round,method,strength,structure_mode,actual_D_count,actual_D_hit_slots,D_outranks_alternative_HA
+5.9579475284080105e-05,0,0/0/0/0/0/0/0/0/0/0,10,,,0,toto1670,structure_0.0,0.0,near_only,,,1.0
+5.9579475284080105e-05,0,0/0/0/0/0/0/0/0/0/0,10,,,0,toto1670,structure_0.5,0.5,near_only,,,4.0
+5.9193405285978105e-05,1,0/0/0/0/0/0/0/0/0/1,9,,,0,toto1670,structure_1.0,1.0,near_only,,,5.0
+5.863109739261313e-05,2,0/0/0/0/0/0/0/0/1/1,8,,,0,toto1670,structure_1.5,1.5,near_only,,,8.0
+5.820648321930929e-05,2,0/0/0/0/0/0/0/0/1/1,8,,,0,toto1670,structure_2.0,2.0,near_only,,,9.0
+5.863109739261313e-05,2,0/0/0/0/0/0/0/0/1/1,8,,,0,toto1670,without_low_total,1.0,near_only,,,9.0
+5.863109739261313e-05,2,0/0/0/0/0/0/0/0/1/1,8,,,0,toto1670,only_balance,1.0,near_only,,,9.0
+3.30757053959503e-05,10,0/0/0/1/1/1/2/1/1/3,3,,,0,toto1670,saved_C_v4,,near_only,,,
+1.2652920237790382e-05,38,0/0/2/0/3/4/6/6/8/9,3,,,0,toto1670,saved_v25,,near_only,,,

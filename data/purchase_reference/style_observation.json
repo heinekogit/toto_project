@@ -1,0 +1,19 @@
+{
+  "status": "saved",
+  "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/style_shadow/forecasts/20261114T112613188057",
+  "matches": 13,
+  "style_source": null,
+  "deployment": "official",
+  "policy": {
+    "version": "style_residual_deployment_v1",
+    "enabled": true,
+    "untrained": "zero_correction",
+    "coefficient_update": "prior_results_only_with_time_holdout_selection",
+    "rollback": "set enabled=false; retain baseline and continue observations",
+    "started_on": "2026-11-03"
+  },
+  "policy_sha256": "14ff90cb58bd840c1173954dbf2b12bb585550da009fd7bad31bf5d1da8cfb03",
+  "model_sha256": "9b1bf24df37d761e3ae060d06f20a102b9c8783fba34e5fb94ee15740c7d0eae",
+  "corrected_matches": 0,
+  "model_enabled": false
+}

@@ -1,0 +1,30 @@
+{
+  "input_hashes": {
+    "data/reports/score_structure_phase35/diagnostics_78.csv": "ffe5dbf9c1f4830bed6400649ff41b2db749a12b98f507dffe724dfb624019b5",
+    "data/reports/score_structure_phase35/relative_scenarios.csv": "e01374c66defa87005d67c592d2df6f3b2d4059332cd6a0045da18dedb802dce",
+    "data/reports/score_structure_phase12/match_structure_78.csv": "7633f1a0105178e6e540b9a816ebca2564cda107f841d24e3fe7b4a20a770b15",
+    "data/reports/score_structure_phase35_threshold_audit/boundary_margins_78.csv": "49c112b045a6037faadc32404acfa117cddc5d3d81a350e7ed08cacb887d0dc0",
+    "data/forecast_registry/forecasts.jsonl": "89e31ed28315a787ffe224cff5219cd00255e9220082b38b76281fa0dff87e3f",
+    "data/forecast_registry/results.jsonl": "5020ee262a847a58447a34f87df99443d0163dacb4c3e1e498e47805c96018be"
+  },
+  "rows": 78,
+  "draws": 18,
+  "condition_counts": [
+    4,
+    5,
+    8
+  ],
+  "draw_counts": [
+    4,
+    4,
+    6
+  ],
+  "max_reconstruction_error": 9.71445146547012e-17,
+  "new_threshold_searches": 0,
+  "matching_specs": [
+    "same round, one-to-one: |PD gap|<=.01 and |HA gap difference|<=.05; normalized L1 minimum assignment",
+    "same round, one-to-one: |T gap|<=.15 and ||logR| gap|<=.10; normalized L1 minimum assignment"
+  ],
+  "independent_new_rounds": 0,
+  "existing_inputs_unchanged": true
+}

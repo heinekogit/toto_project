@@ -1,0 +1,9 @@
+{
+  "round": "toto1672",
+  "forecast_sha256": "9194dd47d4ed743e7436a05d468b1ca95c574edac52c21d6c24573f550a9f829",
+  "history_sha256": "ffe5dbf9c1f4830bed6400649ff41b2db749a12b98f507dffe724dfb624019b5",
+  "condition_version": "condition_S_p00_le_median_p11_ge_median_v1",
+  "history_discovery_sample": true,
+  "no_probability_correction": true,
+  "no_tickets_generated": true
+}

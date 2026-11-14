@@ -34,7 +34,8 @@ class WeatherPredictionMergeTest(unittest.TestCase):
                                     'last_updated_at': [now.isoformat(), (now - pd.Timedelta(days=2)).isoformat(), now.isoformat()]})
             result = scope['merge_weather_cache'](left, weather, 'test')
             self.assertEqual(result.weather_missing.tolist(), [False, True, True])
-            self.assertEqual(result.is_rain.tolist(), [False, False, False])
+            self.assertFalse(result.is_rain.iloc[0])
+            self.assertTrue(result.is_rain.iloc[1:].isna().all())
 
     def test_declared_ms_is_converted_once(self):
         with tempfile.TemporaryDirectory() as tmp:

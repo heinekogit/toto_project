@@ -1,0 +1,127 @@
+﻿round,category,field,column_present,nonmissing,nonmissing_fraction,source_file
+toto1660,疲労・間隔,home_fatigue_score,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,疲労・間隔,away_fatigue_score,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,疲労・間隔,home_rest_hours,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,疲労・間隔,away_rest_hours,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,天候,stadium_weather,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,天候,weather_fetch_ok,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,天候,adverse_weather_during_match,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,欠場,absence_impact_total_home,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,欠場,absence_impact_total_away,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,欠場,absence_players_count_home,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,欠場,absence_players_count_away,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,順位・勝点,rankmot_rank_latest_home,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,順位・勝点,rankmot_rank_latest_away,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,順位・勝点,rankmot_points_latest_home,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,順位・勝点,rankmot_points_latest_away,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,Football LAB,flab_expected_for_xg_home,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,Football LAB,flab_expected_for_xg_away,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,Football LAB,flab_expected_against_xg_home,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,Football LAB,flab_expected_against_xg_away,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,Football LAB,flab_possession_rate_home,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1660,Football LAB,flab_possession_rate_away,True,13,1.0,data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv
+toto1663,疲労・間隔,home_fatigue_score,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,疲労・間隔,away_fatigue_score,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,疲労・間隔,home_rest_hours,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,疲労・間隔,away_rest_hours,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,天候,stadium_weather,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,天候,weather_fetch_ok,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,天候,adverse_weather_during_match,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,欠場,absence_impact_total_home,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,欠場,absence_impact_total_away,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,欠場,absence_players_count_home,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,欠場,absence_players_count_away,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,順位・勝点,rankmot_rank_latest_home,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,順位・勝点,rankmot_rank_latest_away,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,順位・勝点,rankmot_points_latest_home,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,順位・勝点,rankmot_points_latest_away,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,Football LAB,flab_expected_for_xg_home,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,Football LAB,flab_expected_for_xg_away,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,Football LAB,flab_expected_against_xg_home,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,Football LAB,flab_expected_against_xg_away,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,Football LAB,flab_possession_rate_home,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1663,Football LAB,flab_possession_rate_away,True,13,1.0,data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv
+toto1664,疲労・間隔,home_fatigue_score,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,疲労・間隔,away_fatigue_score,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,疲労・間隔,home_rest_hours,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,疲労・間隔,away_rest_hours,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,天候,stadium_weather,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,天候,weather_fetch_ok,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,天候,adverse_weather_during_match,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,欠場,absence_impact_total_home,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,欠場,absence_impact_total_away,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,欠場,absence_players_count_home,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,欠場,absence_players_count_away,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,順位・勝点,rankmot_rank_latest_home,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,順位・勝点,rankmot_rank_latest_away,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,順位・勝点,rankmot_points_latest_home,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,順位・勝点,rankmot_points_latest_away,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,Football LAB,flab_expected_for_xg_home,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,Football LAB,flab_expected_for_xg_away,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,Football LAB,flab_expected_against_xg_home,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,Football LAB,flab_expected_against_xg_away,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,Football LAB,flab_possession_rate_home,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1664,Football LAB,flab_possession_rate_away,True,13,1.0,data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv
+toto1665,疲労・間隔,home_fatigue_score,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,疲労・間隔,away_fatigue_score,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,疲労・間隔,home_rest_hours,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,疲労・間隔,away_rest_hours,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,天候,stadium_weather,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,天候,weather_fetch_ok,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,天候,adverse_weather_during_match,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,欠場,absence_impact_total_home,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,欠場,absence_impact_total_away,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,欠場,absence_players_count_home,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,欠場,absence_players_count_away,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,順位・勝点,rankmot_rank_latest_home,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,順位・勝点,rankmot_rank_latest_away,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,順位・勝点,rankmot_points_latest_home,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,順位・勝点,rankmot_points_latest_away,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,Football LAB,flab_expected_for_xg_home,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,Football LAB,flab_expected_for_xg_away,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,Football LAB,flab_expected_against_xg_home,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,Football LAB,flab_expected_against_xg_away,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,Football LAB,flab_possession_rate_home,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1665,Football LAB,flab_possession_rate_away,True,13,1.0,data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv
+toto1668,疲労・間隔,home_fatigue_score,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,疲労・間隔,away_fatigue_score,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,疲労・間隔,home_rest_hours,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,疲労・間隔,away_rest_hours,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,天候,stadium_weather,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,天候,weather_fetch_ok,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,天候,adverse_weather_during_match,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,欠場,absence_impact_total_home,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,欠場,absence_impact_total_away,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,欠場,absence_players_count_home,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,欠場,absence_players_count_away,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,順位・勝点,rankmot_rank_latest_home,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,順位・勝点,rankmot_rank_latest_away,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,順位・勝点,rankmot_points_latest_home,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,順位・勝点,rankmot_points_latest_away,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,Football LAB,flab_expected_for_xg_home,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,Football LAB,flab_expected_for_xg_away,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,Football LAB,flab_expected_against_xg_home,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,Football LAB,flab_expected_against_xg_away,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,Football LAB,flab_possession_rate_home,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1668,Football LAB,flab_possession_rate_away,True,13,1.0,data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv
+toto1670,疲労・間隔,home_fatigue_score,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,疲労・間隔,away_fatigue_score,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,疲労・間隔,home_rest_hours,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,疲労・間隔,away_rest_hours,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,天候,stadium_weather,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,天候,weather_fetch_ok,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,天候,adverse_weather_during_match,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,欠場,absence_impact_total_home,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,欠場,absence_impact_total_away,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,欠場,absence_players_count_home,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,欠場,absence_players_count_away,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,順位・勝点,rankmot_rank_latest_home,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,順位・勝点,rankmot_rank_latest_away,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,順位・勝点,rankmot_points_latest_home,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,順位・勝点,rankmot_points_latest_away,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,Football LAB,flab_expected_for_xg_home,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,Football LAB,flab_expected_for_xg_away,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,Football LAB,flab_expected_against_xg_home,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,Football LAB,flab_expected_against_xg_away,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,Football LAB,flab_possession_rate_home,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv
+toto1670,Football LAB,flab_possession_rate_away,True,13,1.0,data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv

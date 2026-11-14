@@ -1,0 +1,32 @@
+[
+  {
+    "round": "toto1660",
+    "saved_version": "v2.1",
+    "saved_before_kickoff": 0,
+    "actual_D": 2
+  },
+  {
+    "round": "toto1663",
+    "saved_version": "v2.2",
+    "saved_before_kickoff": 13,
+    "actual_D": 3
+  },
+  {
+    "round": "toto1664",
+    "saved_version": "v2.3",
+    "saved_before_kickoff": 0,
+    "actual_D": 4
+  },
+  {
+    "round": "toto1665",
+    "saved_version": "v2.3",
+    "saved_before_kickoff": 0,
+    "actual_D": 4
+  },
+  {
+    "round": "toto1668",
+    "saved_version": "v2.4",
+    "saved_before_kickoff": 4,
+    "actual_D": 1
+  }
+]

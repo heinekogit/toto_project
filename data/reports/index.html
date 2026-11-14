@@ -2,7 +2,7 @@
 <html lang='ja'>
 <head>
 <meta charset='utf-8'>
-<title>v2.0 予想・運用ダッシュボード</title>
+<title>予想・検証ダッシュボード</title>
 <style>
 body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:#f3f6fa;color:#172033;}
 main{max-width:1180px;margin:auto;padding:24px;}
@@ -16,22 +16,23 @@ select{min-width:320px;max-width:100%;padding:9px;border:1px solid #9facbb;borde
 button,.button{display:inline-block;padding:9px 13px;border:0;border-radius:7px;background:#1769aa;color:#fff;cursor:pointer;margin-left:5px}
 code{white-space:normal}.muted{color:#617184}.warning{border-left:5px solid #d99000;background:#fff8e8;padding:12px}
 details{margin-top:10px}summary{cursor:pointer;font-weight:700;padding:5px 0}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.step{border:1px solid #d6dee8;border-radius:9px;padding:14px;background:#f9fbfe}.step b{display:block;margin-bottom:7px}.badge{font-size:12px;background:#e7f2ff;color:#124a78;padding:3px 7px;border-radius:6px}.links a{display:inline-block;margin:5px 15px 5px 0}
 @media(max-width:640px){main{padding:12px}select{min-width:0;width:100%;margin-bottom:8px}button{margin-left:0;margin-right:4px}}
 </style>
 </head>
 <body><main>
 <div class='box hero'>
-<h1>v2.0 予想・運用ダッシュボード</h1>
+<h1>予想・検証ダッシュボード</h1>
 <div class='row'>現行予想シーズン: <b>2026/27</b></div>
-<div class='row muted'>生成: 2026-10-31 10:27 / 予想本体とBuyPlanの確認、前向き検証の入口</div>
+<div class='row muted'>生成: 2026-11-14 09:26 / 予想の内部計算からBuyPlanまで追跡する入口</div>
 </div>
 <div class='grid'>
 <section class='box'><h2>現在の予想</h2>
-<div class='row'><a class='button' href='html/predictions_round_all_2026_2027_第１３節.html'>直近の予想を開く</a></div>
+<div class='row'><a class='button' href='html/predictions_round_all_2026_2027_第１５節.html'>直近の予想を開く</a></div>
 <div class='row'><a href='html/predictions_view.html'>予想一覧レポート</a></div>
 <div class='row'><a href='html/report_view.html'>解析内訳レポート</a></div>
 <button onclick='reloadNoCache()'>再読込</button></section>
-<section class='box'><h2>BuyPlan v2.0</h2>
+<section class='box'><h2>BuyPlan v2.4</h2>
 <div class='row'>正式版の購入候補とD分類を確認します。</div>
 <div class='row'><a class='button' href='../purchase_reference/buyplan.html'>buyplan.htmlを開く</a></div>
 <div class='row muted'>対象toto13試合が一致しない場合は生成時に安全停止します。</div></section>
@@ -41,13 +42,11 @@ details{margin-top:10px}summary{cursor:pointer;font-weight:700;padding:5px 0}
 <div class='row'>
 <select id='predRound'><option value=''>予想節を選択</option>
 <optgroup label='直近・次の3節'>
-<option value='html/predictions_round_all_2026_2027_第１３節.html'>第１３節 ◀ 次回対象</option>
-<option value='html/predictions_round_all_2026_2027_第１４節.html'>第１４節 ◀ 次回対象</option>
-<option value='html/predictions_round_all_2026_2027_第１５節.html'>第１５節</option>
+<option value='html/predictions_round_all_2026_2027_第１５節.html'>第１５節 ◀ 次回対象</option>
+<option value='html/predictions_round_all_2026_2027_第１６節.html'>第１６節</option>
+<option value='html/predictions_round_all_2026_2027_第１７節.html'>第１７節 ◀ 次回対象</option>
 </optgroup>
 <optgroup label='今後の日程'>
-<option value='html/predictions_round_all_2026_2027_第１６節.html'>第１６節</option>
-<option value='html/predictions_round_all_2026_2027_第１７節.html'>第１７節</option>
 <option value='html/predictions_round_all_2026_2027_第１８節.html'>第１８節</option>
 <option value='html/predictions_round_all_2026_2027_第１９節.html'>第１９節</option>
 <option value='html/predictions_round_all_2026_2027_第２０節.html'>第２０節</option>
@@ -69,8 +68,11 @@ details{margin-top:10px}summary{cursor:pointer;font-weight:700;padding:5px 0}
 <option value='html/predictions_round_all_2026_2027_第３６節.html'>第３６節</option>
 <option value='html/predictions_round_all_2026_2027_第３７節.html'>第３７節</option>
 <option value='html/predictions_round_all_2026_2027_第３８節.html'>第３８節</option>
+<option value='html/predictions_round_j1_2026_2027_ルヴァン準々決勝.html'>J1 ルヴァン準々決勝</option>
 </optgroup>
 <optgroup label='終了した節'>
+<option value='html/predictions_round_all_2026_2027_第１４節.html'>第１４節</option>
+<option value='html/predictions_round_all_2026_2027_第１３節.html'>第１３節</option>
 <option value='html/predictions_round_all_2026_2027_第１２節.html'>第１２節</option>
 <option value='html/predictions_round_all_2026_2027_第１１節.html'>第１１節</option>
 <option value='html/predictions_round_all_2026_2027_第１０節.html'>第１０節</option>
@@ -87,11 +89,17 @@ details{margin-top:10px}summary{cursor:pointer;font-weight:700;padding:5px 0}
 </select><button onclick="openRound('predRound')">表示</button>
 <button onclick="downloadPredRoundCsv()">buyplan用CSV出力</button>
 </div><div class='row muted'>新しい節から表示します。CSV出力は選択節だけを含みます。</div></section>
-<section class='box'><h2>v2.0の前向き検証</h2>
-<div class='warning'>v1の過去バックテストとv2.0は予測方式が異なるため、直接比較しません。v2.0は正式運用後の固定保存データで評価します。</div>
-<div class='row muted'>記録対象: 候補01、10候補平均、最高的中、portfolio cover、H/D/A確率品質、D分類、入力欠損。</div></section>
+<section class='box'><h2>予想の中身を検証する <span class='badge'>検証画面の試作</span></h2>
+<p>試合ごとに入力値から得点期待値λ、H/D/A確率、実スコアまでを追います。平均値の突出や補正の影響を、配券の成績と分けて確認します。</p>
+<div class='flow'>
+<div class='step'><b>1. 入力と平均</b>平均得点・失点、xG・被xG、対象試合数、突出した試合と過去退場記録の有無を確認する。</div>
+<div class='step'><b>2. 予想の計算</b>攻撃指標と相手守備指標から基礎λを作り、Football LAB・欠場補正と得点分布を追う。</div>
+<div class='step'><b>3. 結果との照合</b>得点分布と疲労・天候補正を経たnext_probのH/D/A確率を実結果と比較する。BuyPlanの評価は別に見る。</div>
+</div>
+<div class='links'><a class='button' href='forecast_trace_toto1668.html'>toto1668 計算内訳を開く</a><a href='goal_rate_methods/report.md'>得失点平均の比較検証</a><a href='../style_shadow/reports/index.html'>追加スタイルの前向き学習・評価</a><a href='pattern_matchup_validation/report.html'>攻撃と相手守備の組み合わせ検証</a><a href='../eval/toto_rounds/toto1668/growth_validation.html'>toto1668 開催検証</a><a href='../eval/growth_validation/index.html'>開催別の累積検証</a></div>
+<p class='muted'>toto1668の保存済み予測は当時の値を表示します。新しい得失点補正を過去の保存値へ遡及適用していません。</p></section>
 <section class='box'><h2>過去資料・v1開発履歴</h2>
-<div class='warning'>以下は開発経過と原因調査用です。現行v2.0の通常運用には使用しません。</div>
+<div class='warning'>以下は開発経過と原因調査用です。現在のBuyPlan v2.4の配券には使用しません。</div>
 <details><summary>過去シーズンの予想を開く</summary><div class='row'>
 <select id='archivePredRound'><option value=''>過去の予想を選択</option>
 <option value='html/predictions_round_all_2026_special_第２戦.html'>2026 特殊期 第２戦</option>
@@ -375,6 +383,8 @@ details{margin-top:10px}summary{cursor:pointer;font-weight:700;padding:5px 0}
 <option value='html/backtest_round_j2_2026_2027_第１１節.html'>J2 2026_2027 第１１節</option>
 <option value='html/backtest_round_j2_2026_2027_第１２節.html'>J2 2026_2027 第１２節</option>
 <option value='html/backtest_round_j2_2026_2027_第１３節.html'>J2 2026_2027 第１３節</option>
+<option value='html/backtest_round_j2_2026_2027_第１４節.html'>J2 2026_2027 第１４節</option>
+<option value='html/backtest_round_j2_2026_2027_第１５節.html'>J2 2026_2027 第１５節</option>
 <option value='html/backtest_round_j2_2026_special_第１節.html'>J2 2026_special 第１節</option>
 <option value='html/backtest_round_j2_2026_special_第２節.html'>J2 2026_special 第２節</option>
 <option value='html/backtest_round_j2_2026_special_第３節.html'>J2 2026_special 第３節</option>

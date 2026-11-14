@@ -1,0 +1,17 @@
+﻿model,parameter,estimate,approx_se,train_matches,evaluation_matches,success,rank,columns
+saved_lambda,home_bias,0.0,0.15872001441476297,28,26,True,2,2
+saved_lambda,away_bias,0.0,0.16451456149694757,28,26,True,2,2
+bias_only,home_bias,0.25127225125234526,0.14037426449761028,28,26,True,2,2
+bias_only,away_bias,-0.11281939308106592,0.1737808814529689,28,26,True,2,2
+bias_plus_fatigue,home_bias,0.4634547338483704,0.3154289208207036,28,26,True,4,4
+bias_plus_fatigue,away_bias,0.11401447354580388,0.34056661053382054,28,26,True,4,4
+bias_plus_fatigue,own_attack_loss,0.24875860136712866,0.4451967009494529,28,26,True,4,4
+bias_plus_fatigue,opponent_defense_loss,-0.19659850155838443,0.41379325409575907,28,26,True,4,4
+bias_plus_short_rest,home_bias,0.23150072194062069,0.15355873071907805,28,26,True,4,4
+bias_plus_short_rest,away_bias,-0.14668163311261267,0.18415795876801433,28,26,True,4,4
+bias_plus_short_rest,own_attack_loss,0.2620087519611393,0.7840925230634258,28,26,True,4,4
+bias_plus_short_rest,opponent_defense_loss,0.6358238530697975,0.7846196719525736,28,26,True,4,4
+bias_plus_travel,home_bias,0.23594897007099971,0.18556124063304136,28,26,True,4,4
+bias_plus_travel,away_bias,-0.038621810904339644,0.21084837032790682,28,26,True,4,4
+bias_plus_travel,own_attack_loss,0.5185800236576054,0.8496865946428311,28,26,True,4,4
+bias_plus_travel,opponent_defense_loss,0.09866504613456645,0.7784590415839794,28,26,True,4,4

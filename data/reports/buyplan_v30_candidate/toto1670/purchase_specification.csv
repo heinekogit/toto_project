@@ -1,0 +1,14 @@
+﻿match_no,home_team,away_team,candidate00,purchase_selection,D_rank,double_selected
+1,清水,東京V,1,H/D,2,True
+2,横浜FM,岡山,1,H,5,False
+3,福岡,長崎,2,A/D,4,True
+4,FC東京,鹿島,1,H,13,False
+5,柏,川崎F,2,A,12,False
+6,名古屋,京都,1,H,10,False
+7,神戸,浦和,1,H,11,False
+8,G大阪,C大阪,1,H,9,False
+9,千葉,水戸,1,H,8,False
+10,町田,広島,2,A,7,False
+11,徳島,宮崎,2,A/D,1,True
+12,八戸,札幌,2,A/D,3,True
+13,鳥栖,富山,2,A,6,False

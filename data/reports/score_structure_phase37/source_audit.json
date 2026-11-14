@@ -1,0 +1,18 @@
+{
+  "input_hashes": {
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase35/diagnostics_78.csv": "ffe5dbf9c1f4830bed6400649ff41b2db749a12b98f507dffe724dfb624019b5",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/forecasts.jsonl": "89e31ed28315a787ffe224cff5219cd00255e9220082b38b76281fa0dff87e3f",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/results.jsonl": "5020ee262a847a58447a34f87df99443d0163dacb4c3e1e498e47805c96018be",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase36/shadow_tickets.csv": "b68c5b46782059b7ed791888205f2fc2a567e3516e67eae14fa7e5d0c8e4c753",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/scripts/next_model/phase36_branch_portfolios.py": "72d1c33822ba7c7eb37eff0ea4a03ee12bf4290280338d8ee0d455251c91e516"
+  },
+  "legacy_reproduced": 36,
+  "outputs_generated_without_results": true,
+  "tests_passed": 4,
+  "portfolios": 628,
+  "ticket_rows": 6280,
+  "all_scenario_costs_reconciled": true,
+  "original_hashes_unchanged": true,
+  "html_links_valid": true,
+  "code_sha256": "37967f459bbb1729618872bbea0ae3756fee9fd3fbfc1eb1c6000589e9c6ea5b"
+}

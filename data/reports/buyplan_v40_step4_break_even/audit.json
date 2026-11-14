@@ -1,0 +1,29 @@
+{
+  "source": "data/reports/score_structure_phase35/diagnostics_78.csv",
+  "source_sha256": "ffe5dbf9c1f4830bed6400649ff41b2db749a12b98f507dffe724dfb624019b5",
+  "condition_S": "P(0-0)<=round median and P(1-1)>=round median; unchanged",
+  "rounds": [
+    "toto1660",
+    "toto1663",
+    "toto1664",
+    "toto1665",
+    "toto1668",
+    "toto1670"
+  ],
+  "factor_hypotheses": [
+    1.1,
+    1.5,
+    2.0
+  ],
+  "weight_hypotheses": [
+    0.0,
+    0.1,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "scenario": "all S matches have the same hypothetical D-odds effect; independent match outcomes within each state",
+  "actual_results_used": false,
+  "production_changed": false
+}

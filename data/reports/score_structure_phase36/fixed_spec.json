@@ -1,0 +1,27 @@
+{
+  "version": "phase36-research-1",
+  "candidate_counts": [
+    3,
+    4,
+    5
+  ],
+  "selectors": {
+    "A": "final PD descending; match_no ascending ties",
+    "B": "S first, then final PD descending, match_no ascending",
+    "C": "S first; S sorted abs(logR), then final PD descending, match_no ascending; outside S sorted final PD"
+  },
+  "condition_S": "P00<=within-round median AND P11>=within-round median, unrounded values",
+  "stress_odds_factor": 2.0,
+  "stress_formula": "pD*=2 on active candidates; normalize all 3 probabilities; H/A ratio preserved",
+  "stress_interpretation": "Uncalibrated research hypothesis, not lambda perturbation or observed error frequency; no 75% replacement",
+  "states": "All subsets of selected D candidates active; baseline included; no state occurrence frequency asserted",
+  "generator": "H/A allowed all 13 matches; D allowed only selected candidates; exact top30 per state + baseline top10; union pool",
+  "selection": "max min_s(sum_ticket q_s / best_allowed10_s); deterministic greedy+12 swap sweeps, baseline seed; approximate",
+  "tie_break": "mean relative value then ternary code H,D,A; candidate labels irrelevant after membership",
+  "pool_per_state": 30,
+  "number_tickets": 10,
+  "common_evaluation": "base final and union of all selector/k stress masks per round",
+  "no_result_input": true,
+  "new_parameter_search": false,
+  "official_flow_modified": false
+}

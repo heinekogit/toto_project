@@ -1,0 +1,7 @@
+round,actual_D,A_selected,B_selected,common_selected,A_only,B_only,A_captured_D,B_captured_D,capture_delta_B_minus_A,replaced_matches,newly_captured_by_B,lost_from_A,mix_min,mix_max,max_absolute_rank_change,rank_changed_matches
+toto1660,2,"3,10,11,12","3,10,11,12",4,,,0,0,0,0,0,0,0.0,0.0,0,0
+toto1663,3,"1,8,11,12","1,8,11,12",4,,,1,1,0,0,0,0,0.0,0.0,0,0
+toto1664,4,"1,7,12,13","1,7,12,13",4,,,1,1,0,0,0,0,0.0,0.0,0,0
+toto1665,4,"4,6,7,8","4,6,7,8",4,,,3,3,0,0,0,0,0.221380859375,0.25,0,0
+toto1668,1,"7,8,11,13","7,8,11,13",4,,,0,0,0,0,0,0,0.16390625,0.25,2,8
+toto1670,4,"1,3,11,12","1,2,11,12",3,3,2,1,1,0,1,1,1,0.1459375,0.25,3,7

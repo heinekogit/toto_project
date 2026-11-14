@@ -1,0 +1,7 @@
+{
+  "version": "style_residual_shadow_v1",
+  "cutoff": "2026-11-14T08:18:52.759746+09:00",
+  "enabled": false,
+  "reason": "insufficient_prematch_training_data",
+  "train_matches": 0
+}

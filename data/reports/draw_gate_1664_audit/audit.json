@@ -1,0 +1,8 @@
+{
+  "unchanged_inputs": {
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/gated_structural_draw/eligibility.csv": "56ca1a995e2f089286fb53d3bb4082acb203983903163c1e689567124cf8c89e",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/gated_structural_draw/all_allocations.csv": "6fb1ea2e19235dec5270420f90c39f32ad6434a4f718db6bcd7b41daa6749b84",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1664/actual_results.csv": "8c2ea7d153a988d37ed08521dc03f77033b247cf241f119b551eca9fd7e0283e"
+  },
+  "parameters_changed": false
+}

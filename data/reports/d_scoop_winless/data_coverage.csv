@@ -1,0 +1,5 @@
+﻿source,league,rows,completed_score_rows,match_xg_rows,match_xga_rows,note
+data/j1_2026_latest_results.csv,j1,380.0,140.0,0,0,結果CSVは得失点を保存。試合別xG列なし
+data/j2_2026_latest_results.csv,j2,380.0,160.0,0,0,結果CSVは得失点を保存。試合別xG列なし
+data/eval/toto_rounds/*/snapshot/next_predictions.csv,J1/J2,78.0,78.0,0,0,6開催の試合前予測。xG列はチーム累積・平均値であり過去試合別値ではない
+data/external_metrics/football_lab_team_metrics_*.csv,J1/J2,,,0,0,チーム集計スナップショット。試合別xGの履歴ではない

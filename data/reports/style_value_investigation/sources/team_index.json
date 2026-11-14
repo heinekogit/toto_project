@@ -1,0 +1,122 @@
+[
+  {
+    "slug": "nago",
+    "name": "名古屋グランパス 名古屋",
+    "url": "https://www.football-lab.jp/nago/style?s=81&year=2026",
+    "file": "nago_81.html"
+  },
+  {
+    "slug": "hiro",
+    "name": "サンフレッチェ広島 広島",
+    "url": "https://www.football-lab.jp/hiro/style?s=81&year=2026",
+    "file": "hiro_81.html"
+  },
+  {
+    "slug": "kobe",
+    "name": "ヴィッセル神戸 神戸",
+    "url": "https://www.football-lab.jp/kobe/style?s=81&year=2026",
+    "file": "kobe_81.html"
+  },
+  {
+    "slug": "g-os",
+    "name": "ガンバ大阪 Ｇ大阪",
+    "url": "https://www.football-lab.jp/g-os/style?s=81&year=2026",
+    "file": "g-os_81.html"
+  },
+  {
+    "slug": "shim",
+    "name": "清水エスパルス 清水",
+    "url": "https://www.football-lab.jp/shim/style?s=81&year=2026",
+    "file": "shim_81.html"
+  },
+  {
+    "slug": "okay",
+    "name": "ファジアーノ岡山 岡山",
+    "url": "https://www.football-lab.jp/okay/style?s=81&year=2026",
+    "file": "okay_81.html"
+  },
+  {
+    "slug": "y-fm",
+    "name": "横浜Ｆ・マリノス 横浜FM",
+    "url": "https://www.football-lab.jp/y-fm/style?s=81&year=2026",
+    "file": "y-fm_81.html"
+  },
+  {
+    "slug": "uraw",
+    "name": "浦和レッズ 浦和",
+    "url": "https://www.football-lab.jp/uraw/style?s=81&year=2026",
+    "file": "uraw_81.html"
+  },
+  {
+    "slug": "c-os",
+    "name": "セレッソ大阪 Ｃ大阪",
+    "url": "https://www.football-lab.jp/c-os/style?s=81&year=2026",
+    "file": "c-os_81.html"
+  },
+  {
+    "slug": "ka-f",
+    "name": "川崎フロンターレ 川崎Ｆ",
+    "url": "https://www.football-lab.jp/ka-f/style?s=81&year=2026",
+    "file": "ka-f_81.html"
+  },
+  {
+    "slug": "fctk",
+    "name": "ＦＣ東京 FC東京",
+    "url": "https://www.football-lab.jp/fctk/style?s=81&year=2026",
+    "file": "fctk_81.html"
+  },
+  {
+    "slug": "mcd",
+    "name": "ＦＣ町田ゼルビア 町田",
+    "url": "https://www.football-lab.jp/mcd/style?s=81&year=2026",
+    "file": "mcd_81.html"
+  },
+  {
+    "slug": "kyot",
+    "name": "京都サンガF.C. 京都",
+    "url": "https://www.football-lab.jp/kyot/style?s=81&year=2026",
+    "file": "kyot_81.html"
+  },
+  {
+    "slug": "fuku",
+    "name": "アビスパ福岡 福岡",
+    "url": "https://www.football-lab.jp/fuku/style?s=81&year=2026",
+    "file": "fuku_81.html"
+  },
+  {
+    "slug": "mito",
+    "name": "水戸ホーリーホック 水戸",
+    "url": "https://www.football-lab.jp/mito/style?s=81&year=2026",
+    "file": "mito_81.html"
+  },
+  {
+    "slug": "kasm",
+    "name": "鹿島アントラーズ 鹿島",
+    "url": "https://www.football-lab.jp/kasm/style?s=81&year=2026",
+    "file": "kasm_81.html"
+  },
+  {
+    "slug": "chib",
+    "name": "ジェフユナイテッド千葉 千葉",
+    "url": "https://www.football-lab.jp/chib/style?s=81&year=2026",
+    "file": "chib_81.html"
+  },
+  {
+    "slug": "tk-v",
+    "name": "東京ヴェルディ 東京Ｖ",
+    "url": "https://www.football-lab.jp/tk-v/style?s=81&year=2026",
+    "file": "tk-v_81.html"
+  },
+  {
+    "slug": "kasw",
+    "name": "柏レイソル 柏",
+    "url": "https://www.football-lab.jp/kasw/style?s=81&year=2026",
+    "file": "kasw_81.html"
+  },
+  {
+    "slug": "ngsk",
+    "name": "Ｖ・ファーレン長崎 長崎",
+    "url": "https://www.football-lab.jp/ngsk/style?s=81&year=2026",
+    "file": "ngsk_81.html"
+  }
+]

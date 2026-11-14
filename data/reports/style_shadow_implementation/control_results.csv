@@ -1,0 +1,5 @@
+match_no,league,home_team,away_team,home_score,away_score,result,actual_source_match_id,datetime,status,resolved_league,resolve_note,toto_round,key,match_id
+7,J1,千葉,福岡,3.0,0.0,1,j1_2026_11011403_千葉_福岡,2026-11-01 14:03:00,OK,J1,home_team+away_team,1668,2026-11-01|千葉|福岡,j1_2026_11011400_千葉_福岡
+8,J1,長崎,東京V,1.0,2.0,2,j1_2026_11011403_長崎_東京V,2026-11-01 14:03:00,OK,J1,home_team+away_team,1668,2026-11-01|長崎|東京V,j1_2026_11011400_長崎_東京V
+9,J1,町田,G大阪,0.0,0.0,0,j1_2026_11011603_町田_G大阪,2026-11-01 16:03:00,OK,J1,home_team+away_team,1668,2026-11-01|町田|G大阪,j1_2026_11011600_町田_G大阪
+10,J1,横浜FM,川崎F,4.0,2.0,1,j1_2026_11011303_横浜FM_川崎F,2026-11-01 13:03:00,OK,J1,home_team+away_team,1668,2026-11-01|横浜FM|川崎F,j1_2026_11011300_横浜FM_川崎F

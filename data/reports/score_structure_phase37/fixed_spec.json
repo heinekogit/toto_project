@@ -1,0 +1,38 @@
+{
+  "version": "phase37-frozen-1",
+  "counts": [
+    3,
+    4,
+    5
+  ],
+  "selectors": [
+    "A",
+    "B"
+  ],
+  "strengths": [
+    1.0,
+    1.5,
+    2.0
+  ],
+  "topN": [
+    30,
+    100,
+    300,
+    1000,
+    "FULL"
+  ],
+  "suites": {
+    "legacy": "36 Phase3.6 portfolios reproduced with original states and denominator",
+    "focus": "1665 B5 own 32 masks fixed across all ablations; global unrestricted scenario oracle denominator",
+    "common": "six rounds A/B k=3/4/5; union of A and B subset masks at the SAME k shared by generation AND objective; same unrestricted oracle denominator"
+  },
+  "common_assessment": "For every plan in a round, evaluate on union masks of A/B all k and strengths 1,1.5,2; identical distributions",
+  "objective": "max min_s(sum_t p_s(t)/O_s); same deterministic greedy + 12 swaps; O_s exact unrestricted top10 mass for focus/common",
+  "full": "Every allowed combination evaluated by dominance: keep top10 base probabilities per D-pattern on active scenario support; sufficient for any optimum of monotone scenario mass objective",
+  "branch_addition": "Union with HA baseline modified by every subset of S allowed in mode; also every 0/1/2 HA flip among nonD slots; result blind, no purchase mandate",
+  "prune": "Same lossless per-pattern top10 pruning applied after generating all finite pools; legacy checks against saved tickets",
+  "no_new_D_rule": true,
+  "no_parameter_tuning": true,
+  "all_generation_before_results": true,
+  "warning": "Odds factors uncalibrated; full candidate sufficiency is not proof greedy solver is globally optimal"
+}

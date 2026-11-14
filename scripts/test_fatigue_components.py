@@ -19,6 +19,57 @@ def _load_module():
 
 
 class FatigueComponentTest(unittest.TestCase):
+    def test_unconfirmed_archive_does_not_block_confirmed_events(self):
+        module = _load_module()
+        path = Path(__file__).parents[1] / "data/manual/acl_schedule.csv"
+        events = module.load_acl_team_events(path)
+        self.assertEqual(len(events), 40)
+        self.assertEqual(events.status.value_counts().to_dict(), {"scheduled": 22, "confirmed": 18})
+        self.assertTrue(events.event_load.notna().all())
+
+    def test_recent_unverified_completed_fixture_is_reported(self):
+        module = _load_module()
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "acl.csv"
+            pd.DataFrame([{"match_date": "2026/11/03", "home_team": "柏", "away_team": "大田",
+                           "city": "柏", "country": "日本", "status": "unverified", "source": ""}]).to_csv(path, index=False)
+            with self.assertRaisesRegex(ValueError, "実施済みACL日程の確認が必要"):
+                module.load_acl_team_events(path, as_of_date="2026/11/13")
+
+    def test_original_schedule_without_added_gate_columns_is_usable(self):
+        module = _load_module()
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "acl.csv"
+            pd.DataFrame([{"match_date": "2026/11/03", "competition": "ACL Elite", "home_team": "柏", "away_team": "大田",
+                           "city": "柏", "country": "日本"},
+                          {"match_date": "2026/11/24", "competition": "ACL Elite", "home_team": "京都", "away_team": "浦項",
+                           "city": "京都", "country": "日本"}]).to_csv(path, index=False)
+            events = module.load_acl_team_events(path, as_of_date="2026/11/13")
+        self.assertEqual(events.status.tolist(), ["ledger", "scheduled"])
+        self.assertTrue(events.source.notna().all())
+
+    def test_acl_unknown_distance_stops_instead_of_zero(self):
+        module = _load_module()
+        for distance in [None, "unknown", float("inf"), -1]:
+            with self.subTest(distance=distance), TemporaryDirectory() as directory:
+                path = Path(directory) / "acl.csv"
+                pd.DataFrame([{"match_date": "2026/10/13", "team": "鹿島",
+                               "fatigue_grade": 7, "distance_km": distance,
+                               "competition": "ACL", "status": "confirmed",
+                               "source": "official"}]).to_csv(path, index=False)
+                with self.assertRaisesRegex(ValueError, "ACL移動距離"):
+                    module.load_acl_team_events(path)
+
+    def test_acl_normalization_error_is_not_swallowed(self):
+        module = _load_module()
+        from unittest.mock import patch
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "acl.csv"
+            pd.DataFrame([{"match_date": "2026/11/24", "home_team": "鹿島", "away_team": "相手", "city": "鹿嶋", "country": "日本"}]).to_csv(path, index=False)
+            with patch.object(module, "normalize_acl_schedule", side_effect=ValueError("coordinates missing")):
+                with self.assertRaisesRegex(ValueError, "coordinates missing"):
+                    module.load_acl_team_events(path)
+
     def test_acl_uses_confirmed_appearance_and_generic_travel_load(self):
         module = _load_module()
         with TemporaryDirectory() as directory:
@@ -26,22 +77,26 @@ class FatigueComponentTest(unittest.TestCase):
             pd.DataFrame([
                 {"match_date": "2026/10/13", "team": "鹿島", "fatigue_grade": 7,
                  "distance_km": 2000, "competition": "ACL", "status": "confirmed", "source": "official-result"},
-                {"match_date": "2026/10/20", "team": "鹿島", "fatigue_grade": 7,
+                {"match_date": "2026/11/20", "team": "鹿島", "fatigue_grade": 7,
                  "distance_km": 2000, "competition": "ACL", "status": "scheduled", "source": ""},
             ]).to_csv(path, index=False)
             events = module.load_acl_team_events(path)
-        self.assertEqual(len(events), 1)
+        self.assertEqual(len(events), 2)
         self.assertEqual(events.iloc[0].event_load, 2000 * module.TRAVEL_DISTANCE_WEIGHT)
         self.assertEqual(events.iloc[0].status, "confirmed")
 
-    def test_missing_distance_cannot_be_published_or_predicted(self):
+    def test_missing_distance_is_explicitly_held_not_known_zero(self):
         module = _load_module()
         matches = pd.DataFrame([{'match_id': 'm', 'datetime': pd.Timestamp('2026-09-06'), 'home_team': 'H', 'away_team': 'A'}])
         result = module.calculate_fatigue(matches, pd.DataFrame())
-        with self.assertRaisesRegex(ValueError, 'FATIGUE_QC'):
-            module.validate_fatigue_output(result)
+        module.validate_fatigue_output(result)
+        validate_prediction_fatigue(result)
+        self.assertTrue(pd.isna(result.iloc[0].away_fatigue_score))
+        self.assertEqual(result.iloc[0].away_fatigue_status, 'partial')
+        corrupted = result.copy()
+        corrupted['away_fatigue_score'] = 0.0
         with self.assertRaisesRegex(ValueError, 'FATIGUE_INPUT'):
-            validate_prediction_fatigue(result)
+            validate_prediction_fatigue(corrupted)
 
     def test_old_csv_is_rejected_even_if_scores_are_present(self):
         old = pd.DataFrame([{'home_fatigue_score': 1, 'away_fatigue_score': 4}])
@@ -84,14 +139,15 @@ class FatigueComponentTest(unittest.TestCase):
         target = result[result.match_id.eq("m2")].iloc[0]
         self.assertEqual(target.travel_lookup_status, "hit")
         self.assertAlmostEqual(target.away_rest_fatigue, 0.0)
-        self.assertAlmostEqual(target.away_recent_load_carry, 1.4)
+        self.assertTrue(pd.isna(target.away_recent_load_carry))
         self.assertAlmostEqual(target.away_travel_fatigue, 0.5)
         self.assertAlmostEqual(target.away_away_condition_penalty, 4.0)
         component_total = (
             target.away_rest_fatigue + target.away_recent_load_carry
             + target.away_travel_fatigue + target.away_away_condition_penalty
         )
-        self.assertAlmostEqual(target.away_fatigue_score, component_total, places=2)
+        self.assertTrue(pd.isna(target.away_fatigue_score))
+        self.assertEqual(target.away_fatigue_known_subtotal, 4.5)
 
     def test_full_team_names_resolve_to_short_names(self):
         module = _load_module()
@@ -102,7 +158,8 @@ class FatigueComponentTest(unittest.TestCase):
         matrix = pd.DataFrame([[100.0]], index=["鹿島アントラーズ"], columns=["東京ヴェルディ"])
         target = module.calculate_fatigue(matches, matrix).iloc[0]
         self.assertEqual(target.travel_lookup_status, "hit")
-        self.assertEqual(target.away_fatigue_score, 4.5)
+        self.assertTrue(pd.isna(target.away_fatigue_score))
+        self.assertEqual(target.away_fatigue_known_subtotal, 4.5)
 
     def test_missing_team_is_still_reported(self):
         module = _load_module()

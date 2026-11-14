@@ -89,3 +89,16 @@ class SnapshotTest(unittest.TestCase):
         result = self.run_snapshot()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual((self.out / "shadow_buyplan_c.csv").read_text(), "shadow C fixture\n")
+
+    def test_v25_reference_and_diagnostics_required_and_archived(self):
+        self.engine["shadow_v25_observation"] = {"generator": "v25_match_draw_score_shadow_v1"}
+        self.write_engine()
+        self.assertNotEqual(self.run_snapshot().returncode, 0)
+        names = ("shadow_buyplan_v25.csv", "shadow_buyplan_v25.html", "shadow_v25_features.csv",
+                 "shadow_v25_candidates.csv", "shadow_v25_audit.json", "shadow_v25_reference.json")
+        for name in names:
+            (self.source / name).write_text("v25 fixture\n")
+        result = self.run_snapshot()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        for name in names:
+            self.assertEqual((self.out / name).read_text(), "v25 fixture\n")

@@ -1,0 +1,57 @@
+{
+  "mode": "v4.1 score-neighbor stress research; not calibrated or adopted",
+  "fraction": 0.25,
+  "weights": [
+    0.0,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "score_range": "0..10 each side",
+  "score_rule": "one-goal edge mass * adjacent draw mass / (edge + adjacent) * fraction",
+  "two_plus_direct_transfer": 0,
+  "formal_prediction_changed": false,
+  "formal_buyplan_changed": false,
+  "scenarios": [
+    {
+      "stress_fraction": 0.25,
+      "state_weight": 0.0,
+      "P_prob13": 0.00015011217000039353,
+      "Q_prob13": 4.619515915951168e-05,
+      "mixture_prob13": 0.00015011217000039353,
+      "P_loss_vs_top10": 0.0,
+      "changed_tickets_vs_P": 0,
+      "D_tickets": 0
+    },
+    {
+      "stress_fraction": 0.25,
+      "state_weight": 0.5,
+      "P_prob13": 0.00015011217000039353,
+      "Q_prob13": 4.619515915951168e-05,
+      "mixture_prob13": 9.815366457995257e-05,
+      "P_loss_vs_top10": 0.0,
+      "changed_tickets_vs_P": 0,
+      "D_tickets": 0
+    },
+    {
+      "stress_fraction": 0.25,
+      "state_weight": 0.75,
+      "P_prob13": 0.00014535780146910824,
+      "Q_prob13": 4.932614313590553e-05,
+      "mixture_prob13": 7.33340577192062e-05,
+      "P_loss_vs_top10": 4.754368531285284e-06,
+      "changed_tickets_vs_P": 3,
+      "D_tickets": 3
+    },
+    {
+      "stress_fraction": 0.25,
+      "state_weight": 1.0,
+      "P_prob13": 0.00012987572765382413,
+      "Q_prob13": 5.1279947475276704e-05,
+      "mixture_prob13": 5.1279947475276704e-05,
+      "P_loss_vs_top10": 2.0236442346569395e-05,
+      "changed_tickets_vs_P": 7,
+      "D_tickets": 7
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "source_sha256": "056a93e7ce2cc49da9cb9403eaf1149c3a7f026bedd95bc30f355fdaaf314efc",
+  "seeds": 10,
+  "historical_seeds": 5,
+  "historical_rounds": 6,
+  "method_definitions": {
+    "uniform": "sequential uniform without replacement",
+    "strength": "sequential D_strength without replacement",
+    "strength_times_PD": "sequential D_strength*P(D) without replacement",
+    "PD_sequential": "sequential P(D) without replacement",
+    "PD_conditional": "exact conditional D set P(S|count=k) proportional to product P(D)/(1-P(D))",
+    "PD_conditional_strength": "conditional-set sampling with weights D_strength*P(D)/(1-P(D)); research weight only"
+  },
+  "same_stratified_counts_across_methods": true,
+  "D_removed_after_sampling": false,
+  "probability_correction": false,
+  "actual_results_used_for_selection": false,
+  "formal_program_changed": false
+}

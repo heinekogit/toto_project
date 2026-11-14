@@ -1,0 +1,9 @@
+{
+  "n": 78,
+  "actual_D": 18,
+  "AUC_D_strength": 0.5537037037037037,
+  "AUC_P_D": 0.5314814814814814,
+  "mean_strength_D": 1.166639643966642,
+  "mean_strength_nonD": 1.1335383690100957,
+  "in_sample_exploratory": true
+}

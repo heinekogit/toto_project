@@ -1,0 +1,6 @@
+﻿scope,quality,matches,detail
+registry unique fixtures,A,78,試合前保存・結果あり
+registry unique fixtures,B,0,該当なし
+registry unique fixtures,C,13,第1672回、結果待ち
+additional distinct retrospective matches,C,49,事後再計算、精度評価から除外
+known distinct fixtures total,A/B/C,140,78+13+49。バックアップの重複不明分は算入しない

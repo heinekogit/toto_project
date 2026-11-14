@@ -1,0 +1,33 @@
+{
+  "source_hashes": {
+    "/Users/dev_tomo/Desktop/tt_prj_restart/BUYPLAN_V4_0.md": "82ed9b45346b37c73b458e95004a642d66590bde884c0821fbfba2fcca433c38",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase3/scenario_structure.csv": "c8e21a68b80e111d8f485cc6339532ef9d0c457139eaafb0766c2238e5924e78",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase4b_stage1/ticket_probabilities.csv": "38033731b34ce9400e411769c1ce5aa3065d8b1fe98a168f3755609640cadce6",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/forecasts.jsonl": "89e31ed28315a787ffe224cff5219cd00255e9220082b38b76281fa0dff87e3f",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/results.jsonl": "5020ee262a847a58447a34f87df99443d0163dacb4c3e1e498e47805c96018be"
+  },
+  "rounds": [
+    "toto1660",
+    "toto1663",
+    "toto1664",
+    "toto1665",
+    "toto1668",
+    "toto1670"
+  ],
+  "matches": 78,
+  "states_per_round": 17,
+  "scenario_deltas": [
+    0,
+    0.1,
+    0.2
+  ],
+  "scenario_weights": "equal within compared scenario set; hypothetical, not empirical frequency",
+  "independent_aggregation": "per-match arithmetic mean HDA, then product across matches",
+  "common_aggregation": "mean of 17 joint 13-match probability distributions",
+  "robust_algorithm": "deterministic greedy, compare baseline top10 as second start, plus 12 swap sweeps on union of each state top100; local heuristic, no global optimum claim",
+  "discarded_v30_used": false,
+  "fixed_HDA_counts_used": false,
+  "actual_results_used_for_selection": false,
+  "originals_unchanged": true,
+  "official_buyplan_unchanged": true
+}

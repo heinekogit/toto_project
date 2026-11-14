@@ -1,0 +1,62 @@
+{
+  "rounds": [
+    "toto1660",
+    "toto1663",
+    "toto1664",
+    "toto1665",
+    "toto1668",
+    "toto1670"
+  ],
+  "matches": 78,
+  "score_grid": "independent Poisson 0..10; normalize retained grid",
+  "matrix_tail_max": 8.579915956929973e-06,
+  "final_minus_raw_PD_max": 0.03154438486496053,
+  "saved_score_error_max": 9.71445146547012e-17,
+  "source_hashes": [
+    {
+      "round": "toto1660",
+      "forecast_sha256": "10a971e5783138a46d7018c18dec4ed2c27a7c936554c7bfa018d5ce118e6455",
+      "manifest_sha256": "8653279e65cf255795eb190eafe60572e5497005baf8ecc5ad883887d963caff",
+      "created_at": "2026-10-10T11:11:18+09:00",
+      "matches": 13
+    },
+    {
+      "round": "toto1663",
+      "forecast_sha256": "b20040116f63cdf8d4d8d9e292e6c5aa3be67ef3b87618a3e3a74ebbb38ee9d7",
+      "manifest_sha256": "c6f44cd0a9d084537ad3fac00ddfc50db2bb949339c095d76fdc1ea7efa0a9e4",
+      "created_at": "2026-10-17T09:53:20+09:00",
+      "matches": 13
+    },
+    {
+      "round": "toto1664",
+      "forecast_sha256": "75580295a3107b14620efebeb2c9b7911c90ed889a99c1942595ccd58331dc18",
+      "manifest_sha256": "19c7e42d97d5198258b800b004ba52af918fe6c400dad6579493872cdbb3b002",
+      "created_at": "2026-10-21T09:14:32+09:00",
+      "matches": 13
+    },
+    {
+      "round": "toto1665",
+      "forecast_sha256": "4037a7f331a223d96858f6c2f47108d6bd1b1493df3006dd9142cc440a440fee",
+      "manifest_sha256": "e17fc9146455e3979455d44da52ec2113021685bca1f29ecdb292ead1fc15936",
+      "created_at": "2026-10-24T09:49:23+09:00",
+      "matches": 13
+    },
+    {
+      "round": "toto1668",
+      "forecast_sha256": "5d48fcdb521f03d261900afddc03ea8d1a6a93808654135e620431958db7537a",
+      "manifest_sha256": "3a0bd233a5b98004f72e846797dfee942be4e2adfd2a33e2bcf06916167cb4ea",
+      "created_at": "2026-10-31T10:30:24+09:00",
+      "matches": 13
+    },
+    {
+      "round": "toto1670",
+      "forecast_sha256": "7efaa248066da4a9d5127b429a75d659339fe6869079e81facf335ccc0ee16bf",
+      "manifest_sha256": "7d95afac6f05c1b8639e8b808d2cdac3e7e357d2e73449b190e42302ab606a1b",
+      "created_at": "2026-11-07T08:22:38+09:00",
+      "matches": 13
+    }
+  ],
+  "actual_results_used": false,
+  "model_changed": false,
+  "buyplan_changed": false
+}

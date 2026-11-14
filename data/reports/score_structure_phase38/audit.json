@@ -1,0 +1,33 @@
+{
+  "original_forecasts": 78,
+  "nonD": 60,
+  "reversals": 23,
+  "source_hashes": {
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv": "10a971e5783138a46d7018c18dec4ed2c27a7c936554c7bfa018d5ce118e6455",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv": "b20040116f63cdf8d4d8d9e292e6c5aa3be67ef3b87618a3e3a74ebbb38ee9d7",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv": "75580295a3107b14620efebeb2c9b7911c90ed889a99c1942595ccd58331dc18",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv": "4037a7f331a223d96858f6c2f47108d6bd1b1493df3006dd9142cc440a440fee",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv": "5d48fcdb521f03d261900afddc03ea8d1a6a93808654135e620431958db7537a",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv": "7efaa248066da4a9d5127b429a75d659339fe6869079e81facf335ccc0ee16bf"
+  },
+  "all_base_lambdas_reproduced": true,
+  "all_final_probabilities_reproduced": true,
+  "numerical_feature_splits": 7,
+  "binary_feature_diagnostics": 7,
+  "optimized_thresholds": 0,
+  "new_coefficients": 0,
+  "original_files_unchanged": true,
+  "missing_information": [
+    "No causal identification of individual lambda error from one realized score",
+    "No independent unused complete round",
+    "No historical per-opponent strength adjustment in saved base formula",
+    "No separate explicit home-advantage term in inspected Next base formula"
+  ],
+  "verification": {
+    "unit_tests": 4,
+    "passed": 4,
+    "command": "./scripts/.venv/bin/python scripts/next_model/test_phase38_ha_diagnostics.py",
+    "html_local_links": "all exist",
+    "source_hashes_rechecked": true
+  }
+}

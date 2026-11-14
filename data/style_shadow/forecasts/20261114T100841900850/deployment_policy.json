@@ -1,0 +1,8 @@
+{
+  "version": "style_residual_deployment_v1",
+  "enabled": true,
+  "untrained": "zero_correction",
+  "coefficient_update": "prior_results_only_with_time_holdout_selection",
+  "rollback": "set enabled=false; retain baseline and continue observations",
+  "started_on": "2026-11-03"
+}

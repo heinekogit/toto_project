@@ -24,6 +24,18 @@ USER_AGENT = (
     "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
 )
 
+# J1 tracking-based styles absent from the original Excel acquisition list.
+# J2 does not publish these menu entries. Keep Excel entries authoritative.
+J1_ADDITIONAL_TEAM_STYLES = {
+    "ラインブレイクラン": "45",
+    "ハイプレッシング": "66",
+    "ミドルプレッシング": "67",
+    "カウンタープレス": "69",
+    "ハイブロック": "81",
+    "ミドルブロック": "82",
+    "ローブロック": "83",
+}
+
 
 def latest_prediction_snapshot(league: str, season_year: int) -> Path | None:
     league_key = _league_key(league)
@@ -89,6 +101,32 @@ def _league_key(value: str) -> str:
     raise ValueError(f"unknown league label: {value}")
 
 
+def supplement_team_style_targets(targets: List[Target]) -> List[Target]:
+    """Complete J1 style coverage when the workbook requests J1 styles.
+
+    Apply before CLI filtering, so --league and --data-name also govern these
+    entries. Do not expand a custom workbook that does not request J1 styles.
+    """
+    style_targets = [
+        t for t in targets
+        if t.league == "j1" and t.data_name == "チームスタイル指標"
+    ]
+    if not style_targets:
+        return list(targets)
+    names = {t.item_name for t in style_targets}
+    codes = {
+        dict(parse_qsl(urlsplit(t.url).query)).get("data")
+        for t in style_targets
+    }
+    additions = [
+        Target("j1", "チームスタイル指標", name,
+               f"https://www.football-lab.jp/summary/team_style/j1?data={code}")
+        for name, code in J1_ADDITIONAL_TEAM_STYLES.items()
+        if name not in names and code not in codes
+    ]
+    return [*targets, *additions]
+
+
 def load_targets(xlsx_path: Path) -> List[Target]:
     wb = load_workbook(xlsx_path, read_only=True, data_only=True)
     ws = wb[wb.sheetnames[0]]
@@ -120,7 +158,8 @@ def load_targets(xlsx_path: Path) -> List[Target]:
                 url=url,
             )
         )
-    return targets
+    wb.close()
+    return supplement_team_style_targets(targets)
 
 
 def write_index_csv(path: Path, rows: List[dict]) -> None:
@@ -236,7 +275,7 @@ def fetch_and_save(
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="lab情報一覧.xlsx を読んで Football LAB HTML を保存する")
+    p = argparse.ArgumentParser(description="lab情報一覧.xlsx を読み、J1の不足チームスタイル7項目を自動補完して Football LAB HTML を保存する")
     p.add_argument("--xlsx", default=str(DEFAULT_XLSX), help="既定: data/manual/lab情報一覧.xlsx")
     p.add_argument("--out-root", default=str(DEFAULT_OUT_ROOT), help="既定: external_contents")
     p.add_argument("--date", default=datetime.now().strftime("%Y%m%d"), help="保存日ディレクトリ。既定: 今日")
@@ -294,6 +333,12 @@ def main() -> None:
             "（indexを確認し、不完全なリーグはsnapshot化しないでください）"
         )
     if not args.dry_run:
+        requested = {t.item_name for t in targets if t.league == "j1" and t.data_name == "チームスタイル指標"}
+        if set(J1_ADDITIONAL_TEAM_STYLES).issubset(requested):
+            import sys
+            sys.path.insert(0, str(ROOT_DIR / "scripts/next_model"))
+            from style_input_collection import collect
+            collect(out_root, snapshot_date, args.season_year)
         leagues = sorted({target.league for target in targets})
         print_snapshot_commands(out_root, snapshot_date, leagues, args.season_year)
 

@@ -12,13 +12,13 @@ DATA_DIR = "/Users/dev_tomo/Desktop/tt_prj_restart/data" # 変更
 MANUAL_DIR = os.path.join(DATA_DIR, "manual")
 SEASON_YEAR = os.environ.get("SEASON_YEAR", "2025")
 LEAGUE = os.environ.get("LEAGUE", "j1").lower()
-UPCOMING_CSV = os.path.join(DATA_DIR, f"{LEAGUE}_{SEASON_YEAR}_upcoming.csv")
+UPCOMING_CSV = os.environ.get("PREDICTION_UPCOMING_CSV", os.path.join(DATA_DIR, f"{LEAGUE}_{SEASON_YEAR}_upcoming.csv"))
 LATEST_RESULTS_CSV = os.path.join(DATA_DIR, f"{LEAGUE}_{SEASON_YEAR}_latest_results.csv")
 TEAM_TRAVEL_DISTANCES_CSV = os.path.join(MANUAL_DIR, "team_travel_distances.csv")
 if not os.path.exists(TEAM_TRAVEL_DISTANCES_CSV):
     TEAM_TRAVEL_DISTANCES_CSV = os.path.join(DATA_DIR, "team_travel_distances.csv")
 HOME_STADIUMS_XLSX = os.path.join(MANUAL_DIR, "ホーム所在地一覧.xlsx")
-OUTPUT_FATIGUE_CSV = os.path.join(DATA_DIR, f"team_fatigue_scores_{LEAGUE}_{SEASON_YEAR}.csv")
+OUTPUT_FATIGUE_CSV = os.environ.get("FATIGUE_OUTPUT_CSV", os.path.join(DATA_DIR, f"team_fatigue_scores_{LEAGUE}_{SEASON_YEAR}.csv"))
 ACL_SCHEDULE_CSV = os.environ.get("ACL_SCHEDULE_CSV", os.path.join(MANUAL_DIR, "acl_schedule.csv"))
 EXTERNAL_MATCH_EVENTS_CSV = os.environ.get("EXTERNAL_MATCH_EVENTS_CSV", os.path.join(MANUAL_DIR, "external_match_events.csv"))
 
@@ -229,7 +229,7 @@ def dedupe_matches(df_matches):
     return df
 
 
-def load_acl_team_events(path):
+def load_acl_team_events(path, *, as_of_date=None, lookback_days=45):
     required_cols = {"match_date", "team"}
     empty_events = pd.DataFrame({
         "datetime": pd.Series(dtype="datetime64[ns]"),
@@ -240,29 +240,69 @@ def load_acl_team_events(path):
     if not path or not os.path.exists(path):
         print(f"[INFO] ACL日程ファイルなし: {path}")
         return empty_events
-    try:
-        df = normalize_acl_schedule(path)
-    except Exception as e:
-        print(f"[WARN] ACL日程の読込失敗: {path} error={e}")
+    # The user-maintained fixture list predates the later status/source columns.
+    # Keep recent completed fixtures and future scheduled fixtures; old archive
+    # rows are outside the current fatigue horizon and may use obsolete venues.
+    today = pd.Timestamp(as_of_date).normalize() if as_of_date is not None else pd.Timestamp.today().normalize()
+    raw = pd.read_csv(path, encoding="utf-8-sig")
+    if "match_date" not in raw.columns:
+        raise ValueError("ACL日程に match_date 列がありません")
+    dates = pd.to_datetime(raw["match_date"], errors="coerce")
+    if dates.isna().any():
+        raise ValueError(f"ACL日程の日付が不正です: rows={(dates[dates.isna()].index + 2).tolist()}")
+    recent = raw.loc[dates.ge(today - pd.Timedelta(days=lookback_days))].copy()
+    skipped = len(raw) - len(recent)
+    if skipped:
+        print(f"[INFO] ACL旧日程を計算対象期間外として除外: rows={skipped} cutoff={(today - pd.Timedelta(days=lookback_days)).date()}")
+    if recent.empty:
         return empty_events
+    completed = dates.loc[recent.index].lt(today)
+    if "status" in recent.columns:
+        unchecked = completed & ~recent["status"].astype(str).str.strip().str.lower().eq("confirmed")
+        if unchecked.any():
+            details = recent.loc[unchecked, [c for c in ("match_date", "home_team", "away_team") if c in recent]].to_dict("records")
+            raise ValueError(f"実施済みACL日程の確認が必要です: {details}")
+    elif completed.any():
+        print(f"[WARN] ACL実施確認列なし。日程記載を使用します: rows={int(completed.sum())}")
+    if "source" in recent.columns and "status" in recent.columns:
+        confirmed = recent["status"].astype(str).str.strip().str.lower().eq("confirmed")
+        missing_source = confirmed & recent["source"].fillna("").astype(str).str.strip().eq("")
+        if missing_source.any():
+            raise ValueError("確認済みACL試合には source が必要です")
+    from tempfile import TemporaryDirectory
+    try:
+        with TemporaryDirectory() as directory:
+            filtered_path = os.path.join(directory, "acl_schedule.csv")
+            recent.to_csv(filtered_path, index=False)
+            df = normalize_acl_schedule(filtered_path)
+    except Exception as e:
+        raise ValueError(f"ACL日程の読込失敗: {path}: {e}") from e
 
     if not required_cols.issubset(df.columns):
         missing = sorted(required_cols - set(df.columns))
-        print(f"[WARN] ACL日程の必須列不足: missing={missing} path={path}")
-        return empty_events
+        raise ValueError(f"ACL日程の必須列不足: missing={missing} path={path}")
 
-    if "status" not in df.columns:
-        raise ValueError("ACL日程に status 列がありません。実施確認済みの試合だけを疲労に使ってください")
-    out = df[df["status"].astype(str).str.strip().str.lower().eq("confirmed")].copy()
+    out = df.copy()
     if out.empty:
         return empty_events
-    if "source" not in out.columns or out["source"].isna().any() or out["source"].astype(str).str.strip().eq("").any():
-        raise ValueError("確認済みACL試合には source が必要です")
+    past_status = "confirmed" if "status" in recent.columns else "ledger"
+    out["status"] = np.where(out["match_date"].lt(today), past_status, "scheduled")
+    if "source" not in out.columns:
+        out["source"] = ""
+    out["source"] = out["source"].fillna("").astype(str).str.strip()
+    out.loc[out["source"].eq(""), "source"] = str(path)
     out["team"] = out["team"].astype(str).str.strip()
     out["datetime"] = pd.to_datetime(out["match_date"], errors="coerce")
     # An ACL appearance is an ordinary extra fixture. Travel uses the same
     # distance weight as league travel; no tournament-specific grade is added.
-    out["event_load"] = pd.to_numeric(out["distance_km"], errors="coerce").fillna(0.0) * TRAVEL_DISTANCE_WEIGHT
+    if "distance_km" not in out.columns:
+        raise ValueError(f"ACL移動距離が未取得: distance_km列なし path={path}")
+    distances = pd.to_numeric(out["distance_km"], errors="coerce")
+    invalid = distances.isna() | ~np.isfinite(distances) | distances.lt(0)
+    if invalid.any():
+        details = out.loc[invalid, ["match_date", "team", "distance_km"]].to_dict("records")
+        raise ValueError(f"ACL移動距離が不明または不正。疲労計算を停止します: {details} path={path}")
+    out["event_load"] = distances * TRAVEL_DISTANCE_WEIGHT
     out = out.dropna(subset=["datetime"])
     out = out[out["team"].ne("")]
     if out.empty:
@@ -277,7 +317,7 @@ def load_acl_team_events(path):
 
 def calc_rest_fatigue(days_since_last_match):
     if pd.isna(days_since_last_match):
-        return 0.0
+        return np.nan
     days = float(days_since_last_match)
     if days <= 0:
         return 0.0
@@ -299,7 +339,7 @@ def push_recent_load(team_recent_loads, team, load):
     if not team:
         return
     history = list(team_recent_loads.get(team, []))
-    history.insert(0, float(max(0.0, load)))
+    history.insert(0, float(max(0.0, load)) if pd.notna(load) else np.nan)
     team_recent_loads[team] = history[: len(RECENT_MATCH_CARRY_WEIGHTS)]
 
 
@@ -330,7 +370,7 @@ def calculate_fatigue(df_matches, travel_distances_df, external_team_events=None
                     continue
                 team_last_match_date[team] = row["datetime"]
                 load = row.get("event_load", np.nan)
-                push_recent_load(team_recent_loads, team, load if pd.notna(load) else 0.0)
+                push_recent_load(team_recent_loads, team, load)
                 team_events.setdefault(team, []).append((row["datetime"], str(row.get("event_type", "external")), pd.notna(load)))
                 team_external_details.setdefault(team, []).append({
                     'datetime': row['datetime'].isoformat(), 'competition': str(row.get('event_type', 'external')),
@@ -338,7 +378,7 @@ def calculate_fatigue(df_matches, travel_distances_df, external_team_events=None
                     'core_usage': float(row['core_usage']) if pd.notna(row.get('core_usage')) else None,
                     'source': str(row.get('source', ACL_SCHEDULE_CSV)),
                     'event_load': float(load) if pd.notna(load) else None,
-                    'participation_status': 'confirmed' if row.get('status') == 'confirmed' else 'scheduled',
+                    'participation_status': str(row.get('status', 'scheduled')),
                     'minutes_status': 'confirmed' if pd.notna(row.get('minutes_played')) else 'unknown',
                     'rotation_status': 'confirmed' if pd.notna(row.get('core_usage')) else 'unknown',
                     'extra_time_minutes': float(row['extra_time_minutes']) if pd.notna(row.get('extra_time_minutes')) else (
@@ -356,21 +396,21 @@ def calculate_fatigue(df_matches, travel_distances_df, external_team_events=None
             if team in team_last_match_date and match_datetime - team_last_match_date[team] > pd.Timedelta(days=14):
                 team_recent_loads[team] = []
 
-        home_rest_fatigue = 0.0
+        home_rest_fatigue = np.nan
         if home_team in team_last_match_date:
             days_since_last_match = (match_datetime - team_last_match_date[home_team]).total_seconds() / 86400
             home_rest_fatigue = calc_rest_fatigue(days_since_last_match)
-        home_recent_load_carry = calc_recent_carry(team_recent_loads.get(home_team, []))
+        home_recent_load_carry = calc_recent_carry(team_recent_loads.get(home_team, [])) if home_team in team_last_match_date else np.nan
         home_travel_fatigue = 0.0
         home_away_condition_penalty = 0.0
         home_fatigue = home_rest_fatigue + home_recent_load_carry
 
-        away_rest_fatigue = 0.0
+        away_rest_fatigue = np.nan
         if away_team in team_last_match_date:
             days_since_last_match = (match_datetime - team_last_match_date[away_team]).total_seconds() / 86400
             away_rest_fatigue = calc_rest_fatigue(days_since_last_match)
-        away_recent_load_carry = calc_recent_carry(team_recent_loads.get(away_team, []))
-        away_travel_fatigue = 0.0
+        away_recent_load_carry = calc_recent_carry(team_recent_loads.get(away_team, [])) if away_team in team_last_match_date else np.nan
+        away_travel_fatigue = np.nan
         away_travel_distance_km = np.nan
         travel_lookup_status = "matrix_empty" if travel_distances_df.empty else "team_not_found"
 
@@ -413,7 +453,8 @@ def calculate_fatigue(df_matches, travel_distances_df, external_team_events=None
             'travel_lookup_status': travel_lookup_status,
             'home_fatigue_score': round(home_fatigue, 2),
             'away_fatigue_score': round(away_fatigue, 2),
-            'fatigue_measurement_version': 'conditions_v2',
+            'fatigue_measurement_version': 'conditions_v3',
+            'fatigue_generated_at': pd.Timestamp.now(tz='Asia/Tokyo').isoformat(),
             'external_schedule_coverage': 'partial' if external_team_events is not None and not external_team_events.empty else 'unknown',
             'travel_distance_basis': 'home_base_to_opponent_base_proxy',
         })
@@ -431,7 +472,16 @@ def calculate_fatigue(df_matches, travel_distances_df, external_team_events=None
                 f'{side}_external_events_json': json.dumps([e for e in team_external_details.get(team, [])
                     if pd.Timedelta(0) < match_datetime - pd.Timestamp(e['datetime']) <= pd.Timedelta(days=14)], ensure_ascii=False),
             })
-            team_events.setdefault(team, []).append((match_datetime, 'league', True))
+            record = fatigue_scores[-1]
+            components = [record[f'{side}_{part}'] for part in
+                          ['rest_fatigue', 'recent_load_carry', 'travel_fatigue', 'away_condition_penalty']]
+            incomplete = any(pd.isna(v) for v in components) or record[f'{side}_external_load_unknown']
+            record[f'{side}_fatigue_known_subtotal'] = sum(v for v in components if pd.notna(v))
+            record[f'{side}_fatigue_status'] = 'partial' if incomplete else ('known_zero' if record[f'{side}_fatigue_score']==0 else 'known_load')
+            if incomplete:
+                record[f'{side}_fatigue_score'] = np.nan
+            # A partially observed historical load is not silently turned into a complete load.
+            team_events.setdefault(team, []).append((match_datetime, 'league', not incomplete))
 
         team_last_match_date[home_team] = match_datetime
         team_last_match_date[away_team] = match_datetime
@@ -506,17 +556,10 @@ def validate_fatigue_output(frame):
                 'home_fatigue_score', 'away_fatigue_score', 'fatigue_measurement_version'}
     if frame.empty or not required.issubset(frame):
         raise ValueError('FATIGUE_QC: empty or legacy output; regenerate fatigue data')
-    bad = ~frame.travel_lookup_status.eq('hit')
-    distance = pd.to_numeric(frame.away_travel_distance_km, errors='coerce')
-    bad |= distance.isna() | ~np.isfinite(distance) | distance.lt(0)
-    for col in ['home_fatigue_score', 'away_fatigue_score']:
-        values = pd.to_numeric(frame[col], errors='coerce')
-        bad |= values.isna() | ~np.isfinite(values) | values.lt(0)
-    bad |= ~frame.fatigue_measurement_version.eq('conditions_v2')
-    if bad.any():
-        examples = frame.loc[bad, ['home_team', 'away_team', 'travel_lookup_status']].head(8).to_dict('records')
-        raise ValueError(f'FATIGUE_QC: {int(bad.sum())}/{len(frame)} invalid rows: {examples}')
-    print(f'FATIGUE_QC: PASS travel={len(frame)}/{len(frame)} version=conditions_v2')
+    from fatigue_merge import validate_prediction_fatigue
+    validate_prediction_fatigue(frame)
+    print(f'FATIGUE_QC: PASS rows={len(frame)}; missing loads explicitly held')
+
 
 
 if __name__ == "__main__":

@@ -33,11 +33,12 @@ def validate_merge(matches, fatigue):
     return out.drop(columns='_merge'), rescued
 
 
-def build(league, season, output_dir):
+def build(league, season, output_dir, upcoming_csv=None):
     module = fatigue_module()
     sources = []
     for kind, priority in [('upcoming', 0), ('latest_results', 1)]:
-        frame = pd.read_csv(ROOT / f'data/{league}_{season}_{kind}.csv')
+        path = upcoming_csv if kind == 'upcoming' and upcoming_csv else ROOT / f'data/{league}_{season}_{kind}.csv'
+        frame = pd.read_csv(path)
         frame['__source_priority'] = priority
         sources.append(frame)
     matches = module.dedupe_matches(pd.concat(sources, ignore_index=True))
@@ -72,9 +73,10 @@ def main():
     parser.add_argument('--season', type=int, required=True)
     parser.add_argument('--leagues', nargs='+', default=['j1', 'j2'])
     parser.add_argument('--output-dir', type=Path, default=ROOT / 'data/reports/fatigue_qc')
+    parser.add_argument('--upcoming-csv', type=Path, help='totoの大会試合を加えた予測用日程CSV')
     args = parser.parse_args()
     for league in args.leagues:
-        _, html = build(league.lower(), args.season, args.output_dir)
+        _, html = build(league.lower(), args.season, args.output_dir, args.upcoming_csv)
         print(f'OK: {html}')
 
 

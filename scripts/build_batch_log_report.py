@@ -35,8 +35,8 @@ ISSUE_PATTERNS = [
     ),
     (
         re.compile(r"\[MERGE_QC\]\[WARN\]\s+absence_", re.I),
-        "欠場情報の未登録/不一致",
-        "欠場管理データに該当するチーム・試合日の行がありません。欠場者なしと未確認の両方を含みます。",
+        "その試合日に欠場台帳の該当行なし",
+        "欠場者のみを載せる台帳では、該当行なしは通常の結果でもあります。台帳の取込失敗や選手名不一致は別に確認してください。",
     ),
     (
         re.compile(r"\[MERGE_QC\]\[WARN\]\s+weather_cache_", re.I),
@@ -89,7 +89,29 @@ def _escape(s: str) -> str:
     return html.escape(str(s), quote=True)
 
 
-def parse_log(lines: list[str]) -> dict:
+def _weather_scope_counts(path: str, expected: int, asof: dt.date, lookahead: int) -> tuple[int, int] | None:
+    """Count forecast-window gaps; keep warnings when the QC CSV cannot be verified."""
+    if not path or not os.path.isfile(path):
+        return None
+    try:
+        with open(path, newline="", encoding="utf-8-sig") as f:
+            rows = list(csv.DictReader(f))
+        if len(rows) != expected:
+            return None
+        horizon = asof + dt.timedelta(days=lookahead)
+        active = 0
+        for row in rows:
+            value = row.get("datetime", "")
+            if not value:
+                return None
+            match_date = dt.date.fromisoformat(value[:10])
+            active += asof <= match_date <= horizon
+        return active, expected - active
+    except (OSError, ValueError, csv.Error):
+        return None
+
+
+def parse_log(lines: list[str], report_date: dt.date | None = None) -> dict:
     steps = []
     current_step = None
     current_league = "共通"
@@ -100,6 +122,9 @@ def parse_log(lines: list[str]) -> dict:
     issue_counter = Counter()
     issue_examples = {}
     merge_details = []
+    absence_import = None
+    weather_asof = {}
+    weather_lookahead = {}
 
     step_line_re = re.compile(r"^\[STEP\]\s+([^:]+)\s*:\s*(.*)$")
     result_line_re = re.compile(r"^\[RESULT\]\s+([^:]+)\s*:\s*(OK|ERROR)\s*$")
@@ -119,6 +144,11 @@ def parse_log(lines: list[str]) -> dict:
             current_league = m.group(1).strip().lower()
             current_step = None
             continue
+
+        weather_command = re.search(r"WEATHER_ASOF_DATE=(\d{4}-\d{2}-\d{2}).*?--lookahead-days\s+(\d+)", raw)
+        if weather_command:
+            weather_asof[current_league] = dt.date.fromisoformat(weather_command.group(1))
+            weather_lookahead[current_league] = int(weather_command.group(2))
 
         m = step_line_re.match(raw)
         if m:
@@ -174,6 +204,14 @@ def parse_log(lines: list[str]) -> dict:
         if summary_count_only:
             continue
 
+        import_match = re.search(r"\[INFO\] matched=(\d+), fuzzy=(\d+), not_found=(\d+)", raw)
+        if import_match and current_step and current_step["name"] == "build_absence_impact.py":
+            absence_import = {
+                "matched": int(import_match.group(1)),
+                "fuzzy": int(import_match.group(2)),
+                "not_found": int(import_match.group(3)),
+            }
+
         m = merge_warn_re.search(raw)
         if m:
             stage = m.group(1).strip()
@@ -204,6 +242,38 @@ def parse_log(lines: list[str]) -> dict:
                 issue_counter[(issue_name, issue_hint)] += 1
                 issue_examples.setdefault((issue_name, issue_hint), []).append((idx, raw))
 
+    weather_exclusions = []
+    active_details = []
+    excluded_lines = set()
+    for detail in merge_details:
+        if detail["stage"] == "weather_cache_finished":
+            weather_exclusions.append({**detail, "reason": "終了済み試合（予報取得の対象外）"})
+            excluded_lines.add(detail["line"])
+            continue
+        if detail["stage"] == "weather_cache_future":
+            asof = weather_asof.get(detail["league"], report_date)
+            if asof is not None:
+                counts = _weather_scope_counts(
+                    detail["csv_path"], detail["count"], asof,
+                    weather_lookahead.get(detail["league"], 7),
+                )
+                if counts is not None:
+                    active_count, excluded_count = counts
+                    if excluded_count:
+                        weather_exclusions.append({**detail, "count": excluded_count, "reason": "予報取得範囲外"})
+                    if not active_count:
+                        excluded_lines.add(detail["line"])
+                        continue
+                    detail = {**detail, "count": active_count}
+        active_details.append(detail)
+    merge_details = active_details
+    warnings = [(idx, raw) for idx, raw in warnings if idx not in excluded_lines]
+    for key in list(issue_examples):
+        issue_examples[key] = [(idx, raw) for idx, raw in issue_examples[key] if idx not in excluded_lines]
+        issue_counter[key] = len(issue_examples[key])
+        if not issue_counter[key]:
+            del issue_counter[key]
+
     if not result_counts:
         # run_batch_matchday.sh のように [RESULT] がないログ向け
         result_counts["ERROR"] = len(errors)
@@ -228,6 +298,8 @@ def parse_log(lines: list[str]) -> dict:
         "result_counts": result_counts,
         "top_issues": top_issues,
         "merge_details": merge_details,
+        "weather_exclusions": weather_exclusions,
+        "absence_import": absence_import,
     }
 
 
@@ -284,6 +356,16 @@ def render_html(parsed: dict, log_path: str, title: str) -> str:
     parts.append(f"<tr><th>エラー行数</th><td>{len(parsed['errors'])}</td></tr>")
     parts.append("</tbody></table>")
 
+    absence = parsed.get("absence_import")
+    if absence:
+        failed = absence["not_found"]
+        parts.append("<h2>欠場台帳の取込結果</h2>")
+        parts.append(
+            f"<p class='{'err' if failed else 'warn'}'>"
+            f"選手名一致 {absence['matched']}件、曖昧一致 {absence['fuzzy']}件、未一致 {failed}件。"
+            "試合日に該当する欠場行がないことは、取込失敗を意味しません。</p>"
+        )
+
     if parsed["preflight"]:
         parts.append("<h2>疎通チェック</h2><table><thead><tr><th>対象</th><th>状態</th><th>行</th></tr></thead><tbody>")
         for p in parsed["preflight"]:
@@ -311,7 +393,7 @@ def render_html(parsed: dict, log_path: str, title: str) -> str:
             ex = issue["example"]
             ex_text = f"L{ex[0]}: {ex[1]}" if ex else ""
             parts.append(
-                f"<tr><td class='err'>{_escape(issue['name'])}</td><td>{issue['count']}</td>"
+                f"<tr><td class='warn'>{_escape(issue['name'])}</td><td>{issue['count']}</td>"
                 f"<td>{_escape(issue['hint'])}</td><td class='mono'>{_escape(ex_text)}</td></tr>"
             )
         parts.append("</tbody></table>")
@@ -336,6 +418,17 @@ def render_html(parsed: dict, log_path: str, title: str) -> str:
                 f"<tr><td>{_escape(detail['category'])}</td><td>{_escape(detail['league'])}</td>"
                 f"<td class='mono'>{_escape(detail['stage'])}</td><td>{detail['count']}</td>"
                 f"<td class='mono'>{example_html}</td><td>{csv_html}</td></tr>"
+            )
+        parts.append("</tbody></table>")
+
+    if parsed.get("weather_exclusions"):
+        parts.append("<h2>天候欠損の参考情報（警告対象外）</h2>")
+        parts.append("<p>終了済み試合と予報取得範囲外の試合は、今回の天候取得の失敗として数えません。</p>")
+        parts.append("<table><thead><tr><th>リーグ</th><th>処理</th><th>対象外の理由</th><th>件数</th></tr></thead><tbody>")
+        for detail in parsed["weather_exclusions"]:
+            parts.append(
+                f"<tr><td>{_escape(detail['league'])}</td><td class='mono'>{_escape(detail['stage'])}</td>"
+                f"<td>{_escape(detail['reason'])}</td><td>{detail['count']}</td></tr>"
             )
         parts.append("</tbody></table>")
 
@@ -366,7 +459,7 @@ def main() -> int:
     with open(args.input, "r", encoding="utf-8", errors="replace") as f:
         lines = f.readlines()
 
-    parsed = parse_log(lines)
+    parsed = parse_log(lines, dt.date.fromtimestamp(os.path.getmtime(args.input)))
     report = render_html(parsed, args.input, args.title)
 
     out_dir = os.path.dirname(os.path.abspath(args.output))

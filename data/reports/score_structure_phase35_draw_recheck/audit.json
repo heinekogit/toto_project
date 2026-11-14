@@ -1,0 +1,28 @@
+{
+  "source_hashes": {
+    "data/reports/score_structure_phase35/diagnostics_78.csv": "ffe5dbf9c1f4830bed6400649ff41b2db749a12b98f507dffe724dfb624019b5",
+    "data/reports/score_structure_phase35/branch_candidates.csv": "ff98b488b0607df95239c1e25f694a3e14dd5155a60eb9d17b2ea44be52363e7",
+    "data/reports/score_structure_phase4a_audit/forecast_result_join.csv": "8accccf12026361b85b7ce100221d7b61624c9f1535c4aea826bd4e58343111d"
+  },
+  "rounds": [
+    "toto1660",
+    "toto1663",
+    "toto1664",
+    "toto1665",
+    "toto1668",
+    "toto1670"
+  ],
+  "all_78_are_development_data": true,
+  "target_results_used_to_generate_target_tickets": false,
+  "training_only_prior_rounds": true,
+  "condition_was_discovered_on_all_78": true,
+  "independent_validation": false,
+  "pseudo_count_sensitivity": [
+    1,
+    3,
+    10
+  ],
+  "formal_model_or_buyplan_changed": false,
+  "D_argmax_used_as_branch_gate": false,
+  "D_minimum_ticket_quota": false
+}

@@ -1,0 +1,81 @@
+{
+  "mode": "v4.0 Step 4 research hypothesis; not adopted",
+  "condition_S_version": "condition_S_p00_le_median_p11_ge_median_v1",
+  "condition_S_matches": [
+    1
+  ],
+  "median_P_0_0": 0.07623208540442791,
+  "median_P_1_1": 0.12492264156839844,
+  "hypothesis_D_odds_factor": 1.5,
+  "hypothesis_effect_state_weight": 0.25,
+  "state_definition": "all S matches affected together; mixture of full 13-match distributions",
+  "selection": "exact top 10 of hypothesis mixture among 3^13 outcomes",
+  "official_final_model_prob13": 1.3846772389424703e-05,
+  "shadow_final_model_prob13": 0.00015011217000039353,
+  "official_effect_state_prob13": 1.2983895778489871e-05,
+  "shadow_effect_state_prob13": 0.00013265179298518063,
+  "official_hypothesis_prob13": 1.3631053236690994e-05,
+  "shadow_hypothesis_prob13": 0.00014574707574659031,
+  "official_tickets": [
+    "DAAADAAAHAHDA",
+    "HDHHHAHHHAADD",
+    "DAHHAHADDHHHD",
+    "HDDADHAHAHAHH",
+    "AHAHAHHAAHAHD",
+    "HAHHHDAHAHDDH",
+    "HADDAHDHADAAA",
+    "AHDDHDHHDDDAA",
+    "AHAAADDDAHDHH",
+    "DDHADADDHDHAH"
+  ],
+  "shadow_tickets": [
+    "HAHHAHAHAHAHH",
+    "HAHAAHAHAHAHH",
+    "HAHHAAAHAHAHH",
+    "HAHHAHAHAHAAH",
+    "HAHAAAAHAHAHH",
+    "HAHHHHAHAHAHH",
+    "AAHHAHAHAHAHH",
+    "HHHHAHAHAHAHH",
+    "HAHAAHAHAHAAH",
+    "HAAHAHAHAHAHH"
+  ],
+  "added_tickets": [
+    "AAHHAHAHAHAHH",
+    "HAAHAHAHAHAHH",
+    "HAHAAAAHAHAHH",
+    "HAHAAHAHAHAAH",
+    "HAHAAHAHAHAHH",
+    "HAHHAAAHAHAHH",
+    "HAHHAHAHAHAAH",
+    "HAHHAHAHAHAHH",
+    "HAHHHHAHAHAHH",
+    "HHHHAHAHAHAHH"
+  ],
+  "removed_tickets": [
+    "AHAAADDDAHDHH",
+    "AHAHAHHAAHAHD",
+    "AHDDHDHHDDDAA",
+    "DAAADAAAHAHDA",
+    "DAHHAHADDHHHD",
+    "DDHADADDHDHAH",
+    "HADDAHDHADAAA",
+    "HAHHHDAHAHDDH",
+    "HDDADHAHAHAHH",
+    "HDHHHAHHHAADD"
+  ],
+  "official_unchanged": true,
+  "validated_effect": false,
+  "sensitivity_factors": [
+    1.0,
+    1.1,
+    1.5,
+    2.0
+  ],
+  "sensitivity_weights": [
+    0.0,
+    0.25,
+    0.5,
+    1.0
+  ]
+}

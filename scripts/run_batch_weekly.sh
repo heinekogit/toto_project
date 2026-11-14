@@ -11,7 +11,8 @@ STATS_ASOF_DATE="${STATS_ASOF_DATE:-$(date +%F)}"
 WEATHER_ASOF_DATE="${WEATHER_ASOF_DATE:-$STATS_ASOF_DATE}"
 WEATHER_SNAPSHOT_DIR="${WEATHER_SNAPSHOT_DIR:-$ROOT_DIR/data/weather_snapshots}"
 STADIUMS_FILE="${STADIUMS_FILE:-$ROOT_DIR/data/manual/stadiums.csv}"
-ABSENCES_CSV="${ABSENCES_CSV:-$ROOT_DIR/data/manual/欠場管理リスト.csv}"
+# 最新の台帳エクスポートを全件置換入力に使用。旧台帳とのマージなし。
+ABSENCES_CSV="${ABSENCES_CSV:-$ROOT_DIR/data/manual/temporary_absense/absence-ledger-partial.csv}"
 PLAYERS_CSV="${PLAYERS_CSV:-$ROOT_DIR/data/manual/jleague_club_players.csv}"
 PLAYERS_SUMMARY_JSON="${PLAYERS_SUMMARY_JSON:-$ROOT_DIR/data/manual/jleague_club_players_summary.json}"
 PLAYER_FETCH_SLEEP_SEC="${PLAYER_FETCH_SLEEP_SEC:-1.5}"
@@ -123,7 +124,28 @@ for LEAGUE in $LEAGUES; do
 
   # 週の初め：結果・順位・スタッツ
   describe_step "01_update_match_results.py" "試合結果CSVを更新（終了試合のスコア反映）"
-  run_step_safe "01_update_match_results.py" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" "$PYTHON" "$ROOT_DIR/scripts/01_update_match_results.py"
+  if run_step_safe "01_update_match_results.py" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" "$PYTHON" "$ROOT_DIR/scripts/01_update_match_results.py"; then
+    # Append-only research observation. No prediction or purchase input is changed.
+    RESULT_CSV="$ROOT_DIR/data/${LEAGUE}_${SEASON_YEAR}_latest_results.csv"
+    if [[ -f "$RESULT_CSV" ]]; then
+      if research_output=$("$PYTHON" "$ROOT_DIR/scripts/next_model/forecast_registry.py" sync-league-results --results "$RESULT_CSV" 2>&1); then
+        echo "$research_output"
+      else
+        research_rc=$?
+        echo "[WARN] forecast registry result sync failed (exit=${research_rc}, source=${RESULT_CSV}): ${research_output}"
+        "$PYTHON" "$ROOT_DIR/scripts/next_model/condition_s_registry.py" record-failure \
+          --stage league-result-sync --round "${LEAGUE}_${SEASON_YEAR}" --source "$RESULT_CSV" --reason "exit=${research_rc}: ${research_output}" || true
+      fi
+      if research_output=$("$PYTHON" "$ROOT_DIR/scripts/next_model/condition_s_registry.py" sync-results 2>&1); then
+        echo "$research_output"
+      else
+        research_rc=$?
+        echo "[WARN] condition S result sync failed (exit=${research_rc}, source=${RESULT_CSV}): ${research_output}"
+        "$PYTHON" "$ROOT_DIR/scripts/next_model/condition_s_registry.py" record-failure \
+          --stage condition-s-result-sync --round "${LEAGUE}_${SEASON_YEAR}" --source "$RESULT_CSV" --reason "exit=${research_rc}: ${research_output}" || true
+      fi
+    fi
+  fi
   describe_step "02_update_rankings.py" "順位表CSVを更新（勝点・得失点など）"
   run_step_safe "02_update_rankings.py" LEAGUE="$LEAGUE" SEASON_YEAR="$SEASON_YEAR" "$PYTHON" "$ROOT_DIR/scripts/02_update_rankings.py"
   describe_step "20_update_stats.py" "チームスタッツCSVを更新（予測特徴量の基礎データ）"

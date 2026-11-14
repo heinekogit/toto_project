@@ -1,0 +1,57 @@
+{
+  "version": "match_draw_structure_shadow_v1",
+  "config": {
+    "strength": 0.15,
+    "zero_share_weight": 0.7,
+    "near_balance_weight": 0.3,
+    "lower": 0.85,
+    "upper": 1.2,
+    "scale_floor": 0.02
+  },
+  "center": 0.2597039025608151,
+  "scale": 0.0187959800113733,
+  "zero_beta": [
+    0.28066435841691395,
+    -0.30704645236116873,
+    -0.04751728681182292,
+    -0.00624154835404564,
+    0.3678708232487918,
+    0.05661276321518851,
+    0.0007640437985476796,
+    1.3892475725613498
+  ],
+  "near_beta": [
+    0.49620427332342776,
+    0.40182624897091646,
+    0.0556172801792579,
+    0.00601408960528773,
+    -0.3471478307570194,
+    -0.06648071165091843,
+    -0.005866389412215956,
+    -1.7764802016239032,
+    -1.3098816968246911
+  ],
+  "zero_scale": 0.026183810123156622,
+  "near_scale": 0.02,
+  "zero_residual_std": 0.026183810123156622,
+  "near_residual_std": 0.01460358750924772,
+  "controls": [
+    "final_P_D_cubic",
+    "score_P_D_cubic",
+    "uncertainty_mix"
+  ],
+  "reference_rows": 65,
+  "P_D_range": [
+    0.2066301178536661,
+    0.2949358871772197
+  ],
+  "fit_uses_outcomes": false,
+  "normalizer_is_descriptive_not_predictive_training": true,
+  "inputs": {
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv": "10a971e5783138a46d7018c18dec4ed2c27a7c936554c7bfa018d5ce118e6455",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv": "b20040116f63cdf8d4d8d9e292e6c5aa3be67ef3b87618a3e3a74ebbb38ee9d7",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv": "75580295a3107b14620efebeb2c9b7911c90ed889a99c1942595ccd58331dc18",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv": "4037a7f331a223d96858f6c2f47108d6bd1b1493df3006dd9142cc440a440fee",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv": "5d48fcdb521f03d261900afddc03ea8d1a6a93808654135e620431958db7537a"
+  }
+}

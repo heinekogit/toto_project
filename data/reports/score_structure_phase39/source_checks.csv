@@ -1,0 +1,404 @@
+﻿round,match_no,check,status,source
+1660,1,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,1,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,1,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,1,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,2,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,2,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,2,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,2,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,3,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,3,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,3,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,3,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,4,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,4,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,4,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,4,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,5,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,5,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,5,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,5,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,6,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,6,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,6,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,6,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,7,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,7,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,7,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,7,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,8,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,8,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,8,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,8,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j1.csv
+1660,9,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,9,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,9,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,9,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,10,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,10,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,10,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,10,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,11,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,11,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,11,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,11,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,12,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,12,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,12,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,12,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,13,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,13,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,13,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1660,13,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261010_j2.csv
+1663,1,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,1,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,1,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,1,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,2,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,2,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,2,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,2,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,3,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,3,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,3,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,3,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,4,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,4,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,4,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,4,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,5,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,5,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,5,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,5,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,6,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,6,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,6,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,6,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,7,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,7,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,7,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,7,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,8,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,8,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,8,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,8,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,9,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,9,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,9,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,9,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,10,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,10,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,10,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,10,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j1.csv
+1663,11,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j2.csv
+1663,11,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j2.csv
+1663,11,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j2.csv
+1663,11,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j2.csv
+1663,12,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j2.csv
+1663,12,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j2.csv
+1663,12,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j2.csv
+1663,12,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j2.csv
+1663,13,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j2.csv
+1663,13,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j2.csv
+1663,13,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j2.csv
+1663,13,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261017_j2.csv
+1664,1,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,1,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,1,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,1,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,2,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,2,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,2,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,2,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,3,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,3,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,3,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,3,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,4,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,4,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,4,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,4,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,5,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,5,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,5,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,5,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,6,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,6,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,6,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,6,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,7,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,7,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,7,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,7,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,8,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,8,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,8,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,8,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,9,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,9,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,9,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,9,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,10,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,10,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,10,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,10,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j1.csv
+1664,11,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j2.csv
+1664,11,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j2.csv
+1664,11,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j2.csv
+1664,11,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j2.csv
+1664,12,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j2.csv
+1664,12,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j2.csv
+1664,12,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j2.csv
+1664,12,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j2.csv
+1664,13,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j2.csv
+1664,13,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j2.csv
+1664,13,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j2.csv
+1664,13,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261020_j2.csv
+1665,1,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,1,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,1,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,1,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,1,weather signal,一致,saved weather flags
+1665,2,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,2,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,2,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,2,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,2,weather signal,一致,saved weather flags
+1665,3,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,3,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,3,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,3,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,3,weather signal,一致,saved weather flags
+1665,4,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,4,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,4,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,4,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,4,weather signal,一致,saved weather flags
+1665,5,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,5,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,5,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,5,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,5,weather signal,一致,saved weather flags
+1665,6,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,6,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,6,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,6,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,6,weather signal,一致,saved weather flags
+1665,7,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,7,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,7,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,7,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,7,weather signal,一致,saved weather flags
+1665,8,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,8,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,8,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,8,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,8,weather signal,一致,saved weather flags
+1665,9,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,9,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,9,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,9,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,9,weather signal,一致,saved weather flags
+1665,10,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,10,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,10,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,10,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j1.csv
+1665,10,weather signal,一致,saved weather flags
+1665,11,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j2.csv
+1665,11,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j2.csv
+1665,11,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j2.csv
+1665,11,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j2.csv
+1665,11,weather signal,一致,saved weather flags
+1665,12,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j2.csv
+1665,12,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j2.csv
+1665,12,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j2.csv
+1665,12,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j2.csv
+1665,12,weather signal,一致,saved weather flags
+1665,13,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j2.csv
+1665,13,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j2.csv
+1665,13,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j2.csv
+1665,13,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261024_j2.csv
+1665,13,weather signal,一致,saved weather flags
+1668,1,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,1,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,1,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,1,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,1,weather signal,一致,saved weather flags
+1668,2,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,2,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,2,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,2,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,2,weather signal,一致,saved weather flags
+1668,3,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,3,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,3,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,3,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,3,weather signal,一致,saved weather flags
+1668,4,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,4,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,4,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,4,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,4,weather signal,一致,saved weather flags
+1668,5,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,5,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,5,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,5,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,5,weather signal,一致,saved weather flags
+1668,6,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,6,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,6,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,6,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,6,weather signal,一致,saved weather flags
+1668,7,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,7,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,7,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,7,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,7,weather signal,一致,saved weather flags
+1668,8,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,8,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,8,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,8,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,8,weather signal,一致,saved weather flags
+1668,9,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,9,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,9,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,9,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,9,weather signal,一致,saved weather flags
+1668,10,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,10,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,10,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,10,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j1.csv
+1668,10,weather signal,一致,saved weather flags
+1668,11,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j2.csv
+1668,11,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j2.csv
+1668,11,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j2.csv
+1668,11,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j2.csv
+1668,11,weather signal,一致,saved weather flags
+1668,12,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j2.csv
+1668,12,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j2.csv
+1668,12,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j2.csv
+1668,12,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j2.csv
+1668,12,weather signal,一致,saved weather flags
+1668,13,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j2.csv
+1668,13,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j2.csv
+1668,13,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j2.csv
+1668,13,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261031_j2.csv
+1668,13,weather signal,一致,saved weather flags
+1670,1,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,1,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,1,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,1,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,1,weather signal,一致,saved weather flags
+1670,1,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,1,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,1,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,1,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used
+1670,2,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,2,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,2,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,2,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,2,weather signal,一致,saved weather flags
+1670,2,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,2,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,2,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,2,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used
+1670,3,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,3,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,3,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,3,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,3,weather signal,一致,saved weather flags
+1670,3,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,3,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,3,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,3,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used
+1670,4,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,4,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,4,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,4,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,4,weather signal,一致,saved weather flags
+1670,4,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,4,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,4,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,4,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used
+1670,5,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,5,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,5,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,5,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,5,weather signal,一致,saved weather flags
+1670,5,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,5,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,5,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,5,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used
+1670,6,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,6,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,6,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,6,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,6,weather signal,一致,saved weather flags
+1670,6,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,6,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,6,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,6,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used
+1670,7,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,7,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,7,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,7,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,7,weather signal,一致,saved weather flags
+1670,7,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,7,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,7,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,7,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used
+1670,8,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,8,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,8,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,8,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,8,weather signal,一致,saved weather flags
+1670,8,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,8,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,8,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,8,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used
+1670,9,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,9,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,9,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,9,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,9,weather signal,一致,saved weather flags
+1670,9,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,9,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,9,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,9,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used
+1670,10,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,10,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,10,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,10,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j1.csv
+1670,10,weather signal,一致,saved weather flags
+1670,10,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,10,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,10,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,10,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used
+1670,11,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j2.csv
+1670,11,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j2.csv
+1670,11,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j2.csv
+1670,11,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j2.csv
+1670,11,weather signal,一致,saved weather flags
+1670,11,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,11,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,11,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,11,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used
+1670,12,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j2.csv
+1670,12,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j2.csv
+1670,12,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j2.csv
+1670,12,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j2.csv
+1670,12,weather signal,一致,saved weather flags
+1670,12,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,12,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,12,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,12,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used
+1670,13,LAB source home flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j2.csv
+1670,13,LAB source home flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j2.csv
+1670,13,LAB source away flab_expected_for_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j2.csv
+1670,13,LAB source away flab_expected_against_xg,一致,data/external_metrics/football_lab_team_metrics_20261107_j2.csv
+1670,13,weather signal,一致,saved weather flags
+1670,13,outlier saved arithmetic home for,一致,saved published/ordinary/weighted/used
+1670,13,outlier saved arithmetic home against,一致,saved published/ordinary/weighted/used
+1670,13,outlier saved arithmetic away for,一致,saved published/ordinary/weighted/used
+1670,13,outlier saved arithmetic away against,一致,saved published/ordinary/weighted/used

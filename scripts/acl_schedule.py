@@ -95,7 +95,7 @@ def _normalize_legacy(df: pd.DataFrame) -> pd.DataFrame:
     return out.dropna(subset=["match_date", "team", "fatigue_grade"])
 
 
-def normalize_acl_schedule(path: str | Path) -> pd.DataFrame:
+def normalize_acl_schedule(path: str | Path, *, confirmed_only: bool = False) -> pd.DataFrame:
     """Read either the legacy event schema or the editable home/away schema.
 
     Historical rows can retain a travel type in ``memo``; that value is treated
@@ -103,6 +103,14 @@ def normalize_acl_schedule(path: str | Path) -> pd.DataFrame:
     and J.League home coordinates.
     """
     df = pd.read_csv(path, encoding="utf-8-sig")
+    if confirmed_only:
+        if "status" not in df.columns:
+            raise ValueError("ACL日程に status 列がありません")
+        # Unconfirmed archival rows are not fatigue inputs. Filter before
+        # resolving their venues; confirmed historical appearances still matter.
+        df = df[df["status"].astype(str).str.strip().str.lower().eq("confirmed")].copy()
+        if df.empty:
+            return pd.DataFrame(columns=["match_date", "team", "status", "distance_km"])
     if {"match_date", "team", "fatigue_grade"}.issubset(df.columns):
         return _normalize_legacy(df)
 
@@ -135,11 +143,16 @@ def normalize_acl_schedule(path: str | Path) -> pd.DataFrame:
         if override in TRAVEL_OVERRIDE_GRADES:
             travel_type = override
             fatigue_grade = TRAVEL_OVERRIDE_GRADES[override]
+            if override == "none" and not (venue_type == "home" and country == "日本"):
+                errors.append(f"row {source_row + 2}: zero travel override requires a domestic home fixture ({team}, {city}, {country})")
+                continue
             if override != "none":
                 destination = venue_coords.get(_location_key(city, country))
-                if destination:
-                    origin = home_coords[team]
-                    distance_km = round(haversine_km(*origin, *destination), 1)
+                if destination is None:
+                    errors.append(f"row {source_row + 2}: venue coordinates missing for {city}, {country} (memo={override})")
+                    continue
+                origin = home_coords[team]
+                distance_km = round(haversine_km(*origin, *destination), 1)
         elif venue_type == "home" and country == "日本":
             travel_type, fatigue_grade = "none", 2.0
         else:

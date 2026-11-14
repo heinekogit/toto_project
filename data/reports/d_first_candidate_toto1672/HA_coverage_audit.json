@@ -1,0 +1,11 @@
+{
+  "candidate_reverse_HA_cells": 0,
+  "candidate_nonD_cells": 96,
+  "candidate_distinct_D_masks": 10,
+  "conditional_all_HA_leader_probability_min": 0.0014318386154348025,
+  "conditional_all_HA_leader_probability_max": 0.04491273082960932,
+  "historical_nonD_matches": 60,
+  "historical_HA_reverse_matches": 23,
+  "purchase_ready": false,
+  "reason": "all non-D cells use candidate00 H/A; H/A reversal not covered"
+}

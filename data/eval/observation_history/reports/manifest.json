@@ -1,7 +1,7 @@
 {
   "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/observation_history/matches.csv",
-  "rounds": 12,
-  "matches": 153,
+  "rounds": 14,
+  "matches": 179,
   "outputs": [
     "candidate_summary.csv",
     "draw_tier_summary.csv",

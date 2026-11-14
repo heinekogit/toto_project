@@ -1,0 +1,581 @@
+{
+  "round_id": "toto1670",
+  "version": "v2.4",
+  "strategy": "random_remaining_v24",
+  "resolved": 13,
+  "pending": 0,
+  "model_version": "base_lambda_v1 + lab_xg_v0 + absence_attack_defense_lambda_v1 + score_distribution + fatigue_weather_uniform_v1 + goal_rate_surprise_weight_v1 + style_residual_deployment_v1",
+  "actual_counts": {
+    "H": 3,
+    "D": 4,
+    "A": 6
+  },
+  "official": {
+    "ticket_count": 10,
+    "ticket_names": [
+      "ticket01",
+      "ticket02",
+      "ticket03",
+      "ticket04",
+      "ticket05",
+      "ticket06",
+      "ticket07",
+      "ticket08",
+      "ticket09",
+      "ticket10"
+    ],
+    "ticket_hits": [
+      4,
+      2,
+      7,
+      2,
+      3,
+      4,
+      6,
+      5,
+      5,
+      7
+    ],
+    "best_hits": 7,
+    "mean_hits": 4.5,
+    "accuracy": 0.34615384615384615,
+    "draw_cells": 38,
+    "ge10": 0,
+    "ge11": 0,
+    "ge12": 0,
+    "ge13": 0,
+    "draw_pair_coverage": 0
+  },
+  "shadow": {
+    "ticket_count": 10,
+    "ticket_names": [
+      "ticket11",
+      "ticket12",
+      "ticket13",
+      "ticket14",
+      "ticket15",
+      "ticket16",
+      "ticket17",
+      "ticket18",
+      "ticket19",
+      "ticket20"
+    ],
+    "ticket_hits": [
+      5,
+      9,
+      7,
+      4,
+      6,
+      3,
+      4,
+      2,
+      5,
+      2
+    ],
+    "best_hits": 9,
+    "mean_hits": 4.7,
+    "accuracy": 0.36153846153846153,
+    "draw_cells": 36,
+    "ge10": 0,
+    "ge11": 0,
+    "ge12": 0,
+    "ge13": 0,
+    "draw_pair_coverage": 0
+  },
+  "shadow_version": "A：確率配分型 v2.2",
+  "shadow_b": {
+    "ticket_count": 10,
+    "ticket_names": [
+      "ticket21",
+      "ticket22",
+      "ticket23",
+      "ticket24",
+      "ticket25",
+      "ticket26",
+      "ticket27",
+      "ticket28",
+      "ticket29",
+      "ticket30"
+    ],
+    "ticket_hits": [
+      7,
+      5,
+      5,
+      6,
+      3,
+      6,
+      6,
+      4,
+      2,
+      3
+    ],
+    "best_hits": 7,
+    "mean_hits": 4.7,
+    "accuracy": 0.36153846153846153,
+    "draw_cells": 36,
+    "ge10": 0,
+    "ge11": 0,
+    "ge12": 0,
+    "ge13": 0,
+    "draw_pair_coverage": 0
+  },
+  "shadow_b_version": "B：Anchor段階型",
+  "shadow_c": {
+    "ticket_count": 10,
+    "ticket_names": [
+      "ticket31",
+      "ticket32",
+      "ticket33",
+      "ticket34",
+      "ticket35",
+      "ticket36",
+      "ticket37",
+      "ticket38",
+      "ticket39",
+      "ticket40"
+    ],
+    "ticket_hits": [
+      5,
+      5,
+      5,
+      4,
+      5,
+      6,
+      4,
+      5,
+      6,
+      5
+    ],
+    "best_hits": 6,
+    "mean_hits": 5.0,
+    "accuracy": 0.38461538461538464,
+    "draw_cells": 10,
+    "ge10": 0,
+    "ge11": 0,
+    "ge12": 0,
+    "ge13": 0,
+    "draw_pair_coverage": 0
+  },
+  "shadow_c_version": "C：採用数自由・Dカバー型 v4",
+  "shadow_v25": {
+    "ticket_count": 10,
+    "ticket_names": [
+      "ticket01",
+      "ticket02",
+      "ticket03",
+      "ticket04",
+      "ticket05",
+      "ticket06",
+      "ticket07",
+      "ticket08",
+      "ticket09",
+      "ticket10"
+    ],
+    "ticket_hits": [
+      7,
+      7,
+      6,
+      4,
+      7,
+      3,
+      3,
+      4,
+      2,
+      2
+    ],
+    "best_hits": 7,
+    "mean_hits": 4.5,
+    "accuracy": 0.34615384615384615,
+    "draw_cells": 38,
+    "ge10": 0,
+    "ge11": 0,
+    "ge12": 0,
+    "ge13": 0,
+    "draw_pair_coverage": 0
+  },
+  "model": {
+    "matches": 13,
+    "top_hits": 5,
+    "top_accuracy": 0.38461538461538464,
+    "brier": 0.6422287470018129,
+    "outcome_rows": [
+      {
+        "結果": "H",
+        "平均予測確率": "36.7%",
+        "実際の割合": "23.1%",
+        "実数": 3
+      },
+      {
+        "結果": "D",
+        "平均予測確率": "27.9%",
+        "実際の割合": "30.8%",
+        "実数": 4
+      },
+      {
+        "結果": "A",
+        "平均予測確率": "35.4%",
+        "実際の割合": "46.2%",
+        "実数": 6
+      }
+    ]
+  },
+  "records": [
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 1,
+      "home_team": "清水",
+      "away_team": "東京V",
+      "result": "A",
+      "probabilities": [
+        0.4019736161457958,
+        0.2905274405506154,
+        0.3074989433035889
+      ],
+      "picks": [
+        "H",
+        "A",
+        "A",
+        "H",
+        "D",
+        "A",
+        "H",
+        "H",
+        "D",
+        "D"
+      ]
+    },
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 2,
+      "home_team": "横浜FM",
+      "away_team": "岡山",
+      "result": "D",
+      "probabilities": [
+        0.3828332335026524,
+        0.285110799776685,
+        0.3320559667206625
+      ],
+      "picks": [
+        "H",
+        "A",
+        "D",
+        "D",
+        "H",
+        "H",
+        "A",
+        "D",
+        "A",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 3,
+      "home_team": "福岡",
+      "away_team": "長崎",
+      "result": "D",
+      "probabilities": [
+        0.3544356701280559,
+        0.2852670216163276,
+        0.3602973082556162
+      ],
+      "picks": [
+        "A",
+        "A",
+        "D",
+        "H",
+        "H",
+        "D",
+        "D",
+        "A",
+        "A",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 4,
+      "home_team": "FC東京",
+      "away_team": "鹿島",
+      "result": "H",
+      "probabilities": [
+        0.4335248802650378,
+        0.260884174910071,
+        0.3055909448248913
+      ],
+      "picks": [
+        "H",
+        "A",
+        "H",
+        "D",
+        "A",
+        "D",
+        "H",
+        "H",
+        "D",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 5,
+      "home_team": "柏",
+      "away_team": "川崎F",
+      "result": "H",
+      "probabilities": [
+        0.3647849909490586,
+        0.2614117350766329,
+        0.3738032739743085
+      ],
+      "picks": [
+        "D",
+        "A",
+        "A",
+        "A",
+        "H",
+        "H",
+        "H",
+        "D",
+        "A",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 6,
+      "home_team": "名古屋",
+      "away_team": "京都",
+      "result": "A",
+      "probabilities": [
+        0.3969932687906942,
+        0.2671466831701644,
+        0.3358600480391414
+      ],
+      "picks": [
+        "H",
+        "H",
+        "D",
+        "H",
+        "D",
+        "A",
+        "H",
+        "D",
+        "A",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 7,
+      "home_team": "神戸",
+      "away_team": "浦和",
+      "result": "D",
+      "probabilities": [
+        0.4208092516225954,
+        0.2664052809628174,
+        0.312785467414587
+      ],
+      "picks": [
+        "D",
+        "H",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "A",
+        "D",
+        "D"
+      ]
+    },
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 8,
+      "home_team": "G大阪",
+      "away_team": "C大阪",
+      "result": "A",
+      "probabilities": [
+        0.3651326060250949,
+        0.2761739623853564,
+        0.3586934315895484
+      ],
+      "picks": [
+        "A",
+        "H",
+        "D",
+        "H",
+        "H",
+        "H",
+        "D",
+        "D",
+        "A",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 9,
+      "home_team": "千葉",
+      "away_team": "水戸",
+      "result": "H",
+      "probabilities": [
+        0.4247480276186888,
+        0.2810201052791394,
+        0.2942318671021717
+      ],
+      "picks": [
+        "A",
+        "H",
+        "A",
+        "D",
+        "D",
+        "D",
+        "H",
+        "A",
+        "H",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 10,
+      "home_team": "町田",
+      "away_team": "広島",
+      "result": "D",
+      "probabilities": [
+        0.2999204757834444,
+        0.2821954958576194,
+        0.417884028358936
+      ],
+      "picks": [
+        "A",
+        "A",
+        "A",
+        "H",
+        "H",
+        "A",
+        "D",
+        "D",
+        "H",
+        "D"
+      ]
+    },
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 11,
+      "home_team": "徳島",
+      "away_team": "宮崎",
+      "result": "A",
+      "probabilities": [
+        0.2849164840710957,
+        0.296943423522259,
+        0.4181400924066452
+      ],
+      "picks": [
+        "D",
+        "H",
+        "A",
+        "A",
+        "D",
+        "H",
+        "A",
+        "A",
+        "D",
+        "H"
+      ]
+    },
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 12,
+      "home_team": "八戸",
+      "away_team": "札幌",
+      "result": "A",
+      "probabilities": [
+        0.3156769454164831,
+        0.2872594189406078,
+        0.3970636356429091
+      ],
+      "picks": [
+        "H",
+        "D",
+        "A",
+        "H",
+        "A",
+        "H",
+        "D",
+        "A",
+        "D",
+        "A"
+      ]
+    },
+    {
+      "round_id": "toto1670",
+      "version": "v2.4",
+      "match_no": 13,
+      "home_team": "鳥栖",
+      "away_team": "富山",
+      "result": "A",
+      "probabilities": [
+        0.326602827399049,
+        0.2847236808376988,
+        0.3886734917632521
+      ],
+      "picks": [
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "D",
+        "D",
+        "A",
+        "D"
+      ]
+    }
+  ],
+  "sources": {
+    "buyplan": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/snapshot/buyplan.csv",
+      "sha256": "7be14e6ebd0cc52f24a21670536476a4718f74b1cc8c10702bc6cb9a566b0d33"
+    },
+    "actual": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/actual_results.csv",
+      "sha256": "2099b3370f66a33534fc9c55c9a6617bb077f361334581f093166d457685491e"
+    },
+    "engine_manifest": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/snapshot/buyplan_engine_manifest.json",
+      "sha256": "7d95afac6f05c1b8639e8b808d2cdac3e7e357d2e73449b190e42302ab606a1b"
+    },
+    "shadow": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/snapshot/shadow_buyplan.csv",
+      "sha256": "497b85ff81345d70c6cd5712c8958b423213e67b11deca0f620f18a26ae8cd1b"
+    },
+    "shadow_b": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/snapshot/shadow_buyplan_b.csv",
+      "sha256": "9080266336034ed906616ef94985af91713cee1413b99b71de400e7b6b78a64f"
+    },
+    "shadow_c": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/snapshot/shadow_buyplan_c.csv",
+      "sha256": "871e88b657166610e8e6af4cd082a6be75808277082d80d1e066457f1dc06d82"
+    },
+    "shadow_v25": {
+      "path": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/toto_rounds/toto1670/snapshot/shadow_buyplan_v25.csv",
+      "sha256": "3ace2605e4fcc10969cd18717fc37fadf1c0b3170726f9d4355828e7c86261bd"
+    }
+  },
+  "created_at": "2026-11-08T22:12:48.841136+09:00",
+  "comparison_fair": true
+}

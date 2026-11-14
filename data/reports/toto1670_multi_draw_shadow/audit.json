@@ -1,0 +1,41 @@
+{
+  "protected_sha256": {
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/toto1670_fixed_exact13/forecast_input.csv": "e5957b1ed9223b9aa1e757aa8db9fa866c9b110beadbdbad17d084a994a6f7c6",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_buyplan_v25.csv": "ce28acef5047e1e23e9e5b06dc6b6d4190bf5ed1c0052cdec76702fa19a6b877",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/manifest.json": "38216b396f015f87fc9aded10b300017b1f4cb52350c0cb3e7ed9506c9dafd83"
+  },
+  "round": "toto1670",
+  "base": "saved C95 v2.5 shadow",
+  "ticket_price_yen": 100,
+  "multi_lines_expanded": true,
+  "production_changed": false,
+  "details": {
+    "C95": {
+      "purchase": "10 single lines",
+      "chosen_from_saved": true
+    },
+    "3Doubles_plus_2Singles": {
+      "base_candidate": 1,
+      "double_matches": [
+        2,
+        3,
+        8
+      ],
+      "single_D_counts": [
+        4,
+        5
+      ]
+    },
+    "1Triple_1Double_plus_4Singles": {
+      "base_candidate": 1,
+      "triple_match": 8,
+      "double_match": 3,
+      "single_D_counts": [
+        3,
+        4,
+        5,
+        10
+      ]
+    }
+  }
+}

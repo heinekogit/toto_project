@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31T10:24:58",
+  "generated_at": "2026-11-14T09:24:21",
   "robots_url": "https://www.jleague.jp/robots.txt",
   "club_top_url": "https://www.jleague.jp/club/",
   "ajax_player_url": "https://www.jleague.jp/club/ajax_player/",
@@ -8,7 +8,7 @@
   "requested_clubs": 60,
   "success_clubs": 60,
   "failed_clubs": 0,
-  "rows": 2313,
+  "rows": 2325,
   "warnings": [],
   "results": [
     {
@@ -95,7 +95,7 @@
       "club_key": "shimizu",
       "club_name": "清水エスパルス",
       "ok": true,
-      "row_count": 59,
+      "row_count": 60,
       "warning": "",
       "error": ""
     },
@@ -103,7 +103,7 @@
       "club_key": "nagoya",
       "club_name": "名古屋グランパス",
       "ok": true,
-      "row_count": 51,
+      "row_count": 52,
       "warning": "",
       "error": ""
     },
@@ -135,7 +135,7 @@
       "club_key": "kobe",
       "club_name": "ヴィッセル神戸",
       "ok": true,
-      "row_count": 55,
+      "row_count": 56,
       "warning": "",
       "error": ""
     },
@@ -213,7 +213,7 @@
     },
     {
       "club_key": "iwaki",
-      "club_name": "iwaki",
+      "club_name": "いわきＦＣ",
       "ok": true,
       "row_count": 32,
       "warning": "",
@@ -263,7 +263,7 @@
       "club_key": "niigata",
       "club_name": "アルビレックス新潟",
       "ok": true,
-      "row_count": 33,
+      "row_count": 34,
       "warning": "",
       "error": ""
     },
@@ -271,7 +271,7 @@
       "club_key": "toyama",
       "club_name": "カターレ富山",
       "ok": true,
-      "row_count": 33,
+      "row_count": 35,
       "warning": "",
       "error": ""
     },
@@ -335,7 +335,7 @@
       "club_key": "fukushima",
       "club_name": "福島ユナイテッドＦＣ",
       "ok": true,
-      "row_count": 31,
+      "row_count": 33,
       "warning": "",
       "error": ""
     },
@@ -383,7 +383,7 @@
       "club_key": "kanazawa",
       "club_name": "ツエーゲン金沢",
       "ok": true,
-      "row_count": 31,
+      "row_count": 32,
       "warning": "",
       "error": ""
     },
@@ -391,7 +391,7 @@
       "club_key": "gifu",
       "club_name": "ＦＣ岐阜",
       "ok": true,
-      "row_count": 36,
+      "row_count": 37,
       "warning": "",
       "error": ""
     },
@@ -423,7 +423,7 @@
       "club_key": "tottori",
       "club_name": "ガイナーレ鳥取",
       "ok": true,
-      "row_count": 35,
+      "row_count": 36,
       "warning": "",
       "error": ""
     },
@@ -431,7 +431,7 @@
       "club_key": "yamaguchi",
       "club_name": "レノファ山口ＦＣ",
       "ok": true,
-      "row_count": 37,
+      "row_count": 38,
       "warning": "",
       "error": ""
     },

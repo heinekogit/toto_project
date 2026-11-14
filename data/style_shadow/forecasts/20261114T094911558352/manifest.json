@@ -1,0 +1,17 @@
+{
+  "created_at": "2026-11-14T09:49:11.558352+09:00",
+  "finished_at": "2026-11-14T09:49:11.868616+09:00",
+  "season": 2027,
+  "style_source": null,
+  "source_age_days": null,
+  "model_enabled": false,
+  "deployment": "official",
+  "hashes": {
+    "model.json": "cd98590754a0156b89dcdc9e10dd00f455fe72d130d78762d504cd7e4b5e68d1",
+    "baseline.csv": "8991629d3e8ddf6955038e9fa76561339a798f562db1606290f2d001de145f8e",
+    "examples.csv": "fc56d770cff4ef6d393694243ed0a113452251a8e311d01cfa3ce4b590d64008",
+    "styles.csv": "6c96e5886b7563c8b478a8fbb4f3e2b9e1ae569b6e12fe7f3c9ab1a4a3273747",
+    "comparison.csv": "5cd02fad5972326553cf4d418ee6e2864cf4241119fb7b182f51f0a316763607",
+    "deployment_policy.json": "14ff90cb58bd840c1173954dbf2b12bb585550da009fd7bad31bf5d1da8cfb03"
+  }
+}

@@ -1,0 +1,19 @@
+﻿field,observed,distinct,min,max,D_mean,nonD_mean,AUC_higher_means_D,note
+home_fatigue_score,78,72,0.0,11.49,4.005555555555556,4.104500000000001,0.48564814814814816,exploratory only; possible model input and version confounding
+away_fatigue_score,78,71,4.35,20.17,8.735,9.352333333333336,0.475,exploratory only; possible model input and version confounding
+home_rest_hours,78,48,66.95,523.45,114.0935185185185,131.73472222222225,0.43472222222222223,exploratory only; possible model input and version confounding
+away_rest_hours,78,50,66.95,524.95,116.76574074074074,139.8097222222222,0.40555555555555556,exploratory only; possible model input and version confounding
+absence_impact_total_home,78,44,0.0,0.26093,0.034309690476190466,0.05279797152777776,0.425,exploratory only; possible model input and version confounding
+absence_impact_total_away,78,49,0.0,0.3617971428571429,0.042742700396825394,0.0497035107142857,0.47314814814814815,exploratory only; possible model input and version confounding
+absence_players_count_home,78,7,0.0,6.0,1.5,2.033333333333333,0.425462962962963,exploratory only; possible model input and version confounding
+absence_players_count_away,78,8,0.0,7.0,1.6666666666666667,1.9166666666666667,0.46574074074074073,exploratory only; possible model input and version confounding
+rankmot_rank_latest_home,78,20,1.0,20.0,10.944444444444445,10.55,0.5199074074074074,exploratory only; possible model input and version confounding
+rankmot_rank_latest_away,78,20,1.0,20.0,11.5,10.566666666666666,0.5509259259259259,exploratory only; possible model input and version confounding
+rankmot_points_latest_home,78,25,4.0,30.0,14.944444444444445,14.95,0.48009259259259257,exploratory only; possible model input and version confounding
+rankmot_points_latest_away,78,22,4.0,29.0,14.222222222222221,14.933333333333334,0.45787037037037037,exploratory only; possible model input and version confounding
+flab_expected_for_xg_home,78,75,0.829,2.401,1.2992222222222223,1.3395333333333332,0.48148148148148145,exploratory only; possible model input and version confounding
+flab_expected_for_xg_away,78,74,0.85,2.522,1.2657222222222222,1.3671,0.4115740740740741,exploratory only; possible model input and version confounding
+flab_expected_against_xg_home,78,76,0.704,1.886,1.4357777777777776,1.3051166666666667,0.6375,exploratory only; possible model input and version confounding
+flab_expected_against_xg_away,78,76,0.703,1.824,1.4075,1.3552666666666664,0.5606481481481481,exploratory only; possible model input and version confounding
+flab_possession_rate_home,78,78,39.2894,58.3758,50.369622222222226,49.62479166666666,0.5444444444444444,exploratory only; possible model input and version confounding
+flab_possession_rate_away,78,78,37.8313,59.125,49.87881111111111,48.97120666666667,0.5462962962962963,exploratory only; possible model input and version confounding

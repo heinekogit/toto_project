@@ -1,0 +1,14 @@
+match_id,home_score,away_score,result_available_at,source_file,source_sha256
+j1|2026-11-07|FC東京|鹿島,2,0,2026-11-08T22:12:44.481704+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv,5dbaa213b415cb9f408a1662df393d204582858acf4c6083f2494a12cbced691
+j1|2026-11-07|清水|東京V,0,1,2026-11-08T22:12:44.481704+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv,5dbaa213b415cb9f408a1662df393d204582858acf4c6083f2494a12cbced691
+j1|2026-11-07|名古屋|京都,0,2,2026-11-08T22:12:44.481704+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv,5dbaa213b415cb9f408a1662df393d204582858acf4c6083f2494a12cbced691
+j1|2026-11-07|横浜FM|岡山,1,1,2026-11-08T22:12:44.481704+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv,5dbaa213b415cb9f408a1662df393d204582858acf4c6083f2494a12cbced691
+j1|2026-11-07|福岡|長崎,1,1,2026-11-08T22:12:44.481704+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv,5dbaa213b415cb9f408a1662df393d204582858acf4c6083f2494a12cbced691
+j1|2026-11-07|柏|川崎F,2,1,2026-11-08T22:12:44.481704+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv,5dbaa213b415cb9f408a1662df393d204582858acf4c6083f2494a12cbced691
+j1|2026-11-08|町田|広島,0,0,2026-11-08T22:12:44.481704+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv,5dbaa213b415cb9f408a1662df393d204582858acf4c6083f2494a12cbced691
+j1|2026-11-08|神戸|浦和,2,2,2026-11-08T22:12:44.481704+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv,5dbaa213b415cb9f408a1662df393d204582858acf4c6083f2494a12cbced691
+j1|2026-11-08|G大阪|C大阪,2,3,2026-11-08T22:12:44.481704+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv,5dbaa213b415cb9f408a1662df393d204582858acf4c6083f2494a12cbced691
+j1|2026-11-08|千葉|水戸,1,0,2026-11-08T22:12:44.481704+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j1_2026_latest_results.csv,5dbaa213b415cb9f408a1662df393d204582858acf4c6083f2494a12cbced691
+j2|2026-11-07|鳥栖|富山,1,2,2026-11-08T22:12:46.910351+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_latest_results.csv,e3de19a8044fd6b3d410488c7328cbe9b3cc9afbab41aa097515df3803e26cc5
+j2|2026-11-07|徳島|宮崎,1,2,2026-11-08T22:12:46.910351+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_latest_results.csv,e3de19a8044fd6b3d410488c7328cbe9b3cc9afbab41aa097515df3803e26cc5
+j2|2026-11-08|八戸|札幌,0,1,2026-11-08T22:12:46.910351+09:00,/Users/dev_tomo/Desktop/tt_prj_restart/data/j2_2026_latest_results.csv,e3de19a8044fd6b3d410488c7328cbe9b3cc9afbab41aa097515df3803e26cc5

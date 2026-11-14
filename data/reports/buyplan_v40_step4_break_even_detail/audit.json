@@ -1,0 +1,14 @@
+{
+  "source": "data/reports/score_structure_phase35/diagnostics_78.csv",
+  "source_sha256": "ffe5dbf9c1f4830bed6400649ff41b2db749a12b98f507dffe724dfb624019b5",
+  "condition_S": "P00<=round median and P11>=round median (frozen)",
+  "factor_hypotheses": [
+    1.1,
+    1.5,
+    2.0
+  ],
+  "scenarios": "simultaneous S effect and each individual S effect; no probability assigned to either",
+  "actual_results_used_in_calculation": false,
+  "originals_changed": false,
+  "production_changed": false
+}

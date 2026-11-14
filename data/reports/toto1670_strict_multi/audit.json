@@ -1,0 +1,2903 @@
+{
+  "searchstats": {
+    "types": {
+      "D1": {
+        "enumerated_blocks": 106496,
+        "retained_blocks": 256,
+        "omitted_mass_upper_bound": 8.939900204334214e-06,
+        "max_block_mass": 1.1248040316639365e-05,
+        "seconds": 0.010062832850962877
+      },
+      "D2": {
+        "enumerated_blocks": 638976,
+        "retained_blocks": 256,
+        "omitted_mass_upper_bound": 1.7896093413558945e-05,
+        "max_block_mass": 1.9755677849024066e-05,
+        "seconds": 0.04358133394271135
+      },
+      "D3": {
+        "enumerated_blocks": 2342912,
+        "retained_blocks": 256,
+        "omitted_mass_upper_bound": 3.204551271158557e-05,
+        "max_block_mass": 3.446849956549808e-05,
+        "seconds": 0.15403829235583544
+      },
+      "T1": {
+        "enumerated_blocks": 53248,
+        "retained_blocks": 256,
+        "omitted_mass_upper_bound": 1.2707849485740037e-05,
+        "max_block_mass": 1.7423577784836037e-05,
+        "seconds": 0.008568624965846539
+      },
+      "TD": {
+        "enumerated_blocks": 638976,
+        "retained_blocks": 256,
+        "omitted_mass_upper_bound": 2.7098619862381052e-05,
+        "max_block_mass": 3.080535709776164e-05,
+        "seconds": 0.051214790903031826
+      },
+      "T2": {
+        "enumerated_blocks": 159744,
+        "retained_blocks": 256,
+        "omitted_mass_upper_bound": 3.7824630795170264e-05,
+        "max_block_mass": 4.771849321952513e-05,
+        "seconds": 0.024925541132688522
+      }
+    },
+    "pool_size": 256,
+    "seconds": 0.2934212079271674
+  },
+  "solutions": {
+    "T2x1_S1": {
+      "blocks": [
+        {
+          "kind": "T2",
+          "base_id": 271,
+          "double": [],
+          "triple": [
+            2,
+            7
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            7,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            13445,
+            13688,
+            72251,
+            72494,
+            72737,
+            131300,
+            131543,
+            131786
+          ],
+          "mass": 4.771849321952513e-05,
+          "cost": 9
+        }
+      ],
+      "singles": [
+        1039
+      ],
+      "p13": 5.384470796461638e-05,
+      "strict_optimal": true,
+      "search": "full enumeration",
+      "status": "optimal",
+      "seconds": 0.02492429129779339
+    },
+    "D3x1_S2": {
+      "blocks": [
+        {
+          "kind": "D3",
+          "base_id": 1295,
+          "double": [
+            1,
+            2,
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            3,
+            6,
+            1,
+            4,
+            1,
+            1,
+            3,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            72494,
+            131300,
+            131543,
+            249398,
+            249641,
+            308447,
+            308690
+          ],
+          "mass": 3.446849956549808e-05,
+          "cost": 8
+        }
+      ],
+      "singles": [
+        271,
+        1327
+      ],
+      "p13": 4.681099748393804e-05,
+      "strict_optimal": true,
+      "search": "full enumeration",
+      "status": "optimal",
+      "seconds": 0.15403725020587444
+    },
+    "TDx1_S4": {
+      "blocks": [
+        {
+          "kind": "TD",
+          "base_id": 1295,
+          "double": [
+            2
+          ],
+          "triple": [
+            7
+          ],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            7,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            72494,
+            72737,
+            131300,
+            131543,
+            131786
+          ],
+          "mass": 3.080535709776164e-05,
+          "cost": 6
+        }
+      ],
+      "singles": [
+        271,
+        1039,
+        303,
+        15
+      ],
+      "p13": 5.520028816230198e-05,
+      "strict_optimal": true,
+      "search": "full enumeration",
+      "status": "optimal",
+      "seconds": 0.05121387494727969
+    },
+    "D2x1_S6": {
+      "blocks": [
+        {
+          "kind": "D2",
+          "base_id": 1295,
+          "double": [
+            2,
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            3,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            72494,
+            131300,
+            131543
+          ],
+          "mass": 1.9755677849024066e-05,
+          "cost": 4
+        }
+      ],
+      "singles": [
+        271,
+        1327,
+        1039,
+        303,
+        15,
+        1071
+      ],
+      "p13": 5.633574728961103e-05,
+      "strict_optimal": true,
+      "search": "full enumeration",
+      "status": "optimal",
+      "seconds": 0.04358020890504122
+    },
+    "T1x1_S7": {
+      "blocks": [
+        {
+          "kind": "T1",
+          "base_id": 271,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251,
+            131300
+          ],
+          "mass": 1.7423577784836037e-05,
+          "cost": 3
+        }
+      ],
+      "singles": [
+        1327,
+        1039,
+        303,
+        15,
+        1071,
+        47,
+        3343
+      ],
+      "p13": 5.919340528597812e-05,
+      "strict_optimal": true,
+      "search": "full enumeration",
+      "status": "optimal",
+      "seconds": 0.008567625191062689
+    },
+    "D1x1_S8": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 271,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            3,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251
+          ],
+          "mass": 1.1145909608777259e-05,
+          "cost": 2
+        }
+      ],
+      "singles": [
+        1295,
+        1327,
+        1039,
+        303,
+        15,
+        1071,
+        47,
+        3343
+      ],
+      "p13": 5.919340528597812e-05,
+      "strict_optimal": true,
+      "search": "full enumeration",
+      "status": "optimal",
+      "seconds": 0.010061750188469887
+    },
+    "D1x1_D3x1_S0": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 1327,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72737,
+            131786
+          ],
+          "mass": 1.1049679248737577e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D3",
+          "base_id": 1295,
+          "double": [
+            1,
+            2,
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            3,
+            6,
+            1,
+            4,
+            1,
+            1,
+            3,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            72494,
+            131300,
+            131543,
+            249398,
+            249641,
+            308447,
+            308690
+          ],
+          "mass": 3.446849956549808e-05,
+          "cost": 8
+        }
+      ],
+      "singles": [],
+      "p13": 4.5518178814235656e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 4.551817881423566e-05,
+      "omitted_upper_bound": 4.34083997698323e-05,
+      "full_upper_bound": 4.551817881423566e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.012044542003422976
+    },
+    "D2x1_TDx1_S0": {
+      "blocks": [
+        {
+          "kind": "D2",
+          "base_id": 1039,
+          "double": [
+            2,
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            3,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59129,
+            59372,
+            118178,
+            118421
+          ],
+          "mass": 1.9279057373489104e-05,
+          "cost": 4
+        },
+        {
+          "kind": "TD",
+          "base_id": 1295,
+          "double": [
+            2
+          ],
+          "triple": [
+            7
+          ],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            7,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            72494,
+            72737,
+            131300,
+            131543,
+            131786
+          ],
+          "mass": 3.080535709776164e-05,
+          "cost": 6
+        }
+      ],
+      "singles": [],
+      "p13": 5.008441447125074e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.008441447125074e-05,
+      "omitted_upper_bound": 4.8701450511320584e-05,
+      "full_upper_bound": 5.008441447125074e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.010133708827197552
+    },
+    "T1x1_TDx1_S1": {
+      "blocks": [
+        {
+          "kind": "T1",
+          "base_id": 15,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            80,
+            59129,
+            118178
+          ],
+          "mass": 1.7003220964240323e-05,
+          "cost": 3
+        },
+        {
+          "kind": "TD",
+          "base_id": 1295,
+          "double": [
+            2
+          ],
+          "triple": [
+            7
+          ],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            7,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            72494,
+            72737,
+            131300,
+            131543,
+            131786
+          ],
+          "mass": 3.080535709776164e-05,
+          "cost": 6
+        }
+      ],
+      "singles": [
+        271
+      ],
+      "p13": 5.398411553019864e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.398411553019863e-05,
+      "omitted_upper_bound": 5.079986582327587e-05,
+      "full_upper_bound": 5.398411553019864e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.011304082814604044
+    },
+    "D1x1_TDx1_S2": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 1039,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59129,
+            118178
+          ],
+          "mass": 1.0976672947444393e-05,
+          "cost": 2
+        },
+        {
+          "kind": "TD",
+          "base_id": 1295,
+          "double": [
+            2
+          ],
+          "triple": [
+            7
+          ],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            7,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            72494,
+            72737,
+            131300,
+            131543,
+            131786
+          ],
+          "mass": 3.080535709776164e-05,
+          "cost": 6
+        }
+      ],
+      "singles": [
+        271,
+        303
+      ],
+      "p13": 5.40241983478592e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.402419834785919e-05,
+      "omitted_upper_bound": 5.21984629463513e-05,
+      "full_upper_bound": 5.40241983478592e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.01170074986293912
+    },
+    "D2x2_S2": {
+      "blocks": [
+        {
+          "kind": "D2",
+          "base_id": 1295,
+          "double": [
+            1,
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            3,
+            6,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            131300,
+            249398,
+            308447
+          ],
+          "mass": 1.962489344732565e-05,
+          "cost": 4
+        },
+        {
+          "kind": "D2",
+          "base_id": 1327,
+          "double": [
+            2,
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            6,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72494,
+            72737,
+            131543,
+            131786
+          ],
+          "mass": 1.9557316781122278e-05,
+          "cost": 4
+        }
+      ],
+      "singles": [
+        271,
+        1039
+      ],
+      "p13": 5.1483962441735854e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.148396244173585e-05,
+      "omitted_upper_bound": 5.010497690683846e-05,
+      "full_upper_bound": 5.1483962441735854e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.0027810842730104923
+    },
+    "D2x1_T1x1_S3": {
+      "blocks": [
+        {
+          "kind": "D2",
+          "base_id": 1295,
+          "double": [
+            2,
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            3,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            72494,
+            131300,
+            131543
+          ],
+          "mass": 1.9755677849024066e-05,
+          "cost": 4
+        },
+        {
+          "kind": "T1",
+          "base_id": 303,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13688,
+            72737,
+            131786
+          ],
+          "mass": 1.7116310083194073e-05,
+          "cost": 3
+        }
+      ],
+      "singles": [
+        271,
+        1039,
+        15
+      ],
+      "p13": 5.520028816230199e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.520028816230198e-05,
+      "omitted_upper_bound": 5.393983729289371e-05,
+      "full_upper_bound": 5.520028816230199e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.0050139171071350574
+    },
+    "D1x1_D2x1_S4": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 1295,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            131300
+          ],
+          "mass": 1.1248040316639365e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D2",
+          "base_id": 1327,
+          "double": [
+            2,
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            6,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72494,
+            72737,
+            131543,
+            131786
+          ],
+          "mass": 1.9557316781122278e-05,
+          "cost": 4
+        }
+      ],
+      "singles": [
+        271,
+        1039,
+        303,
+        15
+      ],
+      "p13": 5.520028816230198e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.520028816230198e-05,
+      "omitted_upper_bound": 5.3890514569788296e-05,
+      "full_upper_bound": 5.520028816230198e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.006280708126723766
+    },
+    "T1x2_S4": {
+      "blocks": [
+        {
+          "kind": "T1",
+          "base_id": 271,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251,
+            131300
+          ],
+          "mass": 1.7423577784836037e-05,
+          "cost": 3
+        },
+        {
+          "kind": "T1",
+          "base_id": 303,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13688,
+            72737,
+            131786
+          ],
+          "mass": 1.7116310083194073e-05,
+          "cost": 3
+        }
+      ],
+      "singles": [
+        1039,
+        15,
+        1071,
+        47
+      ],
+      "p13": 5.863109739261314e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.863109739261314e-05,
+      "omitted_upper_bound": 5.487780811016606e-05,
+      "full_upper_bound": 5.863109739261314e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.00201624957844615
+    },
+    "D1x1_T1x1_S5": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 1327,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72737,
+            131786
+          ],
+          "mass": 1.1049679248737577e-05,
+          "cost": 2
+        },
+        {
+          "kind": "T1",
+          "base_id": 271,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251,
+            131300
+          ],
+          "mass": 1.7423577784836037e-05,
+          "cost": 3
+        }
+      ],
+      "singles": [
+        1039,
+        303,
+        15,
+        1071,
+        47
+      ],
+      "p13": 5.8631097392613134e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.8631097392613134e-05,
+      "omitted_upper_bound": 5.7176489663216735e-05,
+      "full_upper_bound": 5.8631097392613134e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.006102999672293663
+    },
+    "D1x2_S6": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 1295,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            131300
+          ],
+          "mass": 1.1248040316639365e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1327,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72737,
+            131786
+          ],
+          "mass": 1.1049679248737577e-05,
+          "cost": 2
+        }
+      ],
+      "singles": [
+        271,
+        1039,
+        303,
+        15,
+        1071,
+        47
+      ],
+      "p13": 5.8631097392613134e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.8631097392613134e-05,
+      "omitted_upper_bound": 5.7027500211815987e-05,
+      "full_upper_bound": 5.8631097392613134e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.0018366249278187752
+    },
+    "D1x1_D2x2_S0": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 1039,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59129,
+            118178
+          ],
+          "mass": 1.0976672947444393e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D2",
+          "base_id": 1295,
+          "double": [
+            1,
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            3,
+            6,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            131300,
+            249398,
+            308447
+          ],
+          "mass": 1.962489344732565e-05,
+          "cost": 4
+        },
+        {
+          "kind": "D2",
+          "base_id": 1327,
+          "double": [
+            2,
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            6,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72494,
+            72737,
+            131543,
+            131786
+          ],
+          "mass": 1.9557316781122278e-05,
+          "cost": 4
+        }
+      ],
+      "singles": [],
+      "p13": 5.0158883175892326e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.015888317589232e-05,
+      "omitted_upper_bound": 4.889981157922237e-05,
+      "full_upper_bound": 5.0158883175892326e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.005712292157113552
+    },
+    "D1x2_TDx1_S0": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 1327,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72737,
+            131786
+          ],
+          "mass": 1.1049679248737577e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1039,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59129,
+            118178
+          ],
+          "mass": 1.0976672947444393e-05,
+          "cost": 2
+        },
+        {
+          "kind": "TD",
+          "base_id": 271,
+          "double": [
+            7
+          ],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            3,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            13445,
+            72251,
+            72494,
+            131300,
+            131543
+          ],
+          "mass": 3.060218313633106e-05,
+          "cost": 6
+        }
+      ],
+      "singles": [],
+      "p13": 5.262853533251303e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.2628535332513024e-05,
+      "omitted_upper_bound": 5.099329761873522e-05,
+      "full_upper_bound": 5.262853533251303e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.006987082771956921
+    },
+    "D2x1_T1x2_S0": {
+      "blocks": [
+        {
+          "kind": "D2",
+          "base_id": 1327,
+          "double": [
+            2,
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            6,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72494,
+            72737,
+            131543,
+            131786
+          ],
+          "mass": 1.9557316781122278e-05,
+          "cost": 4
+        },
+        {
+          "kind": "T1",
+          "base_id": 271,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251,
+            131300
+          ],
+          "mass": 1.7423577784836037e-05,
+          "cost": 3
+        },
+        {
+          "kind": "T1",
+          "base_id": 15,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            80,
+            59129,
+            118178
+          ],
+          "mass": 1.7003220964240323e-05,
+          "cost": 3
+        }
+      ],
+      "singles": [],
+      "p13": 5.398411553019864e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.398411553019864e-05,
+      "omitted_upper_bound": 5.2512515859403765e-05,
+      "full_upper_bound": 5.398411553019864e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.00571404118090868
+    },
+    "D1x1_D2x1_T1x1_S1": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 1039,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59129,
+            118178
+          ],
+          "mass": 1.0976672947444393e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D2",
+          "base_id": 1327,
+          "double": [
+            2,
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            6,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72494,
+            72737,
+            131543,
+            131786
+          ],
+          "mass": 1.9557316781122278e-05,
+          "cost": 4
+        },
+        {
+          "kind": "T1",
+          "base_id": 271,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251,
+            131300
+          ],
+          "mass": 1.7423577784836037e-05,
+          "cost": 3
+        }
+      ],
+      "singles": [
+        303
+      ],
+      "p13": 5.4024198347859204e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.4024198347859204e-05,
+      "omitted_upper_bound": 5.284537969109313e-05,
+      "full_upper_bound": 5.4024198347859204e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.010683333035558462
+    },
+    "T1x3_S1": {
+      "blocks": [
+        {
+          "kind": "T1",
+          "base_id": 271,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251,
+            131300
+          ],
+          "mass": 1.7423577784836037e-05,
+          "cost": 3
+        },
+        {
+          "kind": "T1",
+          "base_id": 303,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13688,
+            72737,
+            131786
+          ],
+          "mass": 1.7116310083194073e-05,
+          "cost": 3
+        },
+        {
+          "kind": "T1",
+          "base_id": 15,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            80,
+            59129,
+            118178
+          ],
+          "mass": 1.7003220964240323e-05,
+          "cost": 3
+        }
+      ],
+      "singles": [
+        1071
+      ],
+      "p13": 5.756128675807377e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.756128675807377e-05,
+      "omitted_upper_bound": 5.360194010764363e-05,
+      "full_upper_bound": 5.756128675807377e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.00240762485191226
+    },
+    "D1x1_T1x2_S2": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 303,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            3,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13688,
+            72737
+          ],
+          "mass": 1.0949349632950785e-05,
+          "cost": 2
+        },
+        {
+          "kind": "T1",
+          "base_id": 271,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251,
+            131300
+          ],
+          "mass": 1.7423577784836037e-05,
+          "cost": 3
+        },
+        {
+          "kind": "T1",
+          "base_id": 15,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            80,
+            59129,
+            118178
+          ],
+          "mass": 1.7003220964240323e-05,
+          "cost": 3
+        }
+      ],
+      "singles": [
+        1327,
+        1071
+      ],
+      "p13": 5.756128675807377e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.756128675807377e-05,
+      "omitted_upper_bound": 5.600952829443448e-05,
+      "full_upper_bound": 5.756128675807377e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.018087708856910467
+    },
+    "D1x2_D2x1_S2": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 271,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            3,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251
+          ],
+          "mass": 1.1145909608777259e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1039,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59129,
+            118178
+          ],
+          "mass": 1.0976672947444393e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D2",
+          "base_id": 1327,
+          "double": [
+            2,
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            6,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72494,
+            72737,
+            131543,
+            131786
+          ],
+          "mass": 1.9557316781122278e-05,
+          "cost": 4
+        }
+      ],
+      "singles": [
+        1295,
+        303
+      ],
+      "p13": 5.40241983478592e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.4024198347859204e-05,
+      "omitted_upper_bound": 5.274324898323101e-05,
+      "full_upper_bound": 5.4024198347859204e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.006253458093851805
+    },
+    "D1x2_T1x1_S3": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 271,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            3,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251
+          ],
+          "mass": 1.1145909608777259e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 15,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            80,
+            59129
+          ],
+          "mass": 1.087700621914907e-05,
+          "cost": 2
+        },
+        {
+          "kind": "T1",
+          "base_id": 303,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13688,
+            72737,
+            131786
+          ],
+          "mass": 1.7116310083194073e-05,
+          "cost": 3
+        }
+      ],
+      "singles": [
+        1295,
+        1039,
+        1071
+      ],
+      "p13": 5.756128675807377e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.756128675807377e-05,
+      "omitted_upper_bound": 5.623168440030834e-05,
+      "full_upper_bound": 5.756128675807377e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.005427875090390444
+    },
+    "D1x3_S4": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 1295,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            131300
+          ],
+          "mass": 1.1248040316639365e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1327,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72737,
+            131786
+          ],
+          "mass": 1.1049679248737577e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 15,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            3,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            80,
+            59129
+          ],
+          "mass": 1.087700621914907e-05,
+          "cost": 2
+        }
+      ],
+      "singles": [
+        271,
+        1039,
+        303,
+        1071
+      ],
+      "p13": 5.756128675807376e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.756128675807377e-05,
+      "omitted_upper_bound": 5.6080230969340826e-05,
+      "full_upper_bound": 5.756128675807377e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.0021661249920725822
+    },
+    "D1x2_T1x2_S0": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 1039,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59129,
+            118178
+          ],
+          "mass": 1.0976672947444393e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1071,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59615,
+            118664
+          ],
+          "mass": 1.0783097488380404e-05,
+          "cost": 2
+        },
+        {
+          "kind": "T1",
+          "base_id": 271,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251,
+            131300
+          ],
+          "mass": 1.7423577784836037e-05,
+          "cost": 3
+        },
+        {
+          "kind": "T1",
+          "base_id": 303,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13688,
+            72737,
+            131786
+          ],
+          "mass": 1.7116310083194073e-05,
+          "cost": 3
+        }
+      ],
+      "singles": [],
+      "p13": 5.629965830385491e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.629965830385491e-05,
+      "omitted_upper_bound": 5.48043629668184e-05,
+      "full_upper_bound": 5.629965830385491e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.004265499766916037
+    },
+    "D1x3_D2x1_S0": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 271,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            3,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251
+          ],
+          "mass": 1.1145909608777259e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1039,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59129,
+            118178
+          ],
+          "mass": 1.0976672947444393e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1295,
+          "double": [
+            1
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            3,
+            4,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            131300,
+            308447
+          ],
+          "mass": 1.095289184468618e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D2",
+          "base_id": 1327,
+          "double": [
+            2,
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            6,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72494,
+            72737,
+            131543,
+            131786
+          ],
+          "mass": 1.9557316781122278e-05,
+          "cost": 4
+        }
+      ],
+      "singles": [],
+      "p13": 5.263279118203011e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.263279118203011e-05,
+      "omitted_upper_bound": 5.1339722587713146e-05,
+      "full_upper_bound": 5.263279118203011e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.005981625057756901
+    },
+    "D1x3_T1x1_S1": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 271,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            3,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251
+          ],
+          "mass": 1.1145909608777259e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1039,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59129,
+            118178
+          ],
+          "mass": 1.0976672947444393e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1071,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59615,
+            118664
+          ],
+          "mass": 1.0783097488380404e-05,
+          "cost": 2
+        },
+        {
+          "kind": "T1",
+          "base_id": 303,
+          "double": [],
+          "triple": [
+            2
+          ],
+          "masks": [
+            1,
+            1,
+            7,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13688,
+            72737,
+            131786
+          ],
+          "mass": 1.7116310083194073e-05,
+          "cost": 3
+        }
+      ],
+      "singles": [
+        1295
+      ],
+      "p13": 5.629965830385491e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.629965830385491e-05,
+      "omitted_upper_bound": 5.5035096090645644e-05,
+      "full_upper_bound": 5.629965830385491e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.00577374966815114
+    },
+    "D1x4_S2": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 1295,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72251,
+            131300
+          ],
+          "mass": 1.1248040316639365e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1327,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72737,
+            131786
+          ],
+          "mass": 1.1049679248737577e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1039,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59129,
+            118178
+          ],
+          "mass": 1.0976672947444393e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1071,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59615,
+            118664
+          ],
+          "mass": 1.0783097488380404e-05,
+          "cost": 2
+        }
+      ],
+      "singles": [
+        271,
+        303
+      ],
+      "p13": 5.629965830385491e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.62996583038549e-05,
+      "omitted_upper_bound": 5.483673502274386e-05,
+      "full_upper_bound": 5.629965830385491e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.002226084005087614
+    },
+    "D1x5_S0": {
+      "blocks": [
+        {
+          "kind": "D1",
+          "base_id": 271,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            3,
+            1,
+            4,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            13202,
+            72251
+          ],
+          "mass": 1.1145909608777259e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1327,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            4,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            72737,
+            131786
+          ],
+          "mass": 1.1049679248737577e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1295,
+          "double": [
+            7
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            4,
+            1,
+            4,
+            1,
+            1,
+            3,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            131300,
+            131543
+          ],
+          "mass": 1.1025884210765492e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1039,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59129,
+            118178
+          ],
+          "mass": 1.0976672947444393e-05,
+          "cost": 2
+        },
+        {
+          "kind": "D1",
+          "base_id": 1071,
+          "double": [
+            2
+          ],
+          "triple": [],
+          "masks": [
+            1,
+            1,
+            6,
+            1,
+            1,
+            1,
+            1,
+            4,
+            1,
+            4,
+            4,
+            4,
+            4
+          ],
+          "codes": [
+            59615,
+            118664
+          ],
+          "mass": 1.0783097488380404e-05,
+          "cost": 2
+        }
+      ],
+      "singles": [],
+      "p13": 5.4981243504105125e-05,
+      "status": "optimal",
+      "strict_optimal": true,
+      "search": "candidate pool integer program",
+      "pool_solver_status": 0,
+      "pool_gap": 0.0,
+      "pool_upper_bound": 5.498124350410512e-05,
+      "omitted_upper_bound": 5.340941358925391e-05,
+      "full_upper_bound": 5.4981243504105125e-05,
+      "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "seconds": 0.0020330832339823246
+    }
+  },
+  "protected_sha256": {
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/toto1670_fixed_exact13/forecast_input.csv": "e5957b1ed9223b9aa1e757aa8db9fa866c9b110beadbdbad17d084a994a6f7c6",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_scenario_09_conservative.csv": "c5323ee7ec1f5fb57eb031121f5b06d113ff23efd1342069dd5d287688305b8b",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_buyplan.html": "eff0ce80263762cab2cc05259a5dc627b76e0a8a62d532c25c05d9981891e900",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_scenario_04_draw_bias.csv": "2bcc48bf5bdfecd6756604239efdf7c7d5a562e4ba883f14dfce1e9af073fea9",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_buyplan.csv": "497b85ff81345d70c6cd5712c8958b423213e67b11deca0f620f18a26ae8cd1b",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_current_evaluation.csv": "95222e26d8515a54042be39c0342f9e830e336b6b219331f2a64666f68702683",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_scenario_08_chaos.csv": "33baacb4fb878a219f955061f013e7b5f27feebc66c682ad8a13d26a34b1a743",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_scenario_06_away_bias.csv": "06b5f5eb7c884305f81f38acc051c2157a11c63c913506784559539ee7119ffb",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_v25_reference.json": "e4aa0a6646bc6fc584b01a5fa2f74e9c70f543377f004636edd59d2f0b55cad5",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_buyplan_b.csv": "9080266336034ed906616ef94985af91713cee1413b99b71de400e7b6b78a64f",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/.DS_Store": "825a364ce9c3dc4c8bbc5ea66c08a3702b79dc565f76a7608a131e7d37bee27a",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_v25_features.csv": "d9926ba5f7af1d38f05bd74ce0b3bdf708dc51e9f28efbcda76448426affd3d2",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_v25_candidates.csv": "ded0217b1f41021a6d239138676cf929d6f676c8deb203b713caceeaf5549086",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_buyplan_c.csv": "871e88b657166610e8e6af4cd082a6be75808277082d80d1e066457f1dc06d82",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_scenario_05_home_bias.csv": "e65d43fe3f6551baa954004ef5c755344fcbdc04f162257634f7d28909fbfa72",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan.html": "355c038ca32122ae3df2ed847ca844fdbec91ae179d33032b21621a50dbfe4ba",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_caution.csv": "d53b8bdae4d4aea4daedf8c63c2b08c886a57820176a6eaf5dffdd9e051dce09",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_scenario_01_base.csv": "3a3d9bc2c3334df1abdcff9fe00fcbb401f07158b9c990bd739c3a3105835a61",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_scenario_10_balanced.csv": "7de32853c6b9657da54fd08e425b153d9f140f5ec6e75f1cc8f1e6dc0addd21a",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_toto_diff.csv": "71c0293a5c582636fa7ef24571a6d62633e827f160375cace8e3c2df4c482974",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions.csv": "4b6563ad70d98a866414a70e2a8d7d585e98025870281ed432f270ab5f8aa816",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_buyplan_c.html": "d986004eab001cf466e2ba5b51a568ba8444f7043091d3057e9bd854414050ff",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_buyplan_b.html": "38ea0f47175e9337e52ab4e3cd54c815614a5be8fa9f3c7e43f3cccfda4939ca",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_scenario_03_strong_upset.csv": "fbbb7dd8cfaa05d87183ef82a4a8425d5ab7a6a89d98ac1dd9ae34e3bb42ea1e",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_v25_audit.json": "6f863fb660df84e3c0d117e992034ab79099d83a3d898bef596c0d568005e119",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_caution_toto_diff.csv": "eb625cfcb5d81d8b5c99ed1e28119fd1f422412b2ac23dfaa2cd9435f6f5a505",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_buyplan_context.csv": "71a79d02b29cdd8ca1796192169dda08a8b66cb751a948dbcf241436245aabb2",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_test_snapshot.csv": "daab0cd5c759ae524c3e3059b46f016fd279f992177bf981152ecc37a4c645fe",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/manual_notes_round18.md": "39419d2bef618a7453c50d1206a9a682b04b4aeb2812be2a4cc4dc425eb0215e",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_buyplan_v25.csv": "ce28acef5047e1e23e9e5b06dc6b6d4190bf5ed1c0052cdec76702fa19a6b877",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan.csv": "7be14e6ebd0cc52f24a21670536476a4718f74b1cc8c10702bc6cb9a566b0d33",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/next_predictions.csv": "7efaa248066da4a9d5127b429a75d659339fe6869079e81facf335ccc0ee16bf",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_test_snapshot.html": "b0a8bde53cd2d81284a06bd1055ff8005d90458d40ec065e7f8ec340efc711c7",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_scored_summary.csv": "e3c0bc0c27844f59a0f47fdd34ec961d191384c274a0212b3e2abadd0914e67a",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/shadow_buyplan_v25.html": "981407afb6cbde8897f3229b1ecf813a1eeefd0ad2b63d7917243ed4087d6f65",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/manifest.json": "38216b396f015f87fc9aded10b300017b1f4cb52350c0cb3e7ed9506c9dafd83",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_test_snapshot_toto_diff.csv": "838c5f4310cf9fbb45f27a8d66388a96d083be1e4efdee35db5d5b1247a8189b",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_caution.csv": "6eb79ddf7a8838ff23800c37fcd440067a6f8841908b3714ba885a900360ed95",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_scenario_07_tight_match.csv": "119e69e367d24011010c26408f3469872d7d1f4d9fd97a18f272634c1ffc3259",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/style_observation.json": "7a4024d923412eadfced7ac0e803d9aba9b3d6bdbd280382b0a16c61f31a442b",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_caution.html": "5d0cf49d3544dedaf3c657f8eb443fd8e746deb74910a9871846b9c96b263625",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_simulation_current.html": "50c54343d47184db2b09cb265e36cf179e182251dcc1a529f0edb7868b3fb973",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_scored.csv": "e3ad1581017dcd0f5cd87601f1284494416343c7ea7d0b7d965b751f394971d2",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/buyplan_simulation.html": "97a348f15b2d284180b6528771954b1f0e9c2a518d83a75cdca4020138b30578",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/purchase_reference/predictions_scenario_02_slight_upset.csv": "1d5cca3ff95e3e9d7c949e4f8bc09e2bc024727c2cacccfbbd223bd6dae3b33d",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/toto1670_multi_draw_shadow/exact_lines.csv": "b704358c329589814798ea2df87b3d9f4b20c2aeea158d4f2e7bce3e80d9c786",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/toto1670_multi_draw_shadow/match_allocations.csv": "d96b22a0e29c4956600eae34e125de570f997a8b6a6eee234e05b300ecec03e2",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/toto1670_multi_draw_shadow/audit.json": "c1ebf163fd3e25c1f79c925d220c03917409aa88f5263c24eed8455f9851f4f2",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/toto1670_multi_draw_shadow/3Doubles_plus_2Singles_tickets.csv": "75e91594d312bac330dd3b6757ce6c17b23ffaf36ead1d4bd1741755716afcfc",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/toto1670_multi_draw_shadow/index.html": "80a06dc6534fe918374a1a1e9c763be47f0ed5136bef8fec686f538c28e24997",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/toto1670_multi_draw_shadow/hit_probabilities.csv": "ce1cca6156068fb33e899d18de53b5c47c6d2a75058dd68e4fde658c86aee902",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/toto1670_multi_draw_shadow/C95_tickets.csv": "404af50f00d1ae7b95b68c950abb39ae399f6c73a2f89d58f190319f17ecb824",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/toto1670_multi_draw_shadow/1Triple_1Double_plus_4Singles_tickets.csv": "a099b803e4517841a39c9f50b5f6a5dde94aa7e7e8c2800fb35b99f236fae379",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/toto1670_multi_draw_shadow/comparison.csv": "a4ef7b759ac0776ac00d75e187c235bed65650b027050c3cff6aca434a1b9c0c"
+  },
+  "winner": "T1x1_S7",
+  "overall_optimal_certified": true,
+  "overall_upper_bound": 5.919340528597812e-05,
+  "production_changed": false
+}

@@ -1,0 +1,10 @@
+{
+  "matches": 78,
+  "per_round": 13,
+  "source_sha256": "ffe5dbf9c1f4830bed6400649ff41b2db749a12b98f507dffe724dfb624019b5",
+  "thresholds_chosen_without_result_optimization": true,
+  "new_selection_score_created": false,
+  "selected_optimal_threshold": false,
+  "independent_validation": false,
+  "explanation": "Existing development sample; resolution audit only"
+}

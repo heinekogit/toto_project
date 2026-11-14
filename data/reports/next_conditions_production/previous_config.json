@@ -1,0 +1,28 @@
+{
+  "version": "fatigue_weather_uniform_v1",
+  "absence_goals_per_impact": 0.25,
+  "fatigue_weight": 0.25,
+  "weather_weight": 0.25,
+  "rain_signal": 0.35,
+  "heavy_rain_signal": 1.0,
+  "strong_wind_signal": 0.65,
+  "max_mix": 0.25,
+  "fit_rounds": [
+    1644,
+    1645,
+    1647,
+    1648,
+    1649,
+    1650,
+    1653,
+    1654
+  ],
+  "validation_rounds": [
+    1660,
+    1663,
+    1664
+  ],
+  "validation_logloss_baseline": 1.0671643050027095,
+  "validation_logloss_candidate": 1.065350924459683,
+  "source": "/Users/dev_tomo/Desktop/tt_prj_restart/data/eval/observation_history/matches.csv"
+}

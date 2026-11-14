@@ -85,7 +85,9 @@ def main() -> None:
     if not args.buyplan_csv and args.engine == "next":
         for name in ("next_predictions.csv", "shadow_buyplan.csv", "shadow_buyplan.html",
                      "shadow_buyplan_b.csv", "shadow_buyplan_b.html",
-                     "shadow_buyplan_c.csv", "shadow_buyplan_c.html", "manifest.json"):
+                     "shadow_buyplan_c.csv", "shadow_buyplan_c.html", "manifest.json",
+                     "shadow_condition_s_buyplan.csv", "shadow_condition_s_buyplan.html",
+                     'shadow_buyplan_v25.csv', 'shadow_buyplan_v25.html', 'shadow_v25_features.csv', 'shadow_v25_candidates.csv', 'shadow_v25_audit.json', 'shadow_v25_reference.json'):
             source = srcdir / name
             if source.is_file():
                 archive_name = "buyplan_engine_manifest.json" if name == "manifest.json" else name

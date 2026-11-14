@@ -1,0 +1,38 @@
+{
+  "input_hashes": {
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase4b_stage1/ticket_probabilities.csv": "38033731b34ce9400e411769c1ce5aa3065d8b1fe98a168f3755609640cadce6",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase4b_stage1/portfolio_comparison.csv": "ca3d1e99ff3d7077d147c4d5d4662419f28cab565a0fe3fe2c3c674d7db3bb30",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase4b_stage1/audit.json": "96845b9f75f691832c7e4884c9e00b5b6743fbc4aca045f95073aafe8ebcfac2",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/BUYPLAN_V4_0.md": "82ed9b45346b37c73b458e95004a642d66590bde884c0821fbfba2fcca433c38",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/forecasts.jsonl": "89e31ed28315a787ffe224cff5219cd00255e9220082b38b76281fa0dff87e3f",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/results.jsonl": "5020ee262a847a58447a34f87df99443d0163dacb4c3e1e498e47805c96018be"
+  },
+  "rounds": [
+    "toto1660",
+    "toto1663",
+    "toto1664",
+    "toto1665",
+    "toto1668",
+    "toto1670"
+  ],
+  "matches": 78,
+  "seed": 20261111,
+  "random_trials_per_kind_per_delta_per_round": 100,
+  "strengths_pp": [
+    1,
+    3,
+    5
+  ],
+  "scenario_count": 3732,
+  "comparison_count": 13684,
+  "archived_portfolios_fixed": true,
+  "Q_reoptimizes_tickets": false,
+  "all_scenarios_hypothetical": true,
+  "real_error_model_fitted": false,
+  "discarded_v30_used": false,
+  "production_changed": false,
+  "existing_data_unchanged": true,
+  "random_independent": "each match independently chooses a random H/D/A recipient and random transfer sign; fixed generator",
+  "random_common": "all matches receive the same randomly chosen H/D/A recipient; fixed generator",
+  "top3_selection": "three fixtures with largest max(P(H),P(D),P(A)), ties match number"
+}

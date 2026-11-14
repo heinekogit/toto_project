@@ -1,0 +1,5 @@
+﻿season,toto_round,match_no,league,competition_frame_id,match_date_from_toto,match_id,datetime,stadium,home_team,away_team,official_source_url
+2027,1672,1,j1,11,2026-11-15,j1_2026_11151400_町田_神戸,2026-11-15 14:00:00,Ｇスタ,町田,神戸,https://data.j-league.or.jp/SFMS01/search?competition_years=2026&competition_frame_ids=11&section_months=11&tv_relay_station_name=
+2027,1672,2,j1,11,2026-11-15,j1_2026_11151500_C大阪_浦和,2026-11-15 15:00:00,ハナサカ,Ｃ大阪,浦和,https://data.j-league.or.jp/SFMS01/search?competition_years=2026&competition_frame_ids=11&section_months=11&tv_relay_station_name=
+2027,1672,3,j1,11,2026-11-15,j1_2026_11151500_鹿島_横浜FM,2026-11-15 15:00:00,メルスタ,鹿島,横浜FM,https://data.j-league.or.jp/SFMS01/search?competition_years=2026&competition_frame_ids=11&section_months=11&tv_relay_station_name=
+2027,1672,4,j1,11,2026-11-15,j1_2026_11151700_柏_川崎F,2026-11-15 17:00:00,三協Ｆ柏,柏,川崎Ｆ,https://data.j-league.or.jp/SFMS01/search?competition_years=2026&competition_frame_ids=11&section_months=11&tv_relay_station_name=

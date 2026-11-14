@@ -1,0 +1,26 @@
+{
+  "matches": 78,
+  "actual_D": 18,
+  "states_per_match": 25,
+  "branch_rows": 156,
+  "condition_families": 7,
+  "source_hashes": {
+    "data/reports/score_structure_phase4a_stage1/match_diagnostics.csv": "6d87a033a7bff3aeb784b202d3f0f41b30d463d4d58d1a6d9833e51f04b9642d",
+    "data/reports/score_structure_phase12/match_structure_78.csv": "7633f1a0105178e6e540b9a816ebca2564cda107f841d24e3fe7b4a20a770b15",
+    "data/reports/score_structure_phase4a_audit/forecast_result_join.csv": "8accccf12026361b85b7ce100221d7b61624c9f1535c4aea826bd4e58343111d",
+    "data/eval/toto_rounds/toto1660/snapshot/next_predictions.csv": "10a971e5783138a46d7018c18dec4ed2c27a7c936554c7bfa018d5ce118e6455",
+    "data/eval/toto_rounds/toto1663/snapshot/next_predictions.csv": "b20040116f63cdf8d4d8d9e292e6c5aa3be67ef3b87618a3e3a74ebbb38ee9d7",
+    "data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv": "75580295a3107b14620efebeb2c9b7911c90ed889a99c1942595ccd58331dc18",
+    "data/eval/toto_rounds/toto1665/snapshot/next_predictions.csv": "4037a7f331a223d96858f6c2f47108d6bd1b1493df3006dd9142cc440a440fee",
+    "data/eval/toto_rounds/toto1668/snapshot/next_predictions.csv": "5d48fcdb521f03d261900afddc03ea8d1a6a93808654135e620431958db7537a",
+    "data/eval/toto_rounds/toto1670/snapshot/next_predictions.csv": "7efaa248066da4a9d5127b429a75d659339fe6869079e81facf335ccc0ee16bf"
+  },
+  "originals_unchanged": true,
+  "results_used_to_set_scenarios_or_conditions": false,
+  "exploratory_relative_widths": [
+    0.05,
+    0.1
+  ],
+  "widths_are_empirical_errors": false,
+  "formal_model_or_buyplan_changed": false
+}

@@ -7,6 +7,9 @@ from typing import List
 
 import pandas as pd
 
+from jleague_team_names import canonical_team_name
+from resolve_toto_official_fixtures import target_date
+
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DEFAULT_OUT_CSV = os.path.join(ROOT_DIR, "data", "purchase_reference", "predictions.csv")
@@ -178,6 +181,66 @@ def load_prediction_csv(
         round_no,
     )
     return out
+
+
+def select_toto_predictions(
+    *, season: int, logical_season: int, toto_round: str,
+    j1_path: str, j2_path: str, order_path: str, official_path: str | None = None,
+) -> pd.DataFrame:
+    """Select exact toto cards by calendar date, kickoff and both teams."""
+    digits = str(toto_round).lower().removeprefix("toto")
+    order = pd.read_csv(order_path, dtype=str, encoding="utf-8-sig")
+    target = order[(order["season"] == str(logical_season)) &
+                   (order["toto_round"] == digits)].copy()
+    if len(target) != 13 or target["match_no"].nunique() != 13:
+        raise RuntimeError(f"toto{digits}: 節リストに13試合・番号一意が必要 (rows={len(target)})")
+    official = None
+    if official_path:
+        official = pd.read_csv(official_path, encoding="utf-8-sig")
+        if len(official) != 13 or official["match_no"].nunique() != 13:
+            raise RuntimeError(f"公式照合スナップショットが13試合でありません: {official_path}")
+    frames = []
+    for league, path in (("j1", j1_path), ("j2", j2_path)):
+        if not os.path.isfile(path):
+            raise FileNotFoundError(f"{league} 予測CSVがありません: {path}")
+        frame = pd.read_csv(path, keep_default_na=False, low_memory=False)
+        frame = frame.assign(
+            __league_source=league,
+            __kickoff=pd.to_datetime(frame["datetime"], errors="coerce"),
+            __home_key=frame["home_team"].map(canonical_team_name),
+            __away_key=frame["away_team"].map(canonical_team_name),
+        )
+        frames.append(frame)
+    predictions = pd.concat(frames, ignore_index=True)
+    selected = []
+    errors = []
+    for _, row in target.iterrows():
+        day, listed_time = target_date(row["match_date"], season)
+        hit = predictions[(predictions["__kickoff"].dt.normalize() == day) &
+                          (predictions["__home_key"] == canonical_team_name(row["home_team"])) &
+                          (predictions["__away_key"] == canonical_team_name(row["away_team"]))]
+        if listed_time:
+            hit = hit[hit["__kickoff"].dt.strftime("%H:%M") == listed_time]
+        if official is not None:
+            fixture = official.loc[official["match_no"] == int(row["match_no"])]
+            if len(fixture) != 1:
+                errors.append(f"No.{row['match_no']}: 公式照合スナップショットに試合がありません")
+                continue
+            expected_kickoff = pd.Timestamp(fixture.iloc[0]["datetime"])
+            hit = hit[hit["__kickoff"] == expected_kickoff]
+        label = f"No.{row['match_no']} {day.date()} {row['home_team']}-{row['away_team']}"
+        if len(hit) != 1:
+            errors.append(f"{label}: 予測CSVとの一致が{len(hit)}件")
+            continue
+        item = hit.iloc[[0]].copy()
+        item["toto_round_id"] = f"toto{digits}"
+        item["toto_match_no"] = int(row["match_no"])
+        selected.append(item)
+    if errors:
+        raise RuntimeError("toto対象の予測が不足・重複しています。predictions.csvは更新しません:\n" + "\n".join(errors))
+    return pd.concat(selected, ignore_index=True).drop(
+        columns=["__league_source", "__kickoff", "__home_key", "__away_key"]
+    ).sort_values("toto_match_no")
 
 
 def align_prediction_columns(frames: List[pd.DataFrame]) -> List[pd.DataFrame]:
@@ -636,6 +699,9 @@ def parse_args():
     p.add_argument("--round", type=int, default=None, dest="round_no", help="J1/J2共通の節番号")
     p.add_argument("--j1-round", type=int, default=None, help="J1 の節番号を個別指定")
     p.add_argument("--j2-round", type=int, default=None, help="J2 の節番号を個別指定")
+    p.add_argument("--toto-round", default=None, help="節番号に依存せずtoto節リストの日付・対戦で13試合を選択 (例: toto1672)")
+    p.add_argument("--toto-order-csv", default=DEFAULT_TOTO_ORDER_CSV)
+    p.add_argument("--official-fixtures", default=None, help="照合済み公式日程CSV。指定時は開始時刻まで一致を要求")
     p.add_argument("--j1", default=None, help="既定: j1_{season}_predictions.csv")
     p.add_argument("--j2", default=None, help="既定: j2_{season}_predictions.csv")
     p.add_argument("--out", default=DEFAULT_OUT_CSV, help="既定: data/purchase_reference/predictions.csv")
@@ -649,12 +715,34 @@ def parse_args():
 
 def main():
     args = parse_args()
-    if args.round_no is None and args.j1_round is None and args.j2_round is None:
-        raise RuntimeError("--round または --j1-round/--j2-round の指定が必要です")
-    j1_path = resolve_prediction_input_path(args.j1, "j1", args.season)
-    j2_path = resolve_prediction_input_path(args.j2, "j2", args.season)
+    if args.toto_round and any(x is not None for x in (args.round_no, args.j1_round, args.j2_round)):
+        raise RuntimeError("--toto-round と節番号指定は併用できません")
+    if not args.toto_round and args.round_no is None and args.j1_round is None and args.j2_round is None:
+        raise RuntimeError("--toto-round、--round、または --j1-round/--j2-round の指定が必要です")
+    if args.toto_round:
+        # Candidate snapshots can predate a cup fixture. The exact toto mode uses
+        # the current completed prediction files unless paths are explicit.
+        j1_path = args.j1 or os.path.join(ROOT_DIR, f"j1_{args.season}_predictions_hfa_on.csv")
+        j2_path = args.j2 or os.path.join(ROOT_DIR, f"j2_{args.season}_predictions_hfa_on.csv")
+    else:
+        j1_path = resolve_prediction_input_path(args.j1, "j1", args.season)
+        j2_path = resolve_prediction_input_path(args.j2, "j2", args.season)
     out_csv = os.path.abspath(args.out)
     out_context_csv = os.path.abspath(args.out_context)
+    if args.toto_round:
+        out = select_toto_predictions(
+            season=args.season,
+            logical_season=args.logical_season if args.logical_season is not None else args.season,
+            toto_round=args.toto_round, j1_path=j1_path, j2_path=j2_path,
+            order_path=args.toto_order_csv, official_path=args.official_fixtures,
+        )
+        out = drop_legacy_variant_columns(out)
+        os.makedirs(os.path.dirname(out_csv) or ".", exist_ok=True)
+        out.to_csv(out_csv, index=False, encoding="utf-8-sig")
+        os.makedirs(os.path.dirname(out_context_csv) or ".", exist_ok=True)
+        build_buyplan_context(out).to_csv(out_context_csv, index=False, encoding="utf-8-sig")
+        print(f"[TOTO_ROUND] {args.toto_round}: {len(out)} exact dated cards; saved={out_csv}")
+        return
     j1_round = int(args.j1_round if args.j1_round is not None else args.round_no)
     j2_round = int(args.j2_round if args.j2_round is not None else args.round_no)
 

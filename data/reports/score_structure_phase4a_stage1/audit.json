@@ -1,0 +1,22 @@
+{
+  "matches": 78,
+  "rounds": [
+    "toto1660",
+    "toto1663",
+    "toto1664",
+    "toto1665",
+    "toto1668",
+    "toto1670"
+  ],
+  "A_only": true,
+  "C_recomputed_used": false,
+  "registry_hashes": {
+    "forecasts.jsonl": "89e31ed28315a787ffe224cff5219cd00255e9220082b38b76281fa0dff87e3f",
+    "results.jsonl": "5020ee262a847a58447a34f87df99443d0163dacb4c3e1e498e47805c96018be"
+  },
+  "independent_poisson_binomial_for_draw_count": true,
+  "pearson_dispersion_denominator": "N per side; no parameters fitted",
+  "goal_interval": "Poisson 5th through 95th percentile, discrete conservative coverage",
+  "brier": "sum of three squared errors, not divided by three",
+  "model_or_buyplan_changed": false
+}

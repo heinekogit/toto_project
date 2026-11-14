@@ -7,7 +7,7 @@ from tempfile import TemporaryDirectory
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).parent / "next_model"))
-from run_next_buyplan import select_round, build_next_probabilities, build_comparison_shadow, build_anchor_shadow
+from run_next_buyplan import select_round, strip_legacy_forecast_outputs, build_next_probabilities, build_comparison_shadow, build_anchor_shadow
 from build_next_buyplan import build_round
 from expected_goals import base_lambdas_v1, score_distribution
 from lab_matchup import apply_lab_matchup
@@ -37,8 +37,8 @@ class RunNextBuyPlanTest(unittest.TestCase):
     def test_purchase_probabilities_come_from_score_distribution(self):
         snapshot = Path(__file__).resolve().parents[1] / 'data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv'
         selected = pd.read_csv(snapshot, encoding='utf-8-sig')
-        output = build_next_probabilities(selected)
-        self.assertTrue(output['buyplan_probability_source'].eq('next_score_distribution_HDA + absence_attack_defense_lambda_v1 + fatigue_weather_uniform_v1').all())
+        output = build_next_probabilities(selected, goal_rate_adjustment=False)
+        self.assertTrue(output['buyplan_probability_source'].eq('next_score_distribution_HDA + absence_attack_defense_lambda_v1 + next_team_conditions_v2').all())
         for idx, source in selected.iterrows():
             base_home, base_away, _ = base_lambdas_v1(source)
             lab = apply_lab_matchup(source, base_home, base_away)
@@ -56,18 +56,47 @@ class RunNextBuyPlanTest(unittest.TestCase):
     def test_default_applies_uncertainty_to_score_forecast(self):
         snapshot = Path(__file__).resolve().parents[1] / 'data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv'
         selected = pd.read_csv(snapshot, encoding='utf-8-sig').iloc[:1]
-        output = build_next_probabilities(selected)
+        output = build_next_probabilities(selected, goal_rate_adjustment=False)
         self.assertAlmostEqual(output.loc[0, 'next_prob_pre_absence_home'], 0.5040519005115558)
         self.assertNotAlmostEqual(output.loc[0, 'next_prob_home'], 0.5040519005115558)
         self.assertEqual(output.loc[0, 'buyplan_probability_source'],
-                         'next_score_distribution_HDA + absence_attack_defense_lambda_v1 + fatigue_weather_uniform_v1')
+                         'next_score_distribution_HDA + absence_attack_defense_lambda_v1 + next_team_conditions_v2')
 
     def test_prediction_final_probabilities_are_not_required(self):
         snapshot = Path(__file__).resolve().parents[1] / 'data/eval/toto_rounds/toto1664/snapshot/next_predictions.csv'
         selected = pd.read_csv(snapshot, encoding='utf-8-sig').iloc[:1].copy()
         selected.loc[selected.index[0], 'prob_final_draw'] = float('nan')
-        output = build_next_probabilities(selected)
+        output = build_next_probabilities(selected, goal_rate_adjustment=False)
         self.assertAlmostEqual(output.loc[0, 'next_prob_pre_absence_home'], 0.5040519005115558)
+
+    def test_default_adjusts_scoring_and_conceding_and_records_lambda_effect(self):
+        snapshot = Path(__file__).resolve().parents[1] / 'data/eval/toto_rounds/toto1668/snapshot/predictions.csv'
+        selected = pd.read_csv(snapshot, encoding='utf-8-sig')
+        selected = selected.loc[selected.home_team.eq('長崎')]
+        adjusted = build_next_probabilities(selected)
+        baseline = build_next_probabilities(selected, goal_rate_adjustment=False)
+        row = adjusted.iloc[0]
+        self.assertEqual(row['goal_rate_adjustment_status'], 'applied')
+        self.assertEqual(row['goal_rate_historical_red_card_status'], 'not_available')
+        self.assertLess(row['goal_rate_for_home_used'], row['goal_rate_for_home_published'])
+        self.assertLess(row['goal_rate_against_away_used'], row['goal_rate_against_away_published'])
+        self.assertAlmostEqual(row['goal_rate_final_lambda_delta_home'],
+                               row['final_lambda_home'] - baseline.iloc[0]['final_lambda_home'])
+
+    def test_next_forecast_is_independent_of_legacy_probabilities_and_labels(self):
+        snapshot = Path(__file__).resolve().parents[1] / 'data/eval/toto_rounds/toto1668/snapshot/predictions.csv'
+        selected = pd.read_csv(snapshot, encoding='utf-8-sig').loc[lambda frame: frame.home_team.eq('長崎')]
+        stripped = strip_legacy_forecast_outputs(selected)
+        self.assertNotIn('prob_final_home', stripped.columns)
+        self.assertNotIn('predicted_result', stripped.columns)
+        original = build_next_probabilities(stripped)
+        changed = selected.copy()
+        for column in ['prob_final_home', 'prob_final_draw', 'prob_final_away']:
+            changed[column] = 0.0
+        changed['predicted_result'] = 'H'
+        recomputed = build_next_probabilities(strip_legacy_forecast_outputs(changed))
+        for column in ['next_prob_home', 'next_prob_draw', 'next_prob_away']:
+            self.assertAlmostEqual(original.iloc[0][column], recomputed.iloc[0][column])
 
     def test_shadow_ab_keep_their_ten_ticket_algorithms(self):
         frame = pd.DataFrame([dict(match_no=i+1, home_team=f'H{i}',away_team=f'A{i}',league='j1',

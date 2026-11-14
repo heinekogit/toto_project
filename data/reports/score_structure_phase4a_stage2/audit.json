@@ -1,0 +1,30 @@
+{
+  "matches": 78,
+  "rounds": [
+    "toto1660",
+    "toto1663",
+    "toto1664",
+    "toto1665",
+    "toto1668",
+    "toto1670"
+  ],
+  "draws": 18,
+  "expected_raw_D": 19.820460661485072,
+  "model_counts": {
+    "early_score_model": 39,
+    "absence_uncertainty": 26,
+    "goal_rate_plus_style_policy": 13
+  },
+  "source_hashes": {
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/forecasts.jsonl": "89e31ed28315a787ffe224cff5219cd00255e9220082b38b76281fa0dff87e3f",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/results.jsonl": "5020ee262a847a58447a34f87df99443d0163dacb4c3e1e498e47805c96018be",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase12/match_structure_78.csv": "7633f1a0105178e6e540b9a816ebca2564cda107f841d24e3fe7b4a20a770b15",
+    "/Users/dev_tomo/Desktop/tt_prj_restart/data/reports/score_structure_phase3/match_sensitivity_78.csv": "3f6816914b2973fb30129f8f16f75b6a02d96df0b77c31d87d4f14bb8b2b0b99"
+  },
+  "plan_links": 6,
+  "new_plan_links": 0,
+  "source_unchanged": true,
+  "official_logic_changed": false,
+  "rank_tie_rule": "P(D) descending, then match_no ascending",
+  "null": "per-round hypergeometric conditioned on observed D count; six-round convolution"
+}

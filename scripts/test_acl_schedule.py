@@ -9,11 +9,34 @@ from acl_schedule import classify_distance, normalize_acl_schedule
 
 
 class AclScheduleTest(unittest.TestCase):
-    def test_production_schedule_venues_are_all_registered(self):
+    def test_memo_does_not_hide_missing_venue(self):
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "acl.csv"
+            pd.DataFrame([{"match_date": "2026/4/15", "home_team": "G大阪",
+                           "away_team": "相手", "city": "未登録", "country": "タイ",
+                           "memo": "long"}]).to_csv(path, index=False)
+            with patch("acl_schedule.load_jleague_home_coordinates", return_value={"G大阪": (34.8, 135.5)}), \
+                 patch("acl_schedule.load_acl_venue_coordinates", return_value={}):
+                with self.assertRaisesRegex(ValueError, "venue coordinates missing"):
+                    normalize_acl_schedule(path)
+
+    def test_production_schedule_rejects_inconsistent_venue(self):
+        schedule = Path(__file__).parents[1] / "data/manual/acl_schedule.csv"
+        with self.assertRaisesRegex(ValueError, "吹田, サウジアラビア"):
+            normalize_acl_schedule(schedule)
+
+    def test_confirmed_schedule_keeps_calculated_travel_and_home_zero(self):
         schedule = Path(__file__).parents[1] / "data/manual/acl_schedule.csv"
         frame = pd.read_csv(schedule, encoding="utf-8-sig")
-        normalized = normalize_acl_schedule(schedule)
-        self.assertEqual(len(normalized), len(frame.dropna(how="all")))
+        frame = frame[frame.status.eq("confirmed")]
+        with tempfile.TemporaryDirectory() as td:
+            path = Path(td) / "confirmed.csv"
+            frame.to_csv(path, index=False)
+            normalized = normalize_acl_schedule(path)
+        self.assertEqual(len(normalized), len(frame))
+        self.assertEqual(len(normalized), 18)
+        self.assertTrue(normalized.loc[normalized.venue_type.eq("away"), "distance_km"].gt(0).all())
+        self.assertTrue(normalized.loc[normalized.venue_type.eq("home"), "distance_km"].eq(0).all())
 
     def test_distance_bands_keep_legacy_scale(self):
         self.assertEqual(classify_distance(999.9), ("short", 3.0))

@@ -1,0 +1,5 @@
+﻿source,role,records,unique_fixtures,quality
+/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/forecasts.jsonl,追記型試合前予測イベント,195,91.0,A候補。最初の検証済み予測を各実試合に1件採用
+/Users/dev_tomo/Desktop/tt_prj_restart/data/forecast_registry/results.jsonl,追記型結果・訂正イベント,78,78.0,最新訂正を採用
+data/eval/next_model/correction_history_v1/matches.csv,事後再計算の比較履歴,88,88.0,39試合はAと重複、49試合は追加の実試合だが当時保存λではないため精度評価から除外
+data/repair_backups/**/next_predictions.csv,修復バックアップ,39,,生成時点の原本manifestを確認できず追加A件数へ算入しない

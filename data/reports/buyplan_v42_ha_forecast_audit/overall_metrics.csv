@@ -1,0 +1,2 @@
+﻿group,all_n,actual_D,HDA_n,HDA_leader_hit,HDA_leader_hit_rate,HDA_brier,HDA_log_loss,HA_n,HA_leader_hit,HA_leader_hit_rate,HA_brier,HA_log_loss,HA_leader_expected,HA_leader_actual,HA_leader_expected_minus_actual
+全78試合,78,18,78,37,0.47435897435897434,0.6175367614077404,1.0294833887695118,60,37,0.6166666666666667,0.22261324892992848,0.6361196451642639,35.680572848999766,37,-1.3194271510002338

@@ -1,0 +1,26 @@
+{
+  "version": "phase39-fixed-1",
+  "scope": "research only",
+  "freeze_before_kickoff": [
+    "source SHA256, model/config SHA256, capture timestamp",
+    "all final lambdas, raw HDA, final HDA, actual saved mix and signals",
+    "condition S: within13 P00<=median AND P11>=median",
+    "xG/xGA totals, rates, directly observed games, coverage, period, metric URL/timestamp",
+    "LAB fields, absence missing vs known zero, ledger timestamp/hash, historical rate audit"
+  ],
+  "evaluation": [
+    "Join complete outcomes by unique match_id; no probability recomputation from updated team data",
+    "paired LL/Brier plus goal NLL, H/A residual and calibration per round/version/league",
+    "report all rounds; do not stop at favorable results; round-level uncertainty",
+    "S remains discovery hypothesis, not probability correction; no selection of four candidates"
+  ],
+  "adoption": [
+    "Verify input semantics independently from results first",
+    "Reserve later unused data before any fitting; assess consistent paired gains and calibration with uncertainty",
+    "Do not infer latent lambda error from realized residual",
+    "No automatic deployment or learned coefficients in these scripts"
+  ],
+  "current_78": "exploratory reused sample; not independent validation",
+  "implemented_capture": "scripts/next_model/phase39_future_check.py capture",
+  "implemented_evaluation": "scripts/next_model/phase39_future_check.py evaluate"
+}

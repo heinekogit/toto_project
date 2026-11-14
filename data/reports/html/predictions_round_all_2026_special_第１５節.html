@@ -78,9 +78,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <th>away_external_load_unknown</th>
 <th>home_external_events_json</th>
 <th>away_external_events_json</th>
+<th>home_fatigue_status</th>
+<th>away_fatigue_status</th>
 <th>home_acl_fatigue</th>
+<th>home_acl_fatigue_status</th>
 <th>home_total_fatigue_score</th>
 <th>away_acl_fatigue</th>
+<th>away_acl_fatigue_status</th>
 <th>away_total_fatigue_score</th>
 <th>datetime_weather</th>
 <th>stadium_weather</th>
@@ -741,6 +745,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <th>decision_reason_detail</th>
 <th>uncertainty_calibration_version</th>
 <th>uncertainty_fatigue_signal</th>
+<th>uncertainty_fatigue_known</th>
 <th>uncertainty_weather_signal</th>
 <th>uncertainty_weather_known</th>
 <th>uncertainty_calibration_mix</th>
@@ -893,6 +898,10 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td>Football LAB試験理由</td>
 <td>ホーム得点（予測時は空）</td>
 <td>アウェイ得点（予測時は空）</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
@@ -1699,6 +1708,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>legacy: 旧派生予測B</td>
 <td>legacy: 旧派生予測C</td>
 <td>legacy: 旧派生予測B記号</td>
@@ -1765,9 +1775,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>5.0</td>
 <td>0.0</td>
+<td></td>
 <td>6.92</td>
 <td>2026-05-06 14:00:00</td>
 <td>ＣＦＳ</td>
@@ -2483,6 +2497,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>False</td>
 <td></td>
 <td>False</td>
@@ -2608,9 +2623,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>4.4</td>
 <td>0.0</td>
+<td></td>
 <td>8.05</td>
 <td>2026-05-06 14:00:00</td>
 <td>プラスタ</td>
@@ -3326,6 +3345,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>False</td>
 <td></td>
 <td>False</td>
@@ -3451,9 +3471,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>2.98</td>
 <td>0.0</td>
+<td></td>
 <td>6.96</td>
 <td>2026-05-06 14:00:00</td>
 <td>ＪＩＴス</td>
@@ -4169,6 +4193,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>False</td>
 <td></td>
 <td>False</td>
@@ -4294,9 +4319,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>2.83</td>
 <td>0.0</td>
+<td></td>
 <td>5.4</td>
 <td>2026-05-06 14:00:00</td>
 <td>デンカＳ</td>
@@ -5012,6 +5041,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>False</td>
 <td></td>
 <td>False</td>
@@ -5137,9 +5167,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>4.96</td>
 <td>0.0</td>
+<td></td>
 <td>9.2</td>
 <td></td>
 <td></td>
@@ -5807,6 +5841,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>j1_false_draw_watch</td>
 <td>draw_false_j1</td>
 <td>medium</td>
@@ -5980,9 +6015,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>4.75</td>
 <td>0.0</td>
+<td></td>
 <td>7.83</td>
 <td></td>
 <td></td>
@@ -6650,6 +6689,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>j1_draw_rescue_watch</td>
 <td>draw_rescue_soft_j1</td>
 <td>high</td>
@@ -6823,9 +6863,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>4.99</td>
 <td>0.0</td>
+<td></td>
 <td>8.54</td>
 <td></td>
 <td></td>
@@ -7493,6 +7537,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>j1_draw_rescue_watch</td>
 <td>draw_rescue_soft_j1</td>
 <td>high</td>
@@ -7666,9 +7711,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>6.35</td>
 <td>0.0</td>
+<td></td>
 <td>7.07</td>
 <td></td>
 <td></td>
@@ -8336,6 +8385,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>chaos_side_watch</td>
 <td>away_watch</td>
 <td>low</td>
@@ -8509,9 +8559,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>4.06</td>
 <td>0.0</td>
+<td></td>
 <td>9.06</td>
 <td></td>
 <td></td>
@@ -9179,6 +9233,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>chaos_side_watch</td>
 <td>away_watch</td>
 <td>low</td>
@@ -9352,9 +9407,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>4.31</td>
 <td>0.0</td>
+<td></td>
 <td>8.12</td>
 <td></td>
 <td></td>
@@ -10022,6 +10081,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>j1_false_draw_watch</td>
 <td>draw_false_j1</td>
 <td>medium</td>
@@ -10195,9 +10255,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>8.6275</td>
+<td></td>
 <td>14.767499999999998</td>
 <td>0.0</td>
+<td></td>
 <td>8.07</td>
 <td></td>
 <td></td>
@@ -10865,6 +10929,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>j1_false_draw_watch</td>
 <td>draw_false_j1</td>
 <td>medium</td>
@@ -11038,9 +11103,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>4.59</td>
 <td>0.0</td>
+<td></td>
 <td>8.4</td>
 <td></td>
 <td></td>
@@ -11708,6 +11777,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>chaos_side_watch</td>
 <td>away_watch</td>
 <td>low</td>
@@ -11881,9 +11951,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>4.74</td>
 <td>0.0</td>
+<td></td>
 <td>6.5</td>
 <td></td>
 <td></td>
@@ -12551,6 +12625,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
 <td>j1_false_draw_watch</td>
 <td>draw_false_j1</td>
 <td>high</td>
@@ -12724,9 +12799,13 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td></td>
 <td></td>
 <td></td>
+<td></td>
+<td></td>
 <td>0.0</td>
+<td></td>
 <td>4.33</td>
 <td>0.0</td>
+<td></td>
 <td>5.99</td>
 <td></td>
 <td></td>
@@ -13385,6 +13464,7 @@ td.is-correct-true{color:#c1121f; font-weight:700;}
 <td>False</td>
 <td></td>
 <td>adopt=BASE; final=D; w=(0.809,0.133,0.058); c=(0.682,0.783,0.486); labels=(D,D,D)</td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>

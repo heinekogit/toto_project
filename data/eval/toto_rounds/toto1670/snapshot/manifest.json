@@ -1,0 +1,84 @@
+{
+  "schema_version": 2,
+  "created_at": "2026-11-07T20:46:47+09:00",
+  "round_id": "toto1670",
+  "logical_season": "2027",
+  "prediction_season": "2026",
+  "j1_source": "",
+  "j2_source": "",
+  "football_lab_snapshot": "",
+  "files": {
+    "predictions.csv": {
+      "size": 183480,
+      "sha256": "4b6563ad70d98a866414a70e2a8d7d585e98025870281ed432f270ab5f8aa816"
+    },
+    "buyplan.csv": {
+      "size": 1598,
+      "sha256": "7be14e6ebd0cc52f24a21670536476a4718f74b1cc8c10702bc6cb9a566b0d33"
+    },
+    "next_predictions.csv": {
+      "size": 149755,
+      "sha256": "7efaa248066da4a9d5127b429a75d659339fe6869079e81facf335ccc0ee16bf"
+    },
+    "shadow_buyplan.csv": {
+      "size": 1598,
+      "sha256": "497b85ff81345d70c6cd5712c8958b423213e67b11deca0f620f18a26ae8cd1b"
+    },
+    "shadow_buyplan.html": {
+      "size": 4606,
+      "sha256": "eff0ce80263762cab2cc05259a5dc627b76e0a8a62d532c25c05d9981891e900"
+    },
+    "shadow_buyplan_b.csv": {
+      "size": 1598,
+      "sha256": "9080266336034ed906616ef94985af91713cee1413b99b71de400e7b6b78a64f"
+    },
+    "shadow_buyplan_b.html": {
+      "size": 4617,
+      "sha256": "38ea0f47175e9337e52ab4e3cd54c815614a5be8fa9f3c7e43f3cccfda4939ca"
+    },
+    "shadow_buyplan_c.csv": {
+      "size": 150105,
+      "sha256": "871e88b657166610e8e6af4cd082a6be75808277082d80d1e066457f1dc06d82"
+    },
+    "shadow_buyplan_c.html": {
+      "size": 4279,
+      "sha256": "d986004eab001cf466e2ba5b51a568ba8444f7043091d3057e9bd854414050ff"
+    },
+    "shadow_buyplan_v25.csv": {
+      "size": 1398,
+      "sha256": "3ace2605e4fcc10969cd18717fc37fadf1c0b3170726f9d4355828e7c86261bd"
+    },
+    "shadow_buyplan_v25.html": {
+      "size": 21879,
+      "sha256": "73ebe4b1881f1c7e1dc51eb27c1bcdcd5df1a0a5f5a586e849c4cbb003c390b4"
+    },
+    "shadow_v25_features.csv": {
+      "size": 9557,
+      "sha256": "056219412a562e740dd72c851a3c548398864e18b3f64ee6df40b0cab0cba8da"
+    },
+    "shadow_v25_candidates.csv": {
+      "size": 1174,
+      "sha256": "a8d38efa894a2398337bf774de1f2bcea656e92e1f0de28dd3dbfe2c6e2df31b"
+    },
+    "shadow_v25_audit.json": {
+      "size": 7432,
+      "sha256": "32b74435058b7f7a68d51f2d723ace7c93ef896ad8ae532a1b62d7b5a5e0b6c3"
+    },
+    "shadow_v25_reference.json": {
+      "size": 2063,
+      "sha256": "e0bca9e6b17b005f78f2a6c2b37c1b6c43dc7e737f10f2d0eb15d89f86c9e852"
+    },
+    "buyplan.html": {
+      "size": 5805,
+      "sha256": "355c038ca32122ae3df2ed847ca844fdbec91ae179d33032b21621a50dbfe4ba"
+    },
+    "predictions_buyplan_context.csv": {
+      "size": 39664,
+      "sha256": "71a79d02b29cdd8ca1796192169dda08a8b66cb751a948dbcf241436245aabb2"
+    },
+    "buyplan_engine_manifest.json": {
+      "size": 39102,
+      "sha256": "7d95afac6f05c1b8639e8b808d2cdac3e7e357d2e73449b190e42302ab606a1b"
+    }
+  }
+}

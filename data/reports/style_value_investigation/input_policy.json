@@ -1,0 +1,12 @@
+{
+  "policy": "overview_aligned_v1",
+  "scope": "J1 additional seven styles; validation inputs",
+  "accepted_fields": 833,
+  "ambiguous_fields": 7,
+  "selection": "overview for index/rate; unique aligned summary row for details",
+  "ambiguity": "null; never choose first/last/mean or substitute zero",
+  "availability": "first observed 2026-11-03; no retrospective use based on displayed date",
+  "model_missingness": "omit the unavailable correction term; retain baseline prediction",
+  "production_prediction_changed": false,
+  "validation": "current full prediction baseline vs additional-style shadow; same matches and budget; goal MAE, H/D/A log loss and Brier; record lambda and probability deltas; tune on earlier data only"
+}

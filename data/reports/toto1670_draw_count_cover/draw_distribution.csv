@@ -1,0 +1,15 @@
+D_count,probability,B_tickets,B_covered,C95_tickets,C95_covered,C90_tickets,C90_covered,C80_tickets,C80_covered
+0,0.014244888494690331,5,True,3,True,3,True,1,True
+1,0.07166635853403984,2,True,1,True,0,False,2,True
+2,0.16636851288585328,0,False,1,True,1,True,1,True
+3,0.23595996950653805,0,False,1,True,1,True,1,True
+4,0.22812082329646322,0,False,1,True,1,True,1,True
+5,0.15875026260770822,0,False,1,True,1,True,1,True
+6,0.08181260752003093,0,False,0,False,1,True,1,True
+7,0.031613815211784385,0,False,0,False,1,True,1,True
+8,0.009159759711322579,0,False,0,False,0,False,0,False
+9,0.001965379019163648,0,False,0,False,0,False,1,True
+10,0.0003035494713809788,0,False,1,True,0,False,0,False
+11,3.1957239774786695e-05,1,True,0,False,1,True,0,False
+12,2.0554970680778872e-06,1,True,0,False,0,False,0,False
+13,6.100418158456165e-08,1,True,1,True,0,False,0,False
